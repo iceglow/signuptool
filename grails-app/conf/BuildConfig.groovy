@@ -12,16 +12,23 @@ grails.project.dependency.resolution = {
     repositories {        
         grailsPlugins()
         grailsHome()
-        grailsCentral()
+      
+        grailsRepo "http://svn.codehaus.org/grails-plugins/"
+
+        // Our own plugins hosted in a svn repository
+        grailsRepo "http://svn.it.su.se/grails-plugins/trunk/"
 
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
         //mavenLocal()
-        //mavenCentral()
+        mavenCentral()
         //mavenRepo "http://snapshots.repository.codehaus.org"
-        //mavenRepo "http://repository.codehaus.org"
-        //mavenRepo "http://download.java.net/maven/2/"
+        mavenRepo "http://repository.codehaus.org"
+        mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
+        mavenRepo "http://maven.it.su.se/it.su.se/maven2/"
+        mavenRepo "http://repo2.maven.org/maven2/"
+        mavenRepo "http://bleu.west.spy.net/~dustin/m2repo/"
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
