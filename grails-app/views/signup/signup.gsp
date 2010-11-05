@@ -17,7 +17,8 @@
         	Klicka på "Fortsätt till studera.nu" nedan för att aktivera ditt universitetskonto. Du kommer då att lämna
         	Stockholms universitets webplats och bli omdirigerad till studera.nu. Efter att du loggat in på studera.nu
         	kommer du att skickas tillbaka hit och få tillgång till ditt universitetskonto.
-        	Fortsätt till studera.nu. 
+          
+        	<a href="${link}">Fortsätt till studera.nu.</a> 
         </p>
     </div>
   </body>
