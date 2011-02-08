@@ -4,8 +4,6 @@ class BootStrap {
 
   def init = { servletContext ->
 
-
-
     // Register default values for system properties
     configService.registerSection("properties")
     configService.registerValueToSection("properties", "javax.security.auth.useSubjectCredsOnly", "false")
@@ -16,11 +14,10 @@ class BootStrap {
     configService.registerValueToSection("properties", "user.language", "sv")
     configService.registerValueToSection("properties", "user.region", "SE")
 
-
     // Get the properties section and register as system properties
     Properties p = configService.getSectionAsProperties("properties")
     Properties sysprop = System.getProperties()
-    for(String key : p.propertyNames()) {
+    for (String key: p.propertyNames()) {
       sysprop.setProperty(key, p.getProperty(key))
     }
     System.setProperties(sysprop)
