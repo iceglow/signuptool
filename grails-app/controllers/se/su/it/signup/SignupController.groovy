@@ -1,26 +1,12 @@
 package se.su.it.signup
 
-import groovyx.net.http.URIBuilder
+//URLEncoder.encode("https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=http://marcus.it.su.se/signup/setup")]
 
 class SignupController {
 
-  def configService
-
-  def signup = {
-    def link = formatLink()
-    return [link: link]
+  def index = {
   }
 
-
-  def formatLink() {
-    def shibb = configService.getValue("studera.nu", "url") ?: "Shibboleth.sso/WAYF"
-    def link = request.request.requestURL.toString()
-
-    URIBuilder uri = new URIBuilder(link)
-    uri.setScheme("https")
-    uri.setPath(shibb)
-    uri.setQuery([target: link])
-
-    return uri
+  def setup = {
   }
 }
