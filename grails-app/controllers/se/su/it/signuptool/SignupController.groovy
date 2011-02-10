@@ -15,7 +15,7 @@ class SignupController {
   def index = {
     def link = 'https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=https://sukattool-web1.it.su.se:1043/foo/signuptool/setup'
 
-    [link: link]
+    [link: link, hostname: System.getProperty('signuptool.hostname')]
   }
 
   def test = {

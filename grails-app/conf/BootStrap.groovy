@@ -5,9 +5,8 @@ class BootStrap {
   def init = { servletContext ->
     // get hostname and inject into system properties
     try {
-      def proc = "hostname -f".execute()
-      proc.waitFor()
-      def hostname = proc.in.text
+      InetAddress addr = InetAddress.getLocalHost()
+      String hostname = addr.getCanonicalHostName()
       System.setProperty("signuptool.hostname", hostname)
       log.info "Setting hostname to ${hostname}"
     } catch (all) {
