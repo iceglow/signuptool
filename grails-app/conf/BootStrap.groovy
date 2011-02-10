@@ -4,6 +4,10 @@ class BootStrap {
 
   def init = { servletContext ->
 
+    configService.registerValueToSection("WS", "AccountFacade", "https://sukat-svc-test.it.su.se/sukatsvc-ws/services/AccountFacade")
+    configService.registerValueToSection("WS", "EnrollmentFacade", "https://sukat-svc-test.it.su.se/sukatsvc-ws/services/EnrollmentFacade")
+    configService.registerValueToSection("WS", "UserContactFacade", "https://sukat-svc-test.it.su.se/sukatsvc-ws/services/UserContactFacade")
+
     configService.registerSection("properties")
     configService.registerValueToSection("properties", "javax.security.auth.useSubjectCredsOnly", "false")
     configService.registerValueToSection("properties", "java.security.krb5.kdc", "kerberos.su.se")
@@ -20,6 +24,7 @@ class BootStrap {
     configService.registerValueToSection("jaas", "principal", "su-sukattool@SU.SE")
 
     java.security.Security.setProperty("login.configuration.provider", "se.su.it.signuptool.Krb5Configuration")
+
 
     // Get the properties section and register as system properties
     Properties p = configService.getSectionAsProperties("properties")

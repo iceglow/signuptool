@@ -7,14 +7,14 @@ import se.su.it.sukat.client.*
 class WsAccessService {
     def configService
 
-    def wsl                 = null
-    def facadeMap           = [:]
+    def wsl = null
+    def facadeMap = [:]
 
     boolean transactional = false
 
     def getWsLocator() {
-        if(wsl == null) {
-        	wsl = WSLocatorFactory.instance(configService.getSectionAsProperties("WS"))
+        if (wsl == null) {
+            wsl = WSLocatorFactory.instance(configService.getSectionAsProperties("WS"))
         }
         return wsl
     }
@@ -28,10 +28,10 @@ class WsAccessService {
         def wslocator = getWsLocator()
         def ret
         synchronized (facadeMap) {
-        	if(!facadeMap.containsKey(clazz)) {
-        		Remote facade = wslocator.getService(clazz, locator, getter);
-        		facadeMap.put(clazz, facade)
-        	}
+            if (!facadeMap.containsKey(clazz)) {
+                Remote facade = wslocator.getService(clazz, locator, getter);
+                facadeMap.put(clazz, facade)
+            }
             ret = facadeMap.get(clazz)
         }
         return ret
@@ -41,10 +41,10 @@ class WsAccessService {
         def wslocator = getWsLocator()
         def ret
         synchronized (facadeMap) {
-        	if(!facadeMap.containsKey(clazz)) {
-        		Remote facade = wslocator.getService(clazz);
-        		facadeMap.put(clazz, facade)
-        	}
+            if (!facadeMap.containsKey(clazz)) {
+                Remote facade = wslocator.getService(clazz);
+                facadeMap.put(clazz, facade)
+            }
             ret = facadeMap.get(clazz);
         }
         return ret

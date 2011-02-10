@@ -10,6 +10,8 @@ import se.su.it.sukat.client.MailRoutingFacade
 
 class SignupController {
 
+    def WsMethodService
+
   def index = {
     def link = 'https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=https://sukattool-web1.it.su.se:1043/foo/signuptool/setup'
 
@@ -58,7 +60,7 @@ class SignupController {
 
     // reset account only if cookies for password and uid havent been set
     if (!request?.cookies['nin'] || !request?.cookies['session']) { //!defined $q->cookie('session' || $nin ne $q->cookie("nin"))
-      def vo = enrollmentFacade?.findEnrolledUserByNIN(nin)
+      def vo = WsMethodService?.findEnrolledUserByNIN(nin)
       if (!vo && domain =~ /student.su.se/) {
         vo = enrollmentFacade?.enrollUser(domain, givenName, sn, "other", nin)
       }
