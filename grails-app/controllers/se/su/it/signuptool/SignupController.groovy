@@ -10,7 +10,7 @@ import se.su.it.sukat.client.MailRoutingFacade
 
 class SignupController {
 
-    def WsMethodService
+  def WsMethodService
 
   def index = {
     def link = 'https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=https://sukattool-web1.it.su.se:1043/foo/signuptool/setup'
@@ -18,7 +18,7 @@ class SignupController {
     [link: link]
   }
 
-   def test = {
+  def test = {
     Properties p = new Properties()
     p.setProperty("MailRoutingFacade", "https://sukat-svc-test.it.su.se/sukatsvc-ws/services/MailRoutingFacade")
     p.setProperty("CardInfoFacade", "https://sukat-svc.it.su.se/sukatsvc-ws/services/CardInfoFacade")
@@ -26,7 +26,7 @@ class SignupController {
     CardInfoFacade fac = wsloc.getService(CardInfoFacade.class)
     def crads = fac.getAllCards("rnyberg", true)
     render crads
-   }
+  }
 
   def step_one = {
     def idp = ''//'Shib-Identity-Provider'
