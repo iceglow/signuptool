@@ -33,6 +33,9 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
+      compile 'se.su.it.ws.commons:su-ws-commons:1.5'
+      compile 'se.su.it.sukat.svc:sukatsvc-client:1.7'
+
       runtime 'mysql:mysql-connector-java:5.1.7'
 
     }
