@@ -12,16 +12,6 @@ class SignupController {
     [link: link]
   }
 
-  def idp2domain(String idp) {
-    if (idp =~ /studera.nu|antagning.se|umdac.se/) {
-      return 'student.su.se'
-    } else if (idp =~ /auth-prod-physto-idp/) {
-      return 'fysik.su.se'
-    }
-
-    return null
-  }
-
   def step_one = {
     def idp = ''//'Shib-Identity-Provider'
     def nin = ''//'Shib-NorEduPerson-NorEduPersonNIN' || "Shib-SocialSecurityNumber"
@@ -82,5 +72,16 @@ class SignupController {
 
       [uid: uid]
     }
+  }
+
+  private String idp2domain(String idp) {
+    if (idp =~ /studera.nu|antagning.se|umdac.se/) {
+      return 'student.su.se'
+    } else if (idp =~ /auth-prod-physto-idp/) {
+      return 'fysik.su.se'
+    }
+
+    // otherwise
+    return null
   }
 }
