@@ -15,6 +15,24 @@ class BootStrap {
       log.error "Unable to call 'hostname -f' using 'unknown' instead"
     }
 
+    def lpwurl
+    def sukatsvcurl
+    switch (System.getProperty("signuptool", "dev")) {
+      case ~/prod(uction)?/:
+        lpwurl = "https://lpwprod-su.its.uu.se"
+        sukatsvcurl = "https://sukat-svc.it.su.se"
+        break
+      case "test":
+        lpwurl = "https://lpwtest-su.its.uu.se"
+        sukatsvcurl = "https://sukat-svc-test.it.su.se"
+        break
+      case ~/dev(elopment)?/:
+      default:
+        lpwurl = "http://mittsu-dev-04.dev.it.su.se"
+        sukatsvcurl = "https://sukat-svc-test.it.su.se"
+    }
+    log.info "LPW URL: ${lpwurl}"
+
     configService.registerValueToSection("WS", "AccountFacade", "${sukatsvcurl}/sukatsvc-ws/services/AccountFacade")
     configService.registerValueToSection("WS", "EnrollmentFacade", "${sukatsvcurl}/sukatsvc-ws/services/EnrollmentFacade")
     configService.registerValueToSection("WS", "UserContactFacade", "${sukatsvcurl}/sukatsvc-ws/services/UserContactFacade")
@@ -35,25 +53,6 @@ class BootStrap {
     configService.registerValueToSection("jaas", "principal", "su-sukattool@SU.SE")
 
     java.security.Security.setProperty("login.configuration.provider", "se.su.it.signuptool.Krb5Configuration")
-
-    // lpw settings
-    def lpwurl
-    def sukatsvcurl
-    switch (System.getProperty("signuptool", "dev")) {
-      case ~/prod(uction)?/:
-        lpwurl = "https://lpwprod-su.its.uu.se"
-        sukatsvcurl = "https://sukat-svc.it.su.se"
-        break
-      case "test":
-        lpwurl = "https://lpwtest-su.its.uu.se"
-        sukatsvcurl = "https://sukat-svc-test.it.su.se"
-        break
-      case ~/dev(elopment)?/:
-      default:
-        lpwurl = "http://mittsu-dev-04.dev.it.su.se"
-        sukatsvcurl = "https://sukat-svc-test.it.su.se"
-    }
-    log.info "LPW URL: ${lpwurl}"
 
     configService.registerSection("WS-CXF")
     configService.registerValueToSection("WS-CXF", "CertAdminFacadeClient", "${lpwurl}/cxf/CertAdminFetcher")
