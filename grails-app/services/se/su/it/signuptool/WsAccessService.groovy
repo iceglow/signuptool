@@ -9,7 +9,6 @@ class WsAccessService {
 
     def wsl                 = null
     def facadeMap           = [:]
-    def facadeMapPolopoly   = [:]
 
     boolean transactional = false
 
