@@ -32,17 +32,7 @@ grails.project.dependency.resolution = {
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-      build ('org.codehaus.groovy.modules.http-builder:http-builder:0.5.0'){
-        excludes "junit", "xml-apis", "xercesImpl"
-      }
 
-      runtime ('xerces:xercesImpl:2.8.1'){
-        excludes "xml-apis"
-      }
-      runtime ('net.sourceforge.nekohtml:nekohtml:1.9.9'){
-        excludes "xercesImpl"
-      }
-        // runtime 'mysql:mysql-connector-java:5.1.5'
 
     }
 
