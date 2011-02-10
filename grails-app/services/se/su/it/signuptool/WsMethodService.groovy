@@ -19,4 +19,52 @@ class WsMethodService {
       return null
     }
   }
+
+  def enrollUser(String domain, String givenName, String sn, String nin)
+  {
+    try {
+      def facade = wsAccessService.getFacade(EnrollmentFacade.class)
+      return facade.enrollUser(domain, givenName, sn, "other", nin)
+    }
+
+    catch (Exception e) {
+      return null
+    }
+  }
+
+  def isBasicServicesEnabled(String uid)
+  {
+     try {
+      def facade = wsAccessService.getFacade(AccountFacade.class)
+      return facade.isBasicServicesEnabled(uid)
+    }
+
+    catch (Exception e) {
+      return null
+    }
+  }
+
+  def enableBasicServices(String uid)
+  {
+     try {
+      def facade = wsAccessService.getFacade(AccountFacade.class)
+      return facade.enableBasicServices(uid)
+    }
+
+    catch (Exception e) {
+      return null
+    }
+  }
+
+  def getMail(String uid)
+  {
+    try {
+      def facade = wsAccessService.getFacade(UserContactFacade.class)
+      return facade.getMail(uid)
+    }
+
+    catch (Exception e) {
+      return null
+    }
+  }
 }

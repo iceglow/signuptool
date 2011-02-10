@@ -62,7 +62,7 @@ class SignupController {
     if (!request?.cookies['nin'] || !request?.cookies['session']) { //!defined $q->cookie('session' || $nin ne $q->cookie("nin"))
       def vo = WsMethodService?.findEnrolledUserByNIN(nin)
       if (!vo && domain =~ /student.su.se/) {
-        vo = enrollmentFacade?.enrollUser(domain, givenName, sn, "other", nin)
+        vo = WsMethodService?.enrollUser(domain, givenName, sn, "other", nin)
       }
 
       if (!vo?.uid && !vo?.password) {
@@ -70,11 +70,11 @@ class SignupController {
         // do something
       }
 
-      def isEnabled = accountFacade?.isBasicServicesEnabled(vo.uid)
-      accountFacade?.enableBasicServices(vo.uid)
+      def isEnabled = WsMethodService?.isBasicServicesEnabled(vo.uid)
+      WsMethodService?.enableBasicServices(vo.uid)
       def mail = null
       if (isEnabled) {
-        mail = userContactFacade?.getMail(vo.uid)
+        mail = WsMethodService?.getMail(vo.uid)
       }
 
       //set name for password_cookie to something other than password, and encode base64
