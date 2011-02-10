@@ -3,6 +3,17 @@ class BootStrap {
   def configService
 
   def init = { servletContext ->
+    // get hostname and inject into system properties
+    try {
+      def proc = "hostname -f".execute()
+      proc.waitFor()
+      def hostname = proc.in.text
+      System.setProperty("signuptool.hostname", hostname)
+      log.info "Setting hostname to ${hostname}"
+    } catch (all) {
+      System.setProperty("signuptool.hostname", 'unknown')
+      log.error "Unable to call 'hostname -f' using 'unknown' instead"
+    }
 
     configService.registerSection("properties")
     configService.registerValueToSection("properties", "javax.security.auth.useSubjectCredsOnly", "false")
