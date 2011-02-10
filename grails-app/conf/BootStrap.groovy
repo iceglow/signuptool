@@ -15,25 +15,6 @@ class BootStrap {
       log.error "Unable to call 'hostname -f' using 'unknown' instead"
     }
 
-    // lpw settings
-    def lpwurl
-    def sukatsvcurl
-    switch (System.getProperty("signuptool", "dev")) {
-      case ~/prod(uction)?/:
-        lpwurl = "https://lpwprod-su.its.uu.se"
-        sukatsvcurl = "https://sukat-svc.it.su.se"
-        break
-      case "test":
-        lpwurl = "https://lpwtest-su.its.uu.se"
-        sukatsvcurl = "https://sukat-svc-test.it.su.se"
-        break
-      case ~/dev(elopment)?/:
-      default:
-        lpwurl = "http://mittsu-dev-04.dev.it.su.se"
-        sukatsvcurl = "https://sukat-svc-test.it.su.se"
-    }
-    log.info "LPW URL: ${lpwurl}"
-
     configService.registerValueToSection("WS", "AccountFacade", "${sukatsvcurl}/sukatsvc-ws/services/AccountFacade")
     configService.registerValueToSection("WS", "EnrollmentFacade", "${sukatsvcurl}/sukatsvc-ws/services/EnrollmentFacade")
     configService.registerValueToSection("WS", "UserContactFacade", "${sukatsvcurl}/sukatsvc-ws/services/UserContactFacade")
@@ -55,25 +36,42 @@ class BootStrap {
 
     java.security.Security.setProperty("login.configuration.provider", "se.su.it.signuptool.Krb5Configuration")
 
+    // lpw settings
+    def lpwurl
+    def sukatsvcurl
+    switch (System.getProperty("signuptool", "dev")) {
+      case ~/prod(uction)?/:
+        lpwurl = "https://lpwprod-su.its.uu.se"
+        sukatsvcurl = "https://sukat-svc.it.su.se"
+        break
+      case "test":
+        lpwurl = "https://lpwtest-su.its.uu.se"
+        sukatsvcurl = "https://sukat-svc-test.it.su.se"
+        break
+      case ~/dev(elopment)?/:
+      default:
+        lpwurl = "http://mittsu-dev-04.dev.it.su.se"
+        sukatsvcurl = "https://sukat-svc-test.it.su.se"
+    }
+    log.info "LPW URL: ${lpwurl}"
 
-
-    configService.registerSection("WS")
-    configService.registerValueToSection("WS", "CertAdminFacadeClient", "${lpwurl}/cxf/CertAdminFetcher")
-    configService.registerValueToSection("WS", "ChangeAddressFacadeClient", "${lpwurl}/cxf/ChangeAddressFetcher")
-    configService.registerValueToSection("WS", "DegreeAppFacadeClient", "${lpwurl}/cxf/DegreeAppFetcher")
-    configService.registerValueToSection("WS", "FORegisterFacadeClient", "${lpwurl}/cxf/FORegisterFetcher")
-    configService.registerValueToSection("WS", "FollowDegreeAppFacadeClient", "${lpwurl}/cxf/FollowDegreeAppFetcher")
-    configService.registerValueToSection("WS", "NationalCertificateFacadeClient", "${lpwurl}/cxf/NationalCertificateFetcher")
-    configService.registerValueToSection("WS", "RegisterFacadeClient", "${lpwurl}/cxf/RegisterFetcher")
-    configService.registerValueToSection("WS", "RegistrateFacadeClient", "${lpwurl}/cxf/RegistrateFetcher")
-    configService.registerValueToSection("WS", "RegistrationCertificateFacadeClient", "${lpwurl}/cxf/RegistrationCertificateFetcher")
-    configService.registerValueToSection("WS", "ResearchCertificateFacadeClient", "${lpwurl}/cxf/ResearchCertificateFetcher")
-    configService.registerValueToSection("WS", "SecureCertificateFacadeClient", "${lpwurl}/cxf/SecureCertificateFetcher")
-    configService.registerValueToSection("WS", "TentamenFacadeClient", "${lpwurl}/cxf/AnonTentamenFetcher")
-    configService.registerValueToSection("WS", "UppfoljFacadeClient", "${lpwurl}/cxf/UppfoljFetcher")
-    configService.registerValueToSection("WS", "UtilityFacadeClient", "${lpwurl}/cxf/UtilityFetcher")
-    configService.registerValueToSection("WS", "MonitorFacadeClient", "${lpwurl}/cxf/MonitorFetcher")
-    configService.registerValueToSection("WS", "ResRappFacadeClient", "${lpwurl}/cxf/ResRappFetcher")
+    configService.registerSection("WS-CXF")
+    configService.registerValueToSection("WS-CXF", "CertAdminFacadeClient", "${lpwurl}/cxf/CertAdminFetcher")
+    configService.registerValueToSection("WS-CXF", "ChangeAddressFacadeClient", "${lpwurl}/cxf/ChangeAddressFetcher")
+    configService.registerValueToSection("WS-CXF", "DegreeAppFacadeClient", "${lpwurl}/cxf/DegreeAppFetcher")
+    configService.registerValueToSection("WS-CXF", "FORegisterFacadeClient", "${lpwurl}/cxf/FORegisterFetcher")
+    configService.registerValueToSection("WS-CXF", "FollowDegreeAppFacadeClient", "${lpwurl}/cxf/FollowDegreeAppFetcher")
+    configService.registerValueToSection("WS-CXF", "NationalCertificateFacadeClient", "${lpwurl}/cxf/NationalCertificateFetcher")
+    configService.registerValueToSection("WS-CXF", "RegisterFacadeClient", "${lpwurl}/cxf/RegisterFetcher")
+    configService.registerValueToSection("WS-CXF", "RegistrateFacadeClient", "${lpwurl}/cxf/RegistrateFetcher")
+    configService.registerValueToSection("WS-CXF", "RegistrationCertificateFacadeClient", "${lpwurl}/cxf/RegistrationCertificateFetcher")
+    configService.registerValueToSection("WS-CXF", "ResearchCertificateFacadeClient", "${lpwurl}/cxf/ResearchCertificateFetcher")
+    configService.registerValueToSection("WS-CXF", "SecureCertificateFacadeClient", "${lpwurl}/cxf/SecureCertificateFetcher")
+    configService.registerValueToSection("WS-CXF", "TentamenFacadeClient", "${lpwurl}/cxf/AnonTentamenFetcher")
+    configService.registerValueToSection("WS-CXF", "UppfoljFacadeClient", "${lpwurl}/cxf/UppfoljFetcher")
+    configService.registerValueToSection("WS-CXF", "UtilityFacadeClient", "${lpwurl}/cxf/UtilityFetcher")
+    configService.registerValueToSection("WS-CXF", "MonitorFacadeClient", "${lpwurl}/cxf/MonitorFetcher")
+    configService.registerValueToSection("WS-CXF", "ResRappFacadeClient", "${lpwurl}/cxf/ResRappFetcher")
 
     configService.registerSection("LPW")
     configService.registerValueToSection("LPW", "lpw_socket_timeout", "10000")
