@@ -1,6 +1,10 @@
 package se.su.it.signuptool
 
 import javax.servlet.http.Cookie
+import se.su.it.ws.commons.WSLocatorFactory
+import se.su.it.ws.commons.WSLocator
+import se.su.it.sukat.client.CardInfoFacade
+import se.su.it.sukat.client.MailRoutingFacade
 
 //URLEncoder.encode("https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=http://marcus.it.su.se/signuptool/setup")]
 
@@ -11,6 +15,16 @@ class SignupController {
 
     [link: link]
   }
+
+   def test = {
+    Properties p = new Properties()
+    p.setProperty("MailRoutingFacade", "https://sukat-svc-test.it.su.se/sukatsvc-ws/services/MailRoutingFacade")
+    p.setProperty("CardInfoFacade", "https://sukat-svc.it.su.se/sukatsvc-ws/services/CardInfoFacade")
+    def wsloc = WSLocatorFactory.instance(p)
+    CardInfoFacade fac = wsloc.getService(CardInfoFacade.class)
+    def crads = fac.getAllCards("rnyberg", true)
+    render crads
+   }
 
   def step_one = {
     def idp = ''//'Shib-Identity-Provider'
