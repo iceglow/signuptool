@@ -5,11 +5,13 @@ import se.su.it.ws.commons.WSLocatorFactory
 import se.su.it.ws.commons.WSLocator
 import se.su.it.sukat.client.CardInfoFacade
 import se.su.it.sukat.client.MailRoutingFacade
+import ladok.lpw.service.changeaddress.facadeclient.ChangeAddressVO
 
 //URLEncoder.encode("https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=http://marcus.it.su.se/signuptool/setup")]
 
 class SignupController {
 
+  def LPWWebService
   def WsMethodService
 
   def index = {
@@ -25,7 +27,9 @@ class SignupController {
     def wsloc = WSLocatorFactory.instance(p)
     CardInfoFacade fac = wsloc.getService(CardInfoFacade.class)
     def crads = fac.getAllCards("rnyberg", true)
-    render crads
+
+    ChangeAddressVO addr = LPWWebService.getChangeAddressVO('marcus')
+    render "${crads} och ${addr}"
   }
 
   def step_one = {
