@@ -1,4 +1,4 @@
-package se.su.it.signup
+package se.su.it.signuptool
 
 import grails.test.*
 

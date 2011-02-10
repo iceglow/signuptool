@@ -5,7 +5,7 @@ class UrlMappings {
 			 // apply constraints here
 		  }
 	  }
-      "/"(controller: "signup", action:"signup")
+      "/"(controller: "signup", action:"signuptool")
 	  "500"(view:'/error')
 	}
 }
