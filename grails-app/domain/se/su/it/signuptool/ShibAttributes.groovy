@@ -20,6 +20,7 @@ class ShibAttributes {
   // Set affiliation to student or employee
   String affiliation
 
+  static transients = ['idp', 'nin', 'givenName', 'sn', 'domain', 'affiliation']
   static constraints = {
     idp(blank: false, nullable: false)
     nin(blank: false, nullable: false)
