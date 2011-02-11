@@ -31,16 +31,22 @@ class SignupController {
 
   def accountSetup = {
 
-    def attrs = new ShibAttributes() // Initiate with shib data from studera.nu
+    // Initialize model with shib data
+    def attrs = new ShibAttributes(
+      idp: '',
+      nin: '', // Could either be Shib-NorEduPerson-NorEduPersonNIN or Shib-SocialSecurityNumber
+      givenName: '',
+      sn: ''
+    )
 
-    // Validates all of the models attributes and renders map of errors if invalid
+    // Validate model and handle map of errors if invalid
     if (!attrs.validate()) {
       flash.message = attrs.getErrorMessages()
       redirect(action: 'index')
       return
     }
 
-    // Should we have a physto whitelist?
+    // TODO: Should we have a physto whitelist?
 
     // Reset account only if cookies for password and uid havent been set
     if (!request?.cookies['session'] || request?.cookies['nin'] != attrs.nin) {
@@ -72,6 +78,6 @@ class SignupController {
       response.addCookie(nin_cookie)
     }
 
-    [status: 'success']
+    [answer: 42] // Should we render another view or go to another action?
   }
 }
