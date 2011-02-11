@@ -2,9 +2,7 @@ package se.su.it.signuptool
 
 import javax.servlet.http.Cookie
 import se.su.it.ws.commons.WSLocatorFactory
-import se.su.it.ws.commons.WSLocator
 import se.su.it.sukat.client.CardInfoFacade
-import se.su.it.sukat.client.MailRoutingFacade
 import ladok.lpw.service.changeaddress.facadeclient.ChangeAddressVO
 
 class SignupController {
