@@ -29,32 +29,20 @@ class SignupController {
     render "${crads} och ${addr}"
   }
 
-  def step_one = {
-    def idp = ''//'Shib-Identity-Provider'
-    def nin = ''//'Shib-NorEduPerson-NorEduPersonNIN' || "Shib-SocialSecurityNumber"
-    def givenName = ''//'Shib-InetOrgPerson-givenName'
-    def sn = ''//'Shib-Person-surname'
+  def accountSetup = {
 
-    if (!idp || !nin || !givenName || !sn) {
-      flash.message = 'Något saknas'
+    def attrs = new ShibAttributes() // Initiate with shib data from studera.nu
+
+    // Validates all of the models attributes and renders map of errors if invalid
+    if (!attrs.validate()) {
+      flash.message = attrs.getErrorMessages()
       redirect(action: 'index')
       return
     }
 
-    def domain = UtilityService.idp2domain(idp)
-    if (!domain) {
-      flash.message = 'Otillåten inloggning'
-      redirect(action: 'index')
-      return
-    }
+    // Should we have a physto whitelist?
 
-    def affiliation = domain =~ /student.su.se/ ? 'student' : 'employee'
-    if (nin.length() == 10) {
-      nin = "19${nin}"
-    }
-
-    // physto_whitelist ...
-
+    // We now have valid shib data, proceed to WS calling...
     def enrollmentFacade = null
     def accountFacade = null
     def userContactFacade = null
