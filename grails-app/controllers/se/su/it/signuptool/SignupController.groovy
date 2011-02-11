@@ -47,11 +47,12 @@ class SignupController {
     def accountFacade = null
     def userContactFacade = null
 
-    // reset account only if cookies for password and uid havent been set
-    if (!request?.cookies['nin'] || !request?.cookies['session']) { //!defined $q->cookie('session' || $nin ne $q->cookie("nin"))
-      def vo = WsMethodService?.findEnrolledUserByNIN(nin)
-      if (!vo && domain =~ /student.su.se/) {
-        vo = WsMethodService?.enrollUser(domain, givenName, sn, "other", nin)
+    // Reset account only if cookies for password and uid havent been set
+    if (!request?.cookies['session'] || request?.cookies['nin'] != attrs.nin) {
+
+      def vo = WsMethodService?.findEnrolledUserByNIN(attrs.nin)
+      if (!vo && attrs.domain =~ /student.su.se/) {
+        vo = WsMethodService?.enrollUser(attrs.domain, attrs.givenName, attrs.sn, "other", attrs.nin)
       }
 
       if (!vo?.uid && !vo?.password) {
@@ -69,13 +70,13 @@ class SignupController {
       //set name for password_cookie to something other than password, and encode base64
       def password_cookie = new Cookie('session', vo.password.encodeAsBase64())
       def uid_cookie = new Cookie('uid', vo.uid)
-      def nin_cookie = new Cookie('nin', nin)
+      def nin_cookie = new Cookie('nin', attrs.nin)
 
       response.addCookie(password_cookie)
       response.addCookie(uid_cookie)
       response.addCookie(nin_cookie)
-
-      [uid: uid]
     }
+
+    [status: 'success']
   }
 }
