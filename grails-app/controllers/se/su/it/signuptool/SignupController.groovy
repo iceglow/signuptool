@@ -9,6 +9,7 @@ import ladok.lpw.service.changeaddress.facadeclient.ChangeAddressVO
 
 class SignupController {
 
+  def UtilityService
   def LPWWebService
   def WsMethodService
 
@@ -42,7 +43,7 @@ class SignupController {
       return
     }
 
-    def domain = idp2domain(idp)
+    def domain = UtilityService.idp2domain(idp)
     if (!domain) {
       flash.message = 'Otillåten inloggning'
       redirect(action: 'index')
@@ -90,16 +91,5 @@ class SignupController {
 
       [uid: uid]
     }
-  }
-
-  private String idp2domain(String idp) {
-    if (idp =~ /studera.nu|antagning.se|umdac.se/) {
-      return 'student.su.se'
-    } else if (idp =~ /auth-prod-physto-idp/) {
-      return 'fysik.su.se'
-    }
-
-    // otherwise
-    return null
   }
 }
