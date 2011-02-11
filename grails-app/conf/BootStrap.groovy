@@ -3,6 +3,9 @@ class BootStrap {
   def configService
 
   def init = { servletContext ->
+    // helper method to strip uid from realm
+    String.metaClass.toUid = {-> delegate?.find(~/^(\w+)@.+$/) {string, match -> return match} }
+
     // get hostname and inject into system properties
     try {
       InetAddress addr = InetAddress.getLocalHost()

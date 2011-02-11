@@ -7,8 +7,6 @@ import se.su.it.sukat.client.CardInfoFacade
 import se.su.it.sukat.client.MailRoutingFacade
 import ladok.lpw.service.changeaddress.facadeclient.ChangeAddressVO
 
-//URLEncoder.encode("https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=http://marcus.it.su.se/signuptool/setup")]
-
 class SignupController {
 
   def LPWWebService
