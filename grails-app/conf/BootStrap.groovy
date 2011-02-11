@@ -11,7 +11,7 @@ class BootStrap {
       log.info "Setting hostname to ${hostname}"
     } catch (all) {
       System.setProperty("signuptool.hostname", 'unknown')
-      log.error "Unable to call 'hostname -f' using 'unknown' instead"
+      log.error "Unable to determine hostname using 'unknown' instead"
     }
 
     def lpwurl
