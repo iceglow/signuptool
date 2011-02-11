@@ -58,7 +58,7 @@ class LPWWebService {
       {
         final long startTime = System.nanoTime();
         final long endTime;
-        Properties prop = configService.getSectionAsProperties("WS")
+        Properties prop = configService.getSectionAsProperties("WS-CXF")
         String url = prop.getProperty(key)
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean()
         factory.setServiceClass(fetcher)
