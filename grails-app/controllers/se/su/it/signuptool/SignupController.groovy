@@ -42,11 +42,6 @@ class SignupController {
 
     // Should we have a physto whitelist?
 
-    // We now have valid shib data, proceed to WS calling...
-    def enrollmentFacade = null
-    def accountFacade = null
-    def userContactFacade = null
-
     // Reset account only if cookies for password and uid havent been set
     if (!request?.cookies['session'] || request?.cookies['nin'] != attrs.nin) {
 
