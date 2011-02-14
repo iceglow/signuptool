@@ -1,0 +1,26 @@
+/* ---------------------------------------------------------------------------------------------------- */
+/* ----- styles.css */
+/* This stylesheet imports stylesheets used by Internet Explorer 6.0 and below */
+/* ---------------------------------------------------------------------------------------------------- */
+/* GLOBAL */
+/* These stylesheet contains fixes for base design and typography and must not be changed */
+/* --------------- Base styles */
+@import url("base-IE.css");
+/* --------------- /Base styles */
+/* /GLOBAL */
+/* ---------------------------------------------------------------------------------------------------- */
+/* FALLBACK */
+/* If web sites that uses the old look (i.e sisu, fek, intwebb) updates the global stylesheets above 
+the deprecated-styles stylesheet must be added to prevent their design and layout from falling apart */
+/* --------------- Deprecated styles
+@import url("deprecated-styles-IE.css"); */
+/* --------------- /Deprecated styles */
+/* /FALLBACK */
+/* ---------------------------------------------------------------------------------------------------- */
+/* LOCAL */
+/* Import your local IE 6.0 styles here. */
+/* --------------- Local stylesheet */
+/* @import url("");  */
+/* --------------- /Local stylesheet */
+/* /LOCAL */
+/* ---------------------------------------------------------------------------------------------------- */

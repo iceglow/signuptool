@@ -1,0 +1,167 @@
+/* ---------------------------------------------------------------------------------------------------- */
+/* ----- deprecated-styles-IE.css */
+/* This stylesheet contains styles used by the old look (sisu, fek, intwebb), see IE.css for instrutions */
+/* Styles in this stylesheet are drawn from the older versions of base-IE.css */
+/* ---------------------------------------------------------------------------------------------------- */
+/* GENERAL LAYOUT: BODY, CONTAINERS, TOP LINKS, HEAD, FOOTER */
+/* --------------- Head */
+/* ----- Head left */
+.head-left {
+    padding-top: 12px;
+}
+/* ----- Head right */
+.head-ribbon { float: right; }
+.head-ribbon ul { 
+	white-space: nowrap;
+	display: inline;
+}
+.head-ribbon li {
+	width: 1px;
+	white-space: nowrap;
+	float: none;
+	display: inline;
+}
+/* --- Head row left (menu) */
+ul.head-row-menu li {
+	width: 1px;
+	white-space: nowrap;
+	background-image: url(../img/_ie/head-tab-left.gif);
+}
+/* --------------- /Head */
+/* /GENERAL LAYOUT: BODY, CONTAINERS, TOP LINKS, HEAD, FOOTER */
+/* ---------------------------------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------------------------------- */
+/* PAGE LAYOUT */
+.fullsize { padding-right: 0; }
+.fullsize .main-columns-left { width: 792px }
+/* --------------- Split into columns */
+.columns-split-two { height: 1px; }
+.columns-split-three { height: 1px; }
+.columns-split-four { height: 1px; }
+.columns-split-three-merge { height: 1px; }
+.columns-split-four-merge { height: 1px; }
+/* --------------- /Split into columns */
+/* /PAGE LAYOUT */
+/* ---------------------------------------------------------------------------------------------------- */
+/* ELEMENTS */
+/* --------------- Recent articles and comments */
+.articles-comments .content-block-link { height: 1px; }
+/* --------------- /Recent articles and comments */
+/* --------------- Content blocks */
+/* --- Block 1 (sky) */
+.block-1-image .content-block-inner { height: 190px; }
+/* --- Block 2 (water) */
+.block-2-image .content-block-inner { height: 190px; }
+/* --- Block 3 (olive) */
+.block-3-image .content-block-inner { height: 190px; }
+/* --- Block 4 (fire) */
+.block-4-image .content-block-inner { height: 190px; }
+/* --- Block 5 (dark blue) */
+.block-5-image .content-block-inner { height: 190px; }
+/* --- Clear block */
+.content-block.block-clear, .block-clear .content-block { height: 1px; position: relative; }
+/* --------------- /Content blocks */
+/* /ELEMENTS */
+/* ---------------------------------------------------------------------------------------------------- */
+/* COLUMN SPLITTERS */
+/* --------------- Correct columns splitter content-block appearance */ 
+/* ----- Split into columns */
+.columns-split-three-merge .column-first { overflow: hidden; }
+.columns-split-three-merge .column-last { overflow: hidden; }
+.columns-split-four-merge .column-first { overflow: hidden; }
+.columns-split-four-merge .column-last { overflow: hidden; }
+/* ----- /Split into columns */
+/* ----- Colors and backgrounds */
+.main-columns-left div.block-gradient { background-image: none; }
+.main-columns-left div.block-1-gradient { background-image: none; }
+.main-columns-left div.block-1-image { background-color: transparent; }
+.main-columns-left div.block-1-crown { background-image: none; }
+.main-columns-left div.block-1-fire { background-image: none; }
+.main-columns-left div.block-1-olive { background-image: none; }
+.main-columns-left div.block-2-gradient { background-image: none; }
+.main-columns-left div.block-2-image { background-color: transparent; }
+.main-columns-left div.block-2-crown { background-image: none; }
+.main-columns-left div.block-2-fire { background-image: none; }
+.main-columns-left div.block-2-olive { background-image: none; }
+.main-columns-left div.block-3-gradient { background-image: none; }
+.main-columns-left div.block-3-image { background-color: transparent; }
+.main-columns-left div.block-3-crown { background-image: none; }
+.main-columns-left div.block-3-fire { background-image: none; }
+.main-columns-left div.block-3-olive { background-image: none; }
+.main-columns-left div.block-4-gradient { background-image: none; }
+.main-columns-left div.block-4-image { background-color: transparent; }
+.main-columns-left div.block-4-crown { background-image: none; }
+.main-columns-left div.block-4-fire { background-image: none; }
+.main-columns-left div.block-4-olive { background-image: none; }
+.main-columns-left div.block-5-gradient { background-image: none; }
+.main-columns-left div.block-5-image { background-color: transparent; }
+.main-columns-left div.block-5-crown { background-image: none; }
+.main-columns-left div.block-5-fire { background-image: none; }
+.main-columns-left div.block-5-olive { background-image: none; }
+/* ----- Margins */
+.columns-split-two .color-block .content-block { margin: 0 9px 0 9px; }
+.columns-split-two .column-first .content-block { margin: 0 9px 0 0; }
+.columns-split-two .column-last .content-block { margin: 0 0 0 9px; }
+.column-first .columns-split-two .color-block .content-block { margin: 0 9px 0 9px; }
+.column-first .columns-split-two .column-first .content-block { margin: 0 9px 0 0; }
+.column-last .columns-split-two .column-last .content-block { margin: 0 0 0 9px; }
+.columns-split-three .color-block .content-block { margin: 0 9px 0 9px; }
+.columns-split-three .column-first .content-block { margin: 0 9px 0 0; }
+.columns-split-three .column-last .content-block { margin: 0 0 0 9px; }
+.columns-split-three-merge .color-block .content-block { margin: 0 9px 0 9px; }
+.columns-split-three-merge .column-first .content-block { margin: 0 9px 0 0; }
+.columns-split-three-merge .column-last .content-block { margin: 0 0 0 9px; }
+.columns-split-three-merge .column-first .columns-split-three .color-block .content-block { margin: 0 9px 0 9px; }
+.columns-split-three-merge .column-first .columns-split-three .column-first .content-block { margin: 0 9px 0 0; }
+.columns-split-three-merge .column-first .columns-split-three .column-last .content-block { margin: 0 9px 0 9px; }
+.columns-split-four .color-block .content-block { margin: 0 9px 0 9px; }
+.columns-split-four .column-first .content-block { margin: 0 9px 0 0; }
+.columns-split-four .column-last .content-block { margin: 0 0 0 9px; }
+.columns-split-four-merge .color-block .content-block { margin: 0 9px 0 9px; }
+.columns-split-four-merge .column-first .content-block { margin: 0 9px 0 0; }
+.columns-split-four-merge .column-last .content-block { margin: 0 0 0 9px; }
+.columns-split-four-merge .columns-split-two .color-block .content-block { margin: 0 9px 0 9px; }
+.columns-split-four-merge .columns-split-two .column-first .content-block { margin: 0 9px 0 0; }
+.columns-split-four-merge .columns-split-two .column-last .content-block { margin: 0 0 0 9px; }
+.columns-split-four-merge .column-first .columns-split-three .color-block .content-block { margin: 0 9px 0 9px; }
+.columns-split-four-merge .column-first .columns-split-three .column-first .content-block { margin: 0 9px 0 0; }
+.columns-split-four-merge .column-first .columns-split-three .column-last .content-block { margin: 0 9px 0 9px; }
+/* --------------- /Correct columns splitter content-block appearance */
+/* /COLUMN SPLITTERS */
+/* ---------------------------------------------------------------------------------------------------- */
+/* ICONS AND LISTS */
+/* --------------- Icons */
+/* --- Go 1 (orange) */
+a.icon-go-1 { background-image: url(../img/_ie/icon-go-1.gif); }
+.teaser-list .content-block-link a.icon-right { 
+	background-image: url(../img/_ie/icon-go-1.gif);
+	padding-right: 22px;
+}
+/* --- Go 2 (white) */
+a.icon-go-2 { background-image: url(../img/_ie/icon-go-2.gif); }
+.content-block-link a.icon-left {
+	background-image: url(../img/icon-back-2.gif); 
+}
+/* --- Go 3 (light blue) */
+a.icon-go-3 { background-image: url(../img/_ie/icon-go-3.gif); }
+/* --- Go 4 (green) */
+a.icon-go-4 { background-image: url(../img/_ie/icon-go-4.gif); }
+/* --- Go 5 (blue) */
+a.icon-go-5 { background-image: url(../img/_ie/icon-go-5.gif); }
+/* --- Go 6 (orange) */
+a.icon-go-6 { background-image: url(../img/_ie/icon-go-6.gif); }
+/* --- Back 1 (orange) */
+a.icon-back-1 { background-image: url(../img/_ie/icon-back-1.gif); }
+/* --- Back 2 (white) */
+a.icon-back-2 { background-image: url(../img/_ie/icon-back-2.gif); }
+/* --------------- /Icons */
+/* --------------- Box type links */
+.content-block-link a { background-image: url(../img/icon-go-2.gif); }
+.content-block-link a.icon-left { background-image: url(../img/icon-back-2.gif); }
+.col-25 .content-block-link a { background-image: url(../img/icon-go-2.gif); }
+.color-block .content-block-link a { background-image: url(../img/icon-go-2.gif); }
+.block-soft .content-block-link a { background-image: url(../img/icon-go-2.gif); }
+/* --------------- /Box type links */
+/* /ICONS AND LISTS */
+/* ---------------------------------------------------------------------------------------------------- */
