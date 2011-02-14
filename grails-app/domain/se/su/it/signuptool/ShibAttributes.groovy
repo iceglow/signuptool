@@ -58,7 +58,7 @@ class ShibAttributes {
     return null
   }
 
-  Map getErrorMessages() {
-    null // Return Map of Strings with error messages for each invalid attribute
+  def getErrorMessages() {
+    return null // Return Map of Strings with error messages for each invalid attribute
   }
 }

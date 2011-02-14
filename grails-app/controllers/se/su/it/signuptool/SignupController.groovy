@@ -69,15 +69,15 @@ class SignupController {
       }
 
       //set name for password_cookie to something other than password, and encode base64
-      def password_cookie = new Cookie('session', vo.password.encodeAsBase64())
-      def uid_cookie = new Cookie('uid', vo.uid)
-      def nin_cookie = new Cookie('nin', attrs.nin)
-
-      response.addCookie(password_cookie)
-      response.addCookie(uid_cookie)
-      response.addCookie(nin_cookie)
+//      def password_cookie = new Cookie('session', vo.password.encodeAsBase64())
+//      def uid_cookie = new Cookie('uid', vo.uid)
+//      def nin_cookie = new Cookie('nin', attrs.nin)
+//
+//      response.addCookie(password_cookie)
+//      response.addCookie(uid_cookie)
+//      response.addCookie(nin_cookie)
     }
 
-    [answer: 42] // Should we render another view or go to another action?
+    [uid: vo.uid]
   }
 }
