@@ -11,22 +11,22 @@ class Info implements java.io.Serializable {
 
   static constraints = {
     created()
-    siteKey(blank:false)
-    subject(blank:false)
-    locale(blank:false, inList:['sv_SE', 'en_US'])
-    body(nullable:true, blank:true, maxSize:10000)
+    siteKey(blank: false)
+    subject(blank: false)
+    locale(blank: false, inList: ['sv_SE', 'en_US'])
+    body(nullable: true, blank: true, maxSize: 10000)
     locationKey()
     active()
   }
 
-  static List findInfoByActiveLocationKeyLocaleAndType(key,locale,siteKey) {
+  static List findActiveInfoByLocaleSiteKeyAndLocationKey(locale, siteKey, locationKey) {
     return Info.createCriteria().list {
       and {
         eq('active', true)
-        eq('locationKey', key)
         eq('locale', locale)
         eq('siteKey', siteKey)
-        order('created', 'desc')
+        eq('locationKey', locationKey)
+        order('created', 'DESC')
       }
     }
   }
