@@ -1,4 +1,3 @@
-<%@ page import="se.su.it.lpwtool.Info" %>
 <html>
   <head>
 
