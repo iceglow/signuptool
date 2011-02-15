@@ -11,7 +11,7 @@ class Info implements java.io.Serializable {
 
   static constraints = {
     created()
-    siteKey(blank: false)
+    siteKey(blank: false, inList: ['new_account', 'reset_account'])
     subject(blank: false)
     locale(blank: false, inList: ['sv_SE', 'en_US'])
     body(nullable: true, blank: true, maxSize: 10000)

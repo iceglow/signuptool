@@ -67,7 +67,7 @@
             </td>
             <td>
               <span>
-                <g:radioGroup name="siteKey" labels="['info.sitekey.new_account.label','info.sitekey.reset_account.label']" values="[false,true]" value="${infoInstance?.siteKey}">
+                <g:radioGroup name="siteKey" labels="['info.sitekey.new_account.label','info.sitekey.reset_account.label']" values="['new_account','reset_account']" value="${infoInstance?.siteKey}">
                   ${it.radio} <g:message code="${it.label}"/>
                 </g:radioGroup>
               </span>
