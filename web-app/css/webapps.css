@@ -1,0 +1,337 @@
+@charset "UTF-8";
+
+.head {
+  background-color: #A3A86B;
+}
+
+.footer {
+	margin-bottom: 12px;
+	}
+
+body {
+	height: 101%;
+
+} /* --- Creates scrollbar on all pages  */
+
+/* --- Margin under the logotype, needed when "head row" div is removed  */
+#apps-headmargin {
+  clear: both;
+  min-height: 10px;
+ }
+/* --- Wider area and bigger font for "tools" div  */
+.tools {
+  float: right;
+  width: 40%;
+  padding-top: 6px;
+  padding-bottom: 1px;
+  font-size: 100%;
+}
+/* --- Modified top links  */
+.top-links {
+  background-color: #A3A86B;
+  padding-left: 18px;
+}
+.top-links-left a.last-item {
+  border: none;
+}
+.top-links-left a {
+  border-right:1px solid #FFFFFF;
+}
+/* --- Sorting arrows for table headers */
+table .apps-th-descending {
+  background-image:url(../img/icon-menu-open-2.gif);
+  background-repeat: no-repeat;
+  background-position: right;
+  padding-right:10px;
+}
+
+table .apps-th-ascending {
+  background-image:url(../img/webapps/icon-menu-close-2.gif);
+  background-repeat: no-repeat;
+  background-position: right;
+  padding-right:10px;
+}
+
+table th {
+  font-size:100%;
+  background-color: #dadcc4;
+}
+
+ul.pager li {
+  font-size:80%;
+  text-transform:uppercase;
+  color:#666666;
+  font-weight: normal;
+}
+
+ul.pager {
+  margin-left: 20px;
+  padding: 0px;
+}
+/*Colors for labels and dialogue text*/
+.label-grey-light{color:#666666;}
+
+ul li .apps-content-block-inner .label-grey-dark, .label-grey-dark{color: #333333;font-weight: bold;}
+
+.apps-content-block-inner.italic-simple{font-style: italic;}
+.apps-dialogue-green-simple{color: #4d5212; font-style: italic;}
+.apps-dialogue-green {
+  font-style: italic;
+  border: 1px solid #A3A86B;
+  background-image: url(../img/icon-dialogue-green.png);
+  background-repeat: no-repeat;
+  background-position: 5px;
+  padding: 5px 5px 5px 25px;
+}
+.apps-dialogue-red-simple, apps-content-block-inner.apps-dialogue-red-simple a:link,
+.apps-content-block-inner.apps-dialogue-red-simple a:visited{color: #D95E00; font-style: italic;}
+.apps-dialogue-red  {
+  font-style: italic;
+  border: 1px solid #D95E00;
+  padding: 5px 5px 5px 25px;
+  color: #D95E00;
+}
+
+
+
+.apps-header{font-weight:bold;}
+h3{padding-bottom:3px; color:#000000; font-size:100%;}
+
+/*----content containers----*/
+.section{padding:0 5px 0 20px;}
+.section.pdn-bottom-15{padding-bottom: 15px;}
+.section.pdn-bottom-5{padding-bottom: 5px;}
+/*This class differs from sukattool*/
+.apps-content-block-inner{margin: 0 0 10px 0;}
+.apps-content-block-top{margin: 0 0 0 0;}
+
+/*----Columns main area, various sizes----*/
+.apps-float-15 {float: left; width: 15%; margin-right:6px;}
+.apps-float-32{float: left; width: 33%; margin-right: 1px;}
+.apps-float-38{padding: 0 0 0 0px; width: 38%; float: left;}
+.apps-float-85{padding: 0 0 0 0px; width: 83%; float: left;}
+
+.apps-float-5{float: left; width: 5%;}
+.apps-float-10{float: left; width: 10%;}
+.apps-float-20{float: left; width: 20%;}
+.apps-float-25{float: left; width: 25%;}
+.apps-float-30{float: left; width: 30%;}
+.apps-float-35{float: left; width: 35%;}
+.apps-float-40{float: left; width: 40%;}
+.apps-float-50{float: left; width: 50%;}
+.apps-float-60{float: left; width: 60%;}
+.apps-float-80{float: left; width: 80%;}
+
+/*-----only used-----*/
+.apps-float-8{float: left; width: 8%;}
+.apps-float-12{float: left; width: 12%;}
+
+
+.float-right{float: right;}
+
+/*List items (entitlements), various sizes*/
+li.col1{float: left; width: 10%;}
+li.col2{float: left; width: 20%;}
+li.col3{float: left; margin-left:8px; width: 78%;}
+
+.apps-dotted-divider{
+  background-image:url(../img/divider-dotted-bright-uni.gif);
+  background-position:left bottom;
+  background-repeat:repeat-x;
+  padding:10px 0 10px 0;
+ }
+
+ .apps-dotted-divider-bright-olive{
+ background-image: url(../img/divider-dotted-bright-olive.gif);
+ background-position:left bottom;
+ background-repeat:repeat-x;
+ padding:10px 0 0 0;
+ }
+ .apps-dotted-divider-bright-fire{
+ background-image: url(../img/divider-dotted-bright-fire.gif);
+ background-position:left bottom;
+ background-repeat:repeat-x;
+ padding:10px 0 0 0;
+ }
+
+ /*various colors for inline information text*/
+ .apps-rights-info{color: #aaa; font-weight:bold;}
+ .apps-text-warn{color:#D95E00;font-style:italic;}
+ .apps-text-greyedout{color:#999;}
+
+ /*Länkpilar*/
+ .apps-add-bullet{
+ background-image: url(../img/icon-bullet.gif);
+ background-repeat: no-repeat;
+ background-position: left 3px;
+ padding: 0 0px 0 14px;
+ }
+.apps-add-bullet-back{
+ background-image: url(../img/icon-bullet-reverse.gif);
+ background-repeat: no-repeat;
+ background-position: left 4px;
+ padding: 0 0px 0 14px;
+ }
+   /* MARTINS NYA */
+label{display: inline;}
+.apps-hint-text {font-size: 90%;color: #aaa;}
+/* MARTINS NYA */
+
+/*---New design to be implemented*/
+.apps-float-85 a.col1{display:block; width:8%; float:left; margin-right:4px;}
+.apps-float-85 a.col2{display:block; width:18%; float:left; margin-right:5px;}
+.apps-float-85 p.col3{float:left; width:78%;}
+.apps-float-85 span.col2{display:block; float:left; width:20%; margin-right:4px;}
+/*---New design to be implemented*/
+
+.apps-float-54{padding: 0 0 0 0px; width: 54%; float: left;}
+
+/*more new stuff*/
+.main-column{margin-top: 20px;}
+.apps-mid-column{width: 604px; float: left;}
+
+.left-column{margin-top: 20px;}
+.left-column ul {
+	list-style-type:none;
+	margin: 0px;
+	padding: 0px;
+	/* border-bottom: 1px solid #D1D7DC;*/
+}
+.left-column li {
+	line-height:15px;
+	margin-bottom: 9px;
+	background-image: url(../img/app-icon-menu.gif);
+	padding-left: 10px;
+	background-repeat: no-repeat;
+	background-position: 0% 5px;
+}
+.apps-right-column {
+	float: left;
+	width: 185px;
+	margin-right: 3px;
+	min-height: 300px;
+	
+}
+.apps-right-column ul li p{line-height: 140%}
+
+a:link {text-decoration:none;}
+a:visited {color:#005B7F;	text-decoration:none;}
+a:hover {color: #000000; text-decoration: underline;}
+
+.apps-color-block{
+	background-color: #dadcc4;
+	padding-top: 4px;
+	padding-left: 5px;
+	padding-bottom: 4px;
+	margin-bottom: 5px;
+	}
+
+
+/* gammal: h3{color: #002f5f;}*/
+h3{color: #333333;}
+
+.apps-content-block-inner ul li.date-right{margin-bottom: 20px;}
+ul li.mgn-min-15 .apps-content-block-inner, ul li.mgn-bottom-20 .apps-content-block-inner, .pdn-left-5{padding-left: 5px;}
+.pdn-left-10{padding-left: 10px;}
+
+/*.mgn-left-50{margin-left: 40px;}*/
+.mgn-left-30{margin-left: 30px;}
+.mgn-35{margin-bottom: 35px;}
+.mgn-bottom-20{margin-bottom:20px;}
+.mgn-min-15{margin-bottom: -15px;}
+.mgn-min-5{margin-bottom: -5px;}
+
+.mgn-right-5{margin-right: 5px;}
+.mgn-right-10{margin-right: 10px;}
+.mgn-min-10{margin-top: -10px;} /*tillfällig*/
+.mgn-min-5{margin-top: -5px;} /*tillfällig*/
+.mgn-bottom-10{margin-bottom: 10px;}
+
+.apps-colorbox1 {
+  padding: 10px;
+  border: 1px solid #dadcc4;
+}
+
+.apps-colorbox2 {
+  padding: 10px;
+  border: 1px solid #d7e0eb;
+}
+
+.apps-colorbox0 {
+  padding: 10px;
+  border: 1px solid #99acbf;
+}
+
+.text-float-right{float: right; margin-right: 5px;}
+
+.apps-columnwidth-350 {width: 350px;}
+.apps-columnwidth-450 {width: 450px;}
+
+td.pdn{padding-left: 20px;}
+td.apps-no-border {border-style: none;}
+
+a.icon-help{
+	background-image: url(../img/app-icon-help.gif);
+	background-repeat: no-repeat;
+	background-position:  0% 2px;
+	padding-left:16px;}
+
+img.icon{border: none;}
+
+.apps-blue{
+  background-color: #9bb2ce;
+}
+
+.apps-color-block.apps-blue, th.apps-blue{
+  background-color: #d7e0eb;
+}
+
+.apps-darkblue{
+  background-color: #002f5f;
+}
+
+.font-small{font-size: 85%;}
+.icon-menu-open{
+background-image: url(../img/icon-menu-open-2.gif);
+background-repeat: no-repeat;
+background-position: 0% 6px;
+padding-left: 8px;
+}
+.icon-menu-closed{
+background-image: url(../img/icon-menu-parent-2.gif);
+background-repeat: no-repeat;
+background-position: 0% 6px;
+padding-left: 8px;
+}
+select.error{
+background-color: #FEFDD0;
+border: 1px solid #C74B38;
+}
+
+/* Examdegree selectboxes jumparound! */
+
+select#degree {
+  width: 100%;
+}
+
+select#subject {
+  width: 100%;
+}
+
+select#specialization {
+  width: 100%;
+}
+
+/*-----special print stuff*/
+.print{font-size: 76%; font-family: Verdana,Arial,Helvetica,sans-serif;}
+.print table td{border-bottom: none; padding: 0 0 0 0px;}
+.print table th{padding: 0 0 0 0px;}
+.print table tr:hover, .print table th { background-color: #ffffff; }
+.print h1, .print h2{color: #000000;}
+.print table td.mgn-top{padding-top: 20px;}
+.print table td.mgn-bottom{padding-bottom: 10px;}
+.print table th {font-weight: bold;}
+.print table.wdt1{width: 400px;}
+.print table.wdt2 {width: 600px;}
+
+/*-----special print stuff*/
