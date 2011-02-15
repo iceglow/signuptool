@@ -83,7 +83,7 @@ class BootStrap {
     configService.registerValueToSection("LPW", "realm", "SU.SE")
     configService.registerValueToSection("LPW", "protocol", "host")
     // end of lpw settings
-
+    configService.registerValueToSection("spocp", "application", "su-signuptool")
     // Get the properties section and register as system properties
     Properties p = configService.getSectionAsProperties("properties")
     Properties sysprop = System.getProperties()
