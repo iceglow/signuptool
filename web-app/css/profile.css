@@ -1,0 +1,163 @@
+/* ---------------------------------------------------------------------------------------------------- */
+/* ----- profile.css */
+/* This stylesheet is used for co-profiled sites */
+/* ---------------------------------------------------------------------------------------------------- */
+/* GENERAL LAYOUT: BODY, CONTAINERS, TOP LINKS, HEAD, FOOTER */
+/* --------------- Containers */
+#container {
+	/* background-image: url(../img/container-repeater.gif); */
+}
+#content {}
+/* --------------- /Containers */
+/* --------------- Top links */
+.top-links {}
+.top-links-right li {}
+/* --------------- /Top links */
+/* --------------- Head */
+.head {}
+/* ----- Head left */
+.wrapper .head-left {}
+.wrapper .head-left img.logotype {}
+/* ----- Head right */
+.wrapper .head-right {}
+.wrapper .head-right img.department {}
+/* ----- Head row */
+.head-row {
+	/* background-image: url(../img/head-row-repeater.gif); */
+}
+/* --- Head row left (menu) */
+.head-row-left {
+	/* background-image: url(../img/head-row-left.gif); */
+}
+/* --- Head row right (search) */
+.head-row-right {
+	/* background-image: url(../img/head-row-right.gif); */
+}
+/* --------------- /Head */
+/* --------------- Footer */
+a.footer-contact {}
+.footer a:link {} 
+.footer a:active {} 
+.footer a:visited {} 
+.footer a:hover {}
+.footer.profile { /* height: px; */ }
+.footer-profile {}
+.profile-logo {}
+.profile-info {}
+.profile-info a:link, .profile-info a:active, .profile-info a:visited {}
+.profile-info a:hover {}
+/* --------------- Footer */
+/* /GENERAL LAYOUT: BODY, CONTAINERS, TOP LINKS, HEAD, FOOTER */
+/* ---------------------------------------------------------------------------------------------------- */
+/* PAGE LAYOUT */
+/* --------------- Start columns */
+/* ----- Column backgrounds */
+.background-25-25-25-25 {
+	/* background-image: url(../img/background-25-25-25-25.gif); */
+}
+.background-25-50-25 {
+	/* background-image: url(../img/background-25-50-25.gif); */
+}
+.background-50-25-25 {
+	/* background-image: url(../img/background-50-25-25.gif); */
+}
+/* ----- Static start page columns */
+.top-static {
+	/* background-image: url(../img/top-static.gif); */
+}
+/* --------------- /Start columns */
+/* --------------- Fixed columns */
+/* --- Left */
+.left-column {
+	/* background-image: url(../img/content-block-gradient.gif); */
+}
+/* --- Main area */
+/* - Top columns */
+.top-columns {
+	/* background-image: url(../img/top-columns.gif); */
+}
+/* - Main columns */
+.main-columns {
+	/* background-image: url(../img/main-left-gradient.gif); */
+}
+.main-columns-left {
+	/* background-image: url(../img/main-right-gradient.gif); */
+}
+.main-columns-right {
+	/* background-image: url(../img/right-col-gradient.gif); */
+}
+/* --------------- /Fixed columns */
+/* ----- /PAGE LAYOUT */
+/* ---------------------------------------------------------------------------------------------------- */
+/* NAVIGATION */
+/* --------------- Left column menu */
+/* --- Design */
+.menu { /* background-color: #002e5f; */ }
+.menu div {	/* border-bottom: solid 1px #33597f; */ }
+.menu > ul { /* background-color: #002e5f; */ }
+.menu ul li {
+	/* 
+	background-image: url(../img/menu-list-gradient.gif);
+	background-position: top left;
+	background-repeat: no-repeat; 
+	*/
+}
+.menu li.open ul div {
+	/*
+	border-bottom: solid 1px #dcdcdc;
+	border-left: solid 1px #ececec;
+	border-right: solid 1px #ececec;
+	*/
+}
+.menu li.open ul {
+	/*
+	background-image: url(../img/menu-gradient.gif);
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-color: #fafafa;
+	*/
+}
+/* --- Bullets */
+.menu ul ul div {
+	/* background-image: url(../img/icon-menu-default.gif); */
+}
+.menu div.opener {
+	/* background-image: url(../img/icon-menu-open-1.gif); */
+}
+.menu ul ul div.opener {
+	/* background-image: url(../img/icon-menu-open-2.gif); */
+}
+.menu div.parent {
+	/* background-image: url(../img/icon-menu-parent-1.gif); */
+}
+.menu ul ul div.parent {
+	/* background-image: url(../img/icon-menu-parent-2.gif); */
+}
+.menu div.selected {
+	/* 
+	background-image: url(../img/icon-menu-selected.gif);
+	background-repeat: no-repeat;
+	color: #ffffff;
+	*/
+
+}
+.menu ul ul div.selected { /*color: #f36b22;*/ }
+/* --- Links */
+.menu a:link, .menu a:active, .menu a:visited {} 
+.menu a:hover {}
+.menu ul ul a:link, .menu ul ul a:active, .menu ul ul a:visited {} 
+.menu ul ul a:hover {}
+.menu ul ul div.selected a:link, .menu ul ul div.selected a:active, .menu ul ul div.selected a:visited {} 
+.menu ul ul div.selected a:hover {} 
+/* --------------- /Left column menu */
+/* /NAVIGATION */
+/* ---------------------------------------------------------------------------------------------------- */
+/* ELEMENTS */
+/* --------------- Dividers */
+.dotted-divider {
+	/* background-image: url(../img/divider-dotted-horisontal.gif); */
+}
+.main-columns-right .dotted-divider {}
+/* --------------- /Dividers */
+/* /ELEMENTS */
+/* ---------------------------------------------------------------------------------------------------- */

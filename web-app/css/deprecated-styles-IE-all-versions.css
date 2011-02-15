@@ -1,0 +1,77 @@
+/* ---------------------------------------------------------------------------------------------------- */
+/* ----- deprecated-styles-IE-all-versions.css */
+/* This stylesheet contains styles used by the old look (sisu, fek, intwebb), see IE-all-versions.css for instrutions */
+/* Styles in this stylesheet are drawn from the older versions of base-IE-all-versions.css */
+/* ---------------------------------------------------------------------------------------------------- */
+/* GENERAL LAYOUT: BODY, CONTAINERS, TOP LINKS, HEAD, FOOTER */
+/* --------------- Containers */
+#content {
+	min-height: 1px;
+	padding-bottom: 1px;
+}
+/* --------------- /Containers */
+/* --------------- Head */
+/* --- Head row left (menu) */
+ul.head-row-menu { line-height: 32px; }
+/* --- Head row right (search) */
+.head-search input { width: 122px; }
+/* --------------- /Head */
+/* /GENERAL LAYOUT: BODY, CONTAINERS, TOP LINKS, HEAD, FOOTER */
+/* ---------------------------------------------------------------------------------------------------- */
+/* ICONS AND LISTS */
+/* --------------- Lists */
+/* --- Arrow 1 (orange) */
+ul.list-arrow-1 {
+	list-style-type: none;
+	list-style-image: url(../img/icon-arrow-1.gif);
+	list-style-position: outside;
+}
+/* --- Arrow 2 (white) */
+ul.list-arrow-2 {
+	list-style-type: none;
+	list-style-image: url(../img/icon-arrow-2.gif);
+	list-style-position: outside;
+}
+/* --------------- /Lists */
+/* ---------------------------------------------------------------------------------------------------- */
+/* COLUMNS */
+/* --------------- Split into columns */
+.columns-split-two .column, .columns-split-two.sub-columns .column  { width: 50%; }
+.columns-split-three .column, .columns-split-three.sub-columns .column { width: 33.33%; }
+.columns-split-three-merge .column-first { width: 66.6%; }
+.columns-split-three-merge .column-last { width: 33.3%; }
+.columns-split-four .column, .columns-split-four.sub-columns .column { width: 25%; }
+.columns-split-four-merge .column-first { width: 75%; }
+.columns-split-four-merge .column-last { width: 25%; }
+.columns-split-three-merge .columns-split-two .column { width: 49.9%; }
+.columns-split-four-merge .columns-split-two .column { width: 49.9%; }
+.columns-split-three-merge .columns-split-three .column { width: 33.33%; }
+.columns-split-four-merge .columns-split-three .column { width: 33.33%; }
+/* --------------- /Split into columns */
+/* --------------- Column dividers */
+.dotted-split-three-merge {
+	background-image: url(../img/_ie/ie-divider-dotted-vertical.gif);
+	background-position: 67%;
+}
+.line-split-three-merge {
+	background-image: url(../img/_ie/ie-divider-line-vertical.gif);
+	background-position: 66.6%;
+}
+.dotted-split-four-merge {
+	background-image: url(../img/_ie/ie-divider-dotted-vertical-2.gif);
+	background-position: 75% top;
+}
+.line-split-four-merge {
+	background-image: url(../img/_ie/ie-divider-line-vertical-2.gif);
+	background-position: 75% top;
+}
+/* --------------- /Column dividers */
+/* --------------- Column margins */
+.columns-split-four-merge .column-first .content-block { margin-right: 7px; }
+.columns-split-four-merge .columns-split-two .column-last .content-block { margin-right: 0; }
+.columns-split-three-merge .columns-split-two .column .content-block { margin-right: 9px; }
+.columns-split-three-merge .columns-split-two .column-last .content-block { margin-right: 9px; }
+.columns-split-three-merge .column-last { margin-right: 0; }
+/* --------------- /Column margins */
+/* /COLUMNS */
+/* ---------------------------------------------------------------------------------------------------- */

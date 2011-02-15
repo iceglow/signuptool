@@ -1,0 +1,203 @@
+/* ---------------------------------------------------------------------------------------------------- */
+/* ----- print.css */
+/* This stylesheet contains print styles */
+/* ---------------------------------------------------------------------------------------------------- */
+/* PRINT STYLES */
+/* --------------- General layout: body, containers, top links, head, footer */
+html, body, form {
+	min-height: auto;
+	height: auto;
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+}
+/* --- Containers */
+#container {
+	width: 660px;
+	background-image: none;
+	margin-left: 0;
+	margin-right: auto;
+	position: inherit;
+	min-height: auto;
+	height: auto;
+}
+html>body #container {
+    min-height: auto;
+	height: auto;
+}
+#content {
+	width: 660px;
+	background-image: none;
+	background-color: #ffffff;
+	min-height: auto;
+	height: auto;
+}
+div { position: inherit; }
+/* --- Top links */
+.top-links { display: none; }
+/* --- Head */
+#head { display: none; }
+/* --- Footer */
+.footer {
+	width: 660px;
+	min-height: auto;
+	height: auto;
+	border-top: solid 1px #000000;
+	background-color: #ffffff;
+	color: #000000;
+	position: inherit;
+}
+.footer img { display: none; }
+.footer-left { padding-left: 0; }
+.footer-right { display: none; }
+.footer-bottom {}
+.footer a:link, .footer a:active, .footer a:visited, .footer a:hover { 
+	text-decoration: none;
+	color: #000000;
+}
+/* --------------- /General layout: body, containers, top links, head, footer */
+/* --------------- Page layout */
+/* --- Left column */
+/* --- Column containers */
+.columns { width: 660px; }
+.column { overflow: hidden; }
+/* --- Fixed columns */
+/* - Left */
+.left-column { display: none; }
+/* - Main */
+.main-column {
+	float: none;
+	width: 660px;
+	
+}
+/* - Columns */
+.main-columns {
+	min-height: auto;
+	height: auto;
+	padding-right: 0;
+	background-image: none;
+	width: 660px;
+}
+.main-columns-left {
+	min-height: auto;
+	height: auto;
+	width: 660px;
+	padding: 0;
+	background-image: none;
+}
+.fullsize .main-columns-left { width: 660px; }
+.main-columns-right {
+	min-height: auto;
+	height: auto;
+	margin-right: 0;
+	width: 164px;
+	padding: 0;
+	background-image: none;
+	display: none;
+}
+/* --- Columns */
+.wrapper .top-columns { background-image: none; }
+.wrapper .top-columns-right { display: none; }
+/* - Column backgrounds */
+.top-static , .background-25-25-25-25, .background-25-50-25, .background-50-25-25 {
+	background-image: none;
+}
+/* --- Start pages */
+.start-columns-row .col-25 {
+	width: 25%
+	overflow: hidden;
+}
+.start-columns-row .col-50 {
+	width: 50%;
+	overflow: hidden;
+}
+
+/* --------------- /Page layout */
+/* --------------- Navigation */
+/* --- Path */
+ol.path, .path a:link, .path a:active, .path a:visited, .path a:hover { color: #000000; }
+/* --------------- /Navigation */
+/* --------------- Elements */
+/* --- Content blocks */
+.main-columns-left .content-block.promotion {
+	background-color: #ffffff;
+}
+/* --------------- /Elements */
+/* --------------- Lists */
+ul.list-arrow-1 a:link, ul.list-arrow-1 a:active, ul.list-arrow-1 a:visited, ul.list-arrow-1 a:hover { 
+	text-decoration: none;
+	color: #000000; 
+}
+ul.list-arrow-2 a:link, ul.list-arrow-2 a:active, ul.list-arrow-2 a:visited, ul.list-arrow-2 a:hover { 
+	text-decoration: none;
+	color: #000000; 
+}
+/* --------------- /Lists */
+/* --------------- Links */
+/* --- Default */
+a:link {
+	color: #000000;
+	text-decoration: none;
+}
+a:active {
+	color: #000000;
+	text-decoration: none;
+}
+a:visited {
+	color: #000000;
+	text-decoration: none;
+}
+a:hover {
+	color: #000000;
+	text-decoration: none;
+}
+/* --------------- Links */
+/* --------------- Headings */
+h1, h2, h3, h4 { color: #000000; }
+/* --------------- /Headings */
+/* --------------- Paragraphs, lists, quotes, addresses */
+/* ----- Paragraphs */
+.main-article p {
+	min-width: auto;
+	max-width: 660px;
+}
+/* --------------- /Paragraphs, lists, quotes, addresses */
+/* --------------- Icons and functions */
+a.icon-print, a.icon-feed { display: none; }
+.article-tools, .content-block-link { display: none; }
+/* --------------- /Icons and functions */
+
+/* ---------------/LPWTOOL*/
+
+/* ------ Previously hidden classes
+
+form, .form-block.apps-colorbox1, .form-block.apps-colorbox2 {display: none;} 
+.apps-add-bullet-back, .row-path-tools, input, { display: none;}
+a img.icon, a.font-small, .dont-print{display: none;} 
+
+-----*/
+.apps-color-block.apps-blue, th.apps-blue {
+	background-color: #FFF;
+}
+
+#footer, title { display: none;}
+
+table th {font-weight: bold;}
+
+.label-grey-dark{font-weight: normal;}
+
+.apps-float-85 p{font-family: Verdana,Arial,Helvetica,sans-serif;}
+.apps-add-bullet-back, .row-path-tools, input, #footer, title { display: none;}
+p.label-grey-light{font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 9pt;}
+ul li .apps-content-block-inner .label-grey-dark, .label-grey-dark {font-weight: normal;}
+ul li .apps-content-block-inner.apps-color-block{font-weight: bold;}
+ul li .apps-color-block, ul li .apps-content-block-inner, .apps-content-block-inner .pdn-left-5{padding: 0 0 0 0px;}
+ul li, .apps-content-block-inner{font-family: Verdana,Arial,Helvetica,sans-serif;}
+ul li .apps-content-block-inner.italic-simple{font-style: normal;}
+.print table td{font-size: 9pt;}
+/* ---------------/LPWTOOL*/
+
+
+
+
+
+
+/* ---------------------------------------------------------------------------------------------------- */
