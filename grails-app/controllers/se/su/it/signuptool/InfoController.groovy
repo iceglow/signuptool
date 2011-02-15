@@ -5,7 +5,6 @@ class InfoController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     static final availableKeys = ['first_page']
-    static final availableSiteKeys = ['new_account', 'reset_account']
 
     def defaultAction = 'list'
 

@@ -1,6 +1,7 @@
 <%@ page import="se.su.it.signuptool.Info" %>
 <html>
   <head>
+  <g:set var="entityName" value="${message(code: 'info.label')}" />
   </head>
 
   <body>

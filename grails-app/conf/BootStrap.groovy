@@ -34,7 +34,7 @@ class BootStrap {
         sukatsvcurl = "https://sukat-svc-test.it.su.se"
     }
     log.info "LPW URL: ${lpwurl}"
-
+    configService.registerSection("WS")
     configService.registerValueToSection("WS", "AccountFacade", "${sukatsvcurl}/sukatsvc-ws/services/AccountFacade")
     configService.registerValueToSection("WS", "EnrollmentFacade", "${sukatsvcurl}/sukatsvc-ws/services/EnrollmentFacade")
     configService.registerValueToSection("WS", "UserContactFacade", "${sukatsvcurl}/sukatsvc-ws/services/UserContactFacade")
@@ -83,6 +83,7 @@ class BootStrap {
     configService.registerValueToSection("LPW", "realm", "SU.SE")
     configService.registerValueToSection("LPW", "protocol", "host")
     // end of lpw settings
+    configService.registerSection("spocp")
     configService.registerValueToSection("spocp", "application", "su-signuptool")
     // Get the properties section and register as system properties
     Properties p = configService.getSectionAsProperties("properties")
