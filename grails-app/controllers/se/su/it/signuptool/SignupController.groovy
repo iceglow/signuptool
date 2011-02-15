@@ -46,8 +46,6 @@ class SignupController {
       return
     }
 
-    // TODO: Should we have a physto whitelist?
-
     // Reset account only if cookies for password and uid havent been set
     if (!request?.cookies['session'] || request?.cookies['nin'] != attrs.nin) {
 
