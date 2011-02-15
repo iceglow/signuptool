@@ -1,16 +1,11 @@
-<%@ page import="se.su.it.lpwtool.Info" %>
+<%@ page import="se.su.it.signuptool.Info" %>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="layout" content="${session.ladok?'ladok':'minastudier'}/main" />
-    <g:set var="entityName" value="${message(code: 'info.label')}" />
-    <title><g:message code="default.create.label" args="[entityName]" /></title>
   </head>
 
   <body>
     <div class="section">
       <div class="apps-float-85">
-        <g:render template="/generic/messages" model="${[models:[infoInstance]]}" />
         <h1><g:message code="default.create.label" args="[entityName]" /></h1>
       </div>
     </div>
@@ -49,7 +44,7 @@
 
               <tr class="prop">
                 <td valign="top" class="name">
-                  <label for="sidebar"><g:message code="info.key.label"/></label>
+                  <g:message code="info.key.label"/>
                 </td>
                 <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'locationKey', 'errors')}">
                   <g:select name="locationKey" from="${availableKeys}" valueMessagePrefix="info.locationKey" />
@@ -71,7 +66,7 @@
                 </td>
                 <td>
                   <span>
-                    <g:radioGroup name="ladok" labels="['application.minastudier.label','application.ladok.label']" values="[false,true]" value="${infoInstance?.ladok}">
+                    <g:radioGroup name="ladok" labels="['application.minastudier.label','application.ladok.label']" values="[false,true]" value="${infoInstance?.siteKey}">
                        ${it.radio} <g:message code="${it.label}"/>
                     </g:radioGroup>
                   </span>

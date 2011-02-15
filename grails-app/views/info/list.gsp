@@ -1,16 +1,13 @@
 <%@ page import="se.su.it.lpwtool.Info" %>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="layout" content="${session.ladok?'ladok':'minastudier'}/main" />
-    <g:set var="entityName" value="${message(code: 'info.label')}" />
-    <title><g:message code="default.list.label" args="[entityName]" /></title>
+
   </head>
 
   <body>
     <div class="section">
       <div class="apps-float-85">
-        <g:render template="/generic/messages" model="${[models:[infoInstance]]}" />
+
         <h1><g:message code="default.list.label" args="[entityName]" /></h1>
       </div>
     </div>
