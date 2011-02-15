@@ -4,7 +4,7 @@ class Info implements java.io.Serializable {
   Date created = new Date()
   String subject
   String body
-  String locationKey
+  String locationKey = 'first_page'
   String locale
   String siteKey
   boolean active
@@ -19,13 +19,13 @@ class Info implements java.io.Serializable {
     active()
   }
 
-  static List findActiveInfoByLocaleSiteKeyAndLocationKey(locale, siteKey, locationKey) {
+  static List findActiveInfoByLocaleAndSiteKey(locale, siteKey) {
     return Info.createCriteria().list {
       and {
         eq('active', true)
         eq('locale', locale)
         eq('siteKey', siteKey)
-        eq('locationKey', locationKey)
+        eq('locationKey', 'first_page')
         order('created', 'DESC')
       }
     }

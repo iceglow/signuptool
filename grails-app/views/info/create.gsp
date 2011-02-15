@@ -45,15 +45,6 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <g:message code="info.locationkey.label"/>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'locationKey', 'errors')}">
-              <g:select name="locationKey" from="${availableKeys}" valueMessagePrefix="info.locationkey"/>
-            </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
               <label for="locale"><g:message code="info.locale.label"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'locale', 'errors')}">
@@ -65,12 +56,8 @@
             <td valign="top" class="name">
               <g:message code="info.sitekey.label"/>
             </td>
-            <td>
-              <span>
-                <g:radioGroup name="siteKey" labels="['info.sitekey.new_account','info.sitekey.reset_account']" values="['new_account','reset_account']" value="${infoInstance?.siteKey}">
-                  ${it.radio} <g:message code="${it.label}"/>
-                </g:radioGroup>
-              </span>
+            <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'siteKey', 'errors')}">
+              <g:select name="siteKey" from="${availableSiteKeys}" valueMessagePrefix="info.sitekey"/>
             </td>
           </tr>
 

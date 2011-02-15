@@ -65,14 +65,12 @@
               </tr>
 
               <tr class="prop">
-                <td><g:message code="generic.site.label"/></td>
-                  <span>
-                    <td>
-                      <g:radioGroup name="ladok" labels="['application.minastudier.label','application.ladok.label']" values="[false,true]" value="${infoInstance?.ladok}">
-                         ${it.radio} <g:message code="${it.label}"/>
-                      </g:radioGroup>
-                    </td>
-                  </span>
+                <td valign="top" class="name">
+                  <g:message code="info.key.label" />
+                </td>
+                <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'siteKey', 'errors')}">
+                  <g:select name="siteKey" from="${availableSiteKeys}" valueMessagePrefix="info.sitekey" value="${infoInstance?.siteKey }" />
+                </td>
               </tr>
 
               <tr class="prop">
