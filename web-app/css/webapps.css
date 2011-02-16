@@ -217,6 +217,10 @@ label{display: inline;}
 a:link {text-decoration:none;}
 a:visited {color:#005B7F;	text-decoration:none;}
 a:hover {color: #000000; text-decoration: underline;}
+a.last-item {
+  border: none;
+}
+
 
 .apps-color-block{
 	background-color: #dadcc4;
