@@ -29,7 +29,7 @@
     <a class="accessibility-link" accesskey="s" href="#content-top" title="Skip navigation"></a>
 
     <!-- head -->
-    <g:render template="/layouts/status_header"/>
+    <g:render template="/layouts/header"/>
     <!-- /head -->
 
     <!-- columns -->
@@ -43,12 +43,9 @@
           <div class="apps-content-block-inner">
 
               <ul>
-                <li><a href="#">Studieresultat, student</a></li>
-                <li><a href="#">Registreringar, student</a></li>
-                <li><a href="#">Antagningar och webbregistrering</a></li>
-                <li><a href="#">Tentamensanmälan</a></li>
-                <li><a href="#">Studieresultat forskare</a></li>
-                <li><a href="#">Registreringar forskare</a></li>
+                <li><g:link controller="info" action="list">Information</g:link></li>
+                <li><g:link controller="section">Section</g:link></li>
+                <li><g:link controller="value">Value</g:link></li>
             </ul>
 
          </div>
