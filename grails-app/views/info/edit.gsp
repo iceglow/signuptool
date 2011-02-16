@@ -78,8 +78,8 @@
       </div>
 
       <div class="buttons">
-        <span class="button"><g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label')}"/></span>
-        <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message')}');"/></span>
+        <span class="button"><g:actionSubmit class="save" action="update" value="${message(code: 'info.update.label')}"/></span>
+        <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'info.delete.label')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message')}');"/></span>
       </div>
     </g:form>
   </div>
