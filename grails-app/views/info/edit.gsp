@@ -7,7 +7,7 @@
 <div class="section">
   <div class="apps-float-85">
 
-    <h1><g:message code="default.edit.label" args="[entityName]"/></h1>
+    <h1><g:message code="info.edit.label" args="[entityName]"/></h1>
   </div>
 </div>
 
@@ -15,8 +15,8 @@
 
 <div class="section">
   <div class="nav">
-    <span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]"/></g:link></span>
-    <span class="menuButton"><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]"/></g:link></span>
+    <span class="menuButton"><g:link class="list" action="list"><g:message code="info.list.label" args="[entityName]"/></g:link></span>
+    <span class="menuButton"><g:link class="create" action="create"><g:message code="info.new.label" args="[entityName]"/></g:link></span>
   </div>
 
   <div class="body">
@@ -30,7 +30,7 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="subject"><g:message code="generic.subject.label"/></label>
+              <label for="subject"><g:message code="info.subject.label"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'subject', 'errors')}">
               <g:textField name="subject" value="${infoInstance?.subject}"/>
@@ -39,7 +39,7 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="body"><g:message code="generic.body.label"/></label>
+              <label for="body"><g:message code="info.body.label"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'body', 'errors')}">
               <g:textArea name="body" cols="80" rows="25" value="${infoInstance?.body}"/>
@@ -48,25 +48,16 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <g:message code="info.key.label"/>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'locationKey', 'errors')}">
-              <g:select name="locationKey" from="${availableKeys}" valueMessagePrefix="info.key" value="${infoInstance?.locationKey }"/>
-            </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="locale"><g:message code="generic.locale.label"/></label>
+              <label for="locale"><g:message code="info.locale.label"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'locale', 'errors')}">
-              <g:select name="locale" from="${infoInstance.constraints.locale.inList}" value="${infoInstance?.locale}" valueMessagePrefix="generic.locale"/>
+              <g:select name="locale" from="${infoInstance.constraints.locale.inList}" value="${infoInstance?.locale}" valueMessagePrefix="info.locale" />
             </td>
           </tr>
 
           <tr class="prop">
             <td valign="top" class="name">
-              <g:message code="info.key.label"/>
+              <g:message code="info.sitekey.label"/>
             </td>
             <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'siteKey', 'errors')}">
               <g:select name="siteKey" from="${availableSiteKeys}" valueMessagePrefix="info.sitekey" value="${infoInstance?.siteKey }"/>
@@ -75,7 +66,7 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="active"><g:message code="generic.active.label"/></label>
+              <label for="active"><g:message code="info.active.label"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'active', 'errors')}">
               <g:checkBox name="active" value="${infoInstance?.active}"/>
