@@ -4,7 +4,7 @@
   <head>
 
     <title>
-
+      <g:message code="signup.title.label"/>
     </title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -32,7 +32,7 @@
         <a class="accessibility-link" accesskey="s" href="#content-top" title="Skip navigation"></a>
 
         <!-- head -->
-        <g:render template="/layouts/header"/>
+        <g:render template="/layouts/status_header"/>
         <!-- /head -->
 
         <!-- columns -->
