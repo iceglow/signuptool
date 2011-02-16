@@ -1,5 +1,7 @@
 <html>
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="layout" content="main"/>
   <g:set var="entityName" value="${message(code: 'info.label')}"/>
 </head>
 
@@ -36,7 +38,7 @@
           <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
             <td><g:link action="edit" id="${infoInstance.id}">${fieldValue(bean: infoInstance, field: "subject")}</g:link></td>
             <td><g:message code="info.locale.${infoInstance.locale}"/></td>
-            <td><g:message code="info.sitekey.${infoInstance.siteKey}" /></td>
+            <td><g:message code="info.sitekey.${infoInstance.siteKey}"/></td>
             <td><g:formatBoolean boolean="${infoInstance.active}"/></td>
             <td><g:formatDate format="${message(code:'info.date.format')}" date="${infoInstance.created}"/></td>
           </tr>
