@@ -21,7 +21,7 @@ class InfoController {
   def create = {
     def infoInstance = new Info()
     infoInstance.properties = params
-    return [infoInstance: infoInstance, availableKeys: availableKeys, availableSiteKeys: availableSiteKeys]
+    return [infoInstance: infoInstance, availableSiteKeys: availableSiteKeys]
   }
 
   def save = {
@@ -53,7 +53,7 @@ class InfoController {
       redirect(action: "list")
     }
     else {
-      return [infoInstance: infoInstance, availableKeys: availableKeys]
+      return [infoInstance: infoInstance, availableSiteKeys: availableSiteKeys]
     }
   }
 
