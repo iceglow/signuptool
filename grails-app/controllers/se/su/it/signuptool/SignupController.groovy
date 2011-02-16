@@ -12,9 +12,13 @@ class SignupController {
   def WsMethodService
 
   def index = {
-    def link = 'https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=https://sukattool-web1.it.su.se:1043/foo/signuptool/setup'
+    def info = Info.findActiveInfoByLocaleAndSiteKey(params.lang, 'new_account')
+    if (info.size() > 1) {
+      info = info.first()
+    }
 
-    [link: link]
+    def link = 'https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=https://sukattool-web1.it.su.se:1043/foo/signuptool/setup'
+    [link: link, info: info]
   }
 
   def test = {

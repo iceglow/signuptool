@@ -4,6 +4,10 @@
   <meta name="layout" content="main"/>
 </head>
 <body>
-<h1></h1><a href="${link}"><i>foo</i></a></h1>
+<g:if test="${info}">
+  <g:render template="information" model="[info:info]"/>
+</g:if>
+
+<a href="${link}">Till studera.nu</a>
 </body>
 </html>
