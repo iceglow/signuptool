@@ -13,14 +13,14 @@
 
 <div id="head" class="head apps-darkblue">
   <div class="head-left">
-    <a href="http://www.su.se/" accesskey="0" title="Stockholms universitet">
-      <img class="logotype" src="${resource(dir: 'img', file: 'logo_su_se_big_dark_blue.gif')}" alt="Stockholms universitet" title="Till Stockholms universitet" border="0"/>
+    <a href="http://www.su.se/" accesskey="0" title="${g.message(code: 'application.su.label')}">
+      <img class="logotype" src="${resource(dir: 'img', file: 'logo_su_se_big_dark_blue.gif')}" alt="${g.message(code: 'application.su.label')}" title="${g.message(code: 'application.su.label')}" border="0"/>
     </a>
   </div>
 
   <div class="head-right">
 
-    <img src='${resource(dir: 'img', file: 'app-logotype-signuptool-se.gif')}' alt='Aktivera Universitetskonto' title='Aktivera Universitetskonto' border='0' class='department'/>
+    <img src='${resource(dir: 'img', file: 'app-logotype-signuptool-se.gif')}' alt="${g.message(code: 'application.activate.su.account.label')}" title="${g.message(code: 'application.activate.su.account.label')}" border='0' class='department'/>
 
   </div>
 

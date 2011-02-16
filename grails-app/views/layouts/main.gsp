@@ -4,7 +4,7 @@
 <head>
 
   <title>
-    <g:message code="signup.title.label"/>
+    <g:message code="application.title.label"/>
   </title>
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>

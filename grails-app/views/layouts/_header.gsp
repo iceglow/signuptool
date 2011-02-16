@@ -7,9 +7,9 @@
 --%>
 
 <!-- head -->
-  
-  <div id="hd">
-      <a href="http://www.su.se" accesskey="0" title="Stockholms universitets startsida">
-        <img width="780" height="177" usemap="#map" alt="Ettan" src="https://webshare.su.se/templates/images/etta.jpg" />
-      </a>
-  </div>
+
+<div id="hd">
+  <a href="http://www.su.se" accesskey="0" title="${g.message(code: 'application.to.su.web.label')}">
+    <img width="780" height="177" usemap="#map" alt="Ettan" src="https://webshare.su.se/templates/images/etta.jpg"/>
+  </a>
+</div>
