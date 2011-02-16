@@ -29,7 +29,7 @@
     <a class="accessibility-link" accesskey="s" href="#content-top" title="Skip navigation"></a>
 
     <!-- head -->
-    <g:render template="/layouts/status_header"/>
+    <g:render template="/layouts/header"/>
     <!-- /head -->
 
     <!-- columns -->
