@@ -51,7 +51,7 @@
               <label for="locale"><g:message code="info.locale.label"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: infoInstance, field: 'locale', 'errors')}">
-              <g:select name="locale" from="${infoInstance.constraints.locale.inList}" value="${infoInstance?.locale}" valueMessagePrefix="info.locale" />
+              <g:select name="locale" from="${infoInstance.constraints.locale.inList}" value="${infoInstance?.locale}" valueMessagePrefix="info.locale"/>
             </td>
           </tr>
 
