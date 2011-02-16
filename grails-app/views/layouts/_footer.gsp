@@ -10,20 +10,20 @@
 
   <div class="footer-left">
     <address>
-      <b><g:message code="layout.su.label" /></b>
+      <b><g:message code="application.su.label" /></b>
       <br />
-      <g:message code="layout.su.address.label" />
+      <g:message code="application.su.address.label" />
     </address>
   </div>
 
   <div class="footer-right">
     <ul class="footer-links">
-      <li><g:message code="layout.application.label" /><g:meta name="app.version"/> ${System.getProperty('signuptool.hostname', 'unknown')}</li>
+      <li><g:message code="application.name.label" /><g:meta name="app.version"/> ${System.getProperty('signuptool.hostname', 'unknown')}</li>
       <li>
-        <g:link url="http://www.su.se"><g:message code="layout.su.link.label" /></g:link>
+        <g:link url="http://www.su.se"><g:message code="application.to.su.web.label" /></g:link>
       </li>
       <li class="last-item">
-        <g:link class="footer-contact" url="http://www.it.su.se/pub/jsp/polopoly.jsp?d=362"><g:message code="layout.su.helpdesk.link.label" /></g:link>
+        <g:link class="footer-contact" url="http://www.it.su.se/pub/jsp/polopoly.jsp?d=362"><g:message code="application.helpdesk.label" /></g:link>
       </li>
     </ul>
   </div>
