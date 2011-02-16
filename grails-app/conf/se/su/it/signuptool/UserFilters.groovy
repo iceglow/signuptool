@@ -24,20 +24,20 @@ class UserFilters {
       }
     }
 
-    doCheckEditorAccessForUser(controller:"info)", action:'*') {
+    doCheckEditorAccessForUser(controller:"(admin|info)", action:'*') {
       before = {
         if (!authorizationService.hasRole(session.user, "editor") && request.remoteUser) {
-          redirect(controller:'dashboard' , action:'accessDenied')
+          redirect(controller:'croak' , action:'accessDenied')
           log.error "*** user ${session.user} tried to access ${controllerName} : ${actionName} but hasn't got access ***"
           return false
         }
       }
     }
 
-    doCheckSysAdminAccessForUser(controller:'(section|value|monitoring|feed)', action:'*'){
+    doCheckSysAdminAccessForUser(controller:'(admin|section|value|monitoring|feed)', action:'*'){
       before = {
         if (!authorizationService.hasRole(session.user, "sysadmin") && request.remoteUser) {
-          redirect(controller:'dashboard' , action:'accessDenied')
+          redirect(controller:'croak' , action:'accessDenied')
           log.error "*** user ${session.user} tried to access ${controllerName} : ${actionName} but hasn't got access ***"
           return false
         }
