@@ -12,13 +12,25 @@ class SignupController {
   def WsMethodService
 
   def index = {
-    def info = Info.findActiveInfoByLocaleAndSiteKey(params.lang, 'new_account')
-    if (info.size() > 1) {
+  def info = Info.findActiveInfoByLocaleAndSiteKey(params.lang, 'new_account')
+
+    if (info && info.size() > 1) {
       info = info.first()
     }
 
     def link = 'https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=https://sukattool-web1.it.su.se:1043/foo/signuptool/setup'
     [link: link, info: info]
+  }
+
+  def resetaccount = {
+    def info = Info.findActiveInfoByLocaleAndSiteKey(params.lang, 'reset_account')
+
+    if (info && info.size() > 1) {
+      info = info.first()
+    }
+
+    def link = 'https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=https://sukattool-web1.it.su.se:1043/foo/signuptool/setup'
+    render(view:"index",model:[link: link, info: info])
   }
 
   def test = {
@@ -89,7 +101,7 @@ class SignupController {
     } else {
       session.locale = "sv_SE"
     }
-    
-    redirect(controller: params.c, action: params.a, params:[lang:session.locale])
+
+    redirect(controller: params.c, action: params.a, params:['lang':session.locale])
   }
 }
