@@ -84,11 +84,12 @@ class SignupController {
   }
 
   def changeLanguage = {
-    if(session.locale && session.locale == "sv_SE"){
+    if (session.locale && session.locale == "sv_SE") {
       session.locale = "en_US"
     } else {
       session.locale = "sv_SE"
     }
-    redirect(controller:params.c,action:params.a,id:params.i)
+    
+    redirect(controller: params.c, action: params.a, id: params.i, params: params)
   }
 }
