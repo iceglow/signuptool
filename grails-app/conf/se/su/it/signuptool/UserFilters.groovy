@@ -8,14 +8,13 @@ class UserFilters {
     all(controller: '*', action: '*') {
       before = {
         if (request.remoteUser && !session.user) {
-            session.user = request.remoteUser?.toUid()
-          }
+          session.user = request.remoteUser?.toUid()
+        }
         if (!params.lang) {
           params["lang"] = session.locale
         }
-        def availLangs = ["sv_SE","en_US"]
-        if(!availLangs.contains(params["lang"]))
-        {
+        def availLangs = ["sv_SE", "en_US"]
+        if (!availLangs.contains(params["lang"])) {
           params["lang"] = "sv_SE"
         }
       }
@@ -27,30 +26,30 @@ class UserFilters {
       }
     }
 
-    doCheckAdminControllerAccessForUser(controller:"admin", action:'*') {
+    doCheckAdminControllerAccessForUser(controller: "admin", action: '*') {
       before = {
         if (!authorizationService.hasRole(session.user, "editor") && !authorizationService.hasRole(session.user, "sysadmin") && request.remoteUser) {
-          redirect(controller:'croak' , action:'accessDenied')
+          redirect(controller: 'croak', action: 'accessDenied')
           log.error "*** user ${session.user} tried to access ${controllerName} : ${actionName} but hasn't got access ***"
           return false
         }
       }
     }
 
-    doCheckEditorAccessForUser(controller:"(info)", action:'*') {
+    doCheckEditorAccessForUser(controller: "(info)", action: '*') {
       before = {
         if (!authorizationService.hasRole(session.user, "editor") && request.remoteUser) {
-          redirect(controller:'croak' , action:'accessDenied')
+          redirect(controller: 'croak', action: 'accessDenied')
           log.error "*** user ${session.user} tried to access ${controllerName} : ${actionName} but hasn't got access ***"
           return false
         }
       }
     }
 
-    doCheckSysAdminAccessForUser(controller:'(section|value|monitoring|feed)', action:'*'){
+    doCheckSysAdminAccessForUser(controller: '(section|value|monitoring|feed)', action: '*') {
       before = {
         if (!authorizationService.hasRole(session.user, "sysadmin") && request.remoteUser) {
-          redirect(controller:'croak' , action:'accessDenied')
+          redirect(controller: 'croak', action: 'accessDenied')
           log.error "*** user ${session.user} tried to access ${controllerName} : ${actionName} but hasn't got access ***"
           return false
         }
