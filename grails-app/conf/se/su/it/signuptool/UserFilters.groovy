@@ -14,8 +14,7 @@ class UserFilters {
         if (session.locale && ['sv_SE', 'en_US'].contains(session.locale)) {
           params['lang'] = session.locale
         } else {
-          session.locale = 'sv_SE'
-          params['lang'] = 'sv_SE'
+          session.locale = params['lang'] = 'sv_SE'
         }
       }
       after = {
