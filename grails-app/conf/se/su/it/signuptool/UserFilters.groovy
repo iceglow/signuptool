@@ -10,12 +10,12 @@ class UserFilters {
         if (request.remoteUser && !session.user) {
           session.user = request.remoteUser?.toUid()
         }
-        if (!params.lang) {
-          params["lang"] = session.locale
-        }
-        def availLangs = ["sv_SE", "en_US"]
-        if (!availLangs.contains(params["lang"])) {
-          params["lang"] = "sv_SE"
+
+        if (session.locale && ['sv_SE', 'en_US'].contains(session.locale)) {
+          params['lang'] = session.locale
+        } else {
+          session.locale = 'sv_SE'
+          params['lang'] = 'sv_SE'
         }
       }
       after = {
