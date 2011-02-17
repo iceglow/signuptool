@@ -90,6 +90,6 @@ class SignupController {
       session.locale = "sv_SE"
     }
     
-    redirect(controller: params.c, action: params.a, id: params.i, params: params)
+    redirect(controller: params.c, action: params.a, params:[lang:session.locale])
   }
 }
