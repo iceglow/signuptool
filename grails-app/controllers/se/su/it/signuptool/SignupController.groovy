@@ -18,7 +18,7 @@ class SignupController {
       info = info.first()
     }
 
-    def link = 'https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=https://sukattool-web1.it.su.se:1043/foo/signuptool/setup'
+    def link = 'https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=https://aktivera-test.su.se/accountSetup'
     [link: link, info: info]
   }
 
