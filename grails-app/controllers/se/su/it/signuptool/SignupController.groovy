@@ -18,7 +18,7 @@ class SignupController {
       info = info.first()
     }
 
-    def link = 'https://aktivera-test.su.se/Shibboleth.sso/WAYF/antagning.se/produktion?target=https://aktivera-test.su.se/accountSetup'
+    def link = 'https://aktivera-test.su.se/Shibboleth.sso/WAYF/antagning.se/produktion?target=https://aktivera-test.su.se/signup/accountSetup'
     [link: link, info: info]
   }
 
