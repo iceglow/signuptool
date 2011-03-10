@@ -175,6 +175,15 @@ class LPWWebService {
   }
 
   // LPW-WS Methods
+  UtilitySemesterVO getCurrentAndNextSemester(uid) throws Exception {
+    // T22
+    try {
+      return getUtilityFacade().getCurrAndNextSemester((ladok.lpw.service.utility.facadeclient.UserVO)getTicketForStudent(uid,"ladok.lpw.service.utility.facadeclient.UserVO"))
+    } catch (Exception e) {
+      UtilityService.logFailure(log, ['uid':uid, 'method':'getCurrentAndNextSemester'], e)
+      throw new Exception('lpw_connection_failure', e)
+    }
+  }
 
   ChangeAddressVO getChangeAddressVO(uid) throws Exception {
     // T24

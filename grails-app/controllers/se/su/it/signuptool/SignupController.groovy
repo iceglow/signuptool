@@ -18,7 +18,8 @@ class SignupController {
       info = info.first()
     }
 
-    def link = 'https://aktivera-test.su.se/Shibboleth.sso/WAYF/antagning.se/produktion?target=https://aktivera-test.su.se/signup/accountSetup'
+    //def link = 'https://aktivera-test.su.se/Shibboleth.sso/WAYF/antagning.se/produktion?target=https://aktivera-test.su.se/signup/accountSetup'
+    def link = "https://${request.getServerName()}/signup/accountSetup"
     [link: link, info: info]
   }
 
@@ -48,12 +49,11 @@ class SignupController {
   def accountSetup = {
 
     // Initialize model with shib data
-    def attrs = new ShibAttributes(
-      idp: '',
-      nin: '', // Could either be Shib-NorEduPerson-NorEduPersonNIN or Shib-SocialSecurityNumber
-      givenName: '',
-      sn: ''
-    )
+    def attrs = new ShibAttributes()
+    attrs.setIdp(request?.eppn)
+    attrs.setNin(request?.norEduPersonNIN)
+    attrs.givenName = request?.givenName
+    attrs.sn = request?.sn
 
     // Validate model and handle map of errors if invalid
     if (!attrs.validate()) {
@@ -63,11 +63,14 @@ class SignupController {
     }
 
     // Reset account only if cookies for password and uid havent been set
-    if (!request?.cookies['session'] || request?.cookies['nin'] != attrs.nin) {
+    Cookie session_cookie = request.cookies.find{it.name == 'session'}
+    Cookie nin_cookie = request.cookies.find{it.name == 'nin'}
+    def vo = null
+    if (!session_cookie || !nin_cookie || nin_cookie.value != attrs.nin) {
 
-      def vo = WsMethodService?.findEnrolledUserByNIN(attrs.nin)
+      vo = WsMethodService?.findEnrolledUserByNIN(attrs.nin)
       if (!vo && attrs.domain =~ /student.su.se/) {
-        vo = WsMethodService?.enrollUser(attrs.domain, attrs.givenName, attrs.sn, "other", attrs.nin)
+        vo = WsMethodService?.enrollUser(attrs.domain, attrs.givenName, attrs.sn, attrs.nin)
       }
 
       if (!vo?.uid && !vo?.password) {
@@ -83,16 +86,21 @@ class SignupController {
       }
 
       //set name for password_cookie to something other than password, and encode base64
-//      def password_cookie = new Cookie('session', vo.password.encodeAsBase64())
-//      def uid_cookie = new Cookie('uid', vo.uid)
-//      def nin_cookie = new Cookie('nin', attrs.nin)
-//
-//      response.addCookie(password_cookie)
-//      response.addCookie(uid_cookie)
-//      response.addCookie(nin_cookie)
+      def password_cookie = new Cookie('session', vo.password.encodeAsBase64())
+      def uid_cookie = new Cookie('uid', vo.uid)
+      def nin2_cookie = new Cookie('nin', attrs.nin)
+
+      response.addCookie(password_cookie)
+      response.addCookie(uid_cookie)
+      response.addCookie(nin2_cookie)
+      //def semester = LPWWebService?.getCurrentAndNextSemester(vo.uid)
+      //def coursesugg = LPWWebService?.getCourseRegSuggestions(vo.uid, semester)
+      [vo:vo, mail:mail]
+    }
+    else {
+      render("Account already activated")
     }
 
-    [uid: vo.uid]
   }
 
   def changeLanguage = {
