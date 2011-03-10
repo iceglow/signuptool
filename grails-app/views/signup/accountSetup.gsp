@@ -35,8 +35,9 @@
   <div class="apps-content-block-inner">
     <div class="apps-float-30 label-grey-dark">E-postadress</div>
     <div class="apps-float-60">${mail}</div>
+	<div class="clear-float"></div>
   </div>
-  <div class="clear-float"></div>
+  
   <div class="apps-content-block-inner">
     <input name="" type="button" value="Skriv ut kontouppgifter..."/>
     <div class="clear-float"></div>
