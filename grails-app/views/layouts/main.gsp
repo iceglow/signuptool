@@ -37,27 +37,32 @@
       <div class="clear-float"></div>
 
       <!-- ************************************************** PAGE ************************************************** -->
-    <!-- ******** Start left column ****** -->
-    <div class="left-column">
-      <div class="section">
-
-        <div class="apps-content-block-inner">
-          <g:if test="${params.controller == 'signup' && params.action == 'index'}">
-            We are at index!!!
-          </g:if>
+      <!-- ******** Start left column ****** -->
+      <div class="left-column">
+        <div class="section">
+          <div class="apps-content-block-inner">
+            <g:if test="${params.controller == 'signup' && params.action == 'index'}">
+              We are at index!!!
+            </g:if>
+          </div>
         </div>
       </div>
-    </div>
       <!-- ***** End left column ******* -->
-    <!-- ****** Start main column ******** -->
+      <!-- ****** Start main column ******** -->
       <div class="main-column">
-      <a class="accessibility-link" id="content-top" name="content-top"></a>
+        <a class="accessibility-link" id="content-top" name="content-top"></a>
         <div class="apps-mid-column">
-        <g:layoutBody/>
+          <g:layoutBody/>
         </div>
         <!-- ***** Start inner right column ****** -->
         <div class="apps-right-column" id="content-inner-right" name="content-inner-right">
-
+          <div class="section">
+            <div class="apps-content-block-inner">
+              <g:if test="${params.controller == 'signup' && params.action == 'index'}">
+                We are at index!!!
+              </g:if>
+            </div>
+          </div>
         </div>
         <!-- ****** End inner right column ******* -->
       </div>
@@ -69,7 +74,7 @@
   </div>
 
   <!-- /content -->
-  <g:render template="/layouts/footer" />
+  <g:render template="/layouts/footer"/>
 
   <div class="clear-float"></div>
 </div>
