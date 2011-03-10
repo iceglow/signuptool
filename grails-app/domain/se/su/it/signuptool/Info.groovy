@@ -30,4 +30,15 @@ class Info implements java.io.Serializable {
       }
     }
   }
+
+  static List findInfoByLocaleAndSiteKey(locale, siteKey) {
+    return Info.createCriteria().list {
+      and {
+        eq('locale', locale)
+        eq('siteKey', siteKey)
+        eq('locationKey', 'first_page')
+        order('created', 'DESC')
+      }
+    }
+  }
 }

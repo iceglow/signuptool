@@ -1,3 +1,5 @@
+import se.su.it.signuptool.Info
+
 class BootStrap {
 
   def configService
@@ -19,19 +21,27 @@ class BootStrap {
 
     def lpwurl
     def sukatsvcurl
+    def aktiverafqdn
+    def minastudierfqdn
     switch (System.getProperty("signuptool", "dev")) {
       case ~/prod(uction)?/:
         lpwurl = "https://lpwprod-su.its.uu.se"
         sukatsvcurl = "https://sukat-svc.it.su.se"
+        aktiverafqdn = "aktivera.su.se"
+        minastudierfqdn = "minastudier.su.se"
         break
       case "test":
         lpwurl = "https://lpwtest-su.its.uu.se"
         sukatsvcurl = "https://sukat-svc-test.it.su.se"
+        aktiverafqdn = "aktivera-test.su.se"
+        minastudierfqdn = "minastudier-test.su.se"
         break
       case ~/dev(elopment)?/:
       default:
         lpwurl = "http://mittsu-dev-04.dev.it.su.se"
         sukatsvcurl = "https://sukat-svc-test.it.su.se"
+        aktiverafqdn = "aktivera-test.su.se"
+        minastudierfqdn = "minastudier-test.su.se"
     }
     log.info "LPW URL: ${lpwurl}"
     configService.registerSection("WS")
@@ -93,6 +103,110 @@ class BootStrap {
     }
     System.setProperties(sysprop)
 
+    // Start Set Default Blobs
+    def infoSvNa = Info.findInfoByLocaleAndSiteKey('sv_SE', 'new_account')
+    if(infoSvNa == null || infoSvNa.size() <= 0) {
+      infoSvNa = new se.su.it.signuptool.Info(
+        subject:'Default System Swedish New Account View',
+        locale: 'sv_SE',
+        siteKey: 'new_account',
+        active:true,
+        body:'''<div class="section">
+<h1>Aktivera ditt konto</h1>
+</div>
+
+<div class="clear-float"></div>
+
+<div class="section mgn-bottom-20">
+	<img src="/img/card-progress-1of3.gif" alt="Steg 1 av 3" width="100" height="97" border="0" class="image-block-left" title="Steg 1 av 3" />
+    <h2>Ny student? Aktivera steg f\u00f6r steg:</h2>
+	<p>Som ny student f\u00f6ljer du bara v\u00e5r steg-f\u00f6r-steg-tjolahopp f\u00f6r att aktivera ditt Universitetskonto och f\u00e5 ditt Universitetskort.</p>
+	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Steg 1: Logga in med ditt Studera.nu-konto</a></p>
+	<div class="clear-float"></div>
+</div>
+
+<div class="section mgn-bottom-20">
+	<img src="/img/card-progress-3of3.gif" alt="Steg 3 av 3" width="100" height="97" border="0" class="image-block-left" title="Steg 3 av 3" />
+	<h2>Redan student? Registrera dig p\u00e5 kurser:</h2>
+	<p>Om du redan bla bla beh\u00f6ver du bara registrera dig p\u00e5 de kurser som du \u00c4r antagen till f\u00f6r att allt ska funka finfint.</p>
+	<p><a href="https://'''+ minastudierfqdn + '''/registrate/" class="apps-add-bullet">Registrera dig p\u00e5 kurser i Mina studier</a></p>
+	<div class="clear-float"></div>
+</div>''')
+      infoSvNa.save()
+    }
+    def infoEnNa = Info.findInfoByLocaleAndSiteKey('en_US', 'new_account')
+    if(infoEnNa == null || infoEnNa.size() <= 0) {
+      infoEnNa = new se.su.it.signuptool.Info(
+        subject:'Default System English New Account View',
+        locale: 'en_US',
+        siteKey: 'new_account',
+        active:true,
+        body:'''<div class="section">
+<h1>This is in English</h1>
+</div>
+
+<div class="clear-float"></div>
+
+<div class="section mgn-bottom-20">
+	<img src="/img/card-progress-1of3.gif" alt="Steg 1 av 3" width="100" height="97" border="0" class="image-block-left" title="Steg 1 av 3" />
+    <h2>Ny student? Aktivera steg f\u00f6r steg:</h2>
+	<p>Som ny student f\u00f6ljer du bara v\u00e5r steg-f\u00f6r-steg-tjolahopp f\u00f6r att aktivera ditt Universitetskonto och f\u00e5 ditt Universitetskort.</p>
+	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Steg 1: Logga in med ditt Studera.nu-konto</a></p>
+	<div class="clear-float"></div>
+</div>
+
+<div class="section mgn-bottom-20">
+	<img src="/img/card-progress-3of3.gif" alt="Steg 3 av 3" width="100" height="97" border="0" class="image-block-left" title="Steg 3 av 3" />
+	<h2>Redan student? Registrera dig p\u00e5 kurser:</h2>
+	<p>Om du redan bla bla beh\u00f6ver du bara registrera dig p\u00e5 de kurser som du \u00c4r antagen till f\u00f6r att allt ska funka finfint.</p>
+	<p><a href="https://'''+ minastudierfqdn + '''/registrate/" class="apps-add-bullet">Registrera dig p\u00e5 kurser i Mina studier</a></p>
+	<div class="clear-float"></div>
+</div>''')
+      infoEnNa.save()
+    }
+    def infoSvRa = Info.findInfoByLocaleAndSiteKey('sv_SE', 'reset_account')
+    if(infoSvRa == null || infoSvRa.size() <= 0) {
+      infoSvRa = new se.su.it.signuptool.Info(
+        subject:'Default System Swedish Reset Account View',
+        locale: 'sv_SE',
+        siteKey: 'reset_account',
+        active:true,
+        body:'''<div class="section">
+<h1>Har du gl\u00f6mt l\u00f6senordet till ditt Universitetskonto?</h1>
+</div>
+
+<div class="clear-float"></div>
+
+<div class="section mgn-bottom-20">
+ <h2>Generera ett nytt l\u00f6senord</h2>
+	<p>Ett nytt l\u00f6senord kommer att genereras \u00e5t dig n\u00c4r du klickar p\u00e5 l\u00c4nken och loggar in med ditt Studera.nu-konto (personnummer och l\u00f6senord)</p>
+	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Steg 1: Logga in med ditt Studera.nu-konto</a></p>
+	<div class="clear-float"></div>
+</div>''')
+      infoSvRa.save()
+    }
+    def infoEnRa = Info.findInfoByLocaleAndSiteKey('en_US', 'reset_account')
+    if(infoEnRa == null || infoEnRa.size() <= 0) {
+      infoEnRa = new se.su.it.signuptool.Info(
+        subject:'Default System English Reset Account View',
+        locale: 'en_US',
+        siteKey: 'reset_account',
+        active:true,
+        body:'''<div class="section">
+<h1>Have you forgotten your University account password?</h1>
+</div>
+
+<div class="clear-float"></div>
+
+<div class="section mgn-bottom-20">
+ <h2>Generate a new password</h2>
+	<p>A new password will be generated when you click on this link and log in with your Studera.nu account (personal identity number and password)</p>
+	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Log in with Studera.nu-account</a></p>
+	<div class="clear-float"></div>
+</div>''')
+      infoEnRa.save()
+    }
+    // End Set Default Blobs
   }
   def destroy = {
   }
