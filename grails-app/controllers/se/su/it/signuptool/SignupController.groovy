@@ -58,7 +58,7 @@ class SignupController {
     // Validate model and handle map of errors if invalid
     if (!attrs.validate()) {
       flash.message = attrs.getErrorMessages()
-      redirect(controller: "signup", action: "error")
+      redirect(controller: "croak", action: "studeraNuAccountSetupError")
       return
     }
 
@@ -98,7 +98,7 @@ class SignupController {
     // Validate model and handle map of errors if invalid
     if (!attrs.validate()) {
       flash.message = attrs.getErrorMessages()
-      redirect(controller: "signup", action: "error")
+      redirect(controller: "croak", action: "studeraNuResetPasswordError")
       return
     }
 
