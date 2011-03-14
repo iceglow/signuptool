@@ -88,12 +88,15 @@
   <div class="clear-float"></div>
 </div>
 
+<g:if test="${coursesugg}">
 <div class="section align-right">
   <input name="" type="button" value="Steg 3: Kursregistrering ->" onclick="window.location.href = 'https://minastudier.su.se/registrate'"/>
   <br/>
   <span class="apps-hint-text">Logga in med kontouppgifterna ovan</span>
   <div class="clear-float"></div>
 </div>
+</g:if>
+
 </body>
 </html>
 
