@@ -10,6 +10,7 @@ class SignupController {
   def UtilityService
   def LPWWebService
   def WsMethodService
+  def SignupService
 
   def index = {
   def info = Info.findActiveInfoByLocaleAndSiteKey(params.lang, 'new_account')
@@ -61,33 +62,60 @@ class SignupController {
       return
     }
 
-    def vo = null
-
-    vo = WsMethodService?.findEnrolledUserByNIN(attrs.nin)
-    if (!vo && attrs.domain =~ /student.su.se/) {
-      vo = WsMethodService?.enrollUser(attrs.domain, attrs.givenName, attrs.sn, attrs.nin)
+    def res
+    try {
+      res = SignupService.enableAccount(attrs)
     }
-
-    if (!vo?.uid && !vo?.password) {
-      flash.error = "Aktiveringen av ditt konto misslyckades."
+    catch (Exception e) {
+      flash.error = e.message
       redirect(controller: "signup", action: "error")
       return
       // do something
     }
 
-    def isEnabled = WsMethodService?.isBasicServicesEnabled(vo.uid)
-    WsMethodService?.enableBasicServices(vo.uid)
-    def mail = null
-    if (isEnabled) {
-      mail = WsMethodService?.getMail(vo.uid)
-    }
+    session.currentVo = res.vo;
+
     //def semester = LPWWebService?.getCurrentAndNextSemester(vo.uid)
     //def coursesugg = LPWWebService?.getCourseRegSuggestions(vo.uid, semester)
-    [vo:vo, mail:mail]
+    [vo:res.vo, mail:res.mail]
   }
 
   def resetconfirm = {
+    // Initialize model with shib data
+    def attrs = new ShibAttributes()
+    attrs.setIdp(request?.eppn)
+    attrs.setNin(request?.norEduPersonNIN)
+    attrs.givenName = request?.givenName
+    attrs.sn = request?.sn
 
+    // Validate model and handle map of errors if invalid
+    if (!attrs.validate()) {
+      flash.message = attrs.getErrorMessages()
+      redirect(controller: "signup", action: "error")
+      return
+    }
+
+    def res
+    try {
+      res = SignupService.enableAccount(attrs)
+    }
+    catch (Exception e) {
+      flash.error = e.message
+      redirect(controller: "signup", action: "error")
+      return
+      // do something
+    }
+
+    session.currentVo = res.vo;
+
+    //def semester = LPWWebService?.getCurrentAndNextSemester(vo.uid)
+    //def coursesugg = LPWWebService?.getCourseRegSuggestions(vo.uid, semester)
+    [vo:res.vo, mail:res.mail]
+  }
+
+  def print = {
+
+    [vo: session.currentVo]
   }
 
   def error = {

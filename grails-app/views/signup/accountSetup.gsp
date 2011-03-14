@@ -26,7 +26,7 @@
     <div class="apps-content-block-inner">
       <div class="apps-float-30 label-grey-dark">Lösenord</div>
       <div class="apps-float-60">
-        <span style="font-family: 'Courier New', Courier, monospace">${vo.password}</span>
+        ${vo.password}
       </div>
     </div>
     <div class="clear-float"></div>
@@ -39,7 +39,8 @@
   </div>
   
   <div class="apps-content-block-inner">
-    <input name="" type="button" value="Skriv ut kontouppgifter..."/>
+    <g:form url="[action:'print']" name="printForm" target="_blank"></g:form>
+    <input type="button" class="button-block-right" value="Skriv ut kontouppgifter..." onclick="document.printForm.submit()" />
     <div class="clear-float"></div>
   </div>
   <div class="apps-dotted-divider"></div>
