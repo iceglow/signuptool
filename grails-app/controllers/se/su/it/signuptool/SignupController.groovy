@@ -18,7 +18,6 @@ class SignupController {
       info = info.first()
     }
 
-    //def link = 'https://aktivera-test.su.se/Shibboleth.sso/WAYF/antagning.se/produktion?target=https://aktivera-test.su.se/signup/accountSetup'
     def link = "https://${request.getServerName()}/signup/accountSetup"
     [link: link, info: info]
   }
@@ -30,7 +29,7 @@ class SignupController {
       info = info.first()
     }
 
-    def link = 'https://public.it.secure.su.se/shibboleth/Shibboleth.sso/WAYF/studera.nu/produktion?target=https://sukattool-web1.it.su.se:1043/foo/signuptool/setup'
+    def link = "https://${request.getServerName()}/signup/resetconfirm"
     render(view:"index",model:[link: link, info: info])
   }
 
@@ -58,49 +57,41 @@ class SignupController {
     // Validate model and handle map of errors if invalid
     if (!attrs.validate()) {
       flash.message = attrs.getErrorMessages()
-      redirect(action: 'index')
+      redirect(controller: "signup", action: "error")
       return
     }
 
-    // Reset account only if cookies for password and uid havent been set
-    Cookie session_cookie = request.cookies.find{it.name == 'session'}
-    Cookie nin_cookie = request.cookies.find{it.name == 'nin'}
     def vo = null
-    if (!session_cookie || !nin_cookie || nin_cookie.value != attrs.nin) {
 
-      vo = WsMethodService?.findEnrolledUserByNIN(attrs.nin)
-      if (!vo && attrs.domain =~ /student.su.se/) {
-        vo = WsMethodService?.enrollUser(attrs.domain, attrs.givenName, attrs.sn, attrs.nin)
-      }
-
-      if (!vo?.uid && !vo?.password) {
-        flash.error = "Aktiveringen av ditt konto misslyckades."
-        // do something
-      }
-
-      def isEnabled = WsMethodService?.isBasicServicesEnabled(vo.uid)
-      WsMethodService?.enableBasicServices(vo.uid)
-      def mail = null
-      if (isEnabled) {
-        mail = WsMethodService?.getMail(vo.uid)
-      }
-
-      //set name for password_cookie to something other than password, and encode base64
-      def password_cookie = new Cookie('session', vo.password.encodeAsBase64())
-      def uid_cookie = new Cookie('uid', vo.uid)
-      def nin2_cookie = new Cookie('nin', attrs.nin)
-
-      response.addCookie(password_cookie)
-      response.addCookie(uid_cookie)
-      response.addCookie(nin2_cookie)
-      //def semester = LPWWebService?.getCurrentAndNextSemester(vo.uid)
-      //def coursesugg = LPWWebService?.getCourseRegSuggestions(vo.uid, semester)
-      [vo:vo, mail:mail]
-    }
-    else {
-      render("Account already activated")
+    vo = WsMethodService?.findEnrolledUserByNIN(attrs.nin)
+    if (!vo && attrs.domain =~ /student.su.se/) {
+      vo = WsMethodService?.enrollUser(attrs.domain, attrs.givenName, attrs.sn, attrs.nin)
     }
 
+    if (!vo?.uid && !vo?.password) {
+      flash.error = "Aktiveringen av ditt konto misslyckades."
+      redirect(controller: "signup", action: "error")
+      return
+      // do something
+    }
+
+    def isEnabled = WsMethodService?.isBasicServicesEnabled(vo.uid)
+    WsMethodService?.enableBasicServices(vo.uid)
+    def mail = null
+    if (isEnabled) {
+      mail = WsMethodService?.getMail(vo.uid)
+    }
+    //def semester = LPWWebService?.getCurrentAndNextSemester(vo.uid)
+    //def coursesugg = LPWWebService?.getCourseRegSuggestions(vo.uid, semester)
+    [vo:vo, mail:mail]
+  }
+
+  def resetconfirm = {
+
+  }
+
+  def error = {
+    render("Something did not work out!!!")
   }
 
   def changeLanguage = {

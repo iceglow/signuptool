@@ -38,7 +38,7 @@ class BootStrap {
         break
       case ~/dev(elopment)?/:
       default:
-        lpwurl = "http://mittsu-dev-04.dev.it.su.se"
+        lpwurl = "https://lpwtest-su.its.uu.se"
         sukatsvcurl = "https://sukat-svc-test.it.su.se"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
@@ -179,8 +179,8 @@ class BootStrap {
 
 <div class="section mgn-bottom-20">
  <h2>Generera ett nytt l\u00f6senord</h2>
-	<p>Ett nytt l\u00f6senord kommer att genereras \u00e5t dig n\u00c4r du klickar p\u00e5 l\u00c4nken och loggar in med ditt Studera.nu-konto (personnummer och l\u00f6senord)</p>
-	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Steg 1: Logga in med ditt Studera.nu-konto</a></p>
+	<p>Ett nytt l\u00f6senord kommer att genereras \u00e5t dig n\u00e4r du klickar p\u00e5 l\u00e4nken och loggar in med ditt Studera.nu-konto (personnummer och l\u00f6senord)</p>
+	<p><a href="https://''' + aktiverafqdn + '''/signup/resetconfirm" class="apps-add-bullet">Steg 1: Logga in med ditt Studera.nu-konto</a></p>
 	<div class="clear-float"></div>
 </div>''')
       infoSvRa.save()
@@ -201,7 +201,7 @@ class BootStrap {
 <div class="section mgn-bottom-20">
  <h2>Generate a new password</h2>
 	<p>A new password will be generated when you click on this link and log in with your Studera.nu account (personal identity number and password)</p>
-	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Log in with Studera.nu-account</a></p>
+	<p><a href="https://''' + aktiverafqdn + '''/signup/resetconfirm" class="apps-add-bullet">Log in with Studera.nu-account</a></p>
 	<div class="clear-float"></div>
 </div>''')
       infoEnRa.save()
