@@ -68,16 +68,23 @@ class SignupController {
     }
     catch (Exception e) {
       flash.error = e.message
-      redirect(controller: "signup", action: "error")
+      redirect(controller: "croak", action: "sukatAccountSetupError")
       return
       // do something
     }
 
     session.currentVo = res.vo;
 
-    //def semester = LPWWebService?.getCurrentAndNextSemester(vo.uid)
-    //def coursesugg = LPWWebService?.getCourseRegSuggestions(vo.uid, semester)
-    [vo:res.vo, mail:res.mail]
+    def coursesugg
+    try {
+      def semester = LPWWebService?.getCurrentAndNextSemester(vo.uid)
+      coursesugg = LPWWebService?.getCourseRegSuggestions(vo.uid, semester)
+    }
+    catch (Exception e) {
+      e.printStackTrace()
+    }
+
+    [vo:res.vo, mail:res.mail, coursesugg: coursesugg]
   }
 
   def resetconfirm = {
@@ -101,25 +108,19 @@ class SignupController {
     }
     catch (Exception e) {
       flash.error = e.message
-      redirect(controller: "signup", action: "error")
+      redirect(controller: "croak", action: "sukatResetPasswordError")
       return
       // do something
     }
 
     session.currentVo = res.vo;
 
-    //def semester = LPWWebService?.getCurrentAndNextSemester(vo.uid)
-    //def coursesugg = LPWWebService?.getCourseRegSuggestions(vo.uid, semester)
     [vo:res.vo, mail:res.mail]
   }
 
   def print = {
 
     [vo: session.currentVo]
-  }
-
-  def error = {
-    render("Something did not work out!!!")
   }
 
   def changeLanguage = {

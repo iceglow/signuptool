@@ -49,31 +49,41 @@
 <div class="section mgn-bottom-20">
   <h2>Sista steget: registrera dig på kurser</h2>
   <p>Logga in i Mina studier med kontouppgifterna ovan och registrera dig på de kurser du ska gå.</p>
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" summary="Summary">
-    <CAPTION>
-      Du kan registrera dig på följande kurser.
-    </CAPTION>
-    <tr>
-      <th>Kursnamn</th>
-      <th>Högskolepoäng</th>
-      <th>Kurskod</th>
-    </tr>
-    <tr>
-      <td>Antikens kultur och samhällsliv - kandidatkurs</td>
-      <td>30.0</td>
-      <td>FI1001</td>
-    </tr>
-    <tr>
-      <td>Historia med didaktisk inriktning II</td>
-      <td>30.0</td>
-      <td>UH111F</td>
-    </tr>
-    <tr>
-      <td>Samhällsvetenskap och juridik I</td>
-      <td>60.0</td>
-      <td>PD131</td>
-    </tr>
-  </table>
+
+
+  <g:if test="${coursesugg}">
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" summary="Summary">
+      <caption>Du kan registrera dig på följande kurser.</caption>
+      <thead>
+        <tr>
+          <th>Kursnamn</th>
+          <th>Kurskod</th>
+          <th>Termin</th>
+          <th>Högskolepoäng</th>
+          <th>Kurstakt</th>
+          <th>Kurstid</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <g:each in="${coursesugg}" status="i" var="courseVO">
+          <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
+            <td><su:localizedString sv="${courseVO.kursbenamn}" en="${courseVO.kursbenamne}" /></td>
+            <td>${courseVO.kurskod}</td>
+            <td>${courseVO.termin}</td>
+            <td>${courseVO.poang }</td>
+            <td>${courseVO.kurstakt }%</td>
+            <td><su:showProperTime time="${courseVO.kurstid}" /></td>
+          </tr>
+        </g:each>
+      </tbody>
+    </table>
+
+  </g:if>
+  <g:else>
+    Fel fel fel!!!
+  </g:else>
 
   <div class="clear-float"></div>
 </div>

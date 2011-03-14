@@ -4,6 +4,21 @@ class SignupToolTagLib {
 
   static namespace = 'su'
 
+
+  def showProperTime = { attrs ->
+    def time = attrs?.time
+    if (!time) {
+      out << message(code: 'generic.kurstid_has_no_value')
+    }
+    if (time == 'DAG') {
+      out << message(code: 'generic.kurstid_day')
+    } else if (time == 'KVÄ') {
+      out << message(code: 'generic.kurstid_night')
+    } else {
+      out << time
+    }
+  }
+
   def passSpell = { attrs ->
       String pwd = attrs?.pwd
       String lang = attrs?.lang
