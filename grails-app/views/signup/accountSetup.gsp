@@ -49,7 +49,7 @@
 <div class="section mgn-bottom-20">
   <h2><g:message code="accountSetup.lastStep.header"/></h2>
 
-  <g:if test="${coursesugg}">
+  <g:if test="${courseSuggestionList}">
     <p><g:message code="accountSetup.lastStep.info"/></p>
 
     <table width="100%" border="0" cellspacing="0" cellpadding="0" summary="Summary">
@@ -66,7 +66,7 @@
       </thead>
 
       <tbody>
-        <g:each in="${coursesugg}" status="i" var="courseVO">
+        <g:each in="${courseSuggestionList}" status="i" var="courseVO">
           <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
             <td><su:localizedString sv="${courseVO.kursbenamn}" en="${courseVO.kursbenamne}" /></td>
             <td>${courseVO.poang }</td>

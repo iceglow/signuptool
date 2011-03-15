@@ -75,16 +75,20 @@ class SignupController {
 
     session.currentVo = res.vo;
 
-    def coursesugg
+    def courseSuggestionList = null
     try {
-      def semester = LPWWebService?.getCurrentAndNextSemester(vo.uid)
-      coursesugg = LPWWebService?.getCourseRegSuggestions(vo.uid, semester)
+      def semesterVO = LPWWebService?.getCurrentAndNextSemester(res.vo.uid)
+      def courseSuggestionVO = LPWWebService?.getCourseRegSuggestions(res.vo.uid, semesterVO.currentSemester)
+      
+      courseSuggestionList = courseSuggestionVO?.courseRegSuggestions
+      courseSuggestionVO = LPWWebService?.getCourseRegSuggestions(res.vo.uid, semesterVO.nextSemester)
+      courseSuggestionList.addAll(courseSuggestionVO?.courseRegSuggestions)
     }
     catch (Exception e) {
       e.printStackTrace()
     }
 
-    [vo:res.vo, mail:res.mail, coursesugg: coursesugg]
+    [vo:res.vo, mail:res.mail, courseSuggestionList: courseSuggestionList]
   }
 
   def resetconfirm = {
