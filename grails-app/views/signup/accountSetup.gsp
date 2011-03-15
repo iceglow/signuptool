@@ -40,7 +40,7 @@
   
   <div class="apps-content-block-inner">
     <g:form url="[action:'print']" name="printForm" target="_blank"></g:form>
-    <input type="button" value="<g:message code="accountSetup.button.printAccount.label"/>" onclick="document.printForm.submit()" />
+    <input type="button" value="<g:message code='accountSetup.button.printAccount.label'/>" onclick="document.printForm.submit()" />
     <div class="clear-float"></div>
   </div>
   <div class="apps-dotted-divider"></div>
@@ -89,7 +89,7 @@
 
 <g:if test="${coursesugg}">
 <div class="section align-right">
-  <input name="" type="button" value="<g:message code="accountSetup.button.nextStep.label"/>" onclick="window.location.href = 'https://minastudier.su.se/registrate'"/>
+  <input name="" type="button" value="<g:message code='accountSetup.button.nextStep.label'/>" onclick="window.location.href = 'https://minastudier.su.se/registrate'"/>
   <br/>
   <span class="apps-dialogue-red-simple"><g:message code="accountSetup.button.nextStep.hint"/></span>
   <div class="clear-float"></div>
