@@ -2,7 +2,6 @@ package se.su.it.signuptool
 
 class AuthorizationService {
 
-  boolean transactional = false
   def spocpService
 
 
