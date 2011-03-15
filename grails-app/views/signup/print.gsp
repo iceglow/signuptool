@@ -42,9 +42,9 @@
 
 <h1>Kontouppgifter</h1>
 <p>
-  <input type="submit" name="button" id="button" value="Skriv ut" onclick="window.print()" />
+  <input type="submit" name="button" id="button_print" value="Skriv ut" onclick="window.print()" />
   &nbsp;
-  <input type="submit" name="button" id="button" value="Stäng" onclick="window.close()" />
+  <input type="submit" name="button" id="button_close" value="Stäng" onclick="window.close()" />
 </p>
 <table>
   <tr>
