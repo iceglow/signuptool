@@ -57,7 +57,7 @@ class SignupController {
 
     // Validate model and handle map of errors if invalid
     if (!attrs.validate()) {
-      flash.message = attrs.getErrorMessages()
+      log.error("accountSetup: validate() failed for user: ${attrs}, errorMessages=${attrs.errorMessages}")
       redirect(controller: "croak", action: "studeraNuAccountSetupError")
       return
     }
@@ -67,7 +67,7 @@ class SignupController {
       res = SignupService.enableAccount(attrs)
     }
     catch (Exception e) {
-      flash.error = e.message
+      log.error("accountSetup: SignupService.enableAccount() failed for user: ${attrs}")
       redirect(controller: "croak", action: "sukatAccountSetupError")
       return
       // do something
@@ -101,7 +101,7 @@ class SignupController {
 
     // Validate model and handle map of errors if invalid
     if (!attrs.validate()) {
-      flash.message = attrs.getErrorMessages()
+      log.error("accountSetup: validate() failed for user: ${attrs}, errorMessages=${attrs.errorMessages}")
       redirect(controller: "croak", action: "studeraNuResetPasswordError")
       return
     }
@@ -111,7 +111,7 @@ class SignupController {
       res = SignupService.enableAccount(attrs)
     }
     catch (Exception e) {
-      flash.error = e.message
+      log.error("resetconfirm: SignupService.enableAccount() failed for user: ${attrs}")
       redirect(controller: "croak", action: "sukatResetPasswordError")
       return
       // do something
