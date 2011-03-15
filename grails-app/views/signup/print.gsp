@@ -38,11 +38,13 @@
   </style>
 
 </head>
-<body>
+<body onload="window.print()">
 
 <h1>Kontouppgifter</h1>
 <p>
   <input type="submit" name="button" id="button" value="Skriv ut" onclick="window.print()" />
+  &nbsp;
+  <input type="submit" name="button" id="button" value="Stäng" onclick="window.close()" />
 </p>
 <table>
   <tr>
