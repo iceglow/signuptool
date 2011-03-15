@@ -42,9 +42,9 @@
 
 <h1><g:message code="accountPrint.pageHeader"/></h1>
 <p>
-  <input type="submit" name="button" id="button" value="<g:message code="generic.button.print"/>" onclick="window.print()" />
+  <input type="submit" name="button" id="button_print" value="<g:message code="generic.button.print"/>" onclick="window.print()" />
   &nbsp;
-  <input type="submit" name="button" id="button" value="<g:message code="generic.button.close"/>" onclick="window.close()" />
+  <input type="submit" name="button" id="button_close" value="<g:message code="generic.button.close"/>" onclick="window.close()" />
 </p>
 <table>
   <tr>

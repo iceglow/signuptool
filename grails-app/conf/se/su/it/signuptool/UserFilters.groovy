@@ -10,6 +10,10 @@ class UserFilters {
         if (request.remoteUser && !session.user) {
           session.user = request.remoteUser?.toUid()
         }
+        else
+        {
+          session.user = ""
+        }
 
         if (session.locale && ['sv_SE', 'en_US'].contains(session.locale)) {
           params['lang'] = session.locale
@@ -27,7 +31,7 @@ class UserFilters {
 
     doCheckAdminControllerAccessForUser(controller: "admin", action: '*') {
       before = {
-        if (!authorizationService.hasRole(session.user, "editor") && !authorizationService.hasRole(session.user, "sysadmin") && request.remoteUser) {
+        if (!authorizationService.hasRole(session.user, "editor") && !authorizationService.hasRole(session.user, "sysadmin")) {
           redirect(controller: 'croak', action: 'accessDenied')
           log.error "*** user ${session.user} tried to access ${controllerName} : ${actionName} but hasn't got access ***"
           return false
@@ -37,7 +41,7 @@ class UserFilters {
 
     doCheckEditorAccessForUser(controller: "(info)", action: '*') {
       before = {
-        if (!authorizationService.hasRole(session.user, "editor") && request.remoteUser) {
+        if (!authorizationService.hasRole(session.user, "editor")) {
           redirect(controller: 'croak', action: 'accessDenied')
           log.error "*** user ${session.user} tried to access ${controllerName} : ${actionName} but hasn't got access ***"
           return false
@@ -47,7 +51,7 @@ class UserFilters {
 
     doCheckSysAdminAccessForUser(controller: '(section|value|monitoring|feed)', action: '*') {
       before = {
-        if (!authorizationService.hasRole(session.user, "sysadmin") && request.remoteUser) {
+        if (!authorizationService.hasRole(session.user, "sysadmin")) {
           redirect(controller: 'croak', action: 'accessDenied')
           log.error "*** user ${session.user} tried to access ${controllerName} : ${actionName} but hasn't got access ***"
           return false
