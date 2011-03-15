@@ -37,7 +37,7 @@
   <div class="clear-float"></div>
   <div class="apps-content-block-inner">
     <g:form url="[action:'print']" name="printForm" target="_blank"></g:form>
-    <input type="button" value="<g:message code="accountSetup.button.printAccount.label"/>" onclick="document.printForm.submit()" />
+    <input type="button" value="<g:message code='accountSetup.button.printAccount.label'/>" onclick="document.printForm.submit()" />
     <div class="clear-float"></div>
   </div>
   <div class="apps-dotted-divider"></div>
