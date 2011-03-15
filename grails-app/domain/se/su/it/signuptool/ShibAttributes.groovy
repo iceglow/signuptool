@@ -61,4 +61,8 @@ class ShibAttributes {
   def getErrorMessages() {
     return null // Return Map of Strings with error messages for each invalid attribute
   }
+
+  public String toString() {
+    "nin: ${nin}, givenName: ${givenName}, sn: ${sn}"
+  }
 }

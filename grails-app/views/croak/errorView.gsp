@@ -14,7 +14,7 @@
 <div class="clear-float"></div>
   <div class="section">
     <p>${errorMessage}</p>
-    <p><g:link controller="signup" action="index" class="apps-add-bullet-back"><g:message code="accountActivationError.tryAgain.label"/></g:link></p>
+    <p><g:link controller="signup" action="${tryAgainAction ?: 'index'}" class="apps-add-bullet-back"><g:message code="accountActivationError.tryAgain.label"/></g:link></p>
   </div>
 
 
