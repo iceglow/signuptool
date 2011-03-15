@@ -1,7 +1,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <title>Kontouppgifter</title>
+  <title><g:message code="accountPrint.pageHeader"/></title>
 
   <style type="text/css">
   body, td, th {
@@ -38,44 +38,44 @@
   </style>
 
 </head>
-<body onload="window.print()">
+<body onLoad="window.print()">
 
-<h1>Kontouppgifter</h1>
+<h1><g:message code="accountPrint.pageHeader"/></h1>
 <p>
-  <input type="submit" name="button" id="button" value="Skriv ut" onclick="window.print()" />
+  <input type="submit" name="button" id="button" value="<g:message code="generic.button.print"/>" onclick="window.print()" />
   &nbsp;
-  <input type="submit" name="button" id="button" value="Stäng" onclick="window.close()" />
+  <input type="submit" name="button" id="button" value="<g:message code="generic.button.close"/>" onclick="window.close()" />
 </p>
 <table>
   <tr>
-    <td><strong>Användarnamn/user name</strong></td>
+    <td><strong><g:message code="accountPrint.username.label"/></strong></td>
     <td>${vo.uid.encodeAsHTML()}</td>
   </tr>
   <tr>
-    <td><strong>Lösenord/password</strong></td>
+    <td><strong><g:message code="accountPrint.password.label"/></strong></td>
     <td>${vo.password.encodeAsHTML()}</td>
   </tr>
 </table>
 
 <br />
 
-<h2>Bokstaverat lösenord</h2>
+<h2><g:message code="accountPrint.spelledPassword.header"/>(<g:message code="info.locale.sv_SE"/>)</h2>
 
-<table cellspacing="0" summary="Lösenord">
+<table cellspacing="0">
   <tr>
-    <th>Tecken</th>
-    <th>Bokstaverat</th>
+    <th><g:message code="accountPrint.character.label"/></th>
+    <th><g:message code="accountPrint.spelled.label"/></th>
   </tr>
   <su:passSpell pwd="${vo.password}" lang="sv"/>
 </table>
 
 
-<h2>Spelled-out password</h2>
+<h2><g:message code="accountPrint.spelledPassword.header"/>(<g:message code="info.locale.en_US"/>)</h2>
 
-<table caption="test" cellspacing="0" summary="Password">
+<table>
   <tr>
-    <th>Character</th>
-    <th>Spelled</th>
+    <th><g:message code="accountPrint.character.label"/></th>
+    <th><g:message code="accountPrint.spelled.label"/></th>
   </tr>
   <su:passSpell pwd="${vo.password}" lang="en"/>
 </table>
