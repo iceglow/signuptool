@@ -87,7 +87,7 @@
   <div class="clear-float"></div>
 </div>
 
-<g:if test="${coursesugg}">
+<g:if test="${courseSuggestionList}">
 <div class="section align-right">
   <input name="" type="button" value="<g:message code='accountSetup.button.nextStep.label'/>" onclick="window.location.href = 'https://minastudier.su.se/registrate'"/>
   <br/>
