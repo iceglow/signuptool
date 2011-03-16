@@ -4,6 +4,19 @@
   <meta name="layout" content="main"/>
 </head>
 <body>
+<g:javascript>
+function noterat(el) {
+  var ms = document.getElementById("msContinue");
+  if(el.checked)
+  {
+    ms.disabled = false;
+  }
+  else
+  {
+    ms.disabled = true;
+  }
+}
+</g:javascript>
 <div class="section">
 
   <div id="suErrors">
@@ -86,10 +99,11 @@
 
   <div class="clear-float"></div>
 </div>
-
 <g:if test="${courseSuggestionList}">
 <div class="section align-right">
-  <input name="" type="button" value="<g:message code='accountSetup.button.nextStep.label'/>" onclick="window.location.href = 'https://minastudier.su.se/registrate'"/>
+  Har du noterat användarnamn och password?&nbsp
+  <input name="checkNoted" id="checkNotedId" type="checkbox" value="" onchange="noterat(this)">
+  <input id="msContinue" disabled="disabled" name="" type="button" value="<g:message code='accountSetup.button.nextStep.label'/>" onclick="window.location.href = 'https://minastudier.su.se/registrate'"/>
   <br/>
   <span class="apps-dialogue-red-simple"><g:message code="accountSetup.button.nextStep.hint"/></span>
   <div class="clear-float"></div>
