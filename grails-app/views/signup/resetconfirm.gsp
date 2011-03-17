@@ -11,7 +11,7 @@
 
   </div>
 
-  <h1><g:message code="accountResetConfirmation.PageHeader"/></h1>
+  <h1><g:message code="accountResetConfirmation.pageHeader"/></h1>
 </div>
 
 <div class="clear-float"></div>

@@ -59,7 +59,7 @@
 
 <br />
 
-<h2><g:message code="accountPrint.spelledPassword.header"/>(<g:message code="info.locale.sv_SE"/>)</h2>
+<h2><g:message code="accountPrint.spelledPassword.header"/> (<g:message code="info.locale.sv_SE"/>)</h2>
 
 <table cellspacing="0">
   <tr>
@@ -70,7 +70,7 @@
 </table>
 
 
-<h2><g:message code="accountPrint.spelledPassword.header"/>(<g:message code="info.locale.en_US"/>)</h2>
+<h2><g:message code="accountPrint.spelledPassword.header"/> (<g:message code="info.locale.en_US"/>)</h2>
 
 <table>
   <tr>
