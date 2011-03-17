@@ -100,12 +100,14 @@ function noterat(el) {
   <div class="clear-float"></div>
 </div>
 <g:if test="${courseSuggestionList}">
+<div class="section apps-dialogue-red-simple">
+  <g:message code="accountSetup.button.nextStep.hint"/>
+</div>
 <div class="section align-right">
-  Har du noterat användarnamn och password?&nbsp
   <input name="checkNoted" id="checkNotedId" type="checkbox" value="" onchange="noterat(this)">
+  <label for="checkNoted"><g:message code="accountSetup.password.checkBox.label"/>&nbsp;</label>
   <input id="msContinue" disabled="disabled" name="" type="button" value="<g:message code='accountSetup.button.nextStep.label'/>" onclick="window.location.href = 'https://minastudier.su.se/registrate'"/>
   <br/>
-  <span class="apps-dialogue-red-simple"><g:message code="accountSetup.button.nextStep.hint"/></span>
   <div class="clear-float"></div>
 </div>
 </g:if>
