@@ -105,7 +105,7 @@ function noterat(el) {
 </div>
 <div class="section align-right">
   <input name="checkNoted" id="checkNotedId" type="checkbox" value="" onchange="noterat(this)">
-  <label for="checkNoted"><g:message code="accountSetup.password.checkBox.label"/>&nbsp;</label>
+  <label for="checkNotedId"><g:message code="accountSetup.password.checkBox.label"/>&nbsp;</label>
   <input id="msContinue" disabled="disabled" name="" type="button" value="<g:message code='accountSetup.button.nextStep.label'/>" onclick="window.location.href = 'https://minastudier.su.se/registrate'"/>
   <br/>
   <div class="clear-float"></div>
