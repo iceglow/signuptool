@@ -266,6 +266,13 @@ ul li.mgn-min-15 .apps-content-block-inner, ul li.mgn-bottom-20 .apps-content-bl
   border: 1px solid #99acbf;
 }
 
+
+.apps-colorbox-red {
+  padding: 10px;
+  border: 1px solid #D95E00;
+}
+
+
 .text-float-right{float: right; margin-right: 5px;}
 
 .apps-columnwidth-350 {width: 350px;}
