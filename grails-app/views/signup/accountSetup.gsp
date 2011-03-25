@@ -29,8 +29,8 @@ function noterat(el) {
 <div class="clear-float"></div>
 
 <div class="section mgn-bottom-20">
-  <h2><g:message code="accountSetup.header.accountInfo"/></h2>
-  <div class="content-block apps-colorbox1 mgn-bottom-10">
+  <p><g:message code="accountSetup.header.accountInfo"/></p>
+  <div class="content-block apps-colorbox-red mgn-bottom-10">
     <div class="apps-content-block-inner">
       <div class="apps-float-30 label-grey-dark"><g:message code="generic.username.label"/></div>
       <div class="apps-float-60">${vo.uid}</div>
@@ -44,6 +44,14 @@ function noterat(el) {
     </div>
     <div class="clear-float"></div>
   </div>
+  
+  <p><em><g:message code="accountSetup.noSend.text"/></em></p>
+
+  <div class="apps-content-block-inner">
+    <g:form url="[action:'print']" name="printForm" target="_blank"></g:form>
+    <input type="button" value="<g:message code='accountSetup.button.printAccount.label'/>" onclick="document.printForm.submit()" />
+    <div class="clear-float"></div>
+  </div>
 
   <div class="apps-content-block-inner">
     <div class="apps-float-30 label-grey-dark"><g:message code="generic.email.label"/></div>
@@ -51,11 +59,6 @@ function noterat(el) {
 	<div class="clear-float"></div>
   </div>
   
-  <div class="apps-content-block-inner">
-    <g:form url="[action:'print']" name="printForm" target="_blank"></g:form>
-    <input type="button" value="<g:message code='accountSetup.button.printAccount.label'/>" onclick="document.printForm.submit()" />
-    <div class="clear-float"></div>
-  </div>
   <div class="apps-dotted-divider"></div>
 
 </div>
@@ -63,8 +66,12 @@ function noterat(el) {
   <h2><g:message code="accountSetup.lastStep.header"/></h2>
 
   <g:if test="${courseSuggestionList}">
+	<!-- OM MAN HAR FLERA KURSER: -->   
     <p><g:message code="accountSetup.lastStep.info"/></p>
+	<!-- OM MAN HAR EN KURS: -->
+	<p><g:message code="accountSetup.lastStep.info.oneCourse"/></p>
 
+	<!-- BORT MED HELA DEN HÄR TABELLEN -->
     <table width="100%" border="0" cellspacing="0" cellpadding="0" summary="Summary">
       <caption><g:message code="accountSetup.table.caption"/></caption>
       <thead>
@@ -100,12 +107,13 @@ function noterat(el) {
   <div class="clear-float"></div>
 </div>
 <g:if test="${courseSuggestionList}">
-<div class="section apps-dialogue-red-simple">
-  <g:message code="accountSetup.button.nextStep.hint"/>
-</div>
-<div class="section align-right">
+<div class="section">
+  <em><g:message code="accountSetup.button.nextStep.hint"/></em><br />
   <input name="checkNoted" id="checkNotedId" type="checkbox" value="" onchange="noterat(this)">
-  <label for="checkNotedId"><g:message code="accountSetup.password.checkBox.label"/>&nbsp;</label>
+  <label for="checkNotedId"><g:message code="accountSetup.password.checkBox.label"/></label>
+</div>
+
+<div class="section align-right">
   <input id="msContinue" disabled="disabled" name="" type="button" value="<g:message code='accountSetup.button.nextStep.label'/>" onclick="window.location.href = 'https://minastudier.su.se/registrate'"/>
   <br/>
   <div class="clear-float"></div>
