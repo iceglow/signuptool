@@ -65,39 +65,14 @@ function noterat(el) {
 <div class="section mgn-bottom-20">
   <h2><g:message code="accountSetup.lastStep.header"/></h2>
 
-  <g:if test="${courseSuggestionList}">
-	<!-- OM MAN HAR FLERA KURSER: -->   
-    <p><g:message code="accountSetup.lastStep.info"/></p>
-	<!-- OM MAN HAR EN KURS: -->
-	<p><g:message code="accountSetup.lastStep.info.oneCourse"/></p>
+  <g:if test="${courseSuggestionList && courseSuggestionList.size() > 0}">
 
-	<!-- BORT MED HELA DEN HÄR TABELLEN -->
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" summary="Summary">
-      <caption><g:message code="accountSetup.table.caption"/></caption>
-      <thead>
-        <tr>
-          <th><g:message code="generic.courseName.label"/></th>
-          <th><g:message code="generic.credits.label"/></th>
-          <th><g:message code="generic.courseCode.label"/></th>
-          %{--<th>Termin</th>--}%
-          %{--<th>Kurstakt</th>--}%
-          %{--<th>Kurstid</th>--}%
-        </tr>
-      </thead>
-
-      <tbody>
-        <g:each in="${courseSuggestionList}" status="i" var="courseVO">
-          <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-            <td><su:localizedString sv="${courseVO.kursbenamn}" en="${courseVO.kursbenamne}" /></td>
-            <td>${courseVO.poang }</td>
-            <td>${courseVO.kurskod}</td>
-            %{--<td>${courseVO.termin}</td>--}%
-            %{--<td>${courseVO.kurstakt }%</td>--}%
-            %{--<td><su:showProperTime time="${courseVO.kurstid}" /></td>--}%
-          </tr>
-        </g:each>
-      </tbody>
-    </table>
+    <g:if test="${courseSuggestionList.size() == 1}">
+      <p><g:message code="accountSetup.lastStep.info.oneCourse"/></p>
+    </g:if>
+    <g:else>
+      <p><g:message code="accountSetup.lastStep.info" args="[courseSuggestionList.size()]"/></p>
+    </g:else>
 
   </g:if>
   <g:else>
