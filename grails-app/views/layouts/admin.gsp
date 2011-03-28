@@ -46,6 +46,7 @@
                 <li><g:link controller="info" action="list">Information</g:link></li>
                 <li><g:link controller="section">Section</g:link></li>
                 <li><g:link controller="value">Value</g:link></li>
+                <li><g:link controller="feed">Feed</g:link></li>
             </ul>
 
          </div>

@@ -48,7 +48,7 @@
         <div class="section">
           <div class="apps-content-block-inner">
             <g:if test="${params.controller == 'signup' && params.action == 'index'}">
-              We are at index!!!
+
             </g:if>
           </div>
         </div>
@@ -65,7 +65,22 @@
           <div class="section">
             <div class="apps-content-block-inner">
               <g:if test="${params.controller == 'signup' && params.action == 'index'}">
-                We are at index!!!
+                <%
+                  def feedidentifier = "FEED" + ((null == session.locale || 'sv_SE' == session.locale) ? "SE" : "EN")
+                  se.su.it.sufeedparser.Feed feed = se.su.it.sufeedparser.Feed.findByIdentifier(feedidentifier)
+                %>
+                <g:if test="${feed.data}">
+                  <g:each in="${feed.data}" var="entry">
+                    <p class="category">Driftinformation</p>
+                    <ul class="generated-list">
+                      <li><p><strong>${entry.title}</strong><br>
+                        <span class="apps-hint-text"><g:formatDate format="yyyy-MM-dd HH:mm:ss" date="${entry.pubDate}"/><br></span>
+                        ${entry.body}
+                      </p></li>
+
+                    </ul>
+                  </g:each>
+                </g:if>
               </g:if>
             </div>
           </div>

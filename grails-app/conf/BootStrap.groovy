@@ -103,6 +103,18 @@ class BootStrap {
     }
     System.setProperties(sysprop)
 
+    // Su-FEEDPARSER
+    se.su.it.sufeedparser.Feed feed=se.su.it.sufeedparser.Feed.findByIdentifier("FEEDSE")
+    if(null==feed) {
+        feed=new se.su.it.sufeedparser.Feed(identifier:"FEEDSE",url:"http://dummy.url/feedsv.xml",description:"phoo and millibar")
+        feed.save()
+    }
+    feed=se.su.it.sufeedparser.Feed.findByIdentifier("FEEDEN")
+    if(null==feed) {
+        feed=new se.su.it.sufeedparser.Feed(identifier:"FEEDEN",url:"http://dummy.url/feeden.xml",description:"phoo and millibar")
+        feed.save()
+    }
+
     // Start Set Default Blobs
     def infoSvNa = Info.findInfoByLocaleAndSiteKey('sv_SE', 'new_account')
     if(infoSvNa == null || infoSvNa.size() <= 0) {
