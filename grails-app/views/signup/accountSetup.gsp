@@ -90,7 +90,7 @@ function noterat(el) {
 <g:if test="${courseSuggestionList}">
 <div class="section">
   <em><g:message code="accountSetup.button.nextStep.hint"/></em><br />
-  <input name="checkNoted" id="checkNotedId" type="checkbox" value="" onchange="noterat(this)">
+  <input name="checkNoted" id="checkNotedId" type="checkbox" value="" onclick="noterat(this)" onchange="noterat(this)">
   <label for="checkNotedId"><g:message code="accountSetup.password.checkBox.label"/></label>
 </div>
 
