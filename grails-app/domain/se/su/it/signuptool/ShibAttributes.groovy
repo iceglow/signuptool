@@ -40,7 +40,7 @@ class ShibAttributes {
   // Automatically set nin to 12 characters if given 10
   // this should be updated to handle year 2k :-) ...finally got to write that!
   public void setNin(String lhs) {
-    if (lhs.length() == 10) {
+    if (lhs && lhs.length() == 10) {
       this.nin = "19${lhs}"
     } else {
       this.nin = lhs
