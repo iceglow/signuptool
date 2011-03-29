@@ -47,6 +47,9 @@
       <div class="left-column">
         <div class="section">
           <div class="apps-content-block-inner">
+
+            <g:pageProperty name="page.leftCol" />
+
             <g:if test="${params.controller == 'signup' && params.action == 'index'}">
 
             </g:if>

@@ -131,17 +131,17 @@ class BootStrap {
 
 <div class="section mgn-bottom-20">
 	<img src="/img/card-progress-1of3.gif" alt="Steg 1 av 3" width="100" height="97" border="0" class="image-block-left" title="Steg 1 av 3" />
-    <h2>Ny student? Aktivera steg f\u00f6r steg:</h2>
-	<p>Som ny student f\u00f6ljer du bara v\u00e5r steg-f\u00f6r-steg-tjolahopp f\u00f6r att aktivera ditt Universitetskonto och f\u00e5 ditt Universitetskort.</p>
+    <h2>Ny p\u00e5 Stockholms universitet? Aktivera steg f\u00f6r steg:</h2>
+	<p>Som ny student f\u00f6ljer du bara v\u00e5r steg-f\u00f6r-steg-guide f\u00f6r att f\u00e5 ditt Universitetskonto och Universitetskort.</p>
 	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Steg 1: Logga in med ditt Studera.nu-konto</a></p>
 	<div class="clear-float"></div>
 </div>
 
 <div class="section mgn-bottom-20">
 	<img src="/img/card-progress-3of3.gif" alt="Steg 3 av 3" width="100" height="97" border="0" class="image-block-left" title="Steg 3 av 3" />
-	<h2>Redan student? Registrera dig p\u00e5 kurser:</h2>
-	<p>Om du redan bla bla beh\u00f6ver du bara registrera dig p\u00e5 de kurser som du \u00c4r antagen till f\u00f6r att allt ska funka finfint.</p>
-	<p><a href="https://'''+ minastudierfqdn + '''/registrate/" class="apps-add-bullet">Registrera dig p\u00e5 kurser i Mina studier</a></p>
+	<h2>Redan student h\u00e4r? Registrera dig p\u00e5 kurser:</h2>
+	<p>Om du redan \u00e4r student vid Stockholms universitet beh\u00f6ver du registrera dig p\u00e5 kurser f\u00f6r att r\u00e4knas som aktiv student.</p>
+	<p><a href="https://''' + minastudierfqdn + '''/registrate/" class="apps-add-bullet">Kursregistrering i Mina studier</a></p>
 	<div class="clear-float"></div>
 </div>''')
       infoSvNa.save()
@@ -154,24 +154,24 @@ class BootStrap {
         siteKey: 'new_account',
         active:true,
         body:'''<div class="section">
-<h1>This is in English</h1>
+<h1>Activate your account</h1>
 </div>
 
 <div class="clear-float"></div>
 
 <div class="section mgn-bottom-20">
-	<img src="/img/card-progress-1of3.gif" alt="Steg 1 av 3" width="100" height="97" border="0" class="image-block-left" title="Steg 1 av 3" />
-    <h2>Ny student? Aktivera steg f\u00f6r steg:</h2>
-	<p>Som ny student f\u00f6ljer du bara v\u00e5r steg-f\u00f6r-steg-tjolahopp f\u00f6r att aktivera ditt Universitetskonto och f\u00e5 ditt Universitetskort.</p>
-	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Steg 1: Logga in med ditt Studera.nu-konto</a></p>
+	<img src="/img/card-progress-1of3.gif" alt="Step 1 of 3" width="100" height="97" border="0" class="image-block-left" title="Step 1 of 3" />
+    <h2>New at Stockholm University? Activate step by step:</h2>
+	<p>As a new student you simply follow our step-by-step guide to get your University Account and University card.</p>
+	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Step 1: Log in with your Studera.nu account</a></p>
 	<div class="clear-float"></div>
 </div>
 
 <div class="section mgn-bottom-20">
-	<img src="/img/card-progress-3of3.gif" alt="Steg 3 av 3" width="100" height="97" border="0" class="image-block-left" title="Steg 3 av 3" />
-	<h2>Redan student? Registrera dig p\u00e5 kurser:</h2>
-	<p>Om du redan bla bla beh\u00f6ver du bara registrera dig p\u00e5 de kurser som du \u00c4r antagen till f\u00f6r att allt ska funka finfint.</p>
-	<p><a href="https://'''+ minastudierfqdn + '''/registrate/" class="apps-add-bullet">Registrera dig p\u00e5 kurser i Mina studier</a></p>
+	<img src="/img/card-progress-3of3.gif" alt="Step 3 of 3" width="100" height="97" border="0" class="image-block-left" title="Step 3 of 3" />
+	<h2>Already a student here? Register for courses:</h2>
+	<p>If you already are a student at Stockholm University you have to register for courses to get access to all services.</p>
+	<p><a href="https://''' + minastudierfqdn + '''/registrate/" class="apps-add-bullet">Course registration in My Studies</a></p>
 	<div class="clear-float"></div>
 </div>''')
       infoEnNa.save()
@@ -192,7 +192,7 @@ class BootStrap {
 <div class="section mgn-bottom-20">
  <h2>Generera ett nytt l\u00f6senord</h2>
 	<p>Ett nytt l\u00f6senord kommer att genereras \u00e5t dig n\u00e4r du klickar p\u00e5 l\u00e4nken och loggar in med ditt Studera.nu-konto (personnummer och l\u00f6senord)</p>
-	<p><a href="https://''' + aktiverafqdn + '''/signup/resetconfirm" class="apps-add-bullet">Steg 1: Logga in med ditt Studera.nu-konto</a></p>
+	<p><a href="https://''' + aktiverafqdn + '''/signup/resetconfirm" class="apps-add-bullet">Logga in med ditt Studera.nu-konto</a></p>
 	<div class="clear-float"></div>
 </div>''')
       infoSvRa.save()
