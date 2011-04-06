@@ -18,7 +18,7 @@
 
   <div class="footer-right">
     <ul class="footer-links">
-      <li><g:message code="application.name.label" /><g:meta name="app.version"/> ${System.getProperty('signuptool.hostname', 'unknown')}</li>
+      <li><g:message code="application.name.label" />&nbsp;<g:meta name="app.version"/> ${System.getProperty('signuptool.hostname', 'unknown')}</li>
       <li>
         <g:link url="http://www.su.se"><g:message code="application.to.su.web.label" /></g:link>
       </li>
