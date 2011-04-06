@@ -2,41 +2,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title><g:message code="accountPrint.pageHeader"/></title>
-
-  <style type="text/css">
-  body, td, th {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: 70%;
-  }
-
-  table {
-    border-style: none;
-    border-collapse: collapse;
-    empty-cells: show;
-  }
-
-  td {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: #CCC;
-    padding: 5px;
-  }
-  th {
-    text-align: left;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: #000;
-    padding: 5px;
-  }
-
-  </style>
-  <style type="text/css" media="print">
-  input {
-    visibility: hidden;
-  }
-
-  </style>
-
+<link href="/css/webapps-print.css" type="text/css" rel="stylesheet">
+  
 </head>
 <body onLoad="window.print()">
 

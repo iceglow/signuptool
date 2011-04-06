@@ -1,0 +1,72 @@
+/* ---------------------------------------------------------------------------------------------------- */
+/* ----- webapps-print.css */
+/* This stylesheet contains styles for the simplified "print versions" of some views. KEEP IT SIMPLE! */
+/* ---------------------------------------------------------------------------------------------------- */
+
+
+    body, td, th {
+      font-family: Verdana, Geneva, sans-serif;
+      font-size: 70%;
+	  /* Worth trying:
+	  
+	  font-size: 11pt;
+	 
+	 */
+      }
+
+    table {
+      border-style: none;
+      border-collapse: collapse;
+      empty-cells: show;
+    }
+
+    td, th {
+      padding: 0;
+      margin: 0;
+    }
+
+    td {
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+      border-bottom-color: #CCC;
+      padding: 5px;
+    }
+
+    th {
+      text-align: left;
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+      border-bottom-color: #000;
+      padding: 5px;
+    }
+
+    .emptycolumn {
+      padding-left: 5em;
+    }
+
+    table.meta {
+      width: auto;
+    }
+    table.meta th, table.meta td {
+      border: none;
+      padding: 3px;
+    }
+
+
+/* PRINT STYLES */
+    @media print {
+    input {
+      visibility: hidden;
+    }
+	}
+	
+
+ 
+
+
+    
+
+
+   
+
+    
