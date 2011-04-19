@@ -1,6 +1,6 @@
 package se.su.it.signuptool
 
-class ShibAttributes {
+class ShibAttributes implements java.io.Serializable {
 
   // Shib-Identity-Provider
   String idp

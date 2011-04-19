@@ -46,49 +46,83 @@ class SignupController {
     render "${crads} och ${addr}"
   }
 
-  def accountSetup = {
+  def accountSetupFlow = {
+    receiveShib {
+      action {
+        def attrs = new ShibAttributes()
+        attrs.setIdp(request.eppn)
+        attrs.setNin(request.norEduPersonNIN)
+        attrs.givenName = request.givenName
+        attrs.sn = request.sn
 
-    // Initialize model with shib data
-    def attrs = new ShibAttributes()
-    attrs.setIdp(request?.eppn)
-    attrs.setNin(request?.norEduPersonNIN)
-    attrs.givenName = request?.givenName
-    attrs.sn = request?.sn
+        // Validate model and handle map of errors if invalid
+        if (!attrs.validate()) {
+          log.error("accountSetup: validate() failed for user: ${attrs}, errorMessages=${attrs.errorMessages}")
+          return error()
+        }
+        [attrs: attrs]
+      }
+      on("success").to "enableAccount"
+      on("error").to "studeraNuAccountSetupError"
+    }
 
-    // Validate model and handle map of errors if invalid
-    if (!attrs.validate()) {
-      log.error("accountSetup: validate() failed for user: ${attrs}, errorMessages=${attrs.errorMessages}")
+    enableAccount {
+      action {
+        ShibAttributes attrs = flow.attrs
+        def res = SignupService.enableAccount(attrs)
+        session.currentVo = res.vo // the print action uses this
+        [mail: res.mail, vo: res.vo]
+      }
+      on("success").to "preCardOrder"
+      on("error").to "sukatAccountSetupError"
+      on(Exception).to "sukatAccountSetupError"
+    }
+
+    preCardOrder {
+      action {
+        try {
+          ChangeAddressVO addr = LPWWebService.getChangeAddressVO(flow.vo.uid)
+          [addrVo: addr.permanentAddr]
+        } catch (Exception e) {
+          [addrVo: null]
+        }
+      }
+      on("success").to "cardOrder"
+    }
+
+    cardOrder { // Process the form data here
+      on("cardbutton").to "fetchLpwStuff"
+    }
+
+    fetchLpwStuff {
+      action {
+        def courseSuggestionList
+        def uid = flow.vo.uid
+        try {
+          def semesterVO = LPWWebService?.getCurrentAndNextSemester(uid)
+          def courseSuggestionVO = LPWWebService?.getCourseRegSuggestions(uid, semesterVO.currentSemester)
+          courseSuggestionList = courseSuggestionVO?.courseRegSuggestions
+          courseSuggestionVO = LPWWebService?.getCourseRegSuggestions(uid, semesterVO.nextSemester)
+          courseSuggestionList.addAll(courseSuggestionVO?.courseRegSuggestions)
+        }
+        catch (Exception e) { // The view will handle this failure gracefully
+          e.printStackTrace()
+        }
+        [courseSuggestionList: courseSuggestionList]
+      }
+      on("success").to "accountDetails"
+      on("error").to "sukatAccountSetupError"
+    }
+
+    accountDetails ()
+
+    studeraNuAccountSetupError {
       redirect(controller: "croak", action: "studeraNuAccountSetupError")
-      return
     }
 
-    def res
-    try {
-      res = SignupService.enableAccount(attrs)
-    }
-    catch (Exception e) {
-      log.error("accountSetup: SignupService.enableAccount() failed for user: ${attrs}")
+    sukatAccountSetupError {
       redirect(controller: "croak", action: "sukatAccountSetupError")
-      return
-      // do something
     }
-
-    session.currentVo = res.vo;
-
-    def courseSuggestionList = null
-    try {
-      def semesterVO = LPWWebService?.getCurrentAndNextSemester(res.vo.uid)
-      def courseSuggestionVO = LPWWebService?.getCourseRegSuggestions(res.vo.uid, semesterVO.currentSemester)
-      
-      courseSuggestionList = courseSuggestionVO?.courseRegSuggestions
-      courseSuggestionVO = LPWWebService?.getCourseRegSuggestions(res.vo.uid, semesterVO.nextSemester)
-      courseSuggestionList.addAll(courseSuggestionVO?.courseRegSuggestions)
-    }
-    catch (Exception e) {
-      e.printStackTrace()
-    }
-
-    [vo:res.vo, mail:res.mail, courseSuggestionList: courseSuggestionList]
   }
 
   def resetconfirm = {
