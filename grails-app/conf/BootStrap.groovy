@@ -32,22 +32,22 @@ class BootStrap {
         break
       case "test":
         lpwurl = "https://lpwtest-su.its.uu.se"
-        sukatsvcurl = "https://sukat-svc-test.it.su.se"
+        sukatsvcurl = "https://sukat-test-svc.it.su.se"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
         break
       case ~/dev(elopment)?/:
       default:
         lpwurl = "https://lpwtest-su.its.uu.se"
-        sukatsvcurl = "https://sukat-svc-test.it.su.se"
+        sukatsvcurl = "https://sukat-test-svc.it.su.se"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
     }
     log.info "LPW URL: ${lpwurl}"
     configService.registerSection("WS")
-    configService.registerValueToSection("WS", "AccountFacade", "${sukatsvcurl}/sukatsvc-ws/services/AccountFacade")
-    configService.registerValueToSection("WS", "EnrollmentFacade", "${sukatsvcurl}/sukatsvc-ws/services/EnrollmentFacade")
-    configService.registerValueToSection("WS", "UserContactFacade", "${sukatsvcurl}/sukatsvc-ws/services/UserContactFacade")
+    configService.registerValueToSection("WS", "AccountFacade", "${sukatsvcurl}/services/AccountFacade")
+    configService.registerValueToSection("WS", "EnrollmentFacade", "${sukatsvcurl}/services/EnrollmentFacade")
+    configService.registerValueToSection("WS", "UserContactFacade", "${sukatsvcurl}/services/UserContactFacade")
 
     configService.registerSection("properties")
     configService.registerValueToSection("properties", "javax.security.auth.useSubjectCredsOnly", "false")
