@@ -8,7 +8,6 @@ class SignupService {
 
   Map enableAccount(ShibAttributes attrs) throws Exception {
     def vo = null
-
     vo = WsMethodService?.findEnrolledUserByNIN(attrs.nin)
     if (!vo && attrs.domain =~ /student.su.se/) {
       vo = WsMethodService?.enrollUser(attrs.domain, attrs.givenName, attrs.sn, attrs.nin)

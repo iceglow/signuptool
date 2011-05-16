@@ -32,14 +32,14 @@ class BootStrap {
         break
       case "test":
         lpwurl = "https://lpwtest-su.its.uu.se"
-        sukatsvcurl = "https://sukat-test-svc.it.su.se"
+        sukatsvcurl = "https://sukat-svc-test.it.su.se"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
         break
       case ~/dev(elopment)?/:
       default:
         lpwurl = "https://lpwtest-su.its.uu.se"
-        sukatsvcurl = "https://sukat-test-svc.it.su.se"
+        sukatsvcurl = "https://sukat-svc-test.it.su.se"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
     }
