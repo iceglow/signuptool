@@ -82,7 +82,7 @@ class SignupController {
       action {
         try {
           ChangeAddressVO addr = LPWWebService.getChangeAddressVO(flow.vo.uid)
-          [addrVo: addr.permanentAddr]
+          [addrVo: addr.permanentAddr, usd: new UserSuppliedData()]
         } catch (Exception e) {
           [addrVo: null]
         }
@@ -91,7 +91,11 @@ class SignupController {
     }
 
     cardOrder { // Process the form data here
-      on("cardbutton").to "fetchLpwStuff"
+      on("cardbutton"){
+         def usd = new UserSuppliedData(params)
+         flow.usd = usd
+         if(!usd.validate())return error()
+      }.to "fetchLpwStuff"
     }
 
     fetchLpwStuff {
