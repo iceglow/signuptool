@@ -22,4 +22,8 @@ class SignupService {
 
     [vo: vo, mail: mail]
   }
+
+  def setSukatMail(String uid, String mail) {
+    return WsMethodService?.setMail(uid, mail)
+  }
 }

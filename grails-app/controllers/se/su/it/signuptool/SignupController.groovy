@@ -99,8 +99,12 @@ class SignupController {
          def usd = new UserSuppliedData(params)
          usd.validate()
          flow.usd = usd
-         if(usd.hasErrors())
+         if(usd.hasErrors()) {
            return error()
+         }
+         if(usd.shouldUseOtherEmail()) {
+          def res = SignupService.setSukatMail(flow.vo.uid, flow.usd.otherEmail)
+         }
       }.to "fetchLpwStuff"
     }
 

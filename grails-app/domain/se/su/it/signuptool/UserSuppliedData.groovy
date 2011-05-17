@@ -19,23 +19,23 @@ class UserSuppliedData implements Serializable{
     otherEmail(validator: { val, obj -> return UserSuppliedData.validatorTestOtherEmail(val,obj)})
   }
 
-  boolean isDeliverHelpdesk() {
+  boolean shouldDeliverHelpdesk() {
     return cardpickup.equalsIgnoreCase("helpdesk")
   }
 
-  boolean isDeliverOtherAddress() {
+  boolean shouldDeliverOtherAddress() {
     return cardpickup.equalsIgnoreCase("otherAddress")
   }
 
-  boolean isDeliverDefaultAddress() {
+  boolean shouldDeliverDefaultAddress() {
     return cardpickup.equalsIgnoreCase("defaultAddress")
   }
 
-  boolean isDeliverOtherEmail() {
-    return email.equalsIgnoreCase("otherEmail")
+  boolean shouldUseOtherEmail() {
+    return email.equalsIgnoreCase("other")
   }
 
-  boolean isDeliverSuEmail() {
+  boolean shouldUseSuEmail() {
     return email.equalsIgnoreCase("su")
   }
 

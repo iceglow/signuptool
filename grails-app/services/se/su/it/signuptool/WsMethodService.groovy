@@ -68,4 +68,17 @@ class WsMethodService {
       return null
     }
   }
+
+  def setMail(String uid, String mail)
+  {
+    try {
+      def facade = wsAccessService.getFacade(UserContactFacade.class)
+      return facade.setMail(uid,mail)
+    }
+
+    catch (Exception e) {
+      e.printStackTrace()
+      return null
+    }
+  }
 }
