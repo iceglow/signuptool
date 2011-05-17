@@ -10,13 +10,13 @@ class UserSuppliedData implements Serializable{
   String otherEmail
 
   static constraints = {
-    cardpickup(blank: false, inList: ['helpdesk', 'otherAdrress', 'defaultAddress'])
+    cardpickup(blank: false, inList: ['helpdesk', 'otherAddress', 'defaultAddress'])
     email(blank: false, inList: ['su', 'other'])
     coadr()
-    gatadr(blank: false, validator: { val, obj -> return UserSuppliedData.validatorTestOtherAddress("gatadr",val,obj)})
-    postnr(blank: false, validator: { val, obj -> return UserSuppliedData.validatorTestOtherAddress("postnr",val,obj)})
-    ort(blank: false, validator: { val, obj -> return UserSuppliedData.validatorTestOtherAddress("ort",val,obj)})
-    otherEmail(blank: false, validator: { val, obj -> return UserSuppliedData.validatorTestOtherEmail(val,obj)})
+    gatadr(validator: { val, obj -> return UserSuppliedData.validatorTestOtherAddress("gatadr",val,obj)})
+    postnr(validator: { val, obj -> return UserSuppliedData.validatorTestOtherAddress("postnr",val,obj)})
+    ort(validator: { val, obj -> return UserSuppliedData.validatorTestOtherAddress("ort",val,obj)})
+    otherEmail(validator: { val, obj -> return UserSuppliedData.validatorTestOtherEmail(val,obj)})
   }
 
   static boolean validatorTestOtherAddress(String field,String val,UserSuppliedData obj)
