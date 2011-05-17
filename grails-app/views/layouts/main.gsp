@@ -49,6 +49,16 @@
       <div class="apps-dialogue-green">${flash.message}</div>
     </div>
   </g:if>
+  <g:if test="${error}">
+    <div class="section">
+      <div class="apps-dialogue-red">${error}</div>
+    </div>
+  </g:if>
+  <g:if test="${message}">
+    <div class="section">
+      <div class="apps-dialogue-green">${message}</div>
+    </div>
+  </g:if>
     <!-- /Error Messages -->
 
     <!-- columns -->

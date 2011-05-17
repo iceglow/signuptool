@@ -102,10 +102,12 @@ class SignupController {
          if(usd.hasErrors()) {
            return error()
          }
-          if(usd.shouldUseOtherEmail()) {
+
+         if(usd.shouldUseOtherEmail()) {
           if(!SignupService.setSukatMail(flow.vo.uid, flow.usd.otherEmail)) {
             flow.usd.email = "su"
             flow.usd.otherEmail = ""
+            flash.error = message(code: 'accountSetup.otherEmail.set.error')
           }
          }
       }.to "fetchLpwStuff"

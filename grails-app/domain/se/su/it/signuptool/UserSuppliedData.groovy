@@ -52,7 +52,7 @@ class UserSuppliedData implements Serializable{
   static boolean validatorTestOtherEmail(String val,UserSuppliedData obj)
   {
     if (obj.email.equalsIgnoreCase("other")) {
-      return val ==~ /[a-z_][a-z0-9_]+@[a-z0-9_.?]+.[a-z]{1,3}/
+      return val ==~ /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/
     }
     else {
       return true
