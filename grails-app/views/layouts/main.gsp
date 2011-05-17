@@ -38,6 +38,19 @@
     <g:render template="/layouts/header"/>
     <!-- /head -->
 
+    <!-- Error Messages -->
+  <g:if test="${flash.error}">
+    <div class="section">
+      <div class="apps-dialogue-red">${flash.error}</div>
+    </div>
+  </g:if>
+  <g:if test="${flash.message}">
+    <div class="section">
+      <div class="apps-dialogue-green">${flash.message}</div>
+    </div>
+  </g:if>
+    <!-- /Error Messages -->
+
     <!-- columns -->
     <div id="columns" class="columns">
       <div class="clear-float"></div>

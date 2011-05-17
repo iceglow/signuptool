@@ -102,8 +102,11 @@ class SignupController {
          if(usd.hasErrors()) {
            return error()
          }
-         if(usd.shouldUseOtherEmail()) {
-          def res = SignupService.setSukatMail(flow.vo.uid, flow.usd.otherEmail)
+          if(usd.shouldUseOtherEmail()) {
+          if(!SignupService.setSukatMail(flow.vo.uid, flow.usd.otherEmail)) {
+            flow.usd.email = "su"
+            flow.usd.otherEmail = ""
+          }
          }
       }.to "fetchLpwStuff"
     }

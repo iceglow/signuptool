@@ -73,12 +73,13 @@ class WsMethodService {
   {
     try {
       def facade = wsAccessService.getFacade(UserContactFacade.class)
-      return facade.setMail(uid,mail)
+      facade.setMail(uid,mail)
+      return true
     }
 
     catch (Exception e) {
       e.printStackTrace()
-      return null
+      return false
     }
   }
 }
