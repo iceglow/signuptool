@@ -62,7 +62,7 @@ function noterat(el) {
 
   <div class="apps-content-block-inner">
     <div class="apps-float-30 label-grey-dark"><g:message code="generic.email.label"/></div>
-    <div class="apps-float-60">${mail}</div>
+    <div class="apps-float-60">${usd?.shouldUseOtherEmail() ? usd.otherEmail:mail}</div>
 	<div class="clear-float"></div>
   </div>
   
