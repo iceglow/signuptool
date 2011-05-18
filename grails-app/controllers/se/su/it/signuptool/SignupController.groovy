@@ -4,6 +4,10 @@ import javax.servlet.http.Cookie
 import se.su.it.ws.commons.WSLocatorFactory
 import se.su.it.sukat.client.CardInfoFacade
 import ladok.lpw.service.changeaddress.facadeclient.ChangeAddressVO
+import se.su.it.sucard.client.CardOrderFacadePortType
+import se.su.it.sucard.client.CardOrderFacade_Service
+import se.su.it.sucard.client.CardOrderVO
+import se.su.it.sucard.client.AddressVO
 
 class SignupController {
 
@@ -44,6 +48,43 @@ class SignupController {
 
     ChangeAddressVO addr = LPWWebService.getChangeAddressVO('marcus')
     render "${crads} och ${addr}"
+  }
+
+  def test2 = {
+    Properties p = new Properties()
+
+    p.setProperty("CardOrderFacade", "http://ilinca.it.su.se/sucardsvc-ws/services/CardOrderFacade")
+    p.setProperty("CardSyncFacade", "http://ilinca.it.su.se/sucardsvc-ws/services/CardSyncFacade")
+    def wsloc = WSLocatorFactory.instance(p)
+    CardOrderFacadePortType fac = wsloc.getService(CardOrderFacadePortType.class)
+    CardOrderVO covo2 = new CardOrderVO()
+    covo2.firstname = "Janne"
+    covo2.lastname = "Qvarnstršm"
+    covo2.id = "jqvar"
+    covo2.owner = "who knows"
+    covo2.printer = "hp kanske"
+    covo2.serial = "serienummer"
+    covo2.status = "ok"
+
+    AddressVO avo = new AddressVO()
+    avo.cardOrderVO = covo2
+    avo.streetadress1 = "gatan 22"
+    avo.streetaddress2 = "postbox23"
+    avo.zipcode = "14645"
+    avo.locality = "what is this"
+    CardOrderVO covo = new CardOrderVO()
+    covo.address = avo
+    covo.firstname = "Janne"
+    covo.lastname = "Qvarnstršm"
+    covo.id = "jqvar"
+    covo.owner = "who knows"
+    covo.printer = "hp kanske"
+    covo.serial = "serienummer"
+    covo.status = "ok"
+
+
+    def crads = fac.orderCard(covo)
+    render "JANNE:${crads}:JANNE"
   }
 
   def accountSetupFlow = {

@@ -1,6 +1,8 @@
 package se.su.it.signuptool
 
 import se.su.it.sukat.client.*
+import se.su.it.sucard.client.CardOrderVO
+import se.su.it.sucard.client.CardOrderFacadePortType
 
 class WsMethodService {
   static scope = "prototype"
@@ -74,6 +76,19 @@ class WsMethodService {
     try {
       def facade = wsAccessService.getFacade(UserContactFacade.class)
       facade.setMail(uid,mail)
+      return true
+    }
+
+    catch (Exception e) {
+      e.printStackTrace()
+      return false
+    }
+  }
+
+  def orderCard(CardOrderVO covo) {
+    try {
+      def facade = wsAccessService.getFacade(CardOrderFacadePortType.class)
+      facade.orderCard(covo)
       return true
     }
 

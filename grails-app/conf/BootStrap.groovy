@@ -49,6 +49,11 @@ class BootStrap {
     configService.registerValueToSection("WS", "EnrollmentFacade", "${sukatsvcurl}/services/EnrollmentFacade")
     configService.registerValueToSection("WS", "UserContactFacade", "${sukatsvcurl}/services/UserContactFacade")
 
+    //sucardsvc
+    configService.registerValueToSection("WS", "CardOrderFacade", "http://ilinca.it.su.se/sucardsvc-ws/services/CardOrderFacade")
+    configService.registerValueToSection("WS", "CardSyncFacade", "http://ilinca.it.su.se/sucardsvc-ws/services/CardSyncFacade")
+    //sucardsvc
+
     configService.registerSection("properties")
     configService.registerValueToSection("properties", "javax.security.auth.useSubjectCredsOnly", "false")
     configService.registerValueToSection("properties", "java.security.krb5.kdc", "kerberos.su.se")
