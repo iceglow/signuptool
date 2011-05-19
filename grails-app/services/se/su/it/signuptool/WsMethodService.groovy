@@ -80,6 +80,7 @@ class WsMethodService {
     }
 
     catch (Exception e) {
+      log.error(e.toString())
       e.printStackTrace()
       return false
     }
@@ -93,6 +94,7 @@ class WsMethodService {
     }
 
     catch (Exception e) {
+      log.error(e.toString())
       e.printStackTrace()
       return false
     }
