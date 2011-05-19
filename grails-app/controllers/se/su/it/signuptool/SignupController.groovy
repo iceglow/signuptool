@@ -52,8 +52,8 @@ class SignupController {
   def test2 = {
     Properties p = new Properties()
 
-    p.setProperty("CardOrderFacade", "http://ilinca.it.su.se/sucardsvc-ws/services/CardOrderFacade")
-    p.setProperty("CardSyncFacade", "http://ilinca.it.su.se/sucardsvc-ws/services/CardSyncFacade")
+    p.setProperty("CardOrderFacade", "http://ilinca.it.su.se/services/CardOrderFacade")
+    p.setProperty("CardSyncFacade", "http://ilinca.it.su.se/services/CardSyncFacade")
     def wsloc = WSLocatorFactory.instance(p)
     CardOrderFacadePortType fac = wsloc.getService(CardOrderFacadePortType.class)
 
