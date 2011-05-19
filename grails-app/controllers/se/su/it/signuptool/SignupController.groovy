@@ -107,15 +107,18 @@ class SignupController {
 
     preCardOrder {
       action {
+        def usd = new UserSuppliedData()
         try {
           ChangeAddressVO addr = LPWWebService.getChangeAddressVO(flow.vo.uid)
-          def usd = new UserSuppliedData()
           if(addr == null || addr.permanentAddr == null) {
             usd.cardpickup = "otherAddress"
           }
           [addrVo: addr.permanentAddr, usd: usd]
         } catch (Exception e) {
-          [addrVo: null]
+          usd.cardpickup = "otherAddress"
+          flash.error = message(code: 'accountSetup.orderCard.fetch.ladok.address.error')
+          log.error("Could not get Ladok default address for uid<" + flow.vo.uid + ">")
+          [addrVo: null, usd: usd]
         }
       }
       on("success").to "cardOrder"
@@ -157,7 +160,8 @@ class SignupController {
           courseSuggestionList.addAll(courseSuggestionVO?.courseRegSuggestions)
         }
         catch (Exception e) { // The view will handle this failure gracefully
-          e.printStackTrace()
+          flash.error = message(code: 'accountSetup.orderCard.fetch.ladok.address.error')
+          log.error("Could not get courses from Ladok for uid<" + flow.vo.uid + ">")
         }
         [courseSuggestionList: courseSuggestionList]
       }
