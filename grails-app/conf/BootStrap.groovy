@@ -26,28 +26,28 @@ class BootStrap {
     switch (System.getProperty("signuptool", "dev")) {
       case ~/prod(uction)?/:
         lpwurl = "https://lpwprod-su.its.uu.se"
-        sukatsvcurl = "https://sukat-svc.it.su.se"
+        sukatsvcurl = "https://sukat-svc.it.su.se/services"
         aktiverafqdn = "aktivera.su.se"
         minastudierfqdn = "minastudier.su.se"
         break
       case "test":
         lpwurl = "https://lpwtest-su.its.uu.se"
-        sukatsvcurl = "https://sukat-svc-test.it.su.se"
+        sukatsvcurl = "https://sukat-test-svc.it.su.se/services"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
         break
       case ~/dev(elopment)?/:
       default:
         lpwurl = "https://lpwtest-su.its.uu.se"
-        sukatsvcurl = "https://sukat-svc-test.it.su.se"
+        sukatsvcurl = "https://sukat-test-svc.it.su.se/services"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
     }
     log.info "LPW URL: ${lpwurl}"
     configService.registerSection("WS")
-    configService.registerValueToSection("WS", "AccountFacade", "${sukatsvcurl}/services/AccountFacade")
-    configService.registerValueToSection("WS", "EnrollmentFacade", "${sukatsvcurl}/services/EnrollmentFacade")
-    configService.registerValueToSection("WS", "UserContactFacade", "${sukatsvcurl}/services/UserContactFacade")
+    configService.registerValueToSection("WS", "AccountFacade", "${sukatsvcurl}/AccountFacade")
+    configService.registerValueToSection("WS", "EnrollmentFacade", "${sukatsvcurl}/EnrollmentFacade")
+    configService.registerValueToSection("WS", "UserContactFacade", "${sukatsvcurl}/UserContactFacade")
 
     //sucardsvc
     configService.registerValueToSection("WS", "CardOrderFacade", "http://ilinca.it.su.se/sucardsvc-ws/services/CardOrderFacade")

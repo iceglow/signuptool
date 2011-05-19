@@ -10,55 +10,15 @@ class WsMethodService {
 
   def wsAccessService
 
-
-  def findEnrolledUserByNIN(String nin) {
-    try {
-      def facade = wsAccessService.getFacade(EnrollmentFacade.class)
-      return facade.findEnrolledUserByNIN(nin);
-    }
-
-    catch (Exception e) {
-      log.error(e.toString())
-      return null
-    }
-  }
-
   def enrollUser(String domain, String givenName, String sn, String nin)
   {
     try {
       def facade = wsAccessService.getFacade(EnrollmentFacade.class)
       return facade.enrollUser(domain, givenName, sn, "other", nin)
     }
-
     catch (Exception e) {
       log.error(e.toString())
-      return null
-    }
-  }
-
-  def isBasicServicesEnabled(String uid)
-  {
-     try {
-      def facade = wsAccessService.getFacade(AccountFacade.class)
-      return facade.isBasicServicesEnabled(uid)
-    }
-
-    catch (Exception e) {
-      log.error(e.toString())
-      return null
-    }
-  }
-
-  def enableBasicServices(String uid)
-  {
-     try {
-      def facade = wsAccessService.getFacade(AccountFacade.class)
-      return facade.enableBasicServices(uid)
-    }
-
-    catch (Exception e) {
-      log.error(e.toString())
-      return null
+      throw e
     }
   }
 
@@ -68,10 +28,9 @@ class WsMethodService {
       def facade = wsAccessService.getFacade(UserContactFacade.class)
       return facade.getMail(uid)
     }
-
     catch (Exception e) {
       log.error(e.toString())
-      return null
+      throw e
     }
   }
 
