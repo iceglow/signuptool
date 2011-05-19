@@ -65,6 +65,23 @@ function noterat(el) {
     <div class="apps-float-60">${usd?.shouldUseOtherEmail() ? usd.otherEmail:mail}</div>
 	<div class="clear-float"></div>
   </div>
+
+  <div class="apps-content-block-inner">
+    <div class="apps-float-30 label-grey-dark"><g:message code="generic.universityCard.label"/></div>
+    <div class="apps-float-60">${(usd?.shouldDeliverDefaultAddress() || usd?.shouldDeliverOtherAddress()) ? g.message(code: 'generic.universityCard.deliver.address.label'):g.message(code: 'generic.universityCard.deliver.helpDesk.label')}</div>
+	  <div class="apps-float-60">${attrs?.givenName + "&nbsp;" + attrs?.sn}</div>
+    <g:if test="${usd?.shouldDeliverOtherAddress()}">
+      <div class="apps-float-60">${usd?.coadr}</div>
+      <div class="apps-float-60">${usd?.gatadr}</div>
+      <div class="apps-float-60">${usd?.postnr + "&nbsp;" + usd?.ort}</div>
+    </g:if>
+    <g:if test="${usd?.shouldDeliverDefaultAddress()}">
+      <div class="apps-float-60">${addrVo?.coadr}</div>
+      <div class="apps-float-60">${addrVo?.gatadr}</div>
+      <div class="apps-float-60">${addrVo?.postnr + "&nbsp;" + addrVo?.ort}</div>
+    </g:if>
+  <div class="clear-float"></div>
+  </div>
   
   <div class="apps-dotted-divider"></div>
 
