@@ -68,18 +68,20 @@ function noterat(el) {
 
   <div class="apps-content-block-inner">
     <div class="apps-float-30 label-grey-dark"><g:message code="generic.universityCard.label"/></div>
-    <div class="apps-float-60">${(usd?.shouldDeliverDefaultAddress() || usd?.shouldDeliverOtherAddress()) ? g.message(code: 'generic.universityCard.deliver.address.label'):g.message(code: 'generic.universityCard.deliver.helpDesk.label')}</div>
-	  <div class="apps-float-60">${attrs?.givenName + "&nbsp;" + attrs?.sn}</div>
+    <div class="apps-float-60">${(usd?.shouldDeliverDefaultAddress() || usd?.shouldDeliverOtherAddress()) ? g.message(code: 'generic.universityCard.deliver.address.label'):g.message(code: 'generic.universityCard.deliver.helpDesk.label')}<br />
     <g:if test="${usd?.shouldDeliverOtherAddress()}">
-      <div class="apps-float-60">${usd?.coadr}</div>
-      <div class="apps-float-60">${usd?.gatadr}</div>
-      <div class="apps-float-60">${usd?.postnr + "&nbsp;" + usd?.ort}</div>
+      ${attrs?.givenName + "&nbsp;" + attrs?.sn}<br />
+      ${usd?.coadr}<br />
+      ${usd?.gatadr}<br />
+      ${usd?.postnr + "&nbsp;" + usd?.ort}<br />
     </g:if>
     <g:if test="${usd?.shouldDeliverDefaultAddress()}">
-      <div class="apps-float-60">${addrVo?.coadr}</div>
-      <div class="apps-float-60">${addrVo?.gatadr}</div>
-      <div class="apps-float-60">${addrVo?.postnr + "&nbsp;" + addrVo?.ort}</div>
+      ${attrs?.givenName + "&nbsp;" + attrs?.sn}<br />
+      ${addrVo?.coadr}<br />
+      ${addrVo?.gatadr}<br />
+      ${addrVo?.postnr + "&nbsp;" + addrVo?.ort}<br />
     </g:if>
+    </div>
   <div class="clear-float"></div>
   </div>
   

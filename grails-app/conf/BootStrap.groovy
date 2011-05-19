@@ -48,6 +48,7 @@ class BootStrap {
     configService.registerValueToSection("WS", "AccountFacade", "${sukatsvcurl}/AccountFacade")
     configService.registerValueToSection("WS", "EnrollmentFacade", "${sukatsvcurl}/EnrollmentFacade")
     configService.registerValueToSection("WS", "UserContactFacade", "${sukatsvcurl}/UserContactFacade")
+    configService.registerValueToSection("WS", "MailRoutingFacade", "${sukatsvcurl}/MailRoutingFacade")
 
     //sucardsvc
     configService.registerValueToSection("WS", "CardOrderFacade", "http://ilinca.it.su.se/sucardsvc-ws/services/CardOrderFacade")
