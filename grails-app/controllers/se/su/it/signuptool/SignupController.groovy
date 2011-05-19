@@ -160,7 +160,7 @@ class SignupController {
           courseSuggestionList.addAll(courseSuggestionVO?.courseRegSuggestions)
         }
         catch (Exception e) { // The view will handle this failure gracefully
-          flash.error = message(code: 'accountSetup.orderCard.fetch.ladok.address.error')
+          flash.error = message(code: 'accountSetup.orderCard.fetch.ladok.courses.error')
           log.error("Could not get courses from Ladok for uid<" + flow.vo.uid + ">")
         }
         [courseSuggestionList: courseSuggestionList]

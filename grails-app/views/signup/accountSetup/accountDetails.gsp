@@ -19,8 +19,8 @@ function noterat(el) {
 </g:javascript>
 
 <content tag="leftCol">
-<p class="category"><g:message code="accountSetup.step2.counter"/></p>
-<p><strong><g:message code="accountSetup.step2.description"/></strong> <a title="<g:message code='accountSetup.step2.counter'/>"><img src="${resource(dir: 'img', file: 'card-progress-2of3.gif')}" alt="<g:message code='accountSetup.step2.counter'/>" border="0" class="logotype" title="<g:message code='accountSetup.step2.counter'/>" /></a></p>
+<p class="category"><g:message code="accountSetup.step3.counter"/></p>
+<p><strong><g:message code="accountSetup.step3.description"/></strong> <a title="<g:message code='accountSetup.step3.counter'/>"><img src="${resource(dir: 'img', file: 'card-progress-3of3.gif')}" alt="<g:message code='accountSetup.step3.counter'/>" border="0" class="logotype" title="<g:message code='accountSetup.step3.counter'/>" /></a></p>
 </content>
 
 <div class="section">
