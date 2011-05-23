@@ -72,7 +72,7 @@ class BootStrap {
     configService.registerValueToSection("jaas", "realm", "SU.SE")
     configService.registerValueToSection("jaas", "debug", "false")
     configService.registerValueToSection("jaas", "keyTab", "/etc/krb5.keytab-su-signuptool-prod")
-    configService.registerValueToSection("jaas", "principal", "su-signuptooltool-prod@SU.SE")
+    configService.registerValueToSection("jaas", "principal", "su-signuptool-prod@SU.SE")
 
     java.security.Security.setProperty("login.configuration.provider", "se.su.it.signuptool.Krb5Configuration")
 
