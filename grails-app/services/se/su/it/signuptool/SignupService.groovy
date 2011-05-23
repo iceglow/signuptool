@@ -11,7 +11,7 @@ class SignupService {
   static transactional = false
 
   Map enableAccount(ShibAttributes attrs) throws Exception {
-    def vo = WsMethodService.enrollUser(attrs.domain, attrs.givenName, attrs.sn, attrs.nin)
+    def vo = WsMethodService.enrollUser(attrs.givenName, attrs.sn, attrs.nin)
     def mail =  WsMethodService.getMail(vo.uid)
     [vo: vo, mail: mail]
   }

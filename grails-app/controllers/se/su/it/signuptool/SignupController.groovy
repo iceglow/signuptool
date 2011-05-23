@@ -77,7 +77,6 @@ class SignupController {
     receiveShib {
       action {
         def attrs = new ShibAttributes()
-        attrs.setIdp(request.eppn)
         attrs.setNin(request.norEduPersonNIN)
         attrs.givenName = request.givenName
         attrs.sn = request.sn
@@ -183,7 +182,6 @@ class SignupController {
   def resetconfirm = {
     // Initialize model with shib data
     def attrs = new ShibAttributes()
-    attrs.setIdp(request?.eppn)
     attrs.setNin(request?.norEduPersonNIN)
     attrs.givenName = request?.givenName
     attrs.sn = request?.sn

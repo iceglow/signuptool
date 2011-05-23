@@ -10,11 +10,11 @@ class WsMethodService {
 
   def wsAccessService
 
-  def enrollUser(String domain, String givenName, String sn, String nin)
+  def enrollUser(String givenName, String sn, String nin)
   {
     try {
       def facade = wsAccessService.getFacade(EnrollmentFacade.class)
-      return facade.enrollUser(domain, givenName, sn, "student", nin)
+      return facade.enrollUser("student.su.se", givenName, sn, "student", nin)
     }
     catch (Exception e) {
       log.error(e.toString())
