@@ -21,18 +21,21 @@ class BootStrap {
 
     def lpwurl
     def sukatsvcurl
+    def sucardsvcurl
     def aktiverafqdn
     def minastudierfqdn
     switch (System.getProperty("signuptool", "dev")) {
       case ~/prod(uction)?/:
         lpwurl = "https://lpwprod-su.its.uu.se"
         sukatsvcurl = "https://sukat-svc.it.su.se/services"
+        sucardsvcurl = "https://sucard-prod-svc01.it.su.se/services"
         aktiverafqdn = "aktivera.su.se"
         minastudierfqdn = "minastudier.su.se"
         break
       case "test":
         lpwurl = "https://lpwtest-su.its.uu.se"
         sukatsvcurl = "https://sukat-test-svc.it.su.se/services"
+        sucardsvcurl = "https://sucard-test-svc01.it.su.se/services"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
         break
@@ -40,6 +43,7 @@ class BootStrap {
       default:
         lpwurl = "https://lpwtest-su.its.uu.se"
         sukatsvcurl = "https://sukat-test-svc.it.su.se/services"
+        sucardsvcurl = "https://sucard-test-svc01.it.su.se/services"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
     }
@@ -51,8 +55,8 @@ class BootStrap {
     configService.registerValueToSection("WS", "MailRoutingFacade", "${sukatsvcurl}/MailRoutingFacade")
 
     //sucardsvc
-    configService.registerValueToSection("WS", "CardOrderFacade", "http://ilinca.it.su.se/services/CardOrderFacade")
-    configService.registerValueToSection("WS", "CardSyncFacade", "http://ilinca.it.su.se/services/CardSyncFacade")
+    configService.registerValueToSection("WS", "CardOrderFacade", "${sucardsvcurl}/CardOrderFacade")
+    configService.registerValueToSection("WS", "CardSyncFacade", "${sucardsvcurl}/CardSyncFacade")
     //sucardsvc
 
     configService.registerSection("properties")
