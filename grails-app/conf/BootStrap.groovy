@@ -28,14 +28,14 @@ class BootStrap {
       case ~/prod(uction)?/:
         lpwurl = "https://lpwprod-su.its.uu.se"
         sukatsvcurl = "https://sukat-svc.it.su.se/services"
-        sucardsvcurl = "https://sucard-prod-svc01.it.su.se/services"
+        sucardsvcurl = "https://sucard-prod-svc.it.su.se/services"
         aktiverafqdn = "aktivera.su.se"
         minastudierfqdn = "minastudier.su.se"
         break
       case "test":
         lpwurl = "https://lpwtest-su.its.uu.se"
         sukatsvcurl = "https://sukat-test-svc.it.su.se/services"
-        sucardsvcurl = "https://sucard-test-svc01.it.su.se/services"
+        sucardsvcurl = "https://sucard-test-svc.it.su.se/services"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
         break
@@ -43,7 +43,7 @@ class BootStrap {
       default:
         lpwurl = "https://lpwtest-su.its.uu.se"
         sukatsvcurl = "https://sukat-test-svc.it.su.se/services"
-        sucardsvcurl = "https://sucard-test-svc01.it.su.se/services"
+        sucardsvcurl = "https://sucard-test-svc.it.su.se/services"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
     }
