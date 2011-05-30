@@ -88,8 +88,17 @@ class SignupController {
         }
         [attrs: attrs]
       }
-      on("success").to "enableAccount"
+      on("success").to "confirmUserAgreement"
       on("error").to "studeraNuAccountSetupError"
+    }
+
+    confirmUserAgreement {
+      on("confirmbutton"){
+         if(params) {
+           flash.error = message(code: 'accountSetup.confirmUserAgreement.error.text')
+           return error()
+         }
+      }.to "enableAccount"
     }
 
     enableAccount {
