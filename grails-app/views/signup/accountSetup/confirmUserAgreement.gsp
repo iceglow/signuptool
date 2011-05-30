@@ -38,11 +38,11 @@
   </div>
 
   <div class="section align-right">
-    <label for="chkagreement">
-      <g:message code="accountSetup.confirmUserAgreement.checkboxAgree.label" />
-    </label>
     <g:checkBox name="chkagreement" value="" />
-    <g:submitButton name="confirmbutton" value="${g.message(code:'accountSetup.confirmUserAgreement.confirmButton.label')}"/>
+    <label for="chkagreement">
+		<g:message code="accountSetup.confirmUserAgreement.checkboxAgree.label" />
+    </label>
+	<g:submitButton name="confirmbutton" value="${g.message(code:'accountSetup.confirmUserAgreement.confirmButton.label')}"/>
   </div>
 </g:form>
 
