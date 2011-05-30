@@ -126,6 +126,57 @@ class BootStrap {
     }
 
     // Start Set Default Blobs
+
+
+    def infoSvITA = Info.findInfoByLocaleAndSiteKey('sv_SE', 'itagreement')
+    if(infoSvITA == null || infoSvITA.size() <= 0) {
+      infoSvITA = new se.su.it.signuptool.Info(
+        subject:'Default System Swedish IT Avtal',
+        locale: 'sv_SE',
+        siteKey: 'itagreement',
+        active:true,
+        body:'''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tempor, libero sit amet tincidunt iaculis, sapien ligula cursus sapien, ut mollis leo turpis sed nunc. Duis mattis fermentum nunc sit amet varius. Suspendisse pellentesque tortor vitae purus faucibus tempus. Morbi condimentum, dui viverra porttitor semper, orci erat luctus risus, nec posuere sem massa ac nunc. Etiam et orci odio. Curabitur eleifend sollicitudin felis eu vestibulum. Nulla gravida adipiscing libero, eu interdum felis volutpat in. Pellentesque eget enim et leo egestas accumsan. Pellentesque ullamcorper arcu vitae sapien rutrum a condimentum elit consectetur. Suspendisse potenti. Ut convallis consequat tortor ut malesuada. Aliquam erat volutpat. In hac habitasse platea dictumst.'''
+        )
+      infoSvITA.save()
+    }
+
+    def infoEnITA = Info.findInfoByLocaleAndSiteKey('en_US', 'itagreement')
+    if(infoEnITA == null || infoEnITA.size() <= 0) {
+      infoEnITA = new se.su.it.signuptool.Info(
+        subject:'Default System Swedish IT Avtal',
+        locale: 'en_US',
+        siteKey: 'itagreement',
+        active:true,
+        body:'''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tempor, libero sit amet tincidunt iaculis, sapien ligula cursus sapien, ut mollis leo turpis sed nunc. Duis mattis fermentum nunc sit amet varius. Suspendisse pellentesque tortor vitae purus faucibus tempus. Morbi condimentum, dui viverra porttitor semper, orci erat luctus risus, nec posuere sem massa ac nunc. Etiam et orci odio. Curabitur eleifend sollicitudin felis eu vestibulum. Nulla gravida adipiscing libero, eu interdum felis volutpat in. Pellentesque eget enim et leo egestas accumsan. Pellentesque ullamcorper arcu vitae sapien rutrum a condimentum elit consectetur. Suspendisse potenti. Ut convallis consequat tortor ut malesuada. Aliquam erat volutpat. In hac habitasse platea dictumst.'''
+        )
+      infoEnITA.save()
+    }
+
+    def infoSvLT = Info.findInfoByLocaleAndSiteKey('sv_SE', 'libraryticket')
+    if(infoSvLT == null || infoSvLT.size() <= 0) {
+      infoSvLT = new se.su.it.signuptool.Info(
+        subject:'Default System Swedish Library Ticket Agreement',
+        locale: 'sv_SE',
+        siteKey: 'libraryticket',
+        active:true,
+        body:'''Morbi velit neque, fringilla ut elementum id, laoreet et lectus. Vestibulum ac justo faucibus massa posuere tristique. Donec auctor eleifend libero gravida porttitor. Cras accumsan feugiat enim ac sollicitudin. In tortor ante, malesuada eu rutrum vel, consequat eu elit. Phasellus quis mi at massa molestie pellentesque id id velit. Praesent pellentesque felis quis velit varius auctor. Fusce at mi ut neque luctus scelerisque. Proin cursus scelerisque magna, sed fermentum justo commodo a. Vivamus dapibus, libero vestibulum rutrum commodo, enim magna scelerisque eros, et pharetra metus sem et risus. Nullam nec tempor tellus.'''
+        )
+      infoSvLT.save()
+    }
+
+    def infoEnLT = Info.findInfoByLocaleAndSiteKey('en_US', 'libraryticket')
+    if(infoEnLT == null || infoEnLT.size() <= 0) {
+      infoEnLT = new se.su.it.signuptool.Info(
+        subject:'Default System Swedish Library Ticket Agreement',
+        locale: 'en_US',
+        siteKey: 'libraryticket',
+        active:true,
+        body:'''Morbi velit neque, fringilla ut elementum id, laoreet et lectus. Vestibulum ac justo faucibus massa posuere tristique. Donec auctor eleifend libero gravida porttitor. Cras accumsan feugiat enim ac sollicitudin. In tortor ante, malesuada eu rutrum vel, consequat eu elit. Phasellus quis mi at massa molestie pellentesque id id velit. Praesent pellentesque felis quis velit varius auctor. Fusce at mi ut neque luctus scelerisque. Proin cursus scelerisque magna, sed fermentum justo commodo a. Vivamus dapibus, libero vestibulum rutrum commodo, enim magna scelerisque eros, et pharetra metus sem et risus. Nullam nec tempor tellus.'''
+        )
+      infoEnLT.save()
+    }
+
+
     def infoSvNa = Info.findInfoByLocaleAndSiteKey('sv_SE', 'new_account')
     if(infoSvNa == null || infoSvNa.size() <= 0) {
       infoSvNa = new se.su.it.signuptool.Info(
@@ -140,7 +191,7 @@ class BootStrap {
 <div class="clear-float"></div>
 
 <div class="section mgn-bottom-20">
-	<img src="/img/card-progress-1of4.gif" alt="Steg 1 av 4" width="100" height="97" border="0" class="image-block-left" title="Steg 1 av 4" />
+	<img src="/img/card-progress-1of5.gif" alt="Steg 1 av 5" width="100" height="97" border="0" class="image-block-left" title="Steg 1 av 5" />
     <h2>Ny p\u00e5 Stockholms universitet? Aktivera steg f\u00f6r steg:</h2>
 	<p>Som ny student f\u00f6ljer du bara v\u00e5r steg-f\u00f6r-steg-guide f\u00f6r att f\u00e5 ditt Universitetskonto och Universitetskort.</p>
 	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Steg 1: Logga in med ditt Studera.nu-konto</a></p>
@@ -148,7 +199,7 @@ class BootStrap {
 </div>
 
 <div class="section mgn-bottom-20">
-	<img src="/img/card-progress-4of4.gif" alt="Steg 4 av 4" width="100" height="97" border="0" class="image-block-left" title="Steg 4 av 4" />
+	<img src="/img/card-progress-5of5.gif" alt="Steg 5 av 5" width="100" height="97" border="0" class="image-block-left" title="Steg 5 av 5" />
 	<h2>Redan student h\u00e4r? Registrera dig p\u00e5 kurser:</h2>
 	<p>Om du redan \u00e4r student vid Stockholms universitet beh\u00f6ver du registrera dig p\u00e5 kurser f\u00f6r att r\u00e4knas som aktiv student.</p>
 	<p><a href="https://''' + minastudierfqdn + '''/registrate/" class="apps-add-bullet">Kursregistrering i Mina studier</a></p>
@@ -170,7 +221,7 @@ class BootStrap {
 <div class="clear-float"></div>
 
 <div class="section mgn-bottom-20">
-	<img src="/img/card-progress-1of4.gif" alt="Step 1 of 4" width="100" height="97" border="0" class="image-block-left" title="Step 1 of 4" />
+	<img src="/img/card-progress-1of5.gif" alt="Step 1 of 5" width="100" height="97" border="0" class="image-block-left" title="Step 1 of 5" />
     <h2>New at Stockholm University? Activate step by step:</h2>
 	<p>As a new student you simply follow our step-by-step guide to get your University Account and University card.</p>
 	<p><a href="https://''' + aktiverafqdn + '''/signup/accountSetup" class="apps-add-bullet">Step 1: Log in with your Studera.nu account</a></p>
@@ -178,7 +229,7 @@ class BootStrap {
 </div>
 
 <div class="section mgn-bottom-20">
-	<img src="/img/card-progress-4of4.gif" alt="Step 4 of 4" width="100" height="97" border="0" class="image-block-left" title="Step 4 of 4" />
+	<img src="/img/card-progress-5of5.gif" alt="Step 5 of 5" width="100" height="97" border="0" class="image-block-left" title="Step 5 of 5" />
 	<h2>Already a student here? Register for courses:</h2>
 	<p>If you already are a student at Stockholm University you have to register for courses to get access to all services.</p>
 	<p><a href="https://''' + minastudierfqdn + '''/registrate/" class="apps-add-bullet">Course registration in My Studies</a></p>

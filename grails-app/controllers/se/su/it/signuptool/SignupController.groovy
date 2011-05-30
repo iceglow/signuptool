@@ -86,7 +86,15 @@ class SignupController {
           log.error("accountSetup: validate() failed for user: ${attrs}, errorMessages=${attrs.errorMessages}")
           return error()
         }
-        [attrs: attrs]
+        def itagree = Info.findActiveInfoByLocaleAndSiteKey(params.lang, 'itagreement')
+        if (itagree && itagree.size() > 1) {
+          itagree = itagree.first()
+        }
+        def libticket = Info.findActiveInfoByLocaleAndSiteKey(params.lang, 'libraryticket')
+        if (libticket && libticket.size() > 1) {
+          libticket = libticket.first()
+        }
+        [attrs: attrs, itagree:itagree, libticket:libticket]
       }
       on("success").to "confirmUserAgreement"
       on("error").to "studeraNuAccountSetupError"
@@ -94,7 +102,7 @@ class SignupController {
 
     confirmUserAgreement {
       on("confirmbutton"){
-         if(params) {
+         if(params.chkagreement == null) {
            flash.error = message(code: 'accountSetup.confirmUserAgreement.error.text')
            return error()
          }
