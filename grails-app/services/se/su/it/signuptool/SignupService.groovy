@@ -24,14 +24,14 @@ class SignupService {
     AddressVO avo = null
     if(usd.shouldDeliverDefaultAddress() && defaultAddress != null && defaultAddress.permanentAddr != null) {
       avo = new AddressVO()
-      avo.streetadress1 = defaultAddress.permanentAddr.coadr.length() > 0 ? defaultAddress.permanentAddr.coadr : defaultAddress.permanentAddr.gatadr
+      avo.streetaddress1 = defaultAddress.permanentAddr.coadr.length() > 0 ? defaultAddress.permanentAddr.coadr : defaultAddress.permanentAddr.gatadr
       avo.streetaddress2 = defaultAddress.permanentAddr.coadr.length() > 0 ? defaultAddress.permanentAddr.gatadr : ""
       avo.zipcode = defaultAddress.permanentAddr.postnr
       avo.locality = defaultAddress.permanentAddr.ort
     }
     else if(usd.shouldDeliverOtherAddress()) {
       avo = new AddressVO()
-      avo.streetadress1 = usd.coadr.length() > 0 ? usd.coadr : usd.gatadr
+      avo.streetaddress1 = usd.coadr.length() > 0 ? usd.coadr : usd.gatadr
       avo.streetaddress2 = usd.coadr.length() > 0 ? usd.gatadr : ""
       avo.zipcode = usd.postnr
       avo.locality = usd.ort

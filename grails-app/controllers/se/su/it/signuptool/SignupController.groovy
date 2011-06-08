@@ -58,7 +58,7 @@ class SignupController {
     CardOrderFacadePortType fac = wsloc.getService(CardOrderFacadePortType.class)
 
     AddressVO avo = new AddressVO()
-    avo.streetadress1 = "gatan 22"
+    avo.streetaddress1 = "gatan 22"
     avo.streetaddress2 = "postbox23"
     avo.zipcode = "14645"
     avo.locality = "Tullinge"
