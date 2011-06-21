@@ -37,7 +37,10 @@ class SignupService {
       avo.locality = usd.ort
     }
     else if(usd.shouldDeliverHelpdesk()) {
-
+      //Functionality changed last couple of day of project. When this option is used we dont want to place
+      //an cardOrder. Ppl need to go to Helpdesk and order it manually.
+      //So lets just return true here
+      return true;
     }
     else {
       return false
