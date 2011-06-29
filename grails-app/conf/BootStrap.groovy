@@ -33,7 +33,8 @@ class BootStrap {
         minastudierfqdn = "minastudier.su.se"
         break
       case "test":
-        lpwurl = "https://lpwtest-su.its.uu.se"
+        //lpwurl = "https://lpwtest-su.its.uu.se"
+        lpwurl = "https://lpwprod-su.its.uu.se" //Remove me and uncomment above after test of sucard implementation in late June
         sukatsvcurl = "https://sukat-test-svc.it.su.se/services"
         sucardsvcurl = "https://sucard-test-svc.it.su.se/services"
         aktiverafqdn = "aktivera-test.su.se"
@@ -41,7 +42,8 @@ class BootStrap {
         break
       case ~/dev(elopment)?/:
       default:
-        lpwurl = "https://lpwtest-su.its.uu.se"
+        //lpwurl = "https://lpwtest-su.its.uu.se"
+        lpwurl = "https://lpwprod-su.its.uu.se" //Remove me and uncomment above after test of sucard implementation in late June
         sukatsvcurl = "https://sukat-test-svc.it.su.se/services"
         sucardsvcurl = "https://sucard-test-svc.it.su.se/services"
         aktiverafqdn = "aktivera-test.su.se"
