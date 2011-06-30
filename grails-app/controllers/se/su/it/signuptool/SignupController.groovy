@@ -1,12 +1,6 @@
 package se.su.it.signuptool
 
-import javax.servlet.http.Cookie
-import se.su.it.ws.commons.WSLocatorFactory
-import se.su.it.sukat.client.CardInfoFacade
 import ladok.lpw.service.changeaddress.facadeclient.ChangeAddressVO
-import se.su.it.sucard.client.CardOrderFacadePortType
-import se.su.it.sucard.client.CardOrderVO
-import se.su.it.sucard.client.AddressVO
 
 class SignupController {
 
@@ -35,42 +29,6 @@ class SignupController {
 
     def link = "https://${request.getServerName()}/signup/resetconfirm"
     render(view:"index",model:[link: link, info: info])
-  }
-
-  def test = {
-    Properties p = new Properties()
-    p.setProperty("MailRoutingFacade", "https://sukat-svc-test.it.su.se/sukatsvc-ws/services/MailRoutingFacade")
-    p.setProperty("CardInfoFacade", "https://sukat-svc.it.su.se/sukatsvc-ws/services/CardInfoFacade")
-    def wsloc = WSLocatorFactory.instance(p)
-    CardInfoFacade fac = wsloc.getService(CardInfoFacade.class)
-    def crads = fac.getAllCards("rnyberg", true)
-
-    ChangeAddressVO addr = LPWWebService.getChangeAddressVO('marcus')
-    render "${crads} och ${addr}"
-  }
-
-  def test2 = {
-    Properties p = new Properties()
-
-    p.setProperty("CardOrderFacade", "http://ilinca.it.su.se/services/CardOrderFacade")
-    p.setProperty("CardSyncFacade", "http://ilinca.it.su.se/services/CardSyncFacade")
-    def wsloc = WSLocatorFactory.instance(p)
-    CardOrderFacadePortType fac = wsloc.getService(CardOrderFacadePortType.class)
-
-    AddressVO avo = new AddressVO()
-    avo.streetaddress1 = "gatan 22"
-    avo.streetaddress2 = "postbox23"
-    avo.zipcode = "14645"
-    avo.locality = "Tullinge"
-    CardOrderVO covo = new CardOrderVO()
-    covo.address = avo
-    covo.firstname = "Janne"
-    covo.lastname = "Qvarnstršm"
-    covo.owner = "jqvar"
-
-
-    def crads = fac.orderCard(covo)
-    render "JANNE:${crads}:JANNE"
   }
 
   def accountSetupFlow = {
