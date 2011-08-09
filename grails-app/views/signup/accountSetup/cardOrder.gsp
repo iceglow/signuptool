@@ -19,6 +19,7 @@
 <g:form action="accountSetup">
   <div class="section mgn-bottom-20">
     <h2><g:message code="cardOrder.orderQuestion"/></h2>
+	<p><g:message code="cardOrder.orderInfo"/></p>
 
     <div class="content-block apps-colorbox1 mgn-bottom-10">
       <g:if test="${addrVo != null}">
