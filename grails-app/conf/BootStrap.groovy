@@ -27,7 +27,7 @@ class BootStrap {
     switch (System.getProperty("signuptool", "dev")) {
       case ~/prod(uction)?/:
         lpwurl = "https://lpwprod-su.its.uu.se"
-        sukatsvcurl = "https://sukat-svc.it.su.se/services"
+        sukatsvcurl = "https://sukat-prod-svc.it.su.se/services"
         sucardsvcurl = "https://sucard-prod-svc.it.su.se/services"
         aktiverafqdn = "aktivera.su.se"
         minastudierfqdn = "minastudier.su.se"
