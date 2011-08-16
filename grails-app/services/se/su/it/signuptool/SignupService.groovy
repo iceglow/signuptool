@@ -20,7 +20,7 @@ class SignupService {
     return WsMethodService?.setMail(uid, mail)
   }
 
-  def placeCardOrder(String uid, String firstName, String lastName, AddressVO defaultAddress, UserSuppliedData usd) {
+  def placeCardOrder(String uid, String firstName, String lastName, ladok.lpw.service.changeaddress.facadeclient.AddressVO defaultAddress, UserSuppliedData usd) {
     AddressVO avo = null
     if(usd.shouldDeliverDefaultAddress() && defaultAddress != null) {
       avo = new AddressVO()
