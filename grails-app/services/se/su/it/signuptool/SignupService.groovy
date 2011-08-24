@@ -20,14 +20,14 @@ class SignupService {
     return WsMethodService?.setMail(uid, mail)
   }
 
-  def placeCardOrder(String uid, String firstName, String lastName, ChangeAddressVO defaultAddress, UserSuppliedData usd) {
+  def placeCardOrder(String uid, String firstName, String lastName, ladok.lpw.service.changeaddress.facadeclient.AddressVO defaultAddress, UserSuppliedData usd) {
     AddressVO avo = null
-    if(usd.shouldDeliverDefaultAddress() && defaultAddress != null && defaultAddress.permanentAddr != null) {
+    if(usd.shouldDeliverDefaultAddress() && defaultAddress != null) {
       avo = new AddressVO()
-      avo.streetaddress1 = defaultAddress.permanentAddr.coadr.length() > 0 ? defaultAddress.permanentAddr.coadr : defaultAddress.permanentAddr.gatadr
-      avo.streetaddress2 = defaultAddress.permanentAddr.coadr.length() > 0 ? defaultAddress.permanentAddr.gatadr : ""
-      avo.zipcode = defaultAddress.permanentAddr.postnr
-      avo.locality = defaultAddress.permanentAddr.ort
+      avo.streetaddress1 = defaultAddress.coadr.length() > 0 ? defaultAddress.coadr : defaultAddress.gatadr
+      avo.streetaddress2 = defaultAddress.coadr.length() > 0 ? defaultAddress.gatadr : ""
+      avo.zipcode = defaultAddress.postnr
+      avo.locality = defaultAddress.ort
     }
     else if(usd.shouldDeliverOtherAddress()) {
       avo = new AddressVO()
