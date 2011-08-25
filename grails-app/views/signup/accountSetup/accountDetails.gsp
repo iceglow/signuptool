@@ -35,6 +35,7 @@ function noterat(el) {
 <div class="clear-float"></div>
 
 <div class="section mgn-bottom-20">
+<h2><g:message code="accountSetup.confirmation.Info"/></h2>
   <p><g:message code="accountSetup.header.accountInfo"/></p>
   <div class="content-block apps-colorbox-red mgn-bottom-10">
     <div class="apps-content-block-inner">
@@ -55,7 +56,7 @@ function noterat(el) {
 
   <div class="apps-content-block-inner">
     <g:form url="[action:'print']" name="printForm" target="_blank"></g:form>
-    <input type="button" value="<g:message code='accountSetup.button.printAccount.label'/>" onclick="document.printForm.submit()" />
+    <input type="button" value="<g:message code='accountSetup.button.printAccount.label'/>" onClick="document.printForm.submit()" />
     <div class="clear-float"></div>
 	<div class="apps-dotted-divider"></div>
   </div>
@@ -114,12 +115,12 @@ function noterat(el) {
 <g:if test="${courseSuggestionList}">
 <div class="section">
   <em><g:message code="accountSetup.button.nextStep.hint"/></em><br />
-  <input name="checkNoted" id="checkNotedId" type="checkbox" value="" onclick="noterat(this)" onchange="noterat(this)">
+  <input name="checkNoted" id="checkNotedId" type="checkbox" value="" onClick="noterat(this)" onChange="noterat(this)">
   <label for="checkNotedId"><g:message code="accountSetup.password.checkBox.label"/></label>
 </div>
 
 <div class="section align-right">
-  <input id="msContinue" disabled="disabled" name="" type="button" value="<g:message code='accountSetup.button.nextStep.label'/>" onclick="window.location.href = 'https://minastudier.su.se/registrate'"/>
+  <input id="msContinue" disabled="disabled" name="" type="button" value="<g:message code='accountSetup.button.nextStep.label'/>" onClick="window.location.href = 'https://minastudier.su.se/registrate'"/>
   <br/>
   <div class="clear-float"></div>
 </div>
