@@ -28,10 +28,6 @@ class ShibAttributes implements java.io.Serializable {
     }
   }
 
-  def getErrorMessages() {
-    return null // Return Map of Strings with error messages for each invalid attribute
-  }
-
   public String toString() {
     "nin: ${nin}, givenName: ${givenName}, sn: ${sn}"
   }

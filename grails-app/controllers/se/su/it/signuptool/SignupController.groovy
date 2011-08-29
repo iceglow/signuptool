@@ -41,7 +41,7 @@ class SignupController {
 
         // Validate model and handle map of errors if invalid
         if (!attrs.validate()) {
-          log.error("accountSetup: validate() failed for user: ${attrs}, errorMessages=${attrs.errorMessages}")
+          log.error("accountSetup: validate() failed for user: ${attrs}, errorMessages=${attrs.errors}")
           return error()
         }
         def itagree = Info.findActiveInfoByLocaleAndSiteKey(params.lang, 'itagreement')
