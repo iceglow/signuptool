@@ -12,6 +12,12 @@ class SignupService {
 
   Map enableAccount(ShibAttributes attrs) throws Exception {
     def vo = WsMethodService.enrollUser(attrs.givenName, attrs.sn, attrs.nin)
+
+    // Check for empty mailRoutingAddress
+    if (!WsMethodService.getMailRoutingAddress(vo.uid)) {
+      WsMethodService.setMailRoutingAddress(vo.uid, vo.uid + "@mbox.su.se")
+    }
+
     def mail =  WsMethodService.getMail(vo.uid)
     [vo: vo, mail: mail]
   }

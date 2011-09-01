@@ -23,6 +23,33 @@ class WsMethodService {
     }
   }
 
+  def getMailRoutingAddress(String uid)
+  {
+    try {
+      def facade = wsAccessService.getFacade(MailRoutingFacade.class)
+      return facade.getMailRoutingAddress(uid)
+    }
+    catch (Exception e) {
+      log.error(e.toString())
+      throw e
+    }
+  }
+
+  def setMailRoutingAddress(String uid, String mailRoutingAddress)
+  {
+    try {
+      def facade = wsAccessService.getFacade(MailRoutingFacade.class)
+      facade.setMailRoutingAddress(uid,mail)
+      return true
+    }
+
+    catch (Exception e) {
+      log.error(e.toString())
+      return false
+    }
+  }
+
+
   def getMail(String uid)
   {
     try {
