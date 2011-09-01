@@ -39,7 +39,7 @@ class WsMethodService {
   {
     try {
       def facade = wsAccessService.getFacade(MailRoutingFacade.class)
-      facade.setMailRoutingAddress(uid,mail)
+      facade.setMailRoutingAddress(uid,mailRoutingAddress)
       return true
     }
 
