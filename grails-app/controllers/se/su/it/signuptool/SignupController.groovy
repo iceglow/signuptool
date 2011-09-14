@@ -31,7 +31,24 @@ class SignupController {
     render(view:"index",model:[link: link, info: info])
   }
 
+  def copyAccountFields(from, to) {
+    ['attrs', 'vo', 'addrVo', 'usd', 'mail', 'canOrderCard', 'courseSuggestionList'].each { k -> to[k] = from[k] }
+  }
+
   def accountSetupFlow = {
+    doneTest {
+      action {
+        if (session.accountDone != null) {
+          copyAccountFields(session, flow)
+          return done()
+        } else {
+          return start()
+        }
+      }
+      on('done').to 'accountDetails'
+      on('start').to 'receiveShib'
+    }
+
     receiveShib {
       action {
         def attrs = new ShibAttributes()
@@ -149,7 +166,9 @@ class SignupController {
           flash.error = message(code: 'accountSetup.orderCard.fetch.ladok.courses.error')
           log.error("Could not get courses from Ladok for uid<" + flow.vo.uid + ">")
         }
-        [courseSuggestionList: courseSuggestionList]
+        flow.courseSuggestionList= courseSuggestionList
+        copyAccountFields(flow, session)
+        session.accountDone = true
       }
       on("success").to "accountDetails"
       on("error").to "sukatAccountSetupError"
