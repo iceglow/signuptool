@@ -76,6 +76,18 @@ class WsMethodService {
     }
   }
 
+  CardOrderVO[] getCardOrdersForUser(String uid) {
+    try {  
+      def facade = wsAccessService.getFacade(CardOrderFacadePortType.class)
+      return facade.getCardOrdersForUser(uid).getCardOrderVO()
+    }
+    catch (Exception e) {
+      log.error(e.toString())
+      return null
+    }
+
+  }
+
   def orderCard(CardOrderVO covo) {
     try {
       def facade = wsAccessService.getFacade(CardOrderFacadePortType.class)

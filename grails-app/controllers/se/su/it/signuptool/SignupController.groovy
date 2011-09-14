@@ -82,16 +82,21 @@ class SignupController {
     preCardOrder {
       action {
         def usd = new UserSuppliedData()
-        try {
-          ChangeAddressVO addr = LPWWebService.getChangeAddressVO(flow.vo.uid)
-          if(addr == null || addr.permanentAddr == null) {
+        flow.canOrderCard = SignupService.canOrderCard(flow.vo.uid)
+        if (flow.canOrderCard) {
+          try {
+            ChangeAddressVO addr = LPWWebService.getChangeAddressVO(flow.vo.uid)
+            if(addr == null || addr.permanentAddr == null) {
+              usd.cardpickup = "otherAddress"
+            }
+            [addrVo: addr.permanentAddr, usd: usd]
+          } catch (Exception e) {
             usd.cardpickup = "otherAddress"
+            flash.error = message(code: 'accountSetup.orderCard.fetch.ladok.address.error')
+            log.error("Could not get Ladok default address for uid<" + flow.vo.uid + ">")
+            [addrVo: null, usd: usd]
           }
-          [addrVo: addr.permanentAddr, usd: usd]
-        } catch (Exception e) {
-          usd.cardpickup = "otherAddress"
-          flash.error = message(code: 'accountSetup.orderCard.fetch.ladok.address.error')
-          log.error("Could not get Ladok default address for uid<" + flow.vo.uid + ">")
+        } else {
           [addrVo: null, usd: usd]
         }
       }
@@ -101,6 +106,11 @@ class SignupController {
     cardOrder { // Process the form data here
       on("cardbutton"){
          def usd = new UserSuppliedData(params)
+         if (!flow.canOrderCard) {
+           // Hack to be able to validate the user supplied data.
+           usd.cardpickup = 'helpdesk'
+           ['coadr', 'gatadr', 'postnr', 'ort'].each { usd[it] = '' }
+         }
          usd.validate()
          flow.usd = usd
          if(usd.hasErrors()) {
@@ -115,9 +125,11 @@ class SignupController {
             log.error("Could not set other email address<" + flow.usd.otherEmail +"> for uid<" + flow.vo.uid + ">")
           }
          }
-         if(!SignupService.placeCardOrder(flow.vo.uid, flow.attrs.givenName, flow.attrs.sn, flow.addrVo, usd)) {
-          flash.error = message(code: 'accountSetup.orderCard.error')
-          log.error("Could not order card for uid<" + flow.vo.uid + ">")
+         if (flow.canOrderCard) {
+           if(!SignupService.placeCardOrder(flow.vo.uid, flow.attrs.givenName, flow.attrs.sn, flow.addrVo, usd)) {
+             flash.error = message(code: 'accountSetup.orderCard.error')
+             log.error("Could not order card for uid<" + flow.vo.uid + ">")
+           }
          }
       }.to "fetchLpwStuff"
     }

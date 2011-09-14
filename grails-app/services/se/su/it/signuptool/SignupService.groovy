@@ -26,6 +26,11 @@ class SignupService {
     return WsMethodService?.setMail(uid, mail)
   }
 
+  Boolean canOrderCard(String uid) {
+    CardOrderVO[] orders = WsMethodService.getCardOrdersForUser(uid)
+    return orders == null || orders.find { it.status != "DISCARDED" } == null
+  }
+
   def placeCardOrder(String uid, String firstName, String lastName, ladok.lpw.service.changeaddress.facadeclient.AddressVO defaultAddress, UserSuppliedData usd) {
     AddressVO avo = null
     if(usd.shouldDeliverDefaultAddress() && defaultAddress != null) {

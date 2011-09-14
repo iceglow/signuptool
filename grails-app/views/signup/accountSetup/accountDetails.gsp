@@ -29,7 +29,9 @@ function noterat(el) {
 
   </div>
 
-  <h1><g:message code="accountSetup.pageHeader" /></h1>
+  <g:if test="${canOrderCard}">
+    <h1><g:message code="accountSetup.pageHeader" /></h1>
+  </g:if>
 </div>
 
 <div class="clear-float"></div>
@@ -73,7 +75,8 @@ function noterat(el) {
 
   <div class="apps-content-block-inner">
     <div class="apps-float-30 label-grey-dark"><g:message code="generic.universityCard.label"/></div>
-    <div class="apps-float-60">${(usd?.shouldDeliverDefaultAddress() || usd?.shouldDeliverOtherAddress()) ? g.message(code: 'generic.universityCard.deliver.address.label'):g.message(code: 'generic.universityCard.deliver.helpDesk.label')}<br />
+    <g:if test="${canOrderCard}">
+     <div class="apps-float-60">${(usd?.shouldDeliverDefaultAddress() || usd?.shouldDeliverOtherAddress()) ? g.message(code: 'generic.universityCard.deliver.address.label'):g.message(code: 'generic.universityCard.deliver.helpDesk.label')}<br />
     <g:if test="${usd?.shouldDeliverOtherAddress()}">
       ${attrs?.givenName + "&nbsp;" + attrs?.sn}<br />
       ${usd?.coadr}<br />
@@ -87,6 +90,10 @@ function noterat(el) {
       ${addrVo?.postnr + "&nbsp;" + addrVo?.ort}<br />
     </g:if>
     </div>
+   </g:if>
+   <g:else>
+     <div class="apps-float-60"><g:message code='cardOrder.cannotOrderInfo'/></div>
+   </g:else>
   <div class="clear-float"></div>
   </div>
   

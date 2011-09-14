@@ -17,7 +17,9 @@
 
 <div class="section"><h1><g:message code="cardOrder.pageHeader"/></h1></div>
 <g:form action="accountSetup">
+
   <div class="section mgn-bottom-20">
+    <g:if test="${canOrderCard}">
     <h2><g:message code="cardOrder.orderQuestion"/></h2>
 	<p><g:message code="cardOrder.orderInfo"/></p>
 
@@ -36,6 +38,8 @@
           <div class="clear-float"></div>
         </div>
       </g:if>
+      <g:else>
+      </g:else>
       <div class="apps-content-block-inner">
         <div class="apps-float-40"><label><g:radio value="otherAddress" name="cardpickup" checked="${usd?.cardpickup.equalsIgnoreCase('otherAddress') ? 'checked':false}"/><g:message code="cardOrder.otherAddr.label"/></label></div>
 
@@ -91,6 +95,8 @@
         <div class="clear-float"></div>
       </div>
     </div>
+    </g:if>
+    <g:else><p><g:message code='cardOrder.cannotOrderInfo'/></p></g:else>
   </div>
 
   <div class="section mgn-bottom-20">
