@@ -63,4 +63,33 @@ class SignupService {
     covo.owner = uid
     return WsMethodService?.orderCard(covo)
   }
+
+  def sendConfirmMailToStudent(String mailaddress) {
+
+    try {
+
+      String toAddress = mailaddress
+
+      String subject = "Bekr\u00e4ftelse universitetskonto och -kort, Stockholms universitet / Confirmation, University Account and University Card, Stockholm University";
+
+      String msgBody = "Du har nu ett aktiverat universitetskonto och har best\u00e4llt hem ditt universitetskort!\n" +
+                       "Kortet b\u00f6r komma inom fem arbetsdagar.\n" +
+                       "Om du har n\u00e5gra fr\u00e5gor \u00e4r du v\u00e4lkommen att kontakta universitetets Helpdesk f\u00f6r IT-fr\u00e5gor: www.su.se/studentsupport/helpdesk/\n" +
+                       "L\u00e4s mer om universitetskontot, universitetskortet och Stockholms universitets IT-tj\u00e4nster: www.su.se/studentsupport/\n" +
+                       "V\u00e4lkommen som student vid Stockholms universitet!\n" +
+                       "\n" +
+                       "------------------------------------------------------------------------------------------------------------------------------------------------\n" +
+                       "You now have an activated University Account, and have successfully ordered your University Card! The card should arrive within five working days.\n" +
+                       "If you have any questions, please contact the University Helpdesk for IT issues: www.su.se/english/helpdesk/\n" +
+                       "Learn more about your University Account, University Card and Stockholm University's IT services at: www.su.se/english/IT/\n" +
+                       "Welcome as a student at Stockholm University!"
+
+      MailUtil mailUtil = new MailUtil("smtp.su.se", "noreply@su.se")
+      mailUtil.sendEmail(msgBody, subject, toAddress)
+    }
+    catch (Exception e) {
+      e.printStackTrace()
+    }
+
+  }
 }

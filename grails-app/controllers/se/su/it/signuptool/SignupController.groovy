@@ -146,6 +146,15 @@ class SignupController {
            if(!SignupService.placeCardOrder(flow.vo.uid, flow.attrs.givenName, flow.attrs.sn, flow.addrVo, usd)) {
              flash.error = message(code: 'accountSetup.orderCard.error')
              log.error("Could not order card for uid<" + flow.vo.uid + ">")
+           } else {
+             //Send confirmation mail to student
+              if(flow.usd.shouldUseOtherEmail() && flow.usd.otherEmail && flow.usd.otherEmail.length() > 0) {
+                SignupService.sendConfirmMailToStudent(flow.usd.otherEmail)
+              } else if(flow.mail && flow.mail.length() > 1){
+                SignupService.sendConfirmMailToStudent(flow.mail)
+             } else {
+                log.error("Could not send confirmation mail for uid<" + flow.vo.uid + "> mail address missing")
+              }
            }
          }
       }.to "fetchLpwStuff"
