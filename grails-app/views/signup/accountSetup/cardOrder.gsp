@@ -9,8 +9,7 @@
 <content tag="leftCol">
   <p class="category"><g:message code="accountSetup.step3.counter"/></p>
 
-  <p><strong><g:message code="accountSetup.step3.description"/></strong> <a
-    title="<g:message code='accountSetup.step3.counter'/>"><img
+  <p><a title="<g:message code='accountSetup.step3.counter'/>"><img
       src="${resource(dir: 'img', file: 'card-progress-3of5.gif')}" alt="<g:message code='accountSetup.step3.counter'/>"
       border="0" class="logotype" title="<g:message code='accountSetup.step3.counter'/>"/></a></p>
 </content>
@@ -108,8 +107,7 @@
                                                    checked="${usd?.email.equalsIgnoreCase('su') ? 'checked':false}"/><g:message
           code="emailChoice.su.label"/></label></div>
 
-        <div class="apps-float-50">${mail}<br/><span class="apps-hint-text"><g:message
-          code="emailChoice.su.help"/></span></div>
+        <div class="apps-float-50">${mail}<br/><g:message code="emailChoice.su.help"/></div>
         <div class="clear-float"></div>
       </div>
 

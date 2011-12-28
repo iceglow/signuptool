@@ -20,7 +20,7 @@ function noterat(el) {
 
 <content tag="leftCol">
 <p class="category"><g:message code="accountSetup.step4.counter"/></p>
-<p><strong><g:message code="accountSetup.step4.description"/></strong> <a title="<g:message code='accountSetup.step4.counter'/>"><img src="${resource(dir: 'img', file: 'card-progress-4of5.gif')}" alt="<g:message code='accountSetup.step4.counter'/>" border="0" class="logotype" title="<g:message code='accountSetup.step4.counter'/>" /></a></p>
+<p><a title="<g:message code='accountSetup.step4.counter'/>"><img src="${resource(dir: 'img', file: 'card-progress-4of5.gif')}" alt="<g:message code='accountSetup.step4.counter'/>" border="0" class="logotype" title="<g:message code='accountSetup.step4.counter'/>" /></a></p>
 </content>
 
 <div class="section">
@@ -103,23 +103,26 @@ function noterat(el) {
 <div class="section mgn-bottom-20">
   <h2><g:message code="accountSetup.lastStep.header"/></h2>
 
-  <g:if test="${courseSuggestionList && courseSuggestionList.size() > 0}">
+  <g:if test="${courseSuggestionList != null}">
 
-    <g:if test="${courseSuggestionList.size() == 1}">
-      <p><g:message code="accountSetup.lastStep.info.oneCourse"/></p>
+    <g:if test="${courseSuggestionList.size() == 0}">
+      <p><g:message code="accountSetup.noCourses.info"/></p>
     </g:if>
+    <g:elseif test="${courseSuggestionList.size() == 1}">
+      <p><g:message code="accountSetup.lastStep.info.oneCourse"/></p>
+    </g:elseif>
     <g:else>
       <p><g:message code="accountSetup.lastStep.info" args="[courseSuggestionList.size()]"/></p>
     </g:else>
 
   </g:if>
   <g:else>
-    <p><g:message code="accountSetup.noCourses.info"/></p>
+    <p><g:message code="accountSetup.lpwFailed.info"/></p>
   </g:else>
 
   <div class="clear-float"></div>
 </div>
-<g:if test="${courseSuggestionList}">
+<g:if test="${courseSuggestionList != null}">
 <div class="section">
   <em><g:message code="accountSetup.button.nextStep.hint"/></em><br />
   <input name="checkNoted" id="checkNotedId" type="checkbox" value="" onClick="noterat(this)" onChange="noterat(this)">

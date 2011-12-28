@@ -174,6 +174,7 @@ class SignupController {
         catch (Exception e) { // The view will handle this failure gracefully
           flash.error = message(code: 'accountSetup.orderCard.fetch.ladok.courses.error')
           log.error("Could not get courses from Ladok for uid<" + flow.vo.uid + ">")
+          courseSuggestionList = null
         }
         flow.courseSuggestionList= courseSuggestionList
         copyAccountFields(flow, session)

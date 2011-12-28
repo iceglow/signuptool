@@ -39,6 +39,7 @@ grails.project.dependency.resolution = {
     compile 'se.su.it.lpw:su-lpw-client:2011-01-20'
     compile 'se.su.it.tickethandler:su-lpw-tickethandler:1.0'
     compile 'javax.mail:mail:1.4'
+    compile 'commons-logging:commons-logging:1.1.1'
 
     runtime 'mysql:mysql-connector-java:5.1.7'
 

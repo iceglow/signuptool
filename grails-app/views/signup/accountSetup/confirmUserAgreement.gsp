@@ -9,8 +9,7 @@
 <content tag="leftCol">
   <p class="category"><g:message code="accountSetup.step2.counter"/></p>
 
-  <p><strong><g:message code="accountSetup.step2.description"/></strong> <a
-    title="<g:message code='accountSetup.step2.counter'/>"><img
+  <p><a title="<g:message code='accountSetup.step2.counter'/>"><img
       src="${resource(dir: 'img', file: 'card-progress-2of5.gif')}" alt="<g:message code='accountSetup.step2.counter'/>"
       border="0" class="logotype" title="<g:message code='accountSetup.step2.counter'/>"/></a></p>
 </content>
