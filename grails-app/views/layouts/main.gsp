@@ -25,6 +25,7 @@
   <!-- page specific styles -->
   <style type="text/css"></style>
 
+  <g:layoutHead />
 </head>
 
 <body id="oBody">

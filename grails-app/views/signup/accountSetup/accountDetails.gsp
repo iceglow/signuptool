@@ -2,6 +2,17 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="layout" content="main"/>
+
+  <style type="text/css">
+    table.header td {
+      padding: 0px;
+      border: none;
+      vertical-align: middle;
+    }
+    table.header tr:hover {
+      background-color: inherit;
+    }
+  </style>
 </head>
 <body>
 <g:javascript>
@@ -30,7 +41,14 @@ function noterat(el) {
   </div>
 
   <g:if test="${canOrderCard}">
-    <h1><g:message code="accountSetup.pageHeader" /></h1>
+    <table class="header">
+      <tbody>
+        <tr>
+          <td><img src="${resource(dir: 'img', file: 'done_icon.png')}"></td>
+          <td style="padding-left: 10px;"><h1><g:message code="accountSetup.pageHeader" /></h1></td>
+        </tr>
+      </tbody>
+    </table>
   </g:if>
 </div>
 
