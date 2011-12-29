@@ -346,3 +346,7 @@ select#specialization {
 .print table.wdt2 {width: 600px;}
 
 /*-----special print stuff*/
+
+input[type=checkbox], input[type=radio] {
+  border: none;
+}
