@@ -1,7 +1,15 @@
 package se.su.it.signuptool
 
-import se.su.it.commons.process.ProcessExecuter
 import org.apache.commons.logging.LogFactory
+
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.HttpResponse
+import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.http.auth.Credentials;
+import java.security.Principal
+import org.apache.http.auth.AuthScope
+import org.apache.http.client.params.AuthPolicy
+import org.apache.http.impl.auth.SPNegoSchemeFactory
 
 import se.su.it.config.*
 
@@ -16,28 +24,28 @@ class LPWTicketService {
   }
 
   static String getTicket(uid) {
-    def script = configService.getValue("LPW", "ticket_wrapper_script")
-    def server = configService.getValue("LPW", "s4u2self_auth_server")
-    def command = [
-      script,
-      "-principal", configService.getValue("LPW", "principal"),
-      "-keytab", configService.getValue("LPW", "keytab"),
-      "-realm", configService.getValue("LPW", "realm"),
-      "-server", server,
-      "-impuser", uid,
-      "-protocol", configService.getValue("LPW", "protocol")]
-
-    log.debug "*** Exec ticket s4u2self script (${script}) with lpwserver=${server} ***"
-
-    def executer = new ProcessExecuter()
-    def process = Runtime.getRuntime().exec((String[]) command)
-
-    def result = ""
+    String result = ""
     try {
-      result = executer.doExec(process);
-      log.debug "*** Ticket wrapper script returned ticket=${result} for uid=${uid}"
+      DefaultHttpClient httpClient = new DefaultHttpClient()
+      httpClient.getAuthSchemes().register(AuthPolicy.SPNEGO, new SPNegoSchemeFactory())
+      Credentials use_jaas_creds = new Credentials() {
+        public String getPassword() {
+          return null
+        }
+        public Principal getUserPrincipal() {
+          return null
+        }
+      }
+      httpClient.getCredentialsProvider().setCredentials(new AuthScope(null, -1, null),use_jaas_creds)
+
+      HttpGet getRequest = new HttpGet("https://" + configService.getValue("ticket", "server") + "/verifier/getticket?uid=" + uid);
+      HttpResponse response = httpClient.execute(getRequest);
+      BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+      result = br.readLine();
+      httpClient.getConnectionManager().shutdown();
     } catch (Exception e) {
       log.error(e.toString())
+      throw new Exception("callGetTicket failed with exception: " + e.message, e)
     }
     return result;
 
