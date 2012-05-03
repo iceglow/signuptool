@@ -32,7 +32,6 @@ grails.project.dependency.resolution = {
   }
   dependencies {
     // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-    compile 'org.apache.httpcomponents:httpclient:4.2-beta1'
     compile 'se.su.it.ws.commons:su-ws-commons:1.5'
     compile 'se.su.it.sukat.svc:sukatsvc-client:1.7'
     compile 'se.su.it.sucard.svc:sucardsvc-client:1.2'

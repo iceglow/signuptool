@@ -19,7 +19,6 @@ class BootStrap {
       log.error "Unable to determine hostname using 'unknown' instead"
     }
 
-    def ticketfqdn
     def lpwurl
     def sukatsvcurl
     def sucardsvcurl
@@ -27,7 +26,6 @@ class BootStrap {
     def minastudierfqdn
     switch (System.getProperty("signuptool", "dev")) {
       case ~/prod(uction)?/:
-        ticketfqdn = "lpwticket.it.su.se"
         lpwurl = "https://lpwprod-su.its.uu.se"
         sukatsvcurl = "https://sukat-prod-svc.it.su.se/services"
         sucardsvcurl = "https://sucard-prod-svc.it.su.se/services"
@@ -36,7 +34,6 @@ class BootStrap {
         break
       case "test":
         //lpwurl = "https://lpwtest-su.its.uu.se"
-        ticketfqdn = "lpwticket-test.it.su.se"
         lpwurl = "https://lpwprod-su.its.uu.se" //Remove me and uncomment above after test of sucard implementation in late June
         sukatsvcurl = "https://sukat-test-svc.it.su.se/services"
         sucardsvcurl = "https://sucard-test-svc.it.su.se/services"
@@ -46,16 +43,12 @@ class BootStrap {
       case ~/dev(elopment)?/:
       default:
         //lpwurl = "https://lpwtest-su.its.uu.se"
-        ticketfqdn = "lpwticket-test.it.su.se"
         lpwurl = "https://lpwprod-su.its.uu.se" //Remove me and uncomment above after test of sucard implementation in late June
         sukatsvcurl = "https://sukat-test-svc.it.su.se/services"
         sucardsvcurl = "https://sucard-test-svc.it.su.se/services"
         aktiverafqdn = "aktivera-test.su.se"
         minastudierfqdn = "minastudier-test.su.se"
     }
-    log.info "Ticket Server: ${ticketfqdn}"
-    configService.registerSection("ticket")
-    configService.registerValueToSection("ticket", "server", "${ticketfqdn}")
 
     log.info "LPW URL: ${lpwurl}"
     configService.registerSection("WS")

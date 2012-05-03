@@ -1,20 +1,12 @@
 package se.su.it.signuptool
 
 import org.apache.commons.logging.LogFactory
-
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.HttpResponse
-import org.apache.http.impl.client.DefaultHttpClient
-import org.apache.http.auth.Credentials;
-import java.security.Principal
-import org.apache.http.auth.AuthScope
-import org.apache.http.client.params.AuthPolicy
-import org.apache.http.impl.auth.SPNegoSchemeFactory
-
 import se.su.it.config.*
+import java.security.MessageDigest
+import sun.misc.BASE64Encoder
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 class LPWTicketService {
-
   private static def log = LogFactory.getLog(this)
 
   private static def configService = new ConfigService()
@@ -22,32 +14,20 @@ class LPWTicketService {
   static String getTicket() {
     return getTicket(null);
   }
-
+  //Below code should be replaced by a SPNEGO call to our ticket service https://lpwticket.it.su.se
+  //At this time we were really pressed for time and there was no simple way to implement with httpclient
+  //due to lots of old dependencies in this Application that seemed to clash with other classes/jars.
+  //We did get the spnego to work but it always broke the negotiation token so we couldnt authenticate :(
   static String getTicket(uid) {
-    String result = ""
-    try {
-      DefaultHttpClient httpClient = new DefaultHttpClient()
-      httpClient.getAuthSchemes().register(AuthPolicy.SPNEGO, new SPNegoSchemeFactory())
-      Credentials use_jaas_creds = new Credentials() {
-        public String getPassword() {
-          return null
-        }
-        public Principal getUserPrincipal() {
-          return null
-        }
-      }
-      httpClient.getCredentialsProvider().setCredentials(new AuthScope(null, -1, null),use_jaas_creds)
-
-      HttpGet getRequest = new HttpGet("https://" + configService.getValue("ticket", "server") + "/verifier/getticket?uid=" + uid);
-      HttpResponse response = httpClient.execute(getRequest);
-      BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
-      result = br.readLine();
-      httpClient.getConnectionManager().shutdown();
-    } catch (Exception e) {
-      log.error(e.toString())
-      throw new Exception("callGetTicket failed with exception: " + e.message, e)
-    }
-    return result;
-
+    def slotLen = ConfigurationHolder.config.lpwTOTP.slotLen
+    def secret = ConfigurationHolder.config.lpwTOTP.secret
+    def timeSlot = (java.lang.Integer) ((new Date()).getTime()/(1000 * slotLen))
+    def key = uid + ":" + timeSlot + ":" + secret
+    log.debug("HASHING: " + key)
+    def md = MessageDigest.getInstance("SHA-256")
+    md.reset()
+    def keyAsBytes = md.digest(new java.lang.String(key).getBytes())
+    def encoder = new BASE64Encoder()
+    return encoder.encode(keyAsBytes) + ":${uid}"
   }
 }
