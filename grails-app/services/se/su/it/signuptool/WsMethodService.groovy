@@ -16,7 +16,7 @@ class WsMethodService {
     try {
       def facade = wsAccessService.getFacade(EnrollmentFacade.class)
       // Using 'other' since other affiliations will be set by some script.
-      return facade.enrollUser("student.su.se", givenName, sn, "other", nin, getLogObject())
+      return facade.enrollUser("student.su.se", givenName, sn, "other", nin)
     }
     catch (Exception e) {
       log.error(e.toString())
@@ -40,7 +40,7 @@ class WsMethodService {
   {
     try {
       def facade = wsAccessService.getFacade(MailRoutingFacade.class)
-      facade.setMailRoutingAddress(uid,mailRoutingAddress,getLogObject())
+      facade.setMailRoutingAddress(uid,mailRoutingAddress)
       return true
     }
 
@@ -67,7 +67,7 @@ class WsMethodService {
   {
     try {
       def facade = wsAccessService.getFacade(MailRoutingFacade.class)
-      facade.setMailRoutingAddress(uid,mail,getLogObject())
+      facade.setMailRoutingAddress(uid,mail)
       return true
     }
 
@@ -100,16 +100,5 @@ class WsMethodService {
       log.error(e.toString())
       return false
     }
-  }
-
-  private se.su.it.sukat.client.AuditVO getLogObject() {
-    def webRequest = RequestContextHolder.currentRequestAttributes()
-
-    def uid = "signuptool"
-    def ip = java.net.InetAddress.getLocalHost().getHostAddress()
-    def client = webRequest.getRequest().getRemoteAddr()
-
-    se.su.it.sukat.client.AuditVO lo = new se.su.it.sukat.client.AuditVO(uid: uid, ipAddress: ip, client: client)
-    return lo
   }
 }
