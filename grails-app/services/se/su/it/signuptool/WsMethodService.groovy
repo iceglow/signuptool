@@ -15,7 +15,7 @@ class WsMethodService {
     try {
       def facade = wsAccessService.getFacade(EnrollmentFacade.class)
       // Using 'other' since other affiliations will be set by some script.
-      return facade.enrollUser("student.su.se", givenName, sn, "other", nin)
+      return facade.enrollUser("student.su.se", givenName, sn, "other", nin,null)
     }
     catch (Exception e) {
       log.error(e.toString())
@@ -39,7 +39,7 @@ class WsMethodService {
   {
     try {
       def facade = wsAccessService.getFacade(MailRoutingFacade.class)
-      facade.setMailRoutingAddress(uid,mailRoutingAddress)
+      facade.setMailRoutingAddress(uid,mailRoutingAddress,null)
       return true
     }
 
@@ -66,7 +66,7 @@ class WsMethodService {
   {
     try {
       def facade = wsAccessService.getFacade(MailRoutingFacade.class)
-      facade.setMailRoutingAddress(uid,mail)
+      facade.setMailRoutingAddress(uid,mail,null)
       return true
     }
 
