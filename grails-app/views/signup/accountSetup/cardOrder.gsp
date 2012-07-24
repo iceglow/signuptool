@@ -21,11 +21,11 @@
     <g:if test="${canOrderCard}">
     <h2><g:message code="cardOrder.orderQuestion"/></h2>
 	<p><g:message code="cardOrder.orderInfo"/></p>
-
+      addrVo: ${addrVo}
     <div class="content-block apps-colorbox1 mgn-bottom-10">
       <g:if test="${addrVo != null}">
         <div class="apps-content-block-inner">
-          <div class="apps-float-40"><label><g:radio value="defaultAddress" name="cardpickup" checked="${usd?.cardpickup.equalsIgnoreCase('defaultAddress') ? 'checked':false}"/><g:message code="cardOrder.permAddr"/></label></div>
+          <div class="apps-float-40"><label><g:radio value="defaultAddress" name="cardpickup" checked="${usd?.cardpickup.equalsIgnoreCase('defaultAddress') ? 'checked':true}"/><g:message code="cardOrder.permAddr"/></label></div>
 
           <div class="apps-float-50">${attrs.givenName} ${attrs.sn}<br/>
           <g:if test="${addrVo.coadr != null && !addrVo.coadr.isEmpty()}">
@@ -38,49 +38,47 @@
         </div>
       </g:if>
       <g:else>
+        <div class="apps-content-block-inner">
+          <div class="apps-float-40"><label><g:radio value="otherAddress" name="cardpickup" checked="${usd?.cardpickup.equalsIgnoreCase('otherAddress') ? 'checked':false}"/><g:message code="cardOrder.otherAddr.label"/></label></div>
+
+          <div class="apps-float-50">
+
+            <div class="apps-content-block-inner">
+              <div class="apps-float-30"><g:message code="address.careOf.label"/></div>
+
+              <div class="apps-float-35"><g:textField name="coadr" value="${usd?.coadr}"/></div>
+              <div class="clear-float"></div>
+            </div>
+
+
+
+            <div class="apps-content-block-inner">
+              <div class="apps-float-30"><g:message code="address.street.label"/></div>
+
+              <div class="apps-float-35"><g:textField name="gatadr" value="${usd?.gatadr}" class="${hasErrors(bean: usd, field:'gatadr', 'error')}"/></div>
+              <div class="clear-float"></div>
+            </div>
+
+
+
+            <div class="apps-content-block-inner">
+              <div class="apps-float-30"><g:message code="address.zip.label"/></div>
+
+              <div class="apps-float-35"><g:textField name="postnr" size="6" value="${usd?.postnr}" class="${hasErrors(bean: usd, field:'postnr', 'error')}"/></div>
+              <div class="clear-float"></div>
+            </div>
+
+            <div class="apps-content-block-inner">
+              <div class="apps-float-30"><g:message code="address.location.label"/></div>
+
+              <div class="apps-float-35"><g:textField name="ort" value="${usd?.ort}" class="${hasErrors(bean: usd, field:'ort', 'error')}"/></div>
+            </div>
+
+          </div>
+
+          <div class="clear-float"></div>
+        </div>
       </g:else>
-      <div class="apps-content-block-inner">
-        %{--<div class="apps-float-40"><label><g:radio value="otherAddress" name="cardpickup" checked="${usd?.cardpickup.equalsIgnoreCase('otherAddress') ? 'checked':false}"/><g:message code="cardOrder.otherAddr.label"/></label></div>--}%
-
-        %{--<div class="apps-float-50">--}%
-
-          %{--<div class="apps-content-block-inner">--}%
-            %{--<div class="apps-float-30"><g:message code="address.careOf.label"/></div>--}%
-
-            %{--<div class="apps-float-35"><g:textField name="coadr" value="${usd?.coadr}"/></div>--}%
-            %{--<div class="clear-float"></div>--}%
-          %{--</div>--}%
-
-
-
-          %{--<div class="apps-content-block-inner">--}%
-            %{--<div class="apps-float-30"><g:message code="address.street.label"/></div>--}%
-
-            %{--<div class="apps-float-35"><g:textField name="gatadr" value="${usd?.gatadr}" class="${hasErrors(bean: usd, field:'gatadr', 'error')}"/></div>--}%
-            %{--<div class="clear-float"></div>--}%
-          %{--</div>--}%
-
-
-
-          %{--<div class="apps-content-block-inner">--}%
-            %{--<div class="apps-float-30"><g:message code="address.zip.label"/></div>--}%
-
-            %{--<div class="apps-float-35"><g:textField name="postnr" size="6" value="${usd?.postnr}" class="${hasErrors(bean: usd, field:'postnr', 'error')}"/></div>--}%
-            %{--<div class="clear-float"></div>--}%
-          %{--</div>--}%
-
-
-
-          %{--<div class="apps-content-block-inner">--}%
-            %{--<div class="apps-float-30"><g:message code="address.location.label"/></div>--}%
-
-            %{--<div class="apps-float-35"><g:textField name="ort" value="${usd?.ort}" class="${hasErrors(bean: usd, field:'ort', 'error')}"/></div>--}%
-          %{--</div>--}%
-
-        %{--</div>--}%
-
-        <div class="clear-float"></div>
-      </div>
 
       <div class="clear-float">&nbsp;</div>
 
