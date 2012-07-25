@@ -25,7 +25,7 @@
     <div class="content-block apps-colorbox1 mgn-bottom-10">
       <g:if test="${addrVo != null}">
         <div class="apps-content-block-inner">
-          <div class="apps-float-40"><label><g:radio value="defaultAddress" name="cardpickup" checked="${usd?.cardpickup.equalsIgnoreCase('defaultAddress') ? 'checked':true}"/><g:message code="cardOrder.permAddr"/></label></div>
+          <div class="apps-float-40"><label><g:radio value="defaultAddress" name="cardpickup" checked="${usd?.cardpickup?.equalsIgnoreCase('defaultAddress') ? 'checked':false}"/><g:message code="cardOrder.permAddr"/></label></div>
 
           <div class="apps-float-50">${attrs.givenName} ${attrs.sn}<br/>
           <g:if test="${addrVo.coadr != null && !addrVo.coadr.isEmpty()}">
@@ -39,7 +39,7 @@
       </g:if>
       <g:else>
         <div class="apps-content-block-inner">
-          <div class="apps-float-40"><label><g:radio value="otherAddress" name="cardpickup" checked="${usd?.cardpickup.equalsIgnoreCase('otherAddress') ? 'checked':false}"/><g:message code="cardOrder.otherAddr.label"/></label></div>
+          <div class="apps-float-40"><label><g:radio value="otherAddress" name="cardpickup" checked="${usd?.cardpickup?.equalsIgnoreCase('otherAddress') ? 'checked':false}"/><g:message code="cardOrder.otherAddr.label"/></label></div>
 
           <div class="apps-float-50">
 
@@ -95,13 +95,13 @@
     </g:if>
     <g:else><p><g:message code='cardOrder.cannotOrderInfo'/></p></g:else>
   </div>
-
-  usd.errors: ${usd?.errors}
-  attrs: ${attrs}
-  usd: ${usd}
-  usd.email: ${usd?.email}
-  mail: ${mail}
-  usd.cardpickup: ${usd?.cardpickup}
+  (params: ${params})
+  (attrs: ${attrs})
+  (usd: ${usd})
+  (usd.email: ${usd?.email})
+  (mail: ${mail})
+  (usd.cardpickup: ${usd?.cardpickup})
+  (usd.errors: ${usd?.errors})
 
   <div class="section mgn-bottom-20">
     <h2><g:message code="emailChoice.question"/></h2>

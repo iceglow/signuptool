@@ -103,11 +103,15 @@ class SignupController {
         if (flow.canOrderCard) {
           try {
             ChangeAddressVO addr = LPWWebService.getChangeAddressVO(flow.vo.uid)
+            println "##########################################################################"
+            println "trying" + addr?.permanentAddr
             if(addr == null || addr.permanentAddr == null) {
               usd.cardpickup = "otherAddress"
             }
             [addrVo: addr.permanentAddr, usd: usd]
           } catch (Exception e) {
+            println "##########################################################################"
+            println "catching :" + e
             usd.cardpickup = "otherAddress"
             flash.error = message(code: 'accountSetup.orderCard.fetch.ladok.address.error')
             log.error("Could not get Ladok default address for uid<" + flow.vo.uid + ">")
@@ -122,12 +126,17 @@ class SignupController {
 
     cardOrder { // Process the form data here
       on("cardbutton"){
+        println "##########################################################################"
+        println params
+        println flow?.canOrderCard
+
          def usd = new UserSuppliedData(params)
          if (!flow.canOrderCard) {
            // Hack to be able to validate the user supplied data.
            usd.cardpickup = 'helpdesk'
            ['coadr', 'gatadr', 'postnr', 'ort'].each { usd[it] = '' }
          }
+
          usd.validate()
          flow.usd = usd
          if(usd.hasErrors()) {
