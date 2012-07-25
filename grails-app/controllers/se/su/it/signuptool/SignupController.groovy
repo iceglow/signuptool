@@ -131,6 +131,7 @@ class SignupController {
          usd.validate()
          flow.usd = usd
          if(usd.hasErrors()) {
+           log.error(usd?.errors)
            return error()
          }
 

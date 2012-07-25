@@ -96,13 +96,20 @@
     <g:else><p><g:message code='cardOrder.cannotOrderInfo'/></p></g:else>
   </div>
 
+  usd.errors: ${usd?.errors}
+  attrs: ${attrs}
+  usd: ${usd}
+  usd.email: ${usd?.email}
+  mail: ${mail}
+  usd.cardpickup: ${usd?.cardpickup}
+
   <div class="section mgn-bottom-20">
     <h2><g:message code="emailChoice.question"/></h2>
 
     <div class="content-block apps-colorbox1 mgn-bottom-10">
       <div class="apps-content-block-inner">
         <div class="apps-float-40"><label><g:radio value="su" name="email"
-                                                   checked="${usd?.email.equalsIgnoreCase('su') ? 'checked':false}"/><g:message
+                                                   checked="${usd?.email?.equalsIgnoreCase('su') ? 'checked':false}"/><g:message
           code="emailChoice.su.label"/></label></div>
 
         <div class="apps-float-50">${mail}<br/><g:message code="emailChoice.su.help"/></div>
