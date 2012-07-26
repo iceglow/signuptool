@@ -79,9 +79,9 @@ class SignupService {
                        "V\u00e4lkommen som student vid Stockholms universitet!\n" +
                        "\n" +
                        "------------------------------------------------------------------------------------------------------------------------------------------------\n" +
-                       "You now have an activated University Account, and have successfully ordered your University Card! The card should arrive within five working days.\n" +
-                       "If you have any questions, please contact the University Helpdesk for IT issues: www.su.se/english/helpdesk/\n" +
-                       "Learn more about your University Account, University Card and Stockholm University's IT services at: www.su.se/english/IT/\n" +
+                       "You now have activated your University Account, and have successfully ordered your University Card! The card should arrive within five working days.\n" +
+                       "If you have any questions, please contact the University Helpdesk for IT.\n" +
+                       "Learn more about your University Account, University Card and Stockholm University's IT services at: http://www.su.se/english/study/student-services/university-account/what-is-a-university-account \n"+
                        "Welcome as a student at Stockholm University!"
 
       MailUtil mailUtil = new MailUtil("smtp.su.se", "noreply@su.se")
