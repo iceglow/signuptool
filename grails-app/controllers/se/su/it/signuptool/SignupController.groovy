@@ -103,15 +103,11 @@ class SignupController {
         if (flow.canOrderCard) {
           try {
             ChangeAddressVO addr = LPWWebService.getChangeAddressVO(flow.vo.uid)
-            println "##########################################################################"
-            println "trying" + addr?.permanentAddr
             if(addr == null || addr.permanentAddr == null) {
               usd.cardpickup = "otherAddress"
             }
             [addrVo: addr.permanentAddr, usd: usd]
           } catch (Exception e) {
-            println "##########################################################################"
-            println "catching :" + e
             usd.cardpickup = "otherAddress"
             flash.error = message(code: 'accountSetup.orderCard.fetch.ladok.address.error')
             log.error("Could not get Ladok default address for uid<" + flow.vo.uid + ">")
@@ -126,11 +122,17 @@ class SignupController {
 
     cardOrder { // Process the form data here
       on("cardbutton"){
-        println "##########################################################################"
-        println params
-        println flow?.canOrderCard
 
          def usd = new UserSuppliedData(params)
+         println "after new: ${usd?.cardpickup}, ${usd?.email}, ${usd?.gatadr}, errors: ${usd?.errors}"
+
+         if(usd.cardpickup.equalsIgnoreCase("defaultAddress")){
+           //this is so that the usd object passes validation.
+           //only if cardpickup == otherAddress these fields has to be longer than 0.
+           // in this case defaultAddress they just need to be there.
+           ['coadr', 'gatadr', 'postnr', 'ort'].each { usd[it] = '' }
+         }
+
          if (!flow.canOrderCard) {
            // Hack to be able to validate the user supplied data.
            usd.cardpickup = 'helpdesk'
@@ -138,6 +140,7 @@ class SignupController {
          }
 
          usd.validate()
+         println "after validate: ${usd?.cardpickup}, ${usd?.email}, ${usd?.gatadr}, errors: ${usd?.errors}"
          flow.usd = usd
          if(usd.hasErrors()) {
            log.error(usd?.errors)

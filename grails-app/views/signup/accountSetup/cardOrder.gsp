@@ -84,7 +84,7 @@
 
       <div class="apps-content-block-inner">
         <div class="apps-float-40"><label><g:radio value="helpdesk" name="cardpickup"
-                                                   checked="${usd?.cardpickup.equalsIgnoreCase('helpdesk') ? 'checked':false}"/><g:message
+                                                   checked="${usd?.cardpickup?.equalsIgnoreCase('helpdesk') ? 'checked':false}"/><g:message
           code="cardOrder.helpdesk.label"/></label></div>
 
         <div class="apps-float-50"><g:message code="cardOrder.helpdesk.desc"/></div>
@@ -95,13 +95,6 @@
     </g:if>
     <g:else><p><g:message code='cardOrder.cannotOrderInfo'/></p></g:else>
   </div>
-  (params: ${params})
-  (attrs: ${attrs})
-  (usd: ${usd})
-  (usd.email: ${usd?.email})
-  (mail: ${mail})
-  (usd.cardpickup: ${usd?.cardpickup})
-  (usd.errors: ${usd?.errors})
 
   <div class="section mgn-bottom-20">
     <h2><g:message code="emailChoice.question"/></h2>
@@ -119,7 +112,7 @@
 
 
       <div class="apps-content-block-inner">
-        <div class="apps-float-40"><label><g:radio value="other" name="email" checked="${usd?.email.equalsIgnoreCase('other') ? 'checked':false}"/><g:message code="emailChoice.other.label"/></label></div>
+        <div class="apps-float-40"><label><g:radio value="other" name="email" checked="${usd?.email?.equalsIgnoreCase('other') ? 'checked':false}"/><g:message code="emailChoice.other.label"/></label></div>
 
         <div class="apps-float-50"><g:textField name="otherEmail" value="${usd?.otherEmail}" class="${hasErrors(bean: usd, field:'otherEmail', 'error')}"/></div>
         <div class="clear-float"></div>
