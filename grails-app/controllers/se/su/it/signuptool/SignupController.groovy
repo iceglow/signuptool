@@ -124,7 +124,6 @@ class SignupController {
       on("cardbutton"){
 
          def usd = new UserSuppliedData(params)
-         println "after new: ${usd?.cardpickup}, ${usd?.email}, ${usd?.gatadr}, errors: ${usd?.errors}"
 
          if(usd.cardpickup.equalsIgnoreCase("defaultAddress")){
            //this is so that the usd object passes validation.
@@ -140,7 +139,6 @@ class SignupController {
          }
 
          usd.validate()
-         println "after validate: ${usd?.cardpickup}, ${usd?.email}, ${usd?.gatadr}, errors: ${usd?.errors}"
          flow.usd = usd
          if(usd.hasErrors()) {
            log.error(usd?.errors)
