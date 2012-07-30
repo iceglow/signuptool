@@ -80,7 +80,7 @@ class SignupService {
                        "\n" +
                        "------------------------------------------------------------------------------------------------------------------------------------------------\n" +
                        "You now have activated your University Account, and have successfully ordered your University Card! The card should arrive within five working days.\n" +
-                       "If you have any questions, please contact the University Helpdesk for IT.\n" +
+                       "If you have any questions, please contact the University Helpdesk for IT issues: http://www.su.se/english/study/student-services/university-account \n" +
                        "Learn more about your University Account, University Card and Stockholm University's IT services at: http://www.su.se/english/study/student-services/university-account/what-is-a-university-account \n"+
                        "Welcome as a student at Stockholm University!"
 
