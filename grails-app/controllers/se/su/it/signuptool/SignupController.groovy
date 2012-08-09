@@ -125,7 +125,7 @@ class SignupController {
 
          def usd = new UserSuppliedData(params)
 
-         if(usd.cardpickup.equalsIgnoreCase("defaultAddress")){
+         if(usd.cardpickup.equalsIgnoreCase("defaultAddress") || usd.cardpickup.equalsIgnoreCase("helpdesk")){
            //this is so that the usd object passes validation.
            //only if cardpickup == otherAddress these fields has to be longer than 0.
            // in this case defaultAddress they just need to be there.
