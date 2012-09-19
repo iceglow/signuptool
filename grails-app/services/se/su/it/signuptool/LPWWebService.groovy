@@ -33,7 +33,6 @@ import ladok.lpw.service.monitor.facadeclient.MonitorFetcher
 import ladok.lpw.service.nationalcertificate.facadeclient.NationalCertificateFetcher
 import ladok.lpw.service.certadmin.facadeclient.CertAdminFetcher
 import ladok.lpw.service.registrate.facadeclient.RegistrateFetcher
-import ladok.lpw.service.resrapp.facadeclient.ResRappFetcher
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
 import org.apache.cxf.frontend.ClientProxy
 import org.apache.cxf.endpoint.Client
@@ -167,11 +166,6 @@ class LPWWebService {
   private RegistrateFetcher getRegistrateFacade() {
     // T30
     return (RegistrateFetcher)getClient(RegistrateFetcher.class, "RegistrateFacadeClient")
-  }
-
-  private ResRappFetcher getResRappFacade() {
-    // T06
-    return (ResRappFetcher)getClient(ResRappFetcher.class, "ResRappFacadeClient")
   }
 
   // LPW-WS Methods
