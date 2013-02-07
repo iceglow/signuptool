@@ -12,16 +12,16 @@ grails.project.dependency.resolution = {
   repositories {
     grailsPlugins()
     grailsHome()
+    grailsCentral()
+    mavenLocal()
+    mavenCentral()
 
     grailsRepo "http://svn.codehaus.org/grails-plugins/"
 
     // Our own plugins hosted in a svn repository
-    grailsRepo "http://svn.it.su.se/grails-plugins/trunk/"
+    grailsRepo "http://svn.it.su.se/grails-plugins/"
+    grailsRepo "http://svn.it.su.se/grails-plugins/trunk"
 
-    // uncomment the below to enable remote dependency resolution
-    // from public Maven repositories
-    //mavenLocal()
-    mavenCentral()
     //mavenRepo "http://snapshots.repository.codehaus.org"
     mavenRepo "http://repository.codehaus.org"
     mavenRepo "http://download.java.net/maven/2/"
@@ -41,6 +41,17 @@ grails.project.dependency.resolution = {
     compile 'commons-logging:commons-logging:1.1.1'
 
     runtime 'mysql:mysql-connector-java:5.1.7'
+    compile 'commons-codec:commons-codec:1.4'
 
+  }
+
+  plugins {
+    build ":tomcat:$grailsVersion"
+    compile ":hibernate:${grailsVersion}"
+
+    runtime ':webflow:2.0.0'
+    runtime ':spocp:0.1.7'
+    runtime ':su-config:0.4.6'
+    runtime ':su-feed-parser:0.4'
   }
 }
