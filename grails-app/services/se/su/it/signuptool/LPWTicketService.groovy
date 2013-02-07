@@ -1,7 +1,6 @@
 package se.su.it.signuptool
 
 import org.apache.commons.logging.LogFactory
-import se.su.it.config.*
 import java.security.MessageDigest
 import sun.misc.BASE64Encoder
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
@@ -9,11 +8,6 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 class LPWTicketService {
   private static def log = LogFactory.getLog(this)
 
-  private static def configService = new ConfigService()
-
-  static String getTicket() {
-    return getTicket(null);
-  }
   //Below code should be replaced by a SPNEGO call to our ticket service https://lpwticket.it.su.se
   //At this time we were really pressed for time and there was no simple way to implement with httpclient
   //due to lots of old dependencies in this Application that seemed to clash with other classes/jars.

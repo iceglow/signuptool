@@ -2,10 +2,6 @@ package se.su.it.signuptool
 
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
-import ladok.lpw.service.register.facadeclient.RegVO
-import ladok.lpw.service.register.facadeclient.PersonVO
-import ladok.lpw.service.registrate.facadeclient.RegistrateVO
-import ladok.lpw.service.registrate.facadeclient.CourseRegistrationVO
 
 class LPWLadokVOService {
 
@@ -86,42 +82,4 @@ class LPWLadokVOService {
       }
       return user;
 	}
-
-  RegVO getRegVORegister(ssn){
-    RegVO reg = new RegVO()
-    PersonVO person = new PersonVO()
-    person.setPnr(ssn)
-    reg.setPerson(person)
-    reg.setRegister(true)
-    return reg
-  }
-
-  RegVO getRegVOResultat(ssn){
-    RegVO reg = new RegVO()
-    PersonVO person = new PersonVO()
-    person.setPnr(ssn)
-    reg.setPerson(person)
-    reg.setResultat(true)
-    return reg
-  }
-
-  RegVO getRegVOAsEmployee(ssn){
-    RegVO reg = new RegVO()
-    PersonVO person = new PersonVO()
-    person.setPnr(ssn)
-    reg.setPerson(person)
-    reg.setResultat(true)
-    reg.setRegister(true)
-    return reg
-  }
-
-  RegistrateVO getRegistrateVO(ssn, semester, courseRegistrations) {
-    RegistrateVO reg = new RegistrateVO()
-    reg.setPnr(ssn)
-    reg.setSemester(semester)
-    reg.getCourseRegistrations().addAll(courseRegistrations as CourseRegistrationVO[])
-    //reg.setCourseRegistrations(courseRegistrations as CourseRegistrationVO[])
-    return reg
-  }
-
 }

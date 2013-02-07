@@ -1,8 +1,8 @@
 package se.su.it.signuptool
 
-import java.rmi.Remote;
 import se.su.it.ws.commons.WSLocatorFactory
-import se.su.it.sukat.client.*
+
+import java.rmi.Remote
 
 class WsAccessService {
   def configService
@@ -10,6 +10,7 @@ class WsAccessService {
   def wsl = null
   def facadeMap = [:]
 
+  //TODO: should this be transactional?? cause this is just wrong...
   boolean transactional = false
 
   def getWsLocator() {
@@ -17,24 +18,6 @@ class WsAccessService {
       wsl = WSLocatorFactory.instance(configService.getSectionAsProperties("WS"))
     }
     return wsl
-  }
-
-  def getEnrollmentFacade() {
-    return getFacade(EnrollmentFacade.class)
-  }
-
-
-  def getFacade(Class clazz, String locator, String getter) {
-    def wslocator = getWsLocator()
-    def ret
-    synchronized (facadeMap) {
-      if (!facadeMap.containsKey(clazz)) {
-        Remote facade = wslocator.getService(clazz, locator, getter);
-        facadeMap.put(clazz, facade)
-      }
-      ret = facadeMap.get(clazz)
-    }
-    return ret
   }
 
   def getFacade(Class clazz) {

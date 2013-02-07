@@ -1,12 +1,15 @@
 package se.su.it.signuptool
 
-import se.su.it.sukat.client.*
-import se.su.it.sucard.client.CardOrderVO
 import se.su.it.sucard.client.CardOrderFacadePortType
-import org.springframework.web.context.request.RequestContextHolder
+import se.su.it.sucard.client.CardOrderVO
+import se.su.it.sukat.client.EnrollmentFacade
+import se.su.it.sukat.client.MailRoutingFacade
+import se.su.it.sukat.client.UserContactFacade
 
 class WsMethodService {
   static scope = "prototype"
+
+  //TODO: should this be transactional?? cause this is just wrong...
   boolean transactional = false
 
   def wsAccessService
@@ -78,7 +81,7 @@ class WsMethodService {
   }
 
   CardOrderVO[] getCardOrdersForUser(String uid) {
-    try {  
+    try {
       def facade = wsAccessService.getFacade(CardOrderFacadePortType.class)
       return facade.getCardOrdersForUser(uid).getCardOrderVO()
     }
