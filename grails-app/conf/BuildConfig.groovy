@@ -47,6 +47,9 @@ grails.project.dependency.resolution = {
 
   plugins {
     build ":tomcat:$grailsVersion"
+
+    test ":code-coverage:1.2.5"
+
     compile ":hibernate:${grailsVersion}"
 
     runtime ':webflow:2.0.0'
