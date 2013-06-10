@@ -1,0 +1,22 @@
+grails.naming.entries = [
+    "jdbc/signuptool-dev": [
+        type: "javax.sql.DataSource",
+        auth: "Container",
+        driverClassName: "com.mysql.jdbc.Driver",
+        url: "jdbc:mysql://localhost:3306/signuptool?autoReconnect=true",
+        maxActive: "20",
+        maxIdle: "1",
+        username: "%%USER%%",
+        password: "%%PASSWORD%%"
+    ],
+    "jdbc/signuptool": [
+        type: "javax.sql.DataSource",
+        auth: "Container",
+        driverClassName: "com.mysql.jdbc.Driver",
+        url: "jdbc:mysql://localhost:3306/signuptool?autoReconnect=true",
+        maxActive: "20",
+        maxIdle: "1",
+        username: "%%USER%%",
+        password: "%%PASSWORD%%"
+    ]
+]
