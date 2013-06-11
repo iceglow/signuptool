@@ -7,3 +7,4 @@ target/
 .classpath
 cobertura.ser
 grails-app/conf/DataSources.groovy
+out
