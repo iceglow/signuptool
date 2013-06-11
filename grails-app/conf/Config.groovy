@@ -99,3 +99,41 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+cxf {
+  client {
+    changeAddressFetcherServiceClient {
+      wsdl = "https://lpwtest-su.its.uu.se/cxf/ChangeAddressFetcher?wsdl"
+      clientInterface = ladok.lpw.service.changeaddress.facadeclient.ChangeAddressFetcher
+      serviceEndpointAddress = "https://lpwtest-su.its.uu.se/cxf/ChangeAddressFetcher"
+      enableDefaultLoggingInterceptors = false
+      receiveTimeout = 60000
+      connectionTimeout = 30000
+      allowChunking = true
+    }
+    registrateFetcherServiceClient {
+      wsdl = "https://lpwtest-su.its.uu.se/cxf/RegistrateFetcher?wsdl"
+      clientInterface = ladok.lpw.service.registrate.facadeclient.RegistrateFetcher
+      serviceEndpointAddress = "https://lpwtest-su.its.uu.se/cxf/RegistrateFetcher"
+      enableDefaultLoggingInterceptors = false
+      receiveTimeout = 60000
+      connectionTimeout = 30000
+      allowChunking = true
+    }
+    utilityFetcherServiceClient {
+      wsdl = "https://lpwtest-su.its.uu.se/cxf/UtilityFetcher?wsdl"
+      clientInterface = ladok.lpw.service.utility.facadeclient.UtilityFetcher
+      serviceEndpointAddress = "https://lpwtest-su.its.uu.se/cxf/UtilityFetcher"
+      enableDefaultLoggingInterceptors = false
+      receiveTimeout = 60000
+      connectionTimeout = 30000
+      allowChunking = true
+    }
+  }
+}
+
+lpwTOTP {
+  secret = "mySecretKey"
+  slotLen = 3600 * 12
+}
+
