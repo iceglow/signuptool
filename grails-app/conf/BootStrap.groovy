@@ -9,7 +9,7 @@ class BootStrap {
     def init = { servletContext ->
 
       def initLocalization = {
-        log.info "*** Importing translations from i18n files into the database. ***"
+        log.info "*** Localizations: Importing translations from i18n files into the database."
         def context = grailsApplication.mainContext
         def files = []
         def languages = ['sv']
@@ -52,7 +52,7 @@ class BootStrap {
                 loc.save(failOnError: true)
                 counts.imported = counts.imported + 1
               } catch (ex) {
-                log.error "Failed to import $key from ${file?.name} with locale ${file?.locale}", ex
+                log.error "*** Localizations: Failed to import $key from ${file?.name} with locale ${file?.locale}", ex
                 counts.error = counts.error + 1
               }
             } else {
@@ -63,15 +63,17 @@ class BootStrap {
         // remove our dummy key..
         Localization.findByCodeAndLocale("foo", "foo")?.delete()
         if (counts.imported > 0 || counts.error > 0) {
-          log.info "Imported: ${counts.imported}, Errors: ${counts.error}, Skipped: ${counts.skipped}"
+          log.info "*** Localizations: Imported: ${counts.imported}, Errors: ${counts.error}, Skipped: ${counts.skipped}"
+        } else {
+          log.info "*** Localizations: No new localizations to import, nothing imported."
         }
-        log.info "*** Import of translations completed. ***"
+        log.info "*** Localizations: Import of translations completed."
       }
 
       try {
         initLocalization()
       } catch (ex) {
-        log.error "Failed to import localizations from i18n files", ex
+        log.error "*** Localizations: Failed to import localizations from i18n files", ex
       }
     }
     def destroy = {
