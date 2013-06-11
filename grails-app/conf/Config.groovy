@@ -11,11 +11,11 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
-def customConfigurations = []
+def customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy"]
 
 environments {
   development {
-     customConfigurations = [DataSources]
+     customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy", DataSources]
   }
 }
 
