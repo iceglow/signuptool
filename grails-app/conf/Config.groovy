@@ -1,3 +1,6 @@
+import org.apache.log4j.DailyRollingFileAppender
+import org.apache.log4j.net.SyslogAppender
+
 // locations to search for config files that get merged into the main config;
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
@@ -18,9 +21,11 @@ environments {
      customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy", DataSources]
   }
 }
+/** Some custom options */
+grails.app.context = '/' // set the base directory to / instead of /signuptool/.
+grails.views.javascript.library = "jquery"
 
 grails.config.locations = customConfigurations
-
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
@@ -80,24 +85,104 @@ environments {
 }
 
 // log4j configuration
-log4j = {
-    // Example of changing the log pattern for the default console appender:
-    //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
 
-    error  'org.codehaus.groovy.grails.web.servlet',        // controllers
-           'org.codehaus.groovy.grails.web.pages',          // GSP
-           'org.codehaus.groovy.grails.web.sitemesh',       // layouts
-           'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
-           'org.codehaus.groovy.grails.web.mapping',        // URL mapping
-           'org.codehaus.groovy.grails.commons',            // core / classloading
-           'org.codehaus.groovy.grails.plugins',            // plugins
-           'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
-           'org.springframework',
-           'org.hibernate',
-           'net.sf.ehcache.hibernate'
+def appName = appName //Grails looses track of the appName property inside the log4j block.
+
+log4j = {
+  environments {
+    production {
+      error "org.codehaus.groovy.grails.web",
+            "org.codehaus.groovy.grails.web.servlet",
+            "org.codehaus.groovy.grails.web.pages",
+            "org.codehaus.groovy.grails.web.sitemesh",
+            "org.codehaus.groovy.grails.web.mapping",
+            "org.codehaus.groovy.grails.web.mapping.filter",
+            "org.codehaus.groovy.grails.commons",
+            "org.codehaus.groovy.grails.plugins",
+            "org.codehaus.groovy.grails.orm.hibernate",
+            "net.sf.ehcache",
+            "org.springframework",
+            "org.hibernate",
+            "org.hibernate.cfg.annotations"
+
+      info  "grails.app",
+            "grails.app.controllers",
+            "grails.app.domain",
+            "grails.app.services",
+            "grails.app.taglib",
+            "grails.app.conf",
+            "grails.app.filters",
+            "grails.app.controllers.se.su.it",
+            "grails.app.domain.se.su.it",
+            "grails.app.services.se.su.it",
+            "grails.app.taglib.se.su.it",
+            "grails.app.conf.se.su.it",
+
+      appenders {
+        'null' name: 'stacktrace' // this makes sure we don't get a stacktrace.log
+        appender new DailyRollingFileAppender(
+            name: "logFile",
+            datePattern: "'.'yyyy-MM-dd",
+            fileName: "${System.properties["catalina.home"]}/logs/${appName}-${Environment?.current?.name}.log",
+            layout: pattern(conversionPattern: '%d [%t] %-5p %c{2} %x - %m%n')
+        )
+        appender new SyslogAppender(name: "syslog",
+            syslogHost: "127.0.0.1",
+            threshold: org.apache.log4j.Level.INFO,
+            layout: pattern(conversionPattern: "${appName}: [%t] %-5p %c{2} %x - %m%n")
+        )
+      }
+
+      root {
+        error 'syslog', 'logFile'
+        additivity: true
+      }
+    }
+    development {
+      error "org.codehaus.groovy.grails.web",
+            "org.codehaus.groovy.grails.web.servlet",
+            "org.codehaus.groovy.grails.web.pages",
+            "org.codehaus.groovy.grails.web.sitemesh",
+            "org.codehaus.groovy.grails.web.mapping.filter",
+            "org.codehaus.groovy.grails.web.mapping",
+            "org.codehaus.groovy.grails.commons",
+            "org.codehaus.groovy.grails.plugins",
+            "org.codehaus.groovy.grails.orm.hibernate",
+            "org.springframework",
+            "org.hibernate",
+            "net.sf.ehcache"
+
+      info  "grails.app",
+            "grails.app.domain",
+            "grails.app.controllers",
+            "grails.app.services",
+            "grails.app.taglib",
+            "grails.app.conf",
+            "grails.app.filters",
+
+      appenders {
+        'null' name: 'stacktrace' // this makes sure we don't get a stacktrace.log
+        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c{2} %x - %m%n')
+      }
+
+      root {
+        info 'stdout'
+        additivity: true
+      }
+
+    }
+
+    test {
+      appenders {
+        'null' name: 'stacktrace' // this makes sure we don't get a stacktrace.log
+        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c{2} %x - %m%n')
+      }
+      root {
+        // Prettier output from tests with loglevel fatal.
+        fatal 'stdout'
+      }
+    }
+  }
 }
 
 cxf {
