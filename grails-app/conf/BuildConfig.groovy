@@ -44,6 +44,8 @@ grails.project.dependency.resolution = {
     // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
     test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
 
+    compile 'se.su.it.ws.commons:su-ws-commons:1.5'
+    compile 'se.su.it.sucard.svc:sucardsvc-client:1.2'
     runtime 'mysql:mysql-connector-java:5.1.22'
     runtime 'se.su.it.tomcat:tomcat-header-encoding-valve:2.2'
     compile "org.grails:grails-webflow:$grailsVersion"
