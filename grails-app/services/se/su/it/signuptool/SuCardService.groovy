@@ -10,7 +10,7 @@ class SuCardService {
   def configService
 
   WSLocatorFactory wsLocatorFactory = null
-  Map<Class,Remote> facadeMap = [:]
+  CardOrderFacadePortType cardOrderFacade = null
 
   public CardOrderVO[] getCardOrdersForUser(String uid) {
     try {
@@ -24,8 +24,7 @@ class SuCardService {
 
   public boolean orderCard(CardOrderVO cardOrderVO) {
     try {
-      CardOrderFacadePortType facade = getFacade(CardOrderFacadePortType.class)
-      facade.orderCard(cardOrderVO)
+      getCardOrderFacade().orderCard(cardOrderVO)
       return true
     } catch (Throwable exception) {
       log.error("Problem ordering card: ${exception.getMessage()}",exception)
@@ -40,16 +39,15 @@ class SuCardService {
     return wsLocatorFactory
   }
 
-  private Remote getFacade(Class clazz) {
-    Remote facade
-    synchronized (facadeMap) {
-      if (!facadeMap.containsKey(clazz)) {
-        WSLocatorFactory wslocator = getWsLocator()
-        Remote servicefacade = wslocator.getService(clazz);
-        facadeMap.put(clazz, servicefacade)
+  private CardOrderFacadePortType getCardOrderFacade() {
+    synchronized (cardOrderFacade) {
+      if(!cardOrderFacade) {
+        WSLocatorFactory wsLocator = getWsLocator()
+        Remote serviceFacade = wsLocator.getService(clazz)
+        cardOrderFacade = (CardOrderFacadePortType) serviceFacade
       }
-      facade = facadeMap.get(clazz);
     }
-    return facade
+    return cardOrderFacade
   }
+
 }
