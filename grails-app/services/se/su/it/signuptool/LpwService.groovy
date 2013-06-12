@@ -13,49 +13,92 @@ class LpwService {
   RegistrateFetcher     registrateFetcherServiceClient
 
   def lpwTicketService
+  public final String DEFAULT_TYPE = "1"
 
-  UtilitySemesterVO getCurrentAndNextSemester(uid) throws Exception {
+  UtilitySemesterVO getCurrentAndNextSemester(String uid) throws Exception {
     try {
-      ladok.lpw.service.utility.facadeclient.UserVO userVO = new ladok.lpw.service.utility.facadeclient.UserVO(
-        uid: uid,
-        type: "1",
-        authinfovo: new ladok.lpw.service.utility.facadeclient.AuthInfoVO(
-          ticket: new ladok.lpw.service.utility.facadeclient.TicketVO(ticket: lpwTicketService.getTicket(uid))),
-        personvo: new ladok.lpw.service.utility.facadeclient.PersonVO()
-      )
+      def userVO = (ladok.lpw.service.utility.facadeclient.UserVO) getUserVO("utility", uid, DEFAULT_TYPE)
       return utilityFetcherServiceClient.getCurrAndNextSemester(userVO)
-    } catch (Exception e) {
-      throw new Exception('lpw_connection_failure', e)
+    } catch (ex) {
+      log.error "Failed when fetching current and next semester for => $uid", ex
+      throw new Exception('lpw_connection_failure', ex)
     }
   }
 
-  ChangeAddressVO getChangeAddressVO(uid) throws Exception {
+  ChangeAddressVO getChangeAddressVO(String uid) throws Exception {
     try {
-      ladok.lpw.service.changeaddress.facadeclient.UserVO userVO = new ladok.lpw.service.changeaddress.facadeclient.UserVO(
-        uid: uid,
-        type: "1",
-        authinfovo: new ladok.lpw.service.changeaddress.facadeclient.AuthInfoVO(
-          ticket: new ladok.lpw.service.changeaddress.facadeclient.TicketVO(ticket: lpwTicketService.getTicket(uid))),
-        personvo: new ladok.lpw.service.changeaddress.facadeclient.PersonVO()
-      )
+      def userVO = (ladok.lpw.service.changeaddress.facadeclient.UserVO) getUserVO("changeaddress", uid, DEFAULT_TYPE)
       return changeAddressFetcherServiceClient.getUserData(userVO)
-    } catch (Exception e) {
-      throw new Exception('lpw_connection_failure', e)
+    } catch (ex) {
+      log.error "Failed when fetching change address for => $uid", ex
+      throw new Exception('lpw_connection_failure', ex)
     }
   }
 
-  CourseSuggestionVO getCourseRegSuggestions(uid, semester) throws Exception {
+  CourseSuggestionVO getCourseRegSuggestions(String uid, String semester) throws Exception {
     try {
-      ladok.lpw.service.registrate.facadeclient.UserVO userVO = new ladok.lpw.service.registrate.facadeclient.UserVO(
-        uid: uid,
-        type: "1",
-        authinfovo: new ladok.lpw.service.registrate.facadeclient.AuthInfoVO(
-          ticket: new ladok.lpw.service.registrate.facadeclient.TicketVO(ticket: lpwTicketService.getTicket(uid))),
-        personvo: new ladok.lpw.service.registrate.facadeclient.PersonVO()
-      )
+      def userVO = (ladok.lpw.service.registrate.facadeclient.UserVO) getUserVO("registrate", uid, DEFAULT_TYPE)
       return registrateFetcherServiceClient.getCourseRegSuggestions(userVO, semester, false)
-    } catch (Exception e) {
-      throw new Exception('lpw_connection_failure', e)
+    } catch (ex) {
+      log.error "Failed to fetch course suggestions for => $uid,  semester $semester", ex
+      throw new Exception('lpw_connection_failure', ex)
     }
+  }
+
+  private getUserVO(String facade, String uid, String type) {
+
+    def userVO = null
+    def ticket = null
+
+    try {
+      ticket = lpwTicketService.getTicket(uid)
+    } catch (ex) {
+      log.error "Failed to fetch ticket from the ticket service.", ex
+      return null
+    }
+
+    if (!ticket) {
+      return null
+    }
+
+    switch(facade) {
+      case "utility":
+        def ticketVO = new ladok.lpw.service.utility.facadeclient.TicketVO(ticket: ticket)
+        def authInfoVO = new ladok.lpw.service.utility.facadeclient.AuthInfoVO(ticket: ticketVO)
+        def personVO = new ladok.lpw.service.utility.facadeclient.PersonVO()
+
+        userVO = new ladok.lpw.service.utility.facadeclient.UserVO(
+            uid: uid,
+            type: type,
+            authinfovo: authInfoVO,
+            personvo: personVO)
+        break
+      case "changeaddress":
+        def ticketVO = new ladok.lpw.service.changeaddress.facadeclient.TicketVO(ticket: ticket)
+        def authInfoVO = new ladok.lpw.service.changeaddress.facadeclient.AuthInfoVO(ticket: ticketVO)
+        def personVO = new ladok.lpw.service.changeaddress.facadeclient.PersonVO()
+
+        userVO = new ladok.lpw.service.changeaddress.facadeclient.UserVO(
+            uid: uid,
+            type: type,
+            authinfovo: authInfoVO,
+            personvo: personVO)
+        break
+      case "registrate":
+        def ticketVO = new ladok.lpw.service.registrate.facadeclient.TicketVO(ticket: ticket)
+        def authInfoVO = new ladok.lpw.service.registrate.facadeclient.AuthInfoVO(ticket: ticketVO)
+        def personVO = new ladok.lpw.service.registrate.facadeclient.PersonVO()
+
+        userVO = new ladok.lpw.service.registrate.facadeclient.UserVO(
+            uid: uid,
+            type: type,
+            authinfovo: authInfoVO,
+            personvo: personVO)
+        break
+      default:
+        log.error "facade: $facade is not implemented."
+      break
+    }
+    return userVO
   }
 }
