@@ -16,12 +16,10 @@ class SuCardService {
     try {
       CardOrderFacadePortType facade = getFacade(CardOrderFacadePortType.class)
       return facade.getCardOrdersForUser(uid).getCardOrderVO()
-    }
-    catch (Exception e) {
-      log.error(e.toString())
+    } catch (Throwable exception) {
+      log.error("Problem getting cardorders: ${exception.getMessage()}",exception)
       return null
     }
-
   }
 
   public boolean orderCard(CardOrderVO cardOrderVO) {
