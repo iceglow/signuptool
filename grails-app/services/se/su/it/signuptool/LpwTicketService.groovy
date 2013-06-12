@@ -12,7 +12,7 @@ class LpwTicketService {
   //At this time we were really pressed for time and there was no simple way to implement with httpclient
   //due to lots of old dependencies in this Application that seemed to clash with other classes/jars.
   //We did get the spnego to work but it always broke the negotiation token so we couldnt authenticate :(
-  static String getTicket(uid) {
+  public String getTicket(uid) {
     def grailsApplication = Holders.getGrailsApplication()
     def slotLen = grailsApplication.config.lpwTOTP.slotLen
     def secret = grailsApplication.config.lpwTOTP.secret

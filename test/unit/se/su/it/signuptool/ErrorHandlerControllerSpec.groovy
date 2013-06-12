@@ -27,6 +27,18 @@ class ErrorHandlerControllerSpec extends Specification {
     response.text == content
   }
 
+  void "on405"() {
+    given:
+    def content = 'mock'
+    views['/errorHandler/_genericError.gsp'] = content
+
+    when:
+    controller.on405()
+
+    then:
+    response.text == content
+  }
+
   void "on404"() {
     given:
     def content = 'mock'
