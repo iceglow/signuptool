@@ -4,4 +4,14 @@ class ActivateAccountAndCardController {
 
   def index() { }
 
+  def activateAccountAndCardFlow = {
+    startActivation {
+      on('success').to('requestUserLogin')
+    }
+
+    requestUserLogin {}
+
+    end()
+  }
+
 }
