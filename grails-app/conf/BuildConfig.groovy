@@ -44,8 +44,11 @@ grails.project.dependency.resolution = {
     // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
     test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
 
+    compile 'se.su.it.ws.commons:su-ws-commons:1.5'
+    compile 'se.su.it.sucard.svc:sucardsvc-client:1.2'
     runtime 'mysql:mysql-connector-java:5.1.22'
     runtime 'se.su.it.tomcat:tomcat-header-encoding-valve:2.2'
+    compile "org.grails:grails-webflow:$grailsVersion"
   }
 
   plugins {
@@ -54,6 +57,9 @@ grails.project.dependency.resolution = {
       exclude "spock-grails-support"
     }
 
+    compile ':webflow:2.0.0', {
+      exclude 'grails-webflow'
+    }
     compile ':build-test-data:2.0.4'
     compile ':cache:1.0.1'
     compile ":criteria:1.6" // Dependency for su-localization-editor plugin search functionality
