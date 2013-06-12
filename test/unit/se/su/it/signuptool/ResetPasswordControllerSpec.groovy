@@ -1,18 +1,17 @@
 package se.su.it.signuptool
 
-import grails.test.mixin.TestFor
 import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
+import spock.lang.Shared
 import spock.lang.Specification
 
 @TestMixin(WebFlowUnitTestMixin)
-@TestFor(ResetPasswordController)
 class ResetPasswordControllerSpec extends Specification {
+  @Shared
+  def controller
 
   def setup() {
-  }
-
-  def cleanup() {
+    controller = mockController(ResetPasswordController)
   }
 
   void "test something"() {
