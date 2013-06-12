@@ -71,6 +71,7 @@ grails.project.dependency.resolution = {
     runtime ":resources:1.1.6"
     runtime(':greenmail:1.3.2') { excludes "activation" }
     runtime ":database-migration:1.3.2"
+    runtime ":webflow:2.0.8.1"
     runtime ":su-config:0.6.2"
     runtime ":su-localization-editor:2.0.0"
 
