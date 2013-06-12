@@ -3,12 +3,31 @@ import org.grails.plugins.localization.Localization
 import org.springframework.core.io.Resource
 
 class BootStrap {
+  def configService
 
-    def grailsApplication
+  def grailsApplication
 
-    def init = { servletContext ->
+  def init = { servletContext ->
+    String sucardsvcurl
 
-      def initLocalization = {
+    switch (System.getProperty("signuptool", "dev")) {
+      case ~/prod(uction)?/:
+        sucardsvcurl = "https://sucard-prod-svc.it.su.se/services"
+        break
+      case "test":
+        sucardsvcurl = "https://sucard-test-svc.it.su.se/services"
+        break
+      case ~/dev(elopment)?/:
+      default:
+        sucardsvcurl = "https://sucard-test-svc.it.su.se/services"
+    }
+
+    //sucardsvc
+    configService.registerValueToSection("WS", "CardOrderFacade", "${sucardsvcurl}/CardOrderFacade")
+    configService.registerValueToSection("WS", "CardSyncFacade", "${sucardsvcurl}/CardSyncFacade")
+    //sucardsvc
+
+    def initLocalization = {
         log.info "*** Localizations: Importing translations from i18n files into the database."
         def context = grailsApplication.mainContext
         def files = []
@@ -68,14 +87,15 @@ class BootStrap {
           log.info "*** Localizations: No new localizations to import, nothing imported."
         }
         log.info "*** Localizations: Import of translations completed."
-      }
+    }
 
-      try {
-        initLocalization()
-      } catch (ex) {
-        log.error "*** Localizations: Failed to import localizations from i18n files", ex
-      }
+    try {
+      initLocalization()
+    } catch (ex) {
+      log.error "*** Localizations: Failed to import localizations from i18n files", ex
     }
-    def destroy = {
-    }
+  }
+
+  def destroy = {
+  }
 }
