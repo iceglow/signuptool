@@ -32,7 +32,7 @@ grails.project.dependency.resolution = {
     mavenCentral()
 
     grailsRepo "http://svn.it.su.se/grails-plugins/"
-
+    mavenRepo "http://maven.it.su.se/it.su.se/maven2"
     // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
     //mavenRepo "http://snapshots.repository.codehaus.org"
     //mavenRepo "http://repository.codehaus.org"
@@ -41,6 +41,7 @@ grails.project.dependency.resolution = {
   }
 
   dependencies {
+    log "error"
     // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
     test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
 
