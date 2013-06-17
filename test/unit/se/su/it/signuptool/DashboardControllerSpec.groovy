@@ -3,18 +3,20 @@ package se.su.it.signuptool
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-/**
- * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
- */
 @TestFor(DashboardController)
 class DashboardControllerSpec extends Specification {
 
-	def setup() {
-	}
+  def setup() {
+  }
 
-	def cleanup() {
-	}
+  def cleanup() {
+  }
 
-	void "test something"() {
-	}
+  void "index"() {
+    when:
+    controller.index()
+
+    then:
+    view == '/dashboard/index'
+  }
 }
