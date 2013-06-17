@@ -222,3 +222,9 @@ lpwTOTP {
   slotLen = 3600 * 12
 }
 
+access {
+  redirect = [controller: 'dashboard']
+  unprotected = ['dashboard', 'errorHandler']
+  disabledInDynamicAccess = ['dashboard', 'access']
+}
+

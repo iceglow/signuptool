@@ -1,11 +1,13 @@
 
 import org.grails.plugins.localization.Localization
 import org.springframework.core.io.Resource
+import se.su.it.grails.plugins.access.AccessRole
 
 class BootStrap {
   def configService
 
   def grailsApplication
+  def accessService
 
   def init = { servletContext ->
     String sucardsvcurl
@@ -87,12 +89,34 @@ class BootStrap {
           log.info "*** Localizations: No new localizations to import, nothing imported."
         }
         log.info "*** Localizations: Import of translations completed."
-    }
 
-    try {
-      initLocalization()
-    } catch (ex) {
-      log.error "*** Localizations: Failed to import localizations from i18n files", ex
+      def initRoleAccessManagement = {
+        AccessRole.withTransaction { status ->
+          try {
+            def displayName = "Sysadmin"
+            def uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=dev"
+            def sysadmin = AccessRole.createOrUpdateInstance(displayName, uri)
+            accessService.addAccess(sysadmin, 'admin')
+            accessService.addAccess(sysadmin, 'access')
+          } catch (ex) {
+            log.error "Failed to save role ", ex
+            status.setRollbackOnly()
+          }
+        }
+      }
+
+      try {
+        initLocalization()
+      } catch (ex) {
+        log.error "*** Localizations: Failed to import localizations from i18n files", ex
+      }
+
+      try {
+        initRoleAccessManagement()
+      } catch (ex) {
+        log.error "*** RoleAccessManagment: Failed to create/add access roles.", ex
+      }
+
     }
   }
 

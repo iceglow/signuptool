@@ -31,6 +31,7 @@ grails.project.dependency.resolution = {
     mavenLocal()
     mavenCentral()
 
+    mavenRepo "http://maven.it.su.se/it.su.se/maven2/"
     grailsRepo "http://svn.it.su.se/grails-plugins/"
     mavenRepo "http://maven.it.su.se/it.su.se/maven2"
     // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
@@ -77,6 +78,7 @@ grails.project.dependency.resolution = {
     runtime ":webflow:2.0.8.1"
     runtime ":su-config:0.6.2"
     runtime ":su-localization-editor:2.0.0"
+    runtime ":role-access-manager:0.2.6.1"
 
     // Uncomment these (or add new ones) to enable additional resources capabilities
     //runtime ":zipped-resources:1.0"
