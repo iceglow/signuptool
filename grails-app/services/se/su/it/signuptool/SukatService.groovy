@@ -23,7 +23,7 @@ import se.su.it.svc.Status
 import se.su.it.svc.WebServiceAdminImpl
 import se.su.it.svc.RoleServiceImpl
 
-class CxfClientService {
+class SukatService {
   def grailsApplication
   def factoryMap = [:]
 
