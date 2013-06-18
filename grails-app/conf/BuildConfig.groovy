@@ -42,15 +42,15 @@ grails.project.dependency.resolution = {
   }
 
   dependencies {
-    log "error"
     // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
     test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
 
+    compile "org.grails:grails-webflow:$grailsVersion"
     compile 'se.su.it.ws.commons:su-ws-commons:1.5'
     compile 'se.su.it.sucard.svc:sucardsvc-client:1.2'
+
     runtime 'mysql:mysql-connector-java:5.1.22'
     runtime 'se.su.it.tomcat:tomcat-header-encoding-valve:2.2'
-    compile "org.grails:grails-webflow:$grailsVersion"
   }
 
   plugins {
@@ -59,26 +59,30 @@ grails.project.dependency.resolution = {
       exclude "spock-grails-support"
     }
 
+    compile(
+        ":build-test-data:2.0.4",
+        ":cache:1.0.1",
+        ":criteria:1.6",
+        ":cxf-client:1.5.3"
+    )
     compile ':webflow:2.0.0', {
       exclude 'grails-webflow'
     }
-    compile ':build-test-data:2.0.4'
-    compile ':cache:1.0.1'
-    compile ":criteria:1.6" // Dependency for su-localization-editor plugin search functionality
 
     build ":tomcat:$grailsVersion"
 
-    compile ':cache:1.0.1'
-    compile ":cxf-client:1.5.3"
-    runtime ":hibernate:$grailsVersion"
-    runtime ":jquery:1.8.3"
-    runtime ":resources:1.1.6"
-    runtime(':greenmail:1.3.2') { excludes "activation" }
-    runtime ":database-migration:1.3.2"
-    runtime ":webflow:2.0.8.1"
-    runtime ":su-config:0.6.2"
-    runtime ":su-localization-editor:2.0.0"
-    runtime ":role-access-manager:0.2.6.1"
+    runtime(
+        ":database-migration:1.3.2",
+        ":hibernate:$grailsVersion",
+        ":jquery:1.8.3",
+        ":resources:1.1.6",
+        ":role-access-manager:0.2.6.1",
+        ":su-config:0.6.5",
+        ":su-localization-editor:2.0.0"
+    )
+    runtime(':greenmail:1.3.2') {
+      excludes "activation"
+    }
 
     // Uncomment these (or add new ones) to enable additional resources capabilities
     //runtime ":zipped-resources:1.0"
