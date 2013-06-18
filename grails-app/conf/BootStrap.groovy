@@ -27,6 +27,16 @@ class BootStrap {
     configService.registerValueToSection("WS", "CardSyncFacade", "${sucardsvcurl}/CardSyncFacade")
     //sucardsvc
 
+    // Get the config systemproperties and register as system properties
+    Properties sysprop = System.getProperties()
+    Properties systemproperties = grailsApplication.config.systemproperties.toProperties()
+    for (String key : systemproperties.propertyNames()) {
+      sysprop.setProperty(key, systemproperties.getProperty(key))
+    }
+    System.setProperties(sysprop)
+    // JAAS Configuration
+    System.setProperty("java.security.auth.login.config", "=file:" + grailsApplication.config.security.jaasloginconfigfile)
+
     def initLocalization = {
         log.info "*** Localizations: Importing translations from i18n files into the database."
         def context = grailsApplication.mainContext
