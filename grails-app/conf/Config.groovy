@@ -158,7 +158,7 @@ log4j = {
             "grails.app.services",
             "grails.app.taglib",
             "grails.app.conf",
-            "grails.app.filters",
+            "grails.app.filters"
 
       appenders {
         'null' name: 'stacktrace' // this makes sure we don't get a stacktrace.log

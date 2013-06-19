@@ -6,23 +6,29 @@ class ActivateAccountAndCardController {
 
   def index() {
     /** Logged in */
+    String password = (params.password)?:''
 
-    def password = (request.password)?:''
-
-    def admitted = activateAccountAndCardService.isAdmittedOnCurrentSemester(session.pnr)
+    boolean admitted = activateAccountAndCardService.isAdmittedOnCurrentSemester(session.pnr)
 
     if (!admitted) {
-      return "To some good error location."
+      flash.error = message(code:'activateAccountAndCardController.notAdmittedCurrentSemester') as String
+      return redirect(controller:'dashboard', action:'index')
     }
 
-    def account = activateAccountAndCardService.getAccount(session.pnr)
+    def account = null
 
-    def hasAccount = (account)
-    def hasAddress = (account.registeredAddress)
-    def canOrderCard = false
+    if (params.uid) {
+      account = activateAccountAndCardService.findAccountByPnr(params.uid)
+    }
 
-    if (hasAccount && hasAddress) {
-      canOrderCard = activateAccountAndCardService.getCardStatusForAccount()
+    // account = activateAccountAndCardService.findAccountByPnr(params.uid)
+
+    boolean canOrderCard = false
+    boolean hasAccount = (account)
+    def hasAddress = (account?.registeredAddress)
+
+    if (hasAccount) {
+      canOrderCard = (hasAddress && activateAccountAndCardService.canOrderCard())
     } else {
       redirect(action:'createNewAccount')
     }
@@ -50,7 +56,60 @@ class ActivateAccountAndCardController {
      * Skapa konto sent och skicka vidare till index med password.
      */
 
-    end()
+    showTermsOfAgreement {
+      on("agree").to("prepareForwardAddress")
+      on("decline").to("end")
+    }
+
+    prepareForwardAddress {
+      action {
+        // Fetch forward address from ladok / lpw
+        String forwardAddress = activateAccountAndCardService.getForwardAddress(session.pnr)
+        [forwardAddress:forwardAddress]
+      }
+      on("success").to("selectEmail")
+      on("error").to("errorHandler")
+      on(Exception).to("errorHandler")
+    }
+
+    selectEmail {
+      on("next").to("processEmailInput")
+    }
+
+    processEmailInput {
+      action {
+        params.email // Validate
+        if (params.email == 'invalid') { return error() }
+      }
+      on("success").to("createAccount")
+      on(Exception).to("errorHandler")
+    }
+
+    createAccount {
+      action {
+        def result = activateAccountAndCardService.createAccount()
+        if (result == null) {
+          throw new Exception("Could not create account.")
+        }
+
+        String uid = result.uid
+        String password = result.password
+        flash.info "Account created!"
+        return redirect(action:'index', model:[uid:uid, password:password])
+      }
+      on(Exception).to("errorHandler")
+    }
+
+    errorHandler {
+      action{
+        log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
+      }
+      on("success").to("end")
+    }
+
+    end() {
+      return redirect(action:'index')
+    }
   }
 
   def orderCardFlow = {
@@ -67,15 +126,5 @@ class ActivateAccountAndCardController {
      * + Skicka beställning.
     */
     end()
-  }
-
-  def editAccount() {
-    /** Prereq:
-     * + pnr
-     * + personen är antagen innevarande termin. (?)
-
-     * Metoder:
-     * + Kan välja att ändra epost.
-     */
   }
 }
