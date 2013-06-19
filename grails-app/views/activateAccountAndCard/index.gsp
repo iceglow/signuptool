@@ -4,9 +4,11 @@
   <meta name="layout" content="main"/>
   <title>Dashboard</title>
 </head>
-<body>
-  Dashboard (exists for access plugin).
-  <br/>
-  <g:link controller="activateAccountAndCard" action="index">flows</g:link>
-</body>
+  <body>
+    Flows
+    <br/>
+    <g:form>
+      <g:submitButton name="createAccount"/>
+    </g:form>
+  </body>
 </html>

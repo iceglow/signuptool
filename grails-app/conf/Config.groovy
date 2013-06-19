@@ -224,7 +224,7 @@ lpwTOTP {
 
 access {
   redirect = [controller: 'dashboard']
-  unprotected = ['dashboard', 'errorHandler']
+  unprotected = ['dashboard', 'errorHandler', 'activateAccountAndCard']
   disabledInDynamicAccess = ['dashboard', 'access']
 }
 
