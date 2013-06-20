@@ -185,8 +185,32 @@ log4j = {
   }
 }
 
+systemproperties {
+  user.language = "sv"
+  user.region = "SE"
+  javax.security.auth.useSubjectCredsOnly = "false"
+  java.security.krb5.conf = "/etc/krb5.conf"
+  java.security.krb5.kdc = "kerberos.su.se"
+  java.security.krb5.realm = "SU.SE"
+  sun.security.spnego.debug = "all"
+  debug = "true"
+}
+
+security {
+  jaasloginconfigfile = "/local/signuptool/conf/login.config"
+}
+
 cxf {
   client {
+    registerFetcherServiceClient {
+      wsdl = "https://lpwtest-su.its.uu.se/cxf/RegisterFetcher?wsdl"
+      clientInterface = ladok.lpw.service.register.facadeclient.RegisterFetcher
+      serviceEndpointAddress = "https://lpwtest-su.its.uu.se/cxf/RegisterFetcher"
+      enableDefaultLoggingInterceptors = false
+      receiveTimeout = 60000
+      connectionTimeout = 30000
+      allowChunking = true
+    }
     changeAddressFetcherServiceClient {
       wsdl = "https://lpwtest-su.its.uu.se/cxf/ChangeAddressFetcher?wsdl"
       clientInterface = ladok.lpw.service.changeaddress.facadeclient.ChangeAddressFetcher
@@ -215,6 +239,13 @@ cxf {
       allowChunking = true
     }
   }
+}
+
+sukatsvc {
+  accountservice = "https://sukat-test-svc.it.su.se/1/AccountService"
+  enrollmentservice = "https://sukat-test-svc.it.su.se/1/EnrollmentService"
+  statusservice = "https://sukat-test-svc.it.su.se/1/Status"
+  webserviceadmin = "https://sukat-test-svc.it.su.se/1/WebServiceAdmin"
 }
 
 lpwTOTP {
