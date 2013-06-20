@@ -63,83 +63,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GetCurrAndNextSemester }
+     * Create an instance of {@link FindInstitutionsByDelkod }
      * 
      */
-    public GetCurrAndNextSemester createGetCurrAndNextSemester() {
-        return new GetCurrAndNextSemester();
-    }
-
-    /**
-     * Create an instance of {@link GetNameByPartPnr }
-     * 
-     */
-    public GetNameByPartPnr createGetNameByPartPnr() {
-        return new GetNameByPartPnr();
-    }
-
-    /**
-     * Create an instance of {@link Message }
-     * 
-     */
-    public Message createMessage() {
-        return new Message();
-    }
-
-    /**
-     * Create an instance of {@link UtilityKursTillFListVO }
-     * 
-     */
-    public UtilityKursTillFListVO createUtilityKursTillFListVO() {
-        return new UtilityKursTillFListVO();
-    }
-
-    /**
-     * Create an instance of {@link UtilityPersonsVO }
-     * 
-     */
-    public UtilityPersonsVO createUtilityPersonsVO() {
-        return new UtilityPersonsVO();
-    }
-
-    /**
-     * Create an instance of {@link UtilityNamnVO }
-     * 
-     */
-    public UtilityNamnVO createUtilityNamnVO() {
-        return new UtilityNamnVO();
-    }
-
-    /**
-     * Create an instance of {@link PersonVO }
-     * 
-     */
-    public PersonVO createPersonVO() {
-        return new PersonVO();
-    }
-
-    /**
-     * Create an instance of {@link UtilityOrtVO }
-     * 
-     */
-    public UtilityOrtVO createUtilityOrtVO() {
-        return new UtilityOrtVO();
-    }
-
-    /**
-     * Create an instance of {@link UtilityKursVO }
-     * 
-     */
-    public UtilityKursVO createUtilityKursVO() {
-        return new UtilityKursVO();
-    }
-
-    /**
-     * Create an instance of {@link UserVO }
-     * 
-     */
-    public UserVO createUserVO() {
-        return new UserVO();
+    public FindInstitutionsByDelkod createFindInstitutionsByDelkod() {
+        return new FindInstitutionsByDelkod();
     }
 
     /**
@@ -151,35 +79,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link FindAllInstitutions }
+     * Create an instance of {@link ErrorObject }
      * 
      */
-    public FindAllInstitutions createFindAllInstitutions() {
-        return new FindAllInstitutions();
-    }
-
-    /**
-     * Create an instance of {@link UtilitySemesterVO }
-     * 
-     */
-    public UtilitySemesterVO createUtilitySemesterVO() {
-        return new UtilitySemesterVO();
-    }
-
-    /**
-     * Create an instance of {@link FindInstitutionsByDelkodResponse }
-     * 
-     */
-    public FindInstitutionsByDelkodResponse createFindInstitutionsByDelkodResponse() {
-        return new FindInstitutionsByDelkodResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetInstitutionByKodResponse }
-     * 
-     */
-    public GetInstitutionByKodResponse createGetInstitutionByKodResponse() {
-        return new GetInstitutionByKodResponse();
+    public ErrorObject createErrorObject() {
+        return new ErrorObject();
     }
 
     /**
@@ -191,187 +95,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ErrorObject }
+     * Create an instance of {@link FindAllInstitutionsResponse }
      * 
      */
-    public ErrorObject createErrorObject() {
-        return new ErrorObject();
-    }
-
-    /**
-     * Create an instance of {@link FindNameByPnr }
-     * 
-     */
-    public FindNameByPnr createFindNameByPnr() {
-        return new FindNameByPnr();
-    }
-
-    /**
-     * Create an instance of {@link GetInstitutionByKod }
-     * 
-     */
-    public GetInstitutionByKod createGetInstitutionByKod() {
-        return new GetInstitutionByKod();
-    }
-
-    /**
-     * Create an instance of {@link UtilityHskVO }
-     * 
-     */
-    public UtilityHskVO createUtilityHskVO() {
-        return new UtilityHskVO();
-    }
-
-    /**
-     * Create an instance of {@link FindHsk }
-     * 
-     */
-    public FindHsk createFindHsk() {
-        return new FindHsk();
-    }
-
-    /**
-     * Create an instance of {@link GetKursByKodResponse }
-     * 
-     */
-    public GetKursByKodResponse createGetKursByKodResponse() {
-        return new GetKursByKodResponse();
-    }
-
-    /**
-     * Create an instance of {@link UtilityInstitutionVO }
-     * 
-     */
-    public UtilityInstitutionVO createUtilityInstitutionVO() {
-        return new UtilityInstitutionVO();
-    }
-
-    /**
-     * Create an instance of {@link GetKursTillFByKodResponse }
-     * 
-     */
-    public GetKursTillFByKodResponse createGetKursTillFByKodResponse() {
-        return new GetKursTillFByKodResponse();
-    }
-
-    /**
-     * Create an instance of {@link BksInfoVO }
-     * 
-     */
-    public BksInfoVO createBksInfoVO() {
-        return new BksInfoVO();
-    }
-
-    /**
-     * Create an instance of {@link GetKursTillFByKod }
-     * 
-     */
-    public GetKursTillFByKod createGetKursTillFByKod() {
-        return new GetKursTillFByKod();
-    }
-
-    /**
-     * Create an instance of {@link ProvVO }
-     * 
-     */
-    public ProvVO createProvVO() {
-        return new ProvVO();
-    }
-
-    /**
-     * Create an instance of {@link GetKursByInstResponse }
-     * 
-     */
-    public GetKursByInstResponse createGetKursByInstResponse() {
-        return new GetKursByInstResponse();
-    }
-
-    /**
-     * Create an instance of {@link TicketVO }
-     * 
-     */
-    public TicketVO createTicketVO() {
-        return new TicketVO();
-    }
-
-    /**
-     * Create an instance of {@link GetCurrAndNextSemesterResponse }
-     * 
-     */
-    public GetCurrAndNextSemesterResponse createGetCurrAndNextSemesterResponse() {
-        return new GetCurrAndNextSemesterResponse();
-    }
-
-    /**
-     * Create an instance of {@link UtilityProvVO }
-     * 
-     */
-    public UtilityProvVO createUtilityProvVO() {
-        return new UtilityProvVO();
-    }
-
-    /**
-     * Create an instance of {@link FindInstitutionsByBenamn }
-     * 
-     */
-    public FindInstitutionsByBenamn createFindInstitutionsByBenamn() {
-        return new FindInstitutionsByBenamn();
-    }
-
-    /**
-     * Create an instance of {@link FindAllPlaces }
-     * 
-     */
-    public FindAllPlaces createFindAllPlaces() {
-        return new FindAllPlaces();
-    }
-
-    /**
-     * Create an instance of {@link UtilityNamnListVO }
-     * 
-     */
-    public UtilityNamnListVO createUtilityNamnListVO() {
-        return new UtilityNamnListVO();
-    }
-
-    /**
-     * Create an instance of {@link FindInstitutionsByBenamnResponse }
-     * 
-     */
-    public FindInstitutionsByBenamnResponse createFindInstitutionsByBenamnResponse() {
-        return new FindInstitutionsByBenamnResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetKursByKod }
-     * 
-     */
-    public GetKursByKod createGetKursByKod() {
-        return new GetKursByKod();
-    }
-
-    /**
-     * Create an instance of {@link FindAllPlacesResponse }
-     * 
-     */
-    public FindAllPlacesResponse createFindAllPlacesResponse() {
-        return new FindAllPlacesResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetNameByPartPnrResponse }
-     * 
-     */
-    public GetNameByPartPnrResponse createGetNameByPartPnrResponse() {
-        return new GetNameByPartPnrResponse();
-    }
-
-    /**
-     * Create an instance of {@link FindInstitutionsByBenamneResponse }
-     * 
-     */
-    public FindInstitutionsByBenamneResponse createFindInstitutionsByBenamneResponse() {
-        return new FindInstitutionsByBenamneResponse();
+    public FindAllInstitutionsResponse createFindAllInstitutionsResponse() {
+        return new FindAllInstitutionsResponse();
     }
 
     /**
@@ -383,27 +111,91 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AuthInfoVO }
+     * Create an instance of {@link FindAllInstitutions }
      * 
      */
-    public AuthInfoVO createAuthInfoVO() {
-        return new AuthInfoVO();
+    public FindAllInstitutions createFindAllInstitutions() {
+        return new FindAllInstitutions();
     }
 
     /**
-     * Create an instance of {@link FindNameByPnrResponse }
+     * Create an instance of {@link FindAllPlacesResponse }
      * 
      */
-    public FindNameByPnrResponse createFindNameByPnrResponse() {
-        return new FindNameByPnrResponse();
+    public FindAllPlacesResponse createFindAllPlacesResponse() {
+        return new FindAllPlacesResponse();
     }
 
     /**
-     * Create an instance of {@link FindInstitutionsByDelkod }
+     * Create an instance of {@link UtilityProvVO }
      * 
      */
-    public FindInstitutionsByDelkod createFindInstitutionsByDelkod() {
-        return new FindInstitutionsByDelkod();
+    public UtilityProvVO createUtilityProvVO() {
+        return new UtilityProvVO();
+    }
+
+    /**
+     * Create an instance of {@link FindInstitutionsByBenamnResponse }
+     * 
+     */
+    public FindInstitutionsByBenamnResponse createFindInstitutionsByBenamnResponse() {
+        return new FindInstitutionsByBenamnResponse();
+    }
+
+    /**
+     * Create an instance of {@link UtilityPersonsVO }
+     * 
+     */
+    public UtilityPersonsVO createUtilityPersonsVO() {
+        return new UtilityPersonsVO();
+    }
+
+    /**
+     * Create an instance of {@link FindInstitutionsByBenamne }
+     * 
+     */
+    public FindInstitutionsByBenamne createFindInstitutionsByBenamne() {
+        return new FindInstitutionsByBenamne();
+    }
+
+    /**
+     * Create an instance of {@link UtilityInstitutionVO }
+     * 
+     */
+    public UtilityInstitutionVO createUtilityInstitutionVO() {
+        return new UtilityInstitutionVO();
+    }
+
+    /**
+     * Create an instance of {@link FindAllPlaces }
+     * 
+     */
+    public FindAllPlaces createFindAllPlaces() {
+        return new FindAllPlaces();
+    }
+
+    /**
+     * Create an instance of {@link GetNameByPartPnrResponse }
+     * 
+     */
+    public GetNameByPartPnrResponse createGetNameByPartPnrResponse() {
+        return new GetNameByPartPnrResponse();
+    }
+
+    /**
+     * Create an instance of {@link UtilityKursVO }
+     * 
+     */
+    public UtilityKursVO createUtilityKursVO() {
+        return new UtilityKursVO();
+    }
+
+    /**
+     * Create an instance of {@link GetKursByKodResponse }
+     * 
+     */
+    public GetKursByKodResponse createGetKursByKodResponse() {
+        return new GetKursByKodResponse();
     }
 
     /**
@@ -415,27 +207,59 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link FindAllInstitutionsResponse }
+     * Create an instance of {@link ProvVO }
      * 
      */
-    public FindAllInstitutionsResponse createFindAllInstitutionsResponse() {
-        return new FindAllInstitutionsResponse();
+    public ProvVO createProvVO() {
+        return new ProvVO();
     }
 
     /**
-     * Create an instance of {@link UtilityKursTillFVO }
+     * Create an instance of {@link FindInstitutionsByBenamn }
      * 
      */
-    public UtilityKursTillFVO createUtilityKursTillFVO() {
-        return new UtilityKursTillFVO();
+    public FindInstitutionsByBenamn createFindInstitutionsByBenamn() {
+        return new FindInstitutionsByBenamn();
     }
 
     /**
-     * Create an instance of {@link GetProvByKurskodResponse }
+     * Create an instance of {@link TicketVO }
      * 
      */
-    public GetProvByKurskodResponse createGetProvByKurskodResponse() {
-        return new GetProvByKurskodResponse();
+    public TicketVO createTicketVO() {
+        return new TicketVO();
+    }
+
+    /**
+     * Create an instance of {@link UserVO }
+     * 
+     */
+    public UserVO createUserVO() {
+        return new UserVO();
+    }
+
+    /**
+     * Create an instance of {@link UtilityKursTillFListVO }
+     * 
+     */
+    public UtilityKursTillFListVO createUtilityKursTillFListVO() {
+        return new UtilityKursTillFListVO();
+    }
+
+    /**
+     * Create an instance of {@link UtilityNamnListVO }
+     * 
+     */
+    public UtilityNamnListVO createUtilityNamnListVO() {
+        return new UtilityNamnListVO();
+    }
+
+    /**
+     * Create an instance of {@link GetNameByPartPnr }
+     * 
+     */
+    public GetNameByPartPnr createGetNameByPartPnr() {
+        return new GetNameByPartPnr();
     }
 
     /**
@@ -447,6 +271,150 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link UtilityNamnVO }
+     * 
+     */
+    public UtilityNamnVO createUtilityNamnVO() {
+        return new UtilityNamnVO();
+    }
+
+    /**
+     * Create an instance of {@link GetKursTillFByKod }
+     * 
+     */
+    public GetKursTillFByKod createGetKursTillFByKod() {
+        return new GetKursTillFByKod();
+    }
+
+    /**
+     * Create an instance of {@link UtilitySemesterVO }
+     * 
+     */
+    public UtilitySemesterVO createUtilitySemesterVO() {
+        return new UtilitySemesterVO();
+    }
+
+    /**
+     * Create an instance of {@link AuthInfoVO }
+     * 
+     */
+    public AuthInfoVO createAuthInfoVO() {
+        return new AuthInfoVO();
+    }
+
+    /**
+     * Create an instance of {@link Message }
+     * 
+     */
+    public Message createMessage() {
+        return new Message();
+    }
+
+    /**
+     * Create an instance of {@link GetProvByKurskodResponse }
+     * 
+     */
+    public GetProvByKurskodResponse createGetProvByKurskodResponse() {
+        return new GetProvByKurskodResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetKursByKod }
+     * 
+     */
+    public GetKursByKod createGetKursByKod() {
+        return new GetKursByKod();
+    }
+
+    /**
+     * Create an instance of {@link PersonVO }
+     * 
+     */
+    public PersonVO createPersonVO() {
+        return new PersonVO();
+    }
+
+    /**
+     * Create an instance of {@link GetKursByInstResponse }
+     * 
+     */
+    public GetKursByInstResponse createGetKursByInstResponse() {
+        return new GetKursByInstResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetInstitutionByKod }
+     * 
+     */
+    public GetInstitutionByKod createGetInstitutionByKod() {
+        return new GetInstitutionByKod();
+    }
+
+    /**
+     * Create an instance of {@link FindInstitutionsByBenamneResponse }
+     * 
+     */
+    public FindInstitutionsByBenamneResponse createFindInstitutionsByBenamneResponse() {
+        return new FindInstitutionsByBenamneResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetCurrAndNextSemester }
+     * 
+     */
+    public GetCurrAndNextSemester createGetCurrAndNextSemester() {
+        return new GetCurrAndNextSemester();
+    }
+
+    /**
+     * Create an instance of {@link FindInstitutionsByDelkodResponse }
+     * 
+     */
+    public FindInstitutionsByDelkodResponse createFindInstitutionsByDelkodResponse() {
+        return new FindInstitutionsByDelkodResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindNameByPnrResponse }
+     * 
+     */
+    public FindNameByPnrResponse createFindNameByPnrResponse() {
+        return new FindNameByPnrResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetCurrAndNextSemesterResponse }
+     * 
+     */
+    public GetCurrAndNextSemesterResponse createGetCurrAndNextSemesterResponse() {
+        return new GetCurrAndNextSemesterResponse();
+    }
+
+    /**
+     * Create an instance of {@link UtilityHskVO }
+     * 
+     */
+    public UtilityHskVO createUtilityHskVO() {
+        return new UtilityHskVO();
+    }
+
+    /**
+     * Create an instance of {@link BksInfoVO }
+     * 
+     */
+    public BksInfoVO createBksInfoVO() {
+        return new BksInfoVO();
+    }
+
+    /**
+     * Create an instance of {@link UtilityKursTillFVO }
+     * 
+     */
+    public UtilityKursTillFVO createUtilityKursTillFVO() {
+        return new UtilityKursTillFVO();
+    }
+
+    /**
      * Create an instance of {@link GetProvByKurskod }
      * 
      */
@@ -455,11 +423,43 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link FindInstitutionsByBenamne }
+     * Create an instance of {@link FindNameByPnr }
      * 
      */
-    public FindInstitutionsByBenamne createFindInstitutionsByBenamne() {
-        return new FindInstitutionsByBenamne();
+    public FindNameByPnr createFindNameByPnr() {
+        return new FindNameByPnr();
+    }
+
+    /**
+     * Create an instance of {@link GetKursTillFByKodResponse }
+     * 
+     */
+    public GetKursTillFByKodResponse createGetKursTillFByKodResponse() {
+        return new GetKursTillFByKodResponse();
+    }
+
+    /**
+     * Create an instance of {@link FindHsk }
+     * 
+     */
+    public FindHsk createFindHsk() {
+        return new FindHsk();
+    }
+
+    /**
+     * Create an instance of {@link UtilityOrtVO }
+     * 
+     */
+    public UtilityOrtVO createUtilityOrtVO() {
+        return new UtilityOrtVO();
+    }
+
+    /**
+     * Create an instance of {@link GetInstitutionByKodResponse }
+     * 
+     */
+    public GetInstitutionByKodResponse createGetInstitutionByKodResponse() {
+        return new GetInstitutionByKodResponse();
     }
 
     /**
