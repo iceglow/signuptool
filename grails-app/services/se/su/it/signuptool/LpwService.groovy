@@ -7,7 +7,10 @@ import ladok.lpw.service.registrate.facadeclient.RegistrateFetcher
 import ladok.lpw.service.utility.facadeclient.UtilityFetcher
 import ladok.lpw.service.utility.facadeclient.UtilitySemesterVO
 
-class LpwService {
+class LpwService implements Serializable {
+  /** Needed if we want to use this service in the flow. */
+  static transactional = false
+
   UtilityFetcher        utilityFetcherServiceClient
   ChangeAddressFetcher  changeAddressFetcherServiceClient
   RegistrateFetcher     registrateFetcherServiceClient
