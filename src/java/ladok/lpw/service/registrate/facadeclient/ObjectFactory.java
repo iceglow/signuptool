@@ -43,107 +43,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ErrorObject }
+     * Create an instance of {@link SemesterRegistrationVO }
      * 
      */
-    public ErrorObject createErrorObject() {
-        return new ErrorObject();
-    }
-
-    /**
-     * Create an instance of {@link Registrate }
-     * 
-     */
-    public Registrate createRegistrate() {
-        return new Registrate();
-    }
-
-    /**
-     * Create an instance of {@link GetSemesterRegSuggestionsResponse }
-     * 
-     */
-    public GetSemesterRegSuggestionsResponse createGetSemesterRegSuggestionsResponse() {
-        return new GetSemesterRegSuggestionsResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetFutureSemesterRegSuggestionsResponse }
-     * 
-     */
-    public GetFutureSemesterRegSuggestionsResponse createGetFutureSemesterRegSuggestionsResponse() {
-        return new GetFutureSemesterRegSuggestionsResponse();
-    }
-
-    /**
-     * Create an instance of {@link TicketVO }
-     * 
-     */
-    public TicketVO createTicketVO() {
-        return new TicketVO();
-    }
-
-    /**
-     * Create an instance of {@link VillkorVO }
-     * 
-     */
-    public VillkorVO createVillkorVO() {
-        return new VillkorVO();
-    }
-
-    /**
-     * Create an instance of {@link RegistrateVO }
-     * 
-     */
-    public RegistrateVO createRegistrateVO() {
-        return new RegistrateVO();
-    }
-
-    /**
-     * Create an instance of {@link Message }
-     * 
-     */
-    public Message createMessage() {
-        return new Message();
-    }
-
-    /**
-     * Create an instance of {@link GetCourseRegSuggestionsResponse }
-     * 
-     */
-    public GetCourseRegSuggestionsResponse createGetCourseRegSuggestionsResponse() {
-        return new GetCourseRegSuggestionsResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetSemesterRegSuggestions }
-     * 
-     */
-    public GetSemesterRegSuggestions createGetSemesterRegSuggestions() {
-        return new GetSemesterRegSuggestions();
-    }
-
-    /**
-     * Create an instance of {@link SemesterSuggestionVO }
-     * 
-     */
-    public SemesterSuggestionVO createSemesterSuggestionVO() {
-        return new SemesterSuggestionVO();
-    }
-
-    /**
-     * Create an instance of {@link GetFutureCourseRegSuggestionsResponse }
-     * 
-     */
-    public GetFutureCourseRegSuggestionsResponse createGetFutureCourseRegSuggestionsResponse() {
-        return new GetFutureCourseRegSuggestionsResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetFutureSemesterRegSuggestions }
-     * 
-     */
-    public GetFutureSemesterRegSuggestions createGetFutureSemesterRegSuggestions() {
-        return new GetFutureSemesterRegSuggestions();
+    public SemesterRegistrationVO createSemesterRegistrationVO() {
+        return new SemesterRegistrationVO();
     }
 
     /**
@@ -155,19 +59,67 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link RegistrateResponse }
+     * Create an instance of {@link Message }
      * 
      */
-    public RegistrateResponse createRegistrateResponse() {
-        return new RegistrateResponse();
+    public Message createMessage() {
+        return new Message();
     }
 
     /**
-     * Create an instance of {@link CourseSuggestionVO }
+     * Create an instance of {@link GetFutureCourseRegSuggestions }
      * 
      */
-    public CourseSuggestionVO createCourseSuggestionVO() {
-        return new CourseSuggestionVO();
+    public GetFutureCourseRegSuggestions createGetFutureCourseRegSuggestions() {
+        return new GetFutureCourseRegSuggestions();
+    }
+
+    /**
+     * Create an instance of {@link GetSemesterRegSuggestions }
+     * 
+     */
+    public GetSemesterRegSuggestions createGetSemesterRegSuggestions() {
+        return new GetSemesterRegSuggestions();
+    }
+
+    /**
+     * Create an instance of {@link GetCourseRegSuggestions }
+     * 
+     */
+    public GetCourseRegSuggestions createGetCourseRegSuggestions() {
+        return new GetCourseRegSuggestions();
+    }
+
+    /**
+     * Create an instance of {@link CourseRegistrationVO }
+     * 
+     */
+    public CourseRegistrationVO createCourseRegistrationVO() {
+        return new CourseRegistrationVO();
+    }
+
+    /**
+     * Create an instance of {@link RegistrateVO }
+     * 
+     */
+    public RegistrateVO createRegistrateVO() {
+        return new RegistrateVO();
+    }
+
+    /**
+     * Create an instance of {@link ErrorObject }
+     * 
+     */
+    public ErrorObject createErrorObject() {
+        return new ErrorObject();
+    }
+
+    /**
+     * Create an instance of {@link GetSemesterRegSuggestionsResponse }
+     * 
+     */
+    public GetSemesterRegSuggestionsResponse createGetSemesterRegSuggestionsResponse() {
+        return new GetSemesterRegSuggestionsResponse();
     }
 
     /**
@@ -187,6 +139,62 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link RegistrateResponse }
+     * 
+     */
+    public RegistrateResponse createRegistrateResponse() {
+        return new RegistrateResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetFutureCourseRegSuggestionsResponse }
+     * 
+     */
+    public GetFutureCourseRegSuggestionsResponse createGetFutureCourseRegSuggestionsResponse() {
+        return new GetFutureCourseRegSuggestionsResponse();
+    }
+
+    /**
+     * Create an instance of {@link TicketVO }
+     * 
+     */
+    public TicketVO createTicketVO() {
+        return new TicketVO();
+    }
+
+    /**
+     * Create an instance of {@link GetCourseRegSuggestionsResponse }
+     * 
+     */
+    public GetCourseRegSuggestionsResponse createGetCourseRegSuggestionsResponse() {
+        return new GetCourseRegSuggestionsResponse();
+    }
+
+    /**
+     * Create an instance of {@link SemesterSuggestionVO }
+     * 
+     */
+    public SemesterSuggestionVO createSemesterSuggestionVO() {
+        return new SemesterSuggestionVO();
+    }
+
+    /**
+     * Create an instance of {@link Registrate }
+     * 
+     */
+    public Registrate createRegistrate() {
+        return new Registrate();
+    }
+
+    /**
+     * Create an instance of {@link CourseSuggestionVO }
+     * 
+     */
+    public CourseSuggestionVO createCourseSuggestionVO() {
+        return new CourseSuggestionVO();
+    }
+
+    /**
      * Create an instance of {@link UserVO }
      * 
      */
@@ -195,35 +203,27 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SemesterRegistrationVO }
+     * Create an instance of {@link GetFutureSemesterRegSuggestions }
      * 
      */
-    public SemesterRegistrationVO createSemesterRegistrationVO() {
-        return new SemesterRegistrationVO();
+    public GetFutureSemesterRegSuggestions createGetFutureSemesterRegSuggestions() {
+        return new GetFutureSemesterRegSuggestions();
     }
 
     /**
-     * Create an instance of {@link GetFutureCourseRegSuggestions }
+     * Create an instance of {@link VillkorVO }
      * 
      */
-    public GetFutureCourseRegSuggestions createGetFutureCourseRegSuggestions() {
-        return new GetFutureCourseRegSuggestions();
+    public VillkorVO createVillkorVO() {
+        return new VillkorVO();
     }
 
     /**
-     * Create an instance of {@link GetCourseRegSuggestions }
+     * Create an instance of {@link GetFutureSemesterRegSuggestionsResponse }
      * 
      */
-    public GetCourseRegSuggestions createGetCourseRegSuggestions() {
-        return new GetCourseRegSuggestions();
-    }
-
-    /**
-     * Create an instance of {@link CourseRegistrationVO }
-     * 
-     */
-    public CourseRegistrationVO createCourseRegistrationVO() {
-        return new CourseRegistrationVO();
+    public GetFutureSemesterRegSuggestionsResponse createGetFutureSemesterRegSuggestionsResponse() {
+        return new GetFutureSemesterRegSuggestionsResponse();
     }
 
     /**

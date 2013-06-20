@@ -39,19 +39,19 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link SetTelekom }
+     * 
+     */
+    public SetTelekom createSetTelekom() {
+        return new SetTelekom();
+    }
+
+    /**
      * Create an instance of {@link TicketVO }
      * 
      */
     public TicketVO createTicketVO() {
         return new TicketVO();
-    }
-
-    /**
-     * Create an instance of {@link AuthInfoVO }
-     * 
-     */
-    public AuthInfoVO createAuthInfoVO() {
-        return new AuthInfoVO();
     }
 
     /**
@@ -71,11 +71,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SetLimitedAddress }
+     * Create an instance of {@link Message }
      * 
      */
-    public SetLimitedAddress createSetLimitedAddress() {
-        return new SetLimitedAddress();
+    public Message createMessage() {
+        return new Message();
     }
 
     /**
@@ -84,38 +84,6 @@ public class ObjectFactory {
      */
     public UserVO createUserVO() {
         return new UserVO();
-    }
-
-    /**
-     * Create an instance of {@link TelekomVO }
-     * 
-     */
-    public TelekomVO createTelekomVO() {
-        return new TelekomVO();
-    }
-
-    /**
-     * Create an instance of {@link SetTelekomResponse }
-     * 
-     */
-    public SetTelekomResponse createSetTelekomResponse() {
-        return new SetTelekomResponse();
-    }
-
-    /**
-     * Create an instance of {@link ErrorObject }
-     * 
-     */
-    public ErrorObject createErrorObject() {
-        return new ErrorObject();
-    }
-
-    /**
-     * Create an instance of {@link SetTelekom }
-     * 
-     */
-    public SetTelekom createSetTelekom() {
-        return new SetTelekom();
     }
 
     /**
@@ -135,11 +103,35 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link TelekomVO }
+     * 
+     */
+    public TelekomVO createTelekomVO() {
+        return new TelekomVO();
+    }
+
+    /**
+     * Create an instance of {@link SetLimitedAddress }
+     * 
+     */
+    public SetLimitedAddress createSetLimitedAddress() {
+        return new SetLimitedAddress();
+    }
+
+    /**
      * Create an instance of {@link ChangeAddressVO }
      * 
      */
     public ChangeAddressVO createChangeAddressVO() {
         return new ChangeAddressVO();
+    }
+
+    /**
+     * Create an instance of {@link ErrorObject }
+     * 
+     */
+    public ErrorObject createErrorObject() {
+        return new ErrorObject();
     }
 
     /**
@@ -151,19 +143,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link AuthInfoVO }
+     * 
+     */
+    public AuthInfoVO createAuthInfoVO() {
+        return new AuthInfoVO();
+    }
+
+    /**
+     * Create an instance of {@link SetTelekomResponse }
+     * 
+     */
+    public SetTelekomResponse createSetTelekomResponse() {
+        return new SetTelekomResponse();
+    }
+
+    /**
      * Create an instance of {@link PersonVO }
      * 
      */
     public PersonVO createPersonVO() {
         return new PersonVO();
-    }
-
-    /**
-     * Create an instance of {@link Message }
-     * 
-     */
-    public Message createMessage() {
-        return new Message();
     }
 
     /**
