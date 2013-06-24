@@ -1,0 +1,240 @@
+/* ---------------------------------------------------------------------------------------------------- */
+/* ----- forms.css */
+/* This stylesheet contains form styles */
+/* ---------------------------------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------------------------------- */
+/* FORMS */
+/* --------------- Containers */
+.form {}
+.form-block {}
+/* --------------- /Containers */
+/* --------------- Input, textarea, select */
+/* ----- Elements */
+input, textarea, select {
+	font-family: Verdana, Arial, Helvetica, Sans-serif;
+	font-size: 100%;
+	line-height: normal;
+}
+input { 
+	border: solid 1px #a0a0a0;
+	padding-top: 2px;
+	padding-left: 2px;
+	padding-right: 2px;
+	padding-bottom: 3px;
+}
+div.block input {}
+div.checkbox input, div.radio input { border: none; }
+input:focus { border-color: #002f5f; color: #000000; }
+textarea { 
+	padding: 2px;
+	border: solid 1px #a0a0a0;
+}
+textarea:focus { border-color: #002f5f; }
+select {
+	padding: 2px;
+	border: solid 1px #a0a0a0;
+}
+select:focus { border-color: #002f5f; }
+/* ----- Sizes */
+/* Width */
+.wdt-1 { width: 250px; }
+.wdt-2 { width: 350px; }
+.wdt-3 { width: 90px; }
+/* Height */
+.hgt-1 { height: 150px; }
+/* --------------- /Input, textarea, select */
+/* --------------- Label, fieldset, legend */
+/* ----- Label */
+label {
+	font-family: Verdana, Arial, Helvetica, Sans-serif;
+	font-size: 100%;
+	font-weight: normal;
+	line-height: normal;
+	padding-top: 6px;
+	padding-bottom: 4px;
+	line-height: 18px;
+	display: block;
+	color: #555555;	
+}
+label:hover { color: #002f5f; }
+.radio label, .checkbox label {
+	float: left;
+	display: inline;
+	position: relative;
+	top: -6px;
+	padding-left: 4px;
+	padding-bottom: 6px;
+}
+.radio br, .checkbox br {
+	clear: both;
+	font-size: 0px;
+	line-height: 0px;
+}
+.radio input, .checkbox input { float: left; }
+/* Required field */
+.required { color: #c74b38; padding-right: 3px; }
+/* ----- Fieldset, legend */
+fieldset {
+	border: none;
+	margin: 6px 0 6px 0;
+	padding: 0;
+}
+fieldset.border {
+	border: solid 1px #e7e7e7;
+	margin: 6px;
+	padding: 0 6px 0 6px;
+}
+legend {
+	font-family: Verdana, Arial, Helvetica, Sans-serif;
+	font-size: 90%;
+	font-weight: bold;
+	line-height: normal;
+	color: #000000;
+	padding-top: 7px;
+	padding-right: 6px;
+	padding-bottom: 12px;	
+}
+/* ----- Additional text */
+.field-additional-text { margin: 0 0 0 8px; }
+/* --------------- /Label, fieldset, legend */
+/* --------------- Errors */
+input.error, textarea.error {
+	border: solid 1px #c74b38; 
+	padding: 2px 1px 3px 1px;
+	background-color: #fefdd0;
+}
+span.error, div.error {
+	color: #c74b38; 
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 90%; 
+	font-weight: normal; 
+}
+span.error {
+	line-height: 16px;
+	background-image: url(../img/error-arrow-2.gif);
+	background-position: left 3px;
+	background-repeat: no-repeat;
+	margin: 4px 0 0 4px;
+	padding: 8px 0 3px 0;
+	position: relative;
+	display: block;
+}
+div.error {
+	background-color: #fefdd0; 
+	padding: 6px 9px 4px 9px;
+	margin: 0 8px 12px 10px;
+	border: solid 1px #c74b38;
+}
+div.error ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+div.error li {
+	background-image: url(../img/error-arrow-3.gif);
+	background-position: left 5px;
+	background-repeat: no-repeat;
+	line-height: 16px;
+	padding: 0 0 3px 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 90%; 
+	font-weight: normal; 
+}
+div.error b {
+	display: block;
+	font-size: 90%px;
+	line-height: 150%;
+	color:#000000; 
+	margin-bottom: 10px;
+}
+/* --------------- /Errors */
+/* --------------- Buttons */
+button, input.button {
+	height: auto;
+	width: auto;
+	font-size: 100%;
+	border: none;
+	color: #ffffff;
+	background-color: #ffffff;
+	background-image: url(../img/button-background-repeater.gif);
+	background-position: left;
+	background-repeat: repeat-x;
+	padding-top: 1px;
+	padding-left: 2px;
+	padding-right: 2px;
+	padding-bottom: 2px;
+}
+.button-block input.button { 
+	padding-top: 2px;
+	padding-left: 3px;
+	padding-right: 3px;
+	padding-bottom: 3px;
+	font-size: 120%; 
+}
+.button-block {
+	margin-top: 16px;
+	padding-top: 6px;
+	padding-left: 6px;
+	padding-right: 6px;
+	padding-bottom: 6px;
+	text-align: left;
+}
+.form-block .button-block { background-color: #ececec; }
+.button-block-left { float: left; }
+.button-block-right { float: right; }
+/* --------------- /Buttons */
+/* /FORMS */
+/* ---------------------------------------------------------------------------------------------------- */
+/* FORM COLORS */
+/* --------------- Form blocks */
+/* --- Form block 1 (water) */
+.form-block-1 h2 { color: #93a9c3; }
+.form-block-1 .button-block { background-color: #d7e0eb; }
+.form-block-1 div.progress li.active { background-color: #9bb2ce; }
+.form-block-1 .captcha { background-color: #ebf0f5; border-color: #d7e0eb; }
+/* --- Form block 2 (sky) */
+.form-block-2 h2 { color: #97c3ca; }
+.form-block-2 .button-block { background-color: #def2f5; }
+.form-block-2 div.progress li.active { background-color: #93cbd4; }
+.form-block-2 .captcha { background-color: #eef8fa; border-color: #def2f5; }
+/* --- Form block 3 (olive) */
+.form-block-3 h2 { color: #9b9f66; }
+.form-block-3 .button-block { background-color: #dadcc4; }
+.form-block-3 div.progress li.active { background-color: #a3a86b; }
+.form-block-3 .captcha { background-color: #edeee1; border-color: #dadcc4; }
+/* --- Form block 4 (fire) */
+.form-block-4 h2 { color: #d95e00; }
+.form-block-4 .button-block { background-color: #f0bf99; }
+.form-block-4 div.progress li.active { background-color: #d95e00; }
+.form-block-4 .captcha { background-color: #f7dfcc; border-color: #f0bf99; }
+/* --------------- /Form blocks */
+/* /FORM COLORS */
+/* ---------------------------------------------------------------------------------------------------- */
+/* CAPTCHA */
+/* --------------- Captcha */
+.captcha {
+	margin: 16px 0 16px 0;
+	padding: 10px 8px 10px 8px;
+	border: solid 1px #99acbf;
+	background-color: #f5f5f5;
+	/*width: 450px;*/
+}
+.captcha img { margin: 0 0 9px 0; }
+.captcha p {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 90%;
+	line-height: 150%;
+}
+.captcha p.alert { color: #d95e00; }
+img.captcha-img {
+	width: 250px;
+	height: 100px;
+	display: block;
+	background-image: url(../img/loader.gif);
+	background-repeat: no-repeat;
+	background-position: 75px 25px;
+}
+/* --------------- /Captcha */
+/* /CAPTCHA */
+/* ---------------------------------------------------------------------------------------------------- */
