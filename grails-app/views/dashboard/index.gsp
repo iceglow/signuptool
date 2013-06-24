@@ -2,11 +2,17 @@
 <html>
 <head>
   <meta name="layout" content="main"/>
-  <title>Dashboard</title>
+  <title><g:message code="application.title"/></title>
 </head>
 <body>
-  Dashboard (exists for access plugin).
-  <br/>
-  <g:link controller="activateAccountAndCard" action="index">flows</g:link>
+
+  <div class="section">
+    <br/>
+    <br/>
+    <br/>
+    <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'index']}">
+      <g:submitButton class="button" name="submit" value="${g.message(code:'dashboard.index.activateAccountButton')}"/>
+    </g:form>
+  </div>
 </body>
 </html>
