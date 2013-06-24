@@ -17,17 +17,22 @@ class LadokService {
     return false
   }
 
-  private runQuery(String query, Map args) {
-    return withConnection({ Sql sql ->
-      return sql.rows(query, args)
-    })
+  private runQuery(String query , Map args) {
+
+    Closure queryClosure = { Sql sql ->
+      if (!sql) { return null }
+      return sql?.rows(query, args)
+    }
+
+    return withConnection(queryClosure)
   }
 
   private withConnection = { Closure query ->
     def response = null
     Sql sql = null
     try {
-      sql = new Sql(ladokDataSource as BasicDataSource)
+      /** getDataSource added for mock and testing purposes */
+      sql = newSqlInstanceFromDataSource()
       response = query(sql)
     } catch (ex) {
       log.error "Connection to LADOK failed", ex
@@ -39,5 +44,9 @@ class LadokService {
       }
     }
     return response
+  }
+
+  private def newSqlInstanceFromDataSource() {
+    return new Sql(ladokDataSource as BasicDataSource)
   }
 }
