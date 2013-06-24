@@ -4,9 +4,8 @@ class ActivateAccountAndCardService implements Serializable {
   /** Needed if we want to use this service in the flow. */
   static transactional = false
 
-  def lpwService
-
   public boolean isAdmittedOnCurrentSemester(String pnr) {
+    return false
   }
 
   public def findAccountByPnr(String pnr) {
