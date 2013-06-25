@@ -2,16 +2,19 @@ package se.su.it.signuptool
 
 import se.su.it.svc.SuCard
 
-class ActivateAccountAndCardService {
+class ActivateAccountAndCardService implements Serializable {
 
   def sukatService
 
+  /** Needed if we want to use this service in the flow. */
+  static transactional = false
+
   public boolean isAdmittedOnCurrentSemester(String socialSecurityNumber) {
-    return true
+    return false
   }
 
   public def findAccountByPnr(String pnr) {
-    return [registeredAddress:'Kakgatan 13']
+    return [registeredAddress:'Kakgatan 13', uid: 'kalleAnka']
   }
 
   /** Checks if user has any active cards or active order for a card */

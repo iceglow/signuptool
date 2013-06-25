@@ -24,7 +24,10 @@ import se.su.it.svc.Status
 import se.su.it.svc.WebServiceAdminImpl
 import se.su.it.svc.RoleServiceImpl
 
-class SukatService {
+class SukatService implements Serializable {
+  /** Needed if we want to use this service in the flow. */
+  static transactional = false
+
   def grailsApplication
   def factoryMap = [:]
 
