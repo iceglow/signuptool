@@ -43,6 +43,12 @@ grails.project.dependency.resolution = {
   dependencies {
     // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
     test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
+
+    /** For Geb functional testing */
+    test 'org.gebish:geb-spock:0.9.0'
+    test "org.seleniumhq.selenium:selenium-support:2.33.0"
+    test "org.seleniumhq.selenium:selenium-chrome-driver:2.33.0"
+
     compile 'se.su.it.cxf:sukat-cxf-svc-client:1.0.1'
     compile "org.grails:grails-webflow:$grailsVersion"
     compile 'se.su.it.ws.commons:su-ws-commons:1.5'
@@ -55,6 +61,8 @@ grails.project.dependency.resolution = {
 
   plugins {
     test ":code-coverage:1.2.6"
+    test ":geb:0.9.0"
+
     test(":spock:0.7") {
       exclude "spock-grails-support"
     }
