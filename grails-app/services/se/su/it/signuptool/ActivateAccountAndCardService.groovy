@@ -10,20 +10,21 @@ class ActivateAccountAndCardService implements Serializable {
   static transactional = false
 
   public boolean isAdmittedOnCurrentSemester(String socialSecurityNumber) {
-    return false
+    return true
   }
 
-  public def findAccountByPnr(String pnr) {
-    return [registeredAddress:'Kakgatan 13', uid: 'kalleAnka']
+  public def findAccountByPnr(String socialSecurityNumber) {
+    return [registeredAddress:'Kakgatan 13', uid: 'mano3567']
   }
 
   /** Checks if user has any active cards or active order for a card */
   public boolean canOrderCard(String uid) {
     List<SuCard> cards = sukatService.getCardsForUser(uid)
+    log.error("epa cards: ${(cards?.size()>0)} ")
     return !(cards?.size()>0)
   }
 
-  public String getForwardAddress(String pnr) {
+  public String getForwardAddress(String socialSecurityNumber) {
     // lpwService get telekom ?
     return "some@email.com"
   }

@@ -5,6 +5,7 @@ class ActivateAccountAndCardController {
   def activateAccountAndCardService
 
   def index() {
+    log.error("hepp")
     /** Logged in */
     String password = (params.password)?:''
 
@@ -17,18 +18,18 @@ class ActivateAccountAndCardController {
 
     def account = null
 
-    if (params.uid) {
-      account = activateAccountAndCardService.findAccountByPnr(params.uid)
-    }
+//    if (params.pnr) {
+      account = activateAccountAndCardService.findAccountByPnr("0123456789") // params.pnr
+//    }
 
     // account = activateAccountAndCardService.findAccountByPnr(params.uid)
 
     boolean canOrderCard = false
     boolean hasAccount = (account)
-    def hasAddress = (account?.registeredAddress)
+    boolean hasAddress = (account?.registeredAddress)
 
     if (hasAccount) {
-      canOrderCard = (hasAddress && activateAccountAndCardService.canOrderCard())
+      canOrderCard = (hasAddress && activateAccountAndCardService.canOrderCard(account.uid))
     } else {
       redirect(action:'createNewAccount')
     }
