@@ -3,7 +3,10 @@ package se.su.it.signuptool
 import java.security.MessageDigest
 import sun.misc.BASE64Encoder
 
-class LpwTicketService {
+class LpwTicketService implements Serializable {
+  /** Needed if we want to use this service in the flow. */
+  static transactional = false
+
   def grailsApplication
 
   //Below code should be replaced by a SPNEGO call to our ticket service https://lpwticket.it.su.se
