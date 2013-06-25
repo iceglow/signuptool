@@ -20,7 +20,7 @@ class ActivateAccountAndCardService implements Serializable {
   /** Checks if user has any active cards or active order for a card */
   public boolean canOrderCard(String uid) {
     List<SuCard> cards = sukatService.getCardsForUser(uid)
-    return true
+    return !(cards?.size()>0)
   }
 
   public String getForwardAddress(String pnr) {
