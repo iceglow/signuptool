@@ -1,6 +1,8 @@
 package se.su.it.signuptool
 
-class ActivateAccountAndCardService {
+class ActivateAccountAndCardService implements Serializable {
+  /** Needed if we want to use this service in the flow. */
+  static transactional = false
 
   // def ladokService
   def sukatService

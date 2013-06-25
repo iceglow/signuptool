@@ -7,7 +7,10 @@ import se.su.it.ws.commons.WSLocatorFactory
 
 import java.rmi.Remote
 
-class SuCardService {
+class SuCardService implements Serializable {
+  /** Needed if we want to use this service in the flow. */
+  static transactional = false
+
   def configService
 
   WSLocatorFactory wsLocatorFactory = null
