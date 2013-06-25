@@ -13,7 +13,7 @@ class SuCardService implements Serializable {
 
   def configService
 
-  WSLocatorFactory wsLocatorFactory = null
+  se.su.it.ws.commons.Axis1WSDL2JavaWSLocator wsLocatorFactory = null
   CardOrderFacadePortType cardOrderFacade = null
 
   public CardOrderVO[] getCardOrdersForUser(String uid) {
@@ -56,16 +56,16 @@ class SuCardService implements Serializable {
 
   private CardOrderFacadePortType getCardOrderFacade() {
     if(!cardOrderFacade) {
-      WSLocatorFactory wsLocator = getWsLocator()
+      se.su.it.ws.commons.Axis1WSDL2JavaWSLocator wsLocator = getWsLocator()
       Remote serviceFacade = wsLocator.getService(CardOrderFacadePortType.class)
       cardOrderFacade = (CardOrderFacadePortType) serviceFacade
     }
     return cardOrderFacade
   }
 
-  private WSLocatorFactory getWsLocator() {
+  private se.su.it.ws.commons.Axis1WSDL2JavaWSLocator getWsLocator() {
     if (!wsLocatorFactory) {
-      wsLocatorFactory = WSLocatorFactory.instance(configService.getSectionAsProperties("WS"))
+      wsLocatorFactory = se.su.it.ws.commons.Axis1WSDL2JavaWSLocator.instance(configService.getSectionAsProperties("WS"))
     }
     return wsLocatorFactory
   }
