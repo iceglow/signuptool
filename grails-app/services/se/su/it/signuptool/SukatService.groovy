@@ -7,6 +7,7 @@ import org.apache.cxf.endpoint.Client
 import org.apache.cxf.frontend.ClientProxy
 import org.apache.cxf.transport.http.HTTPConduit
 import org.springframework.web.context.request.RequestContextHolder
+import se.su.it.svc.SuCard
 import se.su.it.svc.SvcAudit
 import se.su.it.svc.SvcUidPwd
 
@@ -29,6 +30,10 @@ class SukatService {
 
   public AccountServiceImpl getAccountWS() {
     return getFactory(AccountServiceImpl.class, grailsApplication.config.sukatsvc.accountservice)
+  }
+
+  public CardInfoServiceImpl getCardInfoWS() {
+    return getFactory(CardInfoServiceImpl.class, grailsApplication.config.sukatsvc.cardinfoservice)
   }
 
   public EnrollmentServiceImpl getEnrollmentWS() {
@@ -121,6 +126,18 @@ public class TrustAllX509TrustManager implements X509TrustManager {
       ex.printStackTrace()
       return null
     }
+  }
+
+  public List<SuCard> getCardsForUser(String uid) {
+    List<SuCard> cards = []
+    try {
+      cards = getCardInfoWS().getAllCards(uid,true,getAuditObject())
+    } catch (Throwable exception) {
+      cards = []
+      exception.printStackTrace(System.out)
+      log.error("Couldnt get cards for user ${uid} : ${exception.getMessage()}",exception)
+    }
+    return cards
   }
 
   public String getMailRoutingAddress(String uid) {

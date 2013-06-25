@@ -1,8 +1,12 @@
 package se.su.it.signuptool
 
+import se.su.it.svc.SuCard
+
 class ActivateAccountAndCardService {
 
-  public boolean isAdmittedOnCurrentSemester(String pnr) {
+  def sukatService
+
+  public boolean isAdmittedOnCurrentSemester(String socialSecurityNumber) {
     return true
   }
 
@@ -11,7 +15,8 @@ class ActivateAccountAndCardService {
   }
 
   /** Checks if user has any active cards or active order for a card */
-  public boolean canOrderCard() {
+  public boolean canOrderCard(String uid) {
+    List<SuCard> cards = sukatService.getCardsForUser(uid)
     return true
   }
 
