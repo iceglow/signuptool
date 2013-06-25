@@ -9,12 +9,18 @@ class LadokService {
 
   def ladokDataSource
 
-  public findStudentInLadok(String pnr) {
-    def response = runQuery("SELECT * FROM NAMN WHERE pnr = :pnr AND avliden != 'J'", [pnr:pnr])
+  public boolean findStudentInLadok(String pnr) {
+    def response = runQuery("SELECT * FROM NAMN WHERE pnr = :pnr", [pnr:pnr])
     if (response?.size() > 0) {
       return true
     }
     return false
+  }
+
+  public String findForwardAddressSuggestionForPnr(String pnr) {
+    def response = runQuery("SELECT komadr FROM telekom WHERE pnr = :pnr AND komtyp = 'EMAIL'", [pnr:pnr])
+    response = (response?.first()?.komadr)?:''
+    return response
   }
 
   private runQuery(String query , Map args) {

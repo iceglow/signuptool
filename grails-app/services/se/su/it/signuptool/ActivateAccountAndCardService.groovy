@@ -4,16 +4,10 @@ class ActivateAccountAndCardService implements Serializable {
   /** Needed if we want to use this service in the flow. */
   static transactional = false
 
-  // def ladokService
+  def ladokService
   def sukatService
 
-  public boolean isToBeFoundInLadok(String pnr) {
-    // ladokService...
-  }
-
-  public SuPerson findAccountByPnr(String pnr) {
-    sukatService.findUserBySocialSecurityNumber(pnr)
-  }
+  private final emailPattern = /[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/
 
   /** Checks if user has any active cards or active order for a card */
   public boolean canOrderCard() {
@@ -21,7 +15,20 @@ class ActivateAccountAndCardService implements Serializable {
   }
 
   public String getForwardAddress(String pnr) {
-    // lpwService get telekom ?
-    return "some@email.com"
+    ladokService.findForwardAddressSuggestionForPnr(pnr)
+  }
+
+  public boolean validateForwardAddress(String forwardAddress) {
+    forwardAddress = forwardAddress?.trim()
+
+    if (!forwardAddress) {
+      return false
+    }
+
+    if (!(forwardAddress ==~ emailPattern)) {
+      return false
+    }
+
+    return true
   }
 }

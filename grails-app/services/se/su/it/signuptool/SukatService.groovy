@@ -158,14 +158,31 @@ public class TrustAllX509TrustManager implements X509TrustManager {
   public SuPerson findUserBySocialSecurityNumber(String pnr) {
     SuPerson suPerson = null
     try {
-      return SuPerson.find(base: "") {
+      suPerson = SuPerson.find(base: "") {
         and {
           eq("objectclass", "superson")
           eq("socialSecurityNumber", pnr)
         }
       }
     } catch (ex) {
-      log.error "Failed when finding user in ldap.", ex
+      log.error "Failed when finding user by ssn in ldap.", ex
     }
+    return suPerson
   }
+
+  public SuPerson findUserByUid(String uid) {
+    SuPerson suPerson = null
+    try {
+      suPerson = SuPerson.find(base: "") {
+        and {
+          eq("objectclass", "superson")
+          eq("uid", uid)
+        }
+      }
+    } catch (ex) {
+      log.error "Failed when finding user by uid in ldap.", ex
+    }
+    return suPerson
+  }
+
 }

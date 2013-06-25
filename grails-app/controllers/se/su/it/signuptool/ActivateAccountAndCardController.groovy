@@ -2,39 +2,50 @@ package se.su.it.signuptool
 
 class ActivateAccountAndCardController {
 
+  def sukatService
+  def ladokService
   def activateAccountAndCardService
 
   def index() {
     /** Logged in */
     String password = (params.password)?:''
 
-    boolean inLadok = activateAccountAndCardService.isToBeFoundInLadok(session.pnr)
-
-    if (!inLadok) {
-      flash.error = message(code:'activateAccountAndCardController.userNotFoundInLadok') as String
-      return redirect(controller:'dashboard', action:'index')
+    /** If the user is not already in the session or a uid is supplied we fetch the user and put it in the session. */
+    if (!session.user && session.uid) {
+      def user = sukatService.findUserByUid(session.uid)
+      if (user) {
+        session.user = user
+      } else {
+        flash.error = message(code:'activateAccountAndCardController.userNotFoundForUid', args:[session.uid]) as String
+        return redirect(controller:'dashboard', action:'index')
+      }
     }
 
-    def account = null
+    /** If we have no use in the session and no uid either this is a first time visit */
+    if (!session.user) {
 
-    if (params.uid) {
-      account = activateAccountAndCardService.findAccountByPnr(params.uid)
+      /** See if we can find the user in Ladok */
+      if (!ladokService.findStudentInLadok(session.pnr)) {
+        flash.error = message(code:'activateAccountAndCardController.userNotFoundInLadok') as String
+        return redirect(controller:'dashboard', action:'index')
+      }
+
+      session.user = (sukatService.findUserBySocialSecurityNumber(session.pnr))?:null
     }
 
-    // account = activateAccountAndCardService.findAccountByPnr(params.uid)
-
+    def user = session.user
     boolean canOrderCard = false
-    boolean hasAccount = (account)
-    def hasAddress = (account?.registeredAddress)
+    def hasAddress = (user?.registeredAddress)?: false
 
-    if (hasAccount) {
-      canOrderCard = (hasAddress && activateAccountAndCardService.canOrderCard())
+    if (user != null && hasAddress) {
+      /** TODO: Check if we have active orders etc */
+      canOrderCard = activateAccountAndCardService.canOrderCard()
     } else {
       redirect(action:'createNewAccount')
     }
 
     return render(view:'index', model:[
-        account:account,
+        user:user,
         password:password,
         hasAddress:hasAddress,
         canOrderCard:canOrderCard
@@ -64,8 +75,9 @@ class ActivateAccountAndCardController {
     prepareForwardAddress {
       action {
         // Fetch forward address from ladok / lpw
-        String forwardAddress = activateAccountAndCardService.getForwardAddress(session.pnr)
-        [forwardAddress:forwardAddress]
+        if (!flow.forwardAddress) {
+          flow.forwardAddress = ladokService.findForwardAddressSuggestionForPnr(session.pnr)
+        }
       }
       on("success").to("selectEmail")
       on("error").to("errorHandler")
@@ -78,10 +90,13 @@ class ActivateAccountAndCardController {
 
     processEmailInput {
       action {
-        params.email // Validate
-        if (params.email == 'invalid') { return error() }
+        if (!activateAccountAndCardService.validateForwardAddress(params?.forwardAddress)) {
+          flow.error = "Invalid Email"
+          return error()
+        }
       }
       on("success").to("createAccount")
+      on("error").to("selectEmail")
       on(Exception).to("errorHandler")
     }
 
@@ -94,9 +109,14 @@ class ActivateAccountAndCardController {
 
         String uid = result.uid
         String password = result.password
-        flash.info "Account created!"
-        return redirect(action:'index', model:[uid:uid, password:password])
+        session.uid = uid
+
+        flash.info = "Account created!"
+
+        return redirect(action:'index', model:[password:password])
       }
+      on("success").to("end")
+      on("error").to("errorHandler")
       on(Exception).to("errorHandler")
     }
 
