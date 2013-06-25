@@ -1,11 +1,13 @@
 package se.su.it.signuptool
 
+import se.su.it.sucard.client.CardOrderVO
+
 class ActivateAccountAndCardController {
 
   def activateAccountAndCardService
+  def suCardService
 
   def index() {
-    log.error("hepp")
     /** Logged in */
     String password = (params.password)?:''
 
@@ -29,7 +31,8 @@ class ActivateAccountAndCardController {
     boolean hasAddress = (account?.registeredAddress)
 
     if (hasAccount) {
-      canOrderCard = (hasAddress && activateAccountAndCardService.canOrderCard(account.uid))
+      CardOrderVO[] cardOrders=suCardService.getCardOrdersForUser("kalleanka")
+      canOrderCard = (hasAddress /*&& activateAccountAndCardService.canOrderCard(account.uid)*/)
     } else {
       redirect(action:'createNewAccount')
     }

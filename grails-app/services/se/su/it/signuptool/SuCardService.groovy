@@ -3,7 +3,6 @@ package se.su.it.signuptool
 import se.su.it.sucard.client.ArrayOfCardOrderVO
 import se.su.it.sucard.client.CardOrderFacadePortType
 import se.su.it.sucard.client.CardOrderVO
-import se.su.it.ws.commons.WSLocatorFactory
 
 import java.rmi.Remote
 
@@ -17,18 +16,16 @@ class SuCardService implements Serializable {
   CardOrderFacadePortType cardOrderFacade = null
 
   public CardOrderVO[] getCardOrdersForUser(String uid) {
-    CardOrderVO[] cardOrderVOs = null
+    CardOrderVO[] cardOrderVOs = []
 
     if (uid && (uid.length() > 0)) {
-
       try {
         CardOrderFacadePortType facade = getCardOrderFacade()
         ArrayOfCardOrderVO  arrayOfCardOrderVO = facade.getCardOrdersForUser(uid)
         cardOrderVOs = arrayOfCardOrderVO.getCardOrderVO()
-
       } catch (Throwable exception) {
         log.error("Problem getting cardorders: ${exception.getMessage()}",exception)
-        return null
+        cardOrderVOs = []
       }
     }
 
@@ -39,15 +36,13 @@ class SuCardService implements Serializable {
     boolean cardOrdered = false
 
     if (cardOrderVO) {
-
       try {
         CardOrderFacadePortType facade = getCardOrderFacade()
         facade.orderCard(cardOrderVO)
         cardOrdered = true
-
       } catch (Throwable exception) {
         log.error("Problem ordering card: ${exception.getMessage()}",exception)
-        return false
+        cardOrdered = false
       }
     }
 

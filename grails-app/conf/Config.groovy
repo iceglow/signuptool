@@ -198,6 +198,7 @@ systemproperties {
 
 security {
   jaasloginconfigfile = "/local/signuptool/conf/login.config"
+  jaasconfigfile = "/local/signuptool/conf/jaas.config"
 }
 
 cxf {

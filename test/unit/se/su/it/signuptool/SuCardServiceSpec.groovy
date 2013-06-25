@@ -13,7 +13,7 @@ class SuCardServiceSpec extends Specification {
 
   def setup() {
     service.configService = Mock(ConfigService)
-    service.wsLocatorFactory = Mock(WSLocatorFactory)
+    service.wsLocatorFactory = Mock(se.su.it.ws.commons.Axis1WSDL2JavaWSLocator)
     service.cardOrderFacade = Mock(CardOrderFacadePortType)
   }
 
