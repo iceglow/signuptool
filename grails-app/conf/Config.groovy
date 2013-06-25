@@ -185,6 +185,28 @@ log4j = {
   }
 }
 
+ldap {
+  directories {
+    Directory1 {
+      url = "ldap://ldap-test.su.se"
+      base = ""
+      userDn = ""
+      password = ""
+      ignorePartialResultException = false
+      env = [
+          "java.naming.security.authentication": "GSSAPI",
+          "javax.security.sasl.server.authentication": "true"
+      ]
+      searchControls {
+        countLimit = 100000
+        timeLimit = 300000
+        searchScope = "subtree"
+      }
+    }
+  }
+  schemas = [se.su.it.signuptool.SuPerson]
+}
+
 systemproperties {
   user.language = "sv"
   user.region = "SE"

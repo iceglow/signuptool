@@ -151,4 +151,18 @@ public class TrustAllX509TrustManager implements X509TrustManager {
 
     return new SvcAudit(uid: uid, client: client, ipAddress: ip)
   }
+
+  public SuPerson findUserBySocialSecurityNumber(String pnr) {
+    SuPerson suPerson = null
+    try {
+      return SuPerson.find(base: "") {
+        and {
+          eq("objectclass", "superson")
+          eq("socialSecurityNumber", pnr)
+        }
+      }
+    } catch (ex) {
+      log.error "Failed when finding user in ldap.", ex
+    }
+  }
 }

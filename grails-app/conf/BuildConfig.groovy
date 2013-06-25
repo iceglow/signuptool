@@ -33,7 +33,6 @@ grails.project.dependency.resolution = {
 
     mavenRepo "http://maven.it.su.se/it.su.se/maven2/"
     grailsRepo "http://svn.it.su.se/grails-plugins/"
-    mavenRepo "http://maven.it.su.se/it.su.se/maven2"
     // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
     //mavenRepo "http://snapshots.repository.codehaus.org"
     //mavenRepo "http://repository.codehaus.org"
@@ -51,6 +50,7 @@ grails.project.dependency.resolution = {
 
     runtime 'mysql:mysql-connector-java:5.1.22'
     runtime 'se.su.it.tomcat:tomcat-header-encoding-valve:2.2'
+    runtime 'org.codehaus:gldapo:0.8.5'
   }
 
   plugins {
@@ -60,12 +60,13 @@ grails.project.dependency.resolution = {
     }
 
     compile(
+        ':ldap:0.8.2',
         ":build-test-data:2.0.4",
         ":cache:1.0.1",
         ":criteria:1.6",
         ":cxf-client:1.5.3"
     )
-    compile ':webflow:2.0.0', {
+    compile(':webflow:2.0.0') {
       exclude 'grails-webflow'
     }
 
@@ -90,3 +91,9 @@ grails.project.dependency.resolution = {
     //runtime ":yui-minify-resources:0.1.5"
   }
 }
+
+grails.war.resources = { stagingDir ->
+// Remove older version of gldapo since we need version 0.8.5 to get working GSSAPI
+  delete(file:"${stagingDir}/WEB-INF/lib/gldapo-0.8.2.jar")
+}
+

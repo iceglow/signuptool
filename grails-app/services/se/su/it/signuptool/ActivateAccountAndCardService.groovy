@@ -2,12 +2,15 @@ package se.su.it.signuptool
 
 class ActivateAccountAndCardService {
 
-  public boolean isAdmittedOnCurrentSemester(String pnr) {
-    return true
+  // def ladokService
+  def sukatService
+
+  public boolean isToBeFoundInLadok(String pnr) {
+    // ladokService...
   }
 
-  public def findAccountByPnr(String pnr) {
-    return [registeredAddress:'Kakgatan 13']
+  public SuPerson findAccountByPnr(String pnr) {
+    sukatService.findUserBySocialSecurityNumber(pnr)
   }
 
   /** Checks if user has any active cards or active order for a card */

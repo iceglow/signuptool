@@ -8,10 +8,10 @@ class ActivateAccountAndCardController {
     /** Logged in */
     String password = (params.password)?:''
 
-    boolean admitted = activateAccountAndCardService.isAdmittedOnCurrentSemester(session.pnr)
+    boolean inLadok = activateAccountAndCardService.isToBeFoundInLadok(session.pnr)
 
-    if (!admitted) {
-      flash.error = message(code:'activateAccountAndCardController.notAdmittedCurrentSemester') as String
+    if (!inLadok) {
+      flash.error = message(code:'activateAccountAndCardController.userNotFoundInLadok') as String
       return redirect(controller:'dashboard', action:'index')
     }
 
