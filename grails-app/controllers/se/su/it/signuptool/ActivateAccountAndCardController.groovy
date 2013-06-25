@@ -34,15 +34,23 @@ class ActivateAccountAndCardController {
     }
 
     /** If we have no use in the session and no uid either this is a first time visit */
-    if (!session.user) {
+    if (!session.user && session.pnr) {
 
       /** See if we can find the user in Ladok */
-      if (!ladokService.findStudentInLadok(session.pnr)) {
+      Map ladokData = ladokService.findStudentInLadok(session.pnr)
+
+      if (!ladokData) {
         flash.error = message(code:'activateAccountAndCardController.userNotFoundInLadok') as String
         return redirect(controller:'dashboard', action:'index')
       }
 
       session.user = (sukatService.findUserBySocialSecurityNumber(session.pnr))?:null
+
+      if (!session.user) {
+        /** Saving enamn and tnamn for enroll method */
+        session.givenName = ladokData.tnamn
+        session.sn = ladokData.enamn
+      }
     }
 
     def user = session.user
@@ -51,7 +59,7 @@ class ActivateAccountAndCardController {
     /** TODO: Guessing we want to use LPW to fetch the proper addr. */
     def hasAddress = (user?.registeredAddress)?: false
 
-    if (!user) {
+    if (user) {
       /** TODO: Check if we have active orders etc */
       canOrderCard = (hasAddress && activateAccountAndCardService.canOrderCard())
     } else {
@@ -121,8 +129,12 @@ class ActivateAccountAndCardController {
 
     createAccount {
       action {
-        // def result = sukatService.enrollUser('givenName', 'sn', session.pnr)
-        log.error "<<< ENROLLED USER : ${flow.error} >>>"
+
+        def givenName = session.givenName
+        def sn = session.sn
+
+        // def result = sukatService.enrollUser(givenName, sn, session.pnr)
+        log.error "<<< ENROLLED USER : $givenName $sn : ${flow.error} >>>"
 
 
         def result = [:]
