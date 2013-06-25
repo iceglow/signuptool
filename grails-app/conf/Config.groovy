@@ -224,15 +224,6 @@ security {
 
 cxf {
   client {
-    registerFetcherServiceClient {
-      wsdl = "https://lpwtest-su.its.uu.se/cxf/RegisterFetcher?wsdl"
-      clientInterface = ladok.lpw.service.register.facadeclient.RegisterFetcher
-      serviceEndpointAddress = "https://lpwtest-su.its.uu.se/cxf/RegisterFetcher"
-      enableDefaultLoggingInterceptors = false
-      receiveTimeout = 60000
-      connectionTimeout = 30000
-      allowChunking = true
-    }
     changeAddressFetcherServiceClient {
       wsdl = "https://lpwtest-su.its.uu.se/cxf/ChangeAddressFetcher?wsdl"
       clientInterface = ladok.lpw.service.changeaddress.facadeclient.ChangeAddressFetcher

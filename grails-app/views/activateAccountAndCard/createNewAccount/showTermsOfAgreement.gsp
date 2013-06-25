@@ -7,7 +7,6 @@
 <body>
   <div id="section">
     Blah blah terms of agreement.
-
     <div>
       <g:form>
         <g:submitButton name="agree" value="Godkänn"/>

@@ -30,6 +30,9 @@ class SukatService implements Serializable {
   def grailsApplication
   def factoryMap = [:]
 
+  private final DEFAULT_DOMAIN = "student.su.se"
+  private final DEFAULT_AFFILATION = "other"
+
   public AccountServiceImpl getAccountWS() {
     return getFactory(AccountServiceImpl.class, grailsApplication.config.sukatsvc.accountservice)
   }
@@ -116,16 +119,6 @@ public class TrustAllX509TrustManager implements X509TrustManager {
 }
 */
 
-
-  public SvcUidPwd enrollUser(String givenName, String sn, String nin) {
-    try {
-      return getEnrollmentWS().enrollUser("student.su.se",givenName,sn,"other",nin,getAuditObject())
-    } catch (Exception ex) {
-      ex.printStackTrace()
-      return null
-    }
-  }
-
   public String getMailRoutingAddress(String uid) {
     try {
       return getAccountWS().getMailRoutingAddress(uid,getAuditObject())
@@ -185,4 +178,17 @@ public class TrustAllX509TrustManager implements X509TrustManager {
     return suPerson
   }
 
+  public SvcUidPwd enrollUser(String givenName, String sn, String socialSecurityNumber) {
+
+    SvcUidPwd response = null
+
+    try {
+      response = (enrollmentWS as EnrollmentServiceImpl).enrollUser(
+          DEFAULT_DOMAIN, givenName, sn, DEFAULT_AFFILATION, socialSecurityNumber, auditObject)
+    } catch (ex) {
+      log.error "Enrolling student failed.", ex
+    }
+
+    return response
+  }
 }

@@ -7,9 +7,7 @@
 <body>
   <div id="section">
     <g:if test="${error}">
-      <div class="error">
-        ${error}
-      </div>
+      <div class="error">${error}</div>
     </g:if>
     <div>
       <g:form>

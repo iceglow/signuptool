@@ -7,6 +7,7 @@
 <body>
 
   <div class="section">
+    <tmpl:/shared/feedback flash="${flash}"/>
     <br/>
     <br/>
     <br/>

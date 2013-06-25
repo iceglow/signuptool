@@ -1,5 +1,7 @@
 package se.su.it.signuptool
 
+import java.util.regex.Matcher
+
 class ActivateAccountAndCardController {
 
   def sukatService
@@ -7,16 +9,26 @@ class ActivateAccountAndCardController {
   def activateAccountAndCardService
 
   def index() {
+    log.debug "$controllerName, $actionName, $params"
     /** Logged in */
     String password = (params.password)?:''
 
     /** If the user is not already in the session or a uid is supplied we fetch the user and put it in the session. */
-    if (!session.user && session.uid) {
-      def user = sukatService.findUserByUid(session.uid)
+
+    String uid = (session.uid)?:null
+
+    Matcher matcher = (request.eppn =~ /^(.*)@.*$/)
+
+    if (matcher.matches() && !uid) {
+      uid = matcher.group(1)
+    }
+
+    if (!session.user && uid) {
+      def user = sukatService.findUserByUid(uid)
       if (user) {
         session.user = user
       } else {
-        flash.error = message(code:'activateAccountAndCardController.userNotFoundForUid', args:[session.uid]) as String
+        flash.error = message(code:'activateAccountAndCardController.userNotFoundForUid', args:[uid]) as String
         return redirect(controller:'dashboard', action:'index')
       }
     }
@@ -35,20 +47,25 @@ class ActivateAccountAndCardController {
 
     def user = session.user
     boolean canOrderCard = false
+
+    /** TODO: Guessing we want to use LPW to fetch the proper addr. */
     def hasAddress = (user?.registeredAddress)?: false
 
-    if (user != null && hasAddress) {
+    if (!user) {
       /** TODO: Check if we have active orders etc */
-      canOrderCard = activateAccountAndCardService.canOrderCard()
+      canOrderCard = (hasAddress && activateAccountAndCardService.canOrderCard())
     } else {
       redirect(action:'createNewAccount')
     }
 
+    def cardInfo = [:]
+    cardInfo.hasAddress = hasAddress
+    cardInfo.canOrderCard = canOrderCard
+
     return render(view:'index', model:[
         user:user,
         password:password,
-        hasAddress:hasAddress,
-        canOrderCard:canOrderCard
+        cardInfo: cardInfo
     ])
   }
 
@@ -95,20 +112,30 @@ class ActivateAccountAndCardController {
           return error()
         }
       }
-      on("success").to("createAccount")
+      on("success") {
+        flow.error = ''
+      }.to("createAccount")
       on("error").to("selectEmail")
       on(Exception).to("errorHandler")
     }
 
     createAccount {
       action {
-        def result = activateAccountAndCardService.createAccount()
+        // def result = sukatService.enrollUser('givenName', 'sn', session.pnr)
+        log.error "<<< ENROLLED USER : ${flow.error} >>>"
+
+
+        def result = [:]
+
         if (result == null) {
-          throw new Exception("Could not create account.")
+          flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
+          throw new Exception("Failed when creating account.")
         }
 
         String uid = result.uid
         String password = result.password
+
+        /** Since we don't recieve a full account from the creation of an account we return the uid */
         session.uid = uid
 
         flash.info = "Account created!"
@@ -121,7 +148,7 @@ class ActivateAccountAndCardController {
     }
 
     errorHandler {
-      action{
+      action {
         log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
       }
       on("success").to("end")
