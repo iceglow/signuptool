@@ -28,80 +28,14 @@ class SukatService implements Serializable {
   static transactional = false
 
   def grailsApplication
-  def factoryMap = [:]
+
+  AccountServiceImpl accountWS
+  EnrollmentServiceImpl enrollmentWS
+  Status statusWS
+  WebServiceAdminImpl webAdminWS
 
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"
-
-  public AccountServiceImpl getAccountWS() {
-    return getFactory(AccountServiceImpl.class, grailsApplication.config.sukatsvc.accountservice)
-  }
-
-  public EnrollmentServiceImpl getEnrollmentWS() {
-    return getFactory(EnrollmentServiceImpl.class, grailsApplication.config.sukatsvc.enrollmentservice)
-  }
-
-  public Status getStatusWS() {
-    return getFactory(Status.class, grailsApplication.config.sukatsvc.statusservice)
-  }
-
-  public WebServiceAdminImpl getWebAdminWS() {
-    return getFactory(WebServiceAdminImpl.class, grailsApplication.config.sukatsvc.webserviceadmin)
-  }
-
-  private Object getFactory(Class cz, String url) {
-    final long startTime = System.nanoTime()
-    final long endTime;
-    def theFactory = null
-
-    synchronized (factoryMap) {
-      theFactory = factoryMap.get(cz.name)
-      if (theFactory == null) {
-        JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean()
-        factory.setServiceClass(cz)
-        factory.setAddress(url)
-        factory.getInInterceptors().add(new org.apache.cxf.interceptor.LoggingInInterceptor())
-        factory.getOutInterceptors().add(new org.apache.cxf.interceptor.LoggingOutInterceptor())
-        Client client
-        try {
-
-          theFactory = factory.create()
-          client = ClientProxy.getClient(theFactory)
-          factoryMap.put(cz.name, theFactory)
-        } catch (e) {
-//      e.printStackTrace()
-        }
-        if (client != null) {
-          HTTPConduit conduit = (HTTPConduit) client.getConduit()
-          HTTPClientPolicy policy = new HTTPClientPolicy()
-          policy.setConnectionTimeout(10000)
-          policy.setReceiveTimeout(10000)
-
-          conduit.setClient(policy)
-
-          def auth = new AuthorizationPolicy()
-          auth.setAuthorizationType("Negotiate")
-          conduit.setAuthorization(auth)
-
-          //This bypasses certificate checks, god for testing with selfsigned certificates
-          //Remove this code when you have a valid certificate on the server
-          /*BEGIN
-          TLSClientParameters tcp = new TLSClientParameters()
-          TrustManager[] tm = new TrustManager[1]
-          tm[0] = new TrustAllX509TrustManager()
-          tcp.setTrustManagers(tm)
-          tcp.setDisableCNCheck(true)
-          conduit.setTlsClientParameters(tcp)
-
-          *///END
-        }
-      }
-    }
-    endTime = System.nanoTime()
-    final long duration = endTime - startTime
-    log.debug("Getting clientproxy time (in sec) of ${theFactory.getEndpointReference()}: ${duration / 1000000000}")
-    return theFactory
-  }
 
   public String getMailRoutingAddress(String uid) {
     try {
@@ -123,6 +57,7 @@ class SukatService implements Serializable {
   }
 
   private SvcAudit getAuditObject() {
+    /** TODO: Get the request attributes so we can get the request? Seems wierd to me. */
     def webRequest = RequestContextHolder.currentRequestAttributes()
 
     def uid = webRequest.getRequest().getRemoteUser()
