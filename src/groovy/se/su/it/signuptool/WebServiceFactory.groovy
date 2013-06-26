@@ -23,6 +23,7 @@ class WebServiceFactory {
     new ConcurrentLinkedHashMap.Builder<String, Object>().maximumWeightedCapacity(1000).build();
 
   public static Object getInstance(Class cz, String url) {
+
     if (!cz) {
       log.error "No class defined."
       return null
@@ -44,6 +45,8 @@ class WebServiceFactory {
     if (theFactory == null) {
       log.debug "factory not found in cache for class ${cz.name}, creating a new factory."
       theFactory = createNewFactory(cz, url)
+    } else {
+      log.info "Factory for ${cz.name} found in the cache map, returning cached instance."
     }
 
     log.debug("Getting clientproxy time (in sec) of ${TimeCategory.minus(new Date(), startTime)}")

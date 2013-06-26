@@ -1,8 +1,7 @@
 package se.su.it.signuptool
 
-import groovy.time.TimeCategory
-
 class AdminController {
+  def sukatService
 
   def index() {
     return render(view:'index')

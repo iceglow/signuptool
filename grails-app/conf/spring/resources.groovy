@@ -1,4 +1,5 @@
 import org.springframework.jndi.JndiObjectFactoryBean
+import se.su.it.signuptool.AuditFactory
 import se.su.it.signuptool.WebServiceFactory
 import se.su.it.svc.AccountServiceImpl
 import se.su.it.svc.EnrollmentServiceImpl

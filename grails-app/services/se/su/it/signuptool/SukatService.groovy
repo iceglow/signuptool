@@ -1,27 +1,11 @@
 package se.su.it.signuptool
 
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
-import org.apache.cxf.transports.http.configuration.HTTPClientPolicy
-import org.apache.cxf.configuration.security.AuthorizationPolicy
-import org.apache.cxf.endpoint.Client
-import org.apache.cxf.frontend.ClientProxy
-import org.apache.cxf.transport.http.HTTPConduit
-import org.springframework.web.context.request.RequestContextHolder
-import se.su.it.svc.SvcAudit
 import se.su.it.svc.SvcUidPwd
 
-import java.security.cert.CertificateException
-import java.security.cert.X509Certificate;
-import javax.net.ssl.X509TrustManager
-import se.su.it.svc.CardInfoServiceImpl
-import se.su.it.svc.CardAdminServiceImpl
-import se.su.it.svc.EntitlementServiceImpl
-import se.su.it.svc.ServiceServiceImpl
 import se.su.it.svc.AccountServiceImpl
 import se.su.it.svc.EnrollmentServiceImpl
 import se.su.it.svc.Status
 import se.su.it.svc.WebServiceAdminImpl
-import se.su.it.svc.RoleServiceImpl
 
 class SukatService implements Serializable {
   /** Needed if we want to use this service in the flow. */
@@ -38,33 +22,24 @@ class SukatService implements Serializable {
   private final DEFAULT_AFFILATION = "other"
 
   public String getMailRoutingAddress(String uid) {
+    String mailRoutingAddress = null
     try {
-      return getAccountWS().getMailRoutingAddress(uid,getAuditObject())
-    } catch (Exception ex) {
-      ex.printStackTrace()
+      mailRoutingAddress = accountWS.getMailRoutingAddress(uid, AuditFactory.auditObject)
+    } catch (ex) {
+      log.error "Failed when getting mail routing address", ex
       return null
     }
+    return mailRoutingAddress
   }
 
   public boolean setMailRoutingAddress(String uid, String mailRoutingAddress) {
     try {
-      getAccountWS().setMailRoutingAddress(uid, mailRoutingAddress)
-      return true
-    } catch (Exception ex) {
-      ex.printStackTrace()
+      accountWS.setMailRoutingAddress(uid, mailRoutingAddress, AuditFactory.auditObject)
+    } catch (ex) {
+      log.error "Failed when setting mail routing address", ex
       return false
     }
-  }
-
-  private SvcAudit getAuditObject() {
-    /** TODO: Get the request attributes so we can get the request? Seems wierd to me. */
-    def webRequest = RequestContextHolder.currentRequestAttributes()
-
-    def uid = webRequest.getRequest().getRemoteUser()
-    def ip = java.net.InetAddress.getLocalHost().getHostAddress()
-    def client = webRequest.getRequest().getRemoteAddr()
-
-    return new SvcAudit(uid: uid, client: client, ipAddress: ip)
+    return true
   }
 
   public SuPerson findUserBySocialSecurityNumber(String pnr) {
@@ -125,7 +100,7 @@ class SukatService implements Serializable {
           sn,
           DEFAULT_AFFILATION,
           socialSecurityNumber,
-          auditObject
+          AuditFactory.auditObject
       )
     } catch (ex) {
       log.error "Enrolling student failed.", ex
