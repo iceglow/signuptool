@@ -103,22 +103,6 @@ class SukatService implements Serializable {
     return theFactory
   }
 
-/*
-public class TrustAllX509TrustManager implements X509TrustManager {
-  public static final TrustAllX509TrustManager INSTANCE = new TrustAllX509TrustManager();
-  @Override
-  public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-  }
-  @Override
-  public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-  }
-  @Override
-  public X509Certificate[] getAcceptedIssuers() {
-    return null;
-  }
-}
-*/
-
   public String getMailRoutingAddress(String uid) {
     try {
       return getAccountWS().getMailRoutingAddress(uid,getAuditObject())
@@ -180,11 +164,34 @@ public class TrustAllX509TrustManager implements X509TrustManager {
 
   public SvcUidPwd enrollUser(String givenName, String sn, String socialSecurityNumber) {
 
+    if (!givenName?.trim()) {
+      log.error "No givenName supplied."
+      return null
+    }
+
+    if (!sn?.trim()) {
+      log.error "No sn supplied."
+      return null
+    }
+
+    if (!socialSecurityNumber?.trim()) {
+      log.error "No socialSecurityNumber supplied."
+      return null
+    }
+
     SvcUidPwd response = null
 
     try {
-      response = (enrollmentWS as EnrollmentServiceImpl).enrollUser(
-          DEFAULT_DOMAIN, givenName, sn, DEFAULT_AFFILATION, socialSecurityNumber, auditObject)
+      EnrollmentServiceImpl enrollmentWebService = getEnrollmentWS()
+
+      response = enrollmentWebService.enrollUser(
+          DEFAULT_DOMAIN,
+          givenName,
+          sn,
+          DEFAULT_AFFILATION,
+          socialSecurityNumber,
+          auditObject
+      )
     } catch (ex) {
       log.error "Enrolling student failed.", ex
     }
