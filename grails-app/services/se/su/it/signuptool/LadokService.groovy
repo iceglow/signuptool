@@ -19,8 +19,12 @@ class LadokService {
   }
 
   public String findForwardAddressSuggestionForPnr(String pnr) {
+    def response = ''
     def responseList = runQuery("SELECT komadr FROM telekom WHERE pnr = :pnr AND komtyp = 'EMAIL'", [pnr:pnr])
-    def response = (responseList?.first()?.komadr)?:''
+    if (responseList?.size() > 0) {
+      return (responseList?.first()?.komadr)?:''
+    }
+
     return response
   }
 

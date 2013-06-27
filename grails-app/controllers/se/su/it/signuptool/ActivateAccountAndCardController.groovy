@@ -10,6 +10,7 @@ class ActivateAccountAndCardController {
 
   def index() {
     log.debug "$controllerName, $actionName, $params"
+
     /** Logged in */
     String password = (params.password)?:''
 
@@ -23,12 +24,16 @@ class ActivateAccountAndCardController {
       uid = matcher.group(1)
     }
 
+    /** Since we are presented with a uid we expect the user to have been created, but the svc doesn't host
+     * a find user by Uid method atm so we retry the socialSecurityNumber find. */
     if (!session.user && uid) {
-      def user = sukatService.findUserByUid(uid)
+      def user = sukatService.findUserBySocialSecurityNumber(session.pnr)
       if (user) {
         session.user = user
       } else {
-        flash.error = message(code:'activateAccountAndCardController.userNotFoundForUid', args:[uid]) as String
+        flash.error = message(
+            code:'activateAccountAndCardController.userNotFoundForSocialSecurityNumber',
+            args:[session.pnr]) as String
         return redirect(controller:'dashboard', action:'index')
       }
     }

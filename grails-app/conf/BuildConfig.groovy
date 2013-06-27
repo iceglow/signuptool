@@ -49,14 +49,13 @@ grails.project.dependency.resolution = {
     test "org.seleniumhq.selenium:selenium-support:2.33.0"
     test "org.seleniumhq.selenium:selenium-chrome-driver:2.33.0"
 
-    compile 'se.su.it.cxf:sukat-cxf-svc-client:1.0.1'
+    compile "se.su.it.cxf:sukat-cxf-svc-client:1.0.3"
     compile "org.grails:grails-webflow:$grailsVersion"
     compile 'se.su.it.ws.commons:su-ws-commons:1.5'
     compile 'se.su.it.sucard.svc:sucardsvc-client:1.2'
 
     runtime 'mysql:mysql-connector-java:5.1.22'
     runtime 'se.su.it.tomcat:tomcat-header-encoding-valve:2.2'
-    runtime 'org.codehaus:gldapo:0.8.5'
   }
 
   plugins {
@@ -68,7 +67,6 @@ grails.project.dependency.resolution = {
     }
 
     compile(
-        ':ldap:0.8.2',
         ":build-test-data:2.0.4",
         ":cache:1.0.1",
         ":criteria:1.6",
@@ -99,9 +97,3 @@ grails.project.dependency.resolution = {
     //runtime ":yui-minify-resources:0.1.5"
   }
 }
-
-grails.war.resources = { stagingDir ->
-// Remove older version of gldapo since we need version 0.8.5 to get working GSSAPI
-  delete(file:"${stagingDir}/WEB-INF/lib/gldapo-0.8.2.jar")
-}
-

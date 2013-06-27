@@ -1,5 +1,6 @@
 package se.su.it.signuptool
 
+import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
 import se.su.it.svc.AccountServiceImpl
@@ -42,32 +43,12 @@ class SukatService implements Serializable {
     return true
   }
 
-  public SuPerson findUserBySocialSecurityNumber(String pnr) {
-    SuPerson suPerson = null
+  public SvcSuPersonVO findUserBySocialSecurityNumber(String pnr) {
+    SvcSuPersonVO suPerson = null
     try {
-      suPerson = SuPerson.find(base: "") {
-        and {
-          eq("objectclass", "superson")
-          eq("socialSecurityNumber", pnr)
-        }
-      }
+      suPerson = accountWS.findSuPersonBySocialSecurityNumber(pnr, AuditFactory.auditObject)
     } catch (ex) {
       log.error "Failed when finding user by ssn in ldap.", ex
-    }
-    return suPerson
-  }
-
-  public SuPerson findUserByUid(String uid) {
-    SuPerson suPerson = null
-    try {
-      suPerson = SuPerson.find(base: "") {
-        and {
-          eq("objectclass", "superson")
-          eq("uid", uid)
-        }
-      }
-    } catch (ex) {
-      log.error "Failed when finding user by uid in ldap.", ex
     }
     return suPerson
   }
