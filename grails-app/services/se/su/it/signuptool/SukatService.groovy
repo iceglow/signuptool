@@ -73,9 +73,8 @@ class SukatService implements Serializable {
     SvcUidPwd response = null
 
     try {
-      EnrollmentServiceImpl enrollmentWebService = getEnrollmentWS()
 
-      response = enrollmentWebService.enrollUser(
+      response = enrollmentWS.enrollUser(
           DEFAULT_DOMAIN,
           givenName,
           sn,
