@@ -1,4 +1,6 @@
 <div>
   Uid: ${user?.uid}
-  Password: ${password}
+  <g:if test="${password}">
+    Password: ${password}
+  </g:if>
 </div>
