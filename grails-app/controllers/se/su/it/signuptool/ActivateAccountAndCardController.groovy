@@ -4,72 +4,89 @@ import java.util.regex.Matcher
 
 class ActivateAccountAndCardController {
 
-  def sukatService
   def ladokService
   def activateAccountAndCardService
+  def utilityService
 
   def index() {
     log.debug "$controllerName, $actionName, $params"
 
-    /** Logged in */
-    String password = (params.password)?:''
+    /** Only display the password if returned and remove it right after. */
+    String password = ''
 
-    /** If the user is not already in the session or a uid is supplied we fetch the user and put it in the session. */
-
-    String uid = (session.uid)?:null
-
-    Matcher matcher = (request.eppn =~ /^(.*)@.*$/)
-
-    if (matcher.matches() && !uid) {
-      uid = matcher.group(1)
+    if (flash.password) {
+      password = flash.password
+      flash.password = null
     }
 
-    /** Since we are presented with a uid we expect the user to have been created, but the svc doesn't host
-     * a find user by Uid method atm so we retry the socialSecurityNumber find. */
-    if (!session.user && uid) {
-      def user = sukatService.findUserBySocialSecurityNumber(session.pnr)
-      if (user) {
-        session.user = user
-      } else {
+    /** Setting uid
+     * 1. First hand, use the returned uid.
+     * 2. Fetch the uid from eppn
+     */
+
+    String uid = (session.uid)?:(request?.eppn)? utilityService.getUid(request.eppn) : null
+
+    if (!uid) {
+      flash.error = message(
+          code:'activateAccountAndCardController.noValidIdFound',
+          args:[session?.uid, request?.eppn]) as String
+      return redirect(controller:'dashboard', action:'index')
+    }
+
+    /**
+     * If the user isn't already in the session we find it either by ssn or uid and put it in the session.
+     */
+
+    boolean uidIsPnr = utilityService.uidIsPnr(uid)
+
+    if (!session.user) {
+      try {
+        session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+      } catch (ex) {
+        log.error "Failed when setting user in session", ex
         flash.error = message(
-            code:'activateAccountAndCardController.userNotFoundForSocialSecurityNumber',
-            args:[session.pnr]) as String
+            code:'activateAccountAndCardController.errorWhenFetchingUser',
+            args:[uid]) as String
         return redirect(controller:'dashboard', action:'index')
       }
     }
 
-    /** If we have no use in the session and no uid either this is a first time visit */
-    if (!session.user && session.pnr) {
+    /** If we still have no user in the session then this is a first time visit */
+    if (!session.user) {
+      /** See if we can find the new user in Ladok */
+      Map ladokData = [:]
 
-      /** See if we can find the user in Ladok */
-      Map ladokData = ladokService.findStudentInLadok(session.pnr)
+      try {
+        ladokData = activateAccountAndCardService.fetchLadokData(uid)
+      } catch (ex) {
+        log.error "Failed when fetching ladokData for uid: $uid", ex
+      }
 
       if (!ladokData) {
         flash.error = message(code:'activateAccountAndCardController.userNotFoundInLadok') as String
         return redirect(controller:'dashboard', action:'index')
       }
 
-      session.user = (sukatService.findUserBySocialSecurityNumber(session.pnr))?:null
-
-      if (!session.user) {
-        /** Saving enamn and tnamn for enroll method */
-        session.givenName = ladokData.tnamn
-        session.sn = ladokData.enamn
-      }
+      /** Saving enamn and tnamn for enroll method */
+      session.givenName = ladokData.tnamn
+      session.sn = ladokData.enamn
     }
 
-    def user = session.user
+
+    boolean hasAddress = false
     boolean canOrderCard = false
 
-    /** TODO: Guessing we want to use LPW to fetch the proper addr. */
-    def hasAddress = (user?.registeredAddress)?: false
-
-    if (user) {
+    if (session.user) {
+      /** TODO: Guessing we want to use LPW to fetch the proper addr. */
+      hasAddress = (user?.registeredAddress)?: false
       /** TODO: Check if we have active orders etc */
       canOrderCard = (hasAddress && activateAccountAndCardService.canOrderCard())
     } else {
+      /** Send to the create new account flow */
       redirect(action:'createNewAccount')
     }
+
+    def user = session.user // fetch user from session for the presentation in the view.
 
     def cardInfo = [:]
     cardInfo.hasAddress = hasAddress
@@ -149,15 +166,14 @@ class ActivateAccountAndCardController {
           throw new Exception("Failed when creating account.")
         }
 
-        String uid = result.uid
-        String password = result.password
+        session.uid = result.uid
+        flash.password = result.password
 
         /** Since we don't recieve a full account from the creation of an account we return the uid */
-        session.uid = uid
 
         flash.info = "Account created!"
 
-        return redirect(action:'index', model:[password:password])
+        return redirect(action:'index')
       }
       on("success").to("end")
       on("error").to("errorHandler")

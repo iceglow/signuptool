@@ -15,7 +15,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     controller = mockController(ActivateAccountAndCardController)
   }
 
-  def 'dummy test'() {
-    assert 1 < 2
+  def "index"() {
+
   }
 }

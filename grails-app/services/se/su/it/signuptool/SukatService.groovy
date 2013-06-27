@@ -53,6 +53,16 @@ class SukatService implements Serializable {
     return suPerson
   }
 
+  public SvcSuPersonVO findUserByUid(String uid) {
+    SvcSuPersonVO suPerson = null
+    try {
+      suPerson = accountWS.findSuPersonByUid(uid, AuditFactory.auditObject)
+    } catch (ex) {
+      log.error "Failed when finding user by ssn in ldap.", ex
+    }
+    return suPerson
+  }
+
   public SvcUidPwd enrollUser(String givenName, String sn, String socialSecurityNumber) {
 
     if (!givenName?.trim()) {
