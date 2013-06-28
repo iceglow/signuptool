@@ -2,8 +2,8 @@ grails.servlet.version = "2.5" // Change depending on target container complianc
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
-grails.project.target.level = 1.6
-grails.project.source.level = 1.6
+grails.project.target.level = 1.7
+grails.project.source.level = 1.7
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
 // uncomment (and adjust settings) to fork the JVM to isolate classpaths
@@ -33,7 +33,6 @@ grails.project.dependency.resolution = {
 
     mavenRepo "http://maven.it.su.se/it.su.se/maven2/"
     grailsRepo "http://svn.it.su.se/grails-plugins/"
-    mavenRepo "http://maven.it.su.se/it.su.se/maven2"
     // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
     //mavenRepo "http://snapshots.repository.codehaus.org"
     //mavenRepo "http://repository.codehaus.org"
@@ -44,10 +43,14 @@ grails.project.dependency.resolution = {
   dependencies {
     // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
     test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
-    compile 'se.su.it.cxf:sukat-cxf-svc-client:1.0.1'
+
+    /** For Geb functional testing */
+    test 'org.gebish:geb-spock:0.9.0'
+    test "org.seleniumhq.selenium:selenium-support:2.33.0"
+    test "org.seleniumhq.selenium:selenium-chrome-driver:2.33.0"
+
+    compile "se.su.it.cxf:sukat-cxf-svc-client:1.0.4-SNAPSHOT"
     compile "org.grails:grails-webflow:$grailsVersion"
-    compile 'se.su.it.ws.commons:su-ws-commons:1.5'
-    compile 'se.su.it.sucard.svc:sucardsvc-client:1.2'
 
     runtime 'mysql:mysql-connector-java:5.1.22'
     runtime 'se.su.it.tomcat:tomcat-header-encoding-valve:2.2'
@@ -55,6 +58,8 @@ grails.project.dependency.resolution = {
 
   plugins {
     test ":code-coverage:1.2.6"
+    test ":geb:0.9.0"
+
     test(":spock:0.7") {
       exclude "spock-grails-support"
     }
@@ -65,7 +70,7 @@ grails.project.dependency.resolution = {
         ":criteria:1.6",
         ":cxf-client:1.5.3"
     )
-    compile ':webflow:2.0.0', {
+    compile(':webflow:2.0.0') {
       exclude 'grails-webflow'
     }
 

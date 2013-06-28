@@ -20,6 +20,9 @@ environments {
   development {
     customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy", DataSources]
   }
+  test {
+    customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy", DataSources]
+  }
 }
 /** Some custom options */
 grails.app.context = '/' // set the base directory to / instead of /signuptool/.
@@ -185,6 +188,10 @@ log4j = {
   }
 }
 
+/**
+ * Kerberos config
+ */
+
 systemproperties {
   user.language = "sv"
   user.region = "SE"
@@ -195,52 +202,17 @@ systemproperties {
   sun.security.spnego.debug = "all"
   debug = "true"
 }
+/**
+ * JAAS config
+ */
 
 security {
   jaasloginconfigfile = "/local/signuptool/conf/login.config"
 }
 
-cxf {
-  client {
-    registerFetcherServiceClient {
-      wsdl = "https://lpwtest-su.its.uu.se/cxf/RegisterFetcher?wsdl"
-      clientInterface = ladok.lpw.service.register.facadeclient.RegisterFetcher
-      serviceEndpointAddress = "https://lpwtest-su.its.uu.se/cxf/RegisterFetcher"
-      enableDefaultLoggingInterceptors = false
-      receiveTimeout = 60000
-      connectionTimeout = 30000
-      allowChunking = true
-    }
-    changeAddressFetcherServiceClient {
-      wsdl = "https://lpwtest-su.its.uu.se/cxf/ChangeAddressFetcher?wsdl"
-      clientInterface = ladok.lpw.service.changeaddress.facadeclient.ChangeAddressFetcher
-      serviceEndpointAddress = "https://lpwtest-su.its.uu.se/cxf/ChangeAddressFetcher"
-      enableDefaultLoggingInterceptors = false
-      receiveTimeout = 60000
-      connectionTimeout = 30000
-      allowChunking = true
-    }
-    registrateFetcherServiceClient {
-      wsdl = "https://lpwtest-su.its.uu.se/cxf/RegistrateFetcher?wsdl"
-      clientInterface = ladok.lpw.service.registrate.facadeclient.RegistrateFetcher
-      serviceEndpointAddress = "https://lpwtest-su.its.uu.se/cxf/RegistrateFetcher"
-      enableDefaultLoggingInterceptors = false
-      receiveTimeout = 60000
-      connectionTimeout = 30000
-      allowChunking = true
-    }
-    utilityFetcherServiceClient {
-      wsdl = "https://lpwtest-su.its.uu.se/cxf/UtilityFetcher?wsdl"
-      clientInterface = ladok.lpw.service.utility.facadeclient.UtilityFetcher
-      serviceEndpointAddress = "https://lpwtest-su.its.uu.se/cxf/UtilityFetcher"
-      enableDefaultLoggingInterceptors = false
-      receiveTimeout = 60000
-      connectionTimeout = 30000
-      allowChunking = true
-    }
-  }
-}
-
+/**
+ * SUKAT-SVC config
+ */
 sukatsvc {
   accountservice = "https://sukat-test-svc.it.su.se/1/AccountService"
   enrollmentservice = "https://sukat-test-svc.it.su.se/1/EnrollmentService"
@@ -248,11 +220,9 @@ sukatsvc {
   webserviceadmin = "https://sukat-test-svc.it.su.se/1/WebServiceAdmin"
 }
 
-lpwTOTP {
-  secret = "mySecretKey"
-  slotLen = 3600 * 12
-}
-
+/**
+ * RoleAccessManager config
+ */
 access {
   redirect = [controller: 'dashboard']
   unprotected = ['dashboard', 'errorHandler', 'activateAccountAndCard']

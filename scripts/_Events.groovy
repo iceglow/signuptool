@@ -14,6 +14,7 @@ eventConfigureTomcat = {tomcat ->
     ajpConnector.setProperty("protocol", "AJP/1.3")
     ajpConnector.setProperty("enableLookups", "false")
     ajpConnector.URIEncoding = "UTF-8"
+    ajpConnector.setProperty("tomcatAuthentication", "false")
     tomcat.service.addConnector ajpConnector
 
     HeaderEncodingValve headerEncodingValve = new HeaderEncodingValve()

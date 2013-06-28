@@ -4,33 +4,28 @@
     <meta name="layout" content="main"/>
     <title>Dashboard</title>
     <style>
-      body {
-        min-width: 800px;
-        min-height: 700px;
-      }
       #accountInfo {
-        min-width: 100%;
-        min-height: 45%;
-        background: lightblue;
+        min-width: 90%;
+        min-height: 200px;
+        background: #afd7e6;
       }
       #cardInfo {
-        min-width: 100%;
-        min-height: 45%;
-        background: lightsalmon;
+        min-width: 90%;
+        min-height: 200px;
+        background: #ffa07a;
       }
+      #webreg {
+        min-width: 90%;
+        min-height: 200px;
+        background: #7aff8b;
+      }
+
     </style>
   </head>
   <body>
-    <div id="feedback">
-      <g:if test="${flash.info}">
-        ${flash.info}
-      </g:if>
-      <g:if test="${flash.info}">
-        ${flash.error}
-      </g:if>
-    </div>
-
-    <div id="accountInfo"></div>
-    <div id="cardInfo"></div>
+      <tmpl:/shared/feedback flash="${flash}"/>
+      <div id="accountInfo"><tmpl:accountInfo user="${user}" password="${password}"/></div>
+      <div id="cardInfo"><tmpl:cardInfo user="${cardInfo}"/></div>
+      <div id="webreg"><tmpl:webreg/></div>
   </body>
 </html>
