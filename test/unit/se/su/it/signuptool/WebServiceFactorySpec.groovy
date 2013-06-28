@@ -39,10 +39,10 @@ class WebServiceFactorySpec extends Specification {
     expect:
     null == WebServiceFactory.getInstance().getInstanceForClass(Object, null)
   }
-
+  @IgnoreRest
   void "getInstanceForClass: calls factory method and returns the result."() {
     given:
-    WebServiceFactory.metaClass.getInstanceForClass = { Class arg1, String arg2 ->
+    WebServiceFactory.metaClass.getFactory = { Class arg1, String arg2 ->
       return 'someFactory'
     }
     expect:

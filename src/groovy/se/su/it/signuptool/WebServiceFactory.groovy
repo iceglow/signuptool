@@ -24,7 +24,8 @@ class WebServiceFactory {
   final private static ConcurrentLinkedHashMap<String, Object> webServiceMap =
     new ConcurrentLinkedHashMap.Builder<String, Object>().maximumWeightedCapacity(1000).build();
 
-  private WebServiceFactory() {}
+  public WebServiceFactory() {
+  }
 
   public static WebServiceFactory getInstance() {
     return instance
