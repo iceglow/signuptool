@@ -19,10 +19,18 @@ class WebServiceFactory {
   private static final int DEFAULT_RECEIVE_TIMEOUT = 10000
   private static final String DEFAULT_AUTH_TYPE = "Negotiate"
 
+  final private static WebServiceFactory instance = new WebServiceFactory()
+
   final private static ConcurrentLinkedHashMap<String, Object> webServiceMap =
     new ConcurrentLinkedHashMap.Builder<String, Object>().maximumWeightedCapacity(1000).build();
 
-  public static Object getInstance(Class cz, String url) {
+  private WebServiceFactory() {}
+
+  public static WebServiceFactory getInstance() {
+    return instance
+  }
+
+  private Object getInstanceForClass(Class cz, String url) {
 
     if (!cz) {
       log.error "No class defined."
@@ -37,7 +45,7 @@ class WebServiceFactory {
     return getFactory(cz, url)
   }
 
-  private static Object getFactory(Class cz, String url) {
+  private Object getFactory(Class cz, String url) {
     final Date startTime = new Date()
 
     def theFactory = webServiceMap.get(cz?.name)
@@ -53,7 +61,7 @@ class WebServiceFactory {
     return theFactory
   }
 
-  private static createNewFactory(Class cz, String url) {
+  private createNewFactory(Class cz, String url) {
 
     log.debug "Starting factory creation."
 
@@ -71,6 +79,7 @@ class WebServiceFactory {
     }
 
     try {
+      /** TODO: See if this is what we want.. If client fails to configure we just fail quietly and return the factory without a configured client. */
       log.debug "Creating client proxy."
       client = ClientProxy.getClient(theFactory)
       log.debug "Done creating client proxy."
@@ -94,7 +103,7 @@ class WebServiceFactory {
     return theFactory
   }
 
-  private static JaxWsProxyFactoryBean getFactoryInstance(Class cz, String url) {
+  private JaxWsProxyFactoryBean getFactoryInstance(Class cz, String url) {
     JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean()
     factory.setServiceClass(cz)
     factory.setAddress(url)
@@ -103,7 +112,8 @@ class WebServiceFactory {
     return factory
   }
 
-  private static void configureClientProxy(Client client) {
+  /** TODO: Write tests */
+  private void configureClientProxy(Client client) {
     HTTPConduit conduit = (HTTPConduit) client.getConduit()
     HTTPClientPolicy policy = new HTTPClientPolicy()
     policy.setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT)

@@ -12,23 +12,28 @@ beans = {
     jndiName = "java:comp/env/jdbc/ladok"
   }
 
-  accountWS(WebServiceFactory) { bean ->
+  webServiceFactory(WebServiceFactory) { bean ->
+    bean.singleton = true
     bean.factoryMethod = 'getInstance'
+  }
+
+  accountWS(webServiceFactory) { bean ->
+    bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [AccountServiceImpl.class, grailsApplication.config.sukatsvc.accountservice]
   }
 
-  enrollmentWS(WebServiceFactory) { bean ->
-    bean.factoryMethod = 'getInstance'
+  enrollmentWS(webServiceFactory) { bean ->
+    bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [EnrollmentServiceImpl.class, grailsApplication.config.sukatsvc.enrollmentservice]
   }
 
-  statusWS(WebServiceFactory) { bean ->
-    bean.factoryMethod = 'getInstance'
+  statusWS(webServiceFactory) { bean ->
+    bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [Status.class, grailsApplication.config.sukatsvc.statusservice]
   }
 
-  webAdminWS(WebServiceFactory) { bean ->
-    bean.factoryMethod = 'getInstance'
+  webAdminWS(webServiceFactory) { bean ->
+    bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [WebServiceAdminImpl.class, grailsApplication.config.sukatsvc.webserviceadmin]
   }
 }
