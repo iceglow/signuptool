@@ -3,21 +3,19 @@ package se.su.it.signuptool
 import grails.test.mixin.*
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
 import se.su.it.svc.SvcSuPersonVO
+import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 
 @TestMixin(WebFlowUnitTestMixin)
+@TestFor(ActivateAccountAndCardController)
+
 class ActivateAccountAndCardControllerSpec extends Specification {
 
-  @Shared
-  ActivateAccountAndCardController controller
-
   def setup() {
-    ActivateAccountAndCardController controller = mockController(ActivateAccountAndCardController)
     controller.utilityService = Mock(UtilityService)
     controller.ladokService = Mock(LadokService)
     controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
-    this.controller = controller
   }
 
   def "index: Testing the password passing."() {
@@ -140,5 +138,10 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo')
     0 * controller.activateAccountAndCardService.fetchLadokData(*_)
     1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> [:]
+  }
+
+  def "createNewAccountFlow"() {
+    // TODO: Tests for the flow.
+    return true
   }
 }
