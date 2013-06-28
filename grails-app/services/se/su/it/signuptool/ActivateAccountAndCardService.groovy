@@ -69,6 +69,21 @@ class ActivateAccountAndCardService implements Serializable {
     return ladokData
   }
 
+  public Map getCardOrderStatus(def user) {
+    Map cardInfo = [:]
+
+    try {
+      /** TODO: Guessing we want to use LPW to fetch the proper addr. */
+      cardInfo.hasAddress = false
+      /** TODO: Check if we have active orders etc */
+      cardInfo.canOrderCard = (cardInfo.hasAddress && canOrderCard())
+    } catch (ex) {
+      log.error "Failed when creating card order information object", ex
+    }
+
+    return cardInfo
+  }
+
   private static String chompUid(String uid) {
     (uid?.length() == 12) ? uid[2..0] : uid
   }

@@ -24,7 +24,7 @@ class UtilityServiceSpec extends Specification {
 
     where:
     eppn << ['kaka', 'kaka@', 'kaka@kaka@kaka']
-    expected << ['', '', '']
+    expected << [null, null, null]
   }
   @Unroll
   void "getUid: Parsing valid eppn: #eppn"() {
@@ -54,4 +54,20 @@ class UtilityServiceSpec extends Specification {
      '01234567891Ö'   | true
   }
 
+  @Unroll
+  void "fetchUid where uid: \'#uid\' and eppn \'#eppn\' expecting \'#expected\'"() {
+    expect:
+    expected == service.fetchUid(uid, eppn)
+
+    where:
+    uid              | eppn         | expected
+    null             | null         | null
+    ''               | null         | null
+    null             | ''           | null
+    ''               | ''           | null
+    'uid'            | null         | 'uid'
+    'uid'            | 'eppn'       | 'uid'
+    null             | 'eppn'       | null
+    null             | 'eppn@su.se' | 'eppn'
+  }
 }

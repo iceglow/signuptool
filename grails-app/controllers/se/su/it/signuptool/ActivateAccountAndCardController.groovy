@@ -24,7 +24,7 @@ class ActivateAccountAndCardController {
      * 2. Fetch the uid from eppn
      */
 
-    String uid = (session.uid)?:(request?.eppn)? utilityService.getUid(request.eppn) : null
+    String uid = utilityService.fetchUid(session.uid, request.eppn)
 
     if (!uid) {
       flash.error = message(
@@ -36,11 +36,9 @@ class ActivateAccountAndCardController {
     /**
      * If the user isn't already in the session we find it either by ssn or uid and put it in the session.
      */
-
-    boolean uidIsPnr = utilityService.uidIsPnr(uid)
-
     if (!session.user) {
       try {
+        boolean uidIsPnr = utilityService.uidIsPnr(uid)
         session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
       } catch (ex) {
         log.error "Failed when setting user in session", ex
@@ -70,27 +68,13 @@ class ActivateAccountAndCardController {
       /** Saving enamn and tnamn for enroll method */
       session.givenName = ladokData.tnamn
       session.sn = ladokData.enamn
-    }
 
-
-    boolean hasAddress = false
-    boolean canOrderCard = false
-
-    if (session.user) {
-      /** TODO: Guessing we want to use LPW to fetch the proper addr. */
-      hasAddress = (user?.registeredAddress)?: false
-      /** TODO: Check if we have active orders etc */
-      canOrderCard = (hasAddress && activateAccountAndCardService.canOrderCard())
-    } else {
-      /** Send to the create new account flow */
-      redirect(action:'createNewAccount')
+      return redirect(action:'createNewAccount')
     }
 
     def user = session.user // fetch user from session for the presentation in the view.
 
-    def cardInfo = [:]
-    cardInfo.hasAddress = hasAddress
-    cardInfo.canOrderCard = canOrderCard
+    def cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
 
     return render(view:'index', model:[
         user:user,
@@ -166,12 +150,11 @@ class ActivateAccountAndCardController {
           throw new Exception("Failed when creating account.")
         }
 
-        session.uid = result.uid
-        flash.password = result.password
-
         /** Since we don't recieve a full account from the creation of an account we return the uid */
 
         flash.info = "Account created!"
+        session.uid = result.uid
+        flash.password = result.password
 
         return redirect(action:'index')
       }
