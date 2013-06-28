@@ -34,6 +34,10 @@ class ActivateAccountAndCardService implements Serializable {
   public SvcSuPersonVO findUser(String uid, boolean uidIsPnr) {
     def user = null
 
+    if (!uid) {
+      return user
+    }
+
     if (uidIsPnr) {
       user = sukatService.findUserBySocialSecurityNumber(uid)
     } else {
@@ -43,6 +47,12 @@ class ActivateAccountAndCardService implements Serializable {
     (user?.uid)? user : null
   }
 
+  /**
+   * The only time we should be fetching data from Ladok is when a student has no account
+   * in SUKAT, the uid should thus be a socialSecurityNumber (10 chars)
+   * @param uid
+   * @return
+   */
   public Map fetchLadokData(String uid) {
     Map ladokData = [:]
 
@@ -51,11 +61,15 @@ class ActivateAccountAndCardService implements Serializable {
     }
 
     /** Turn 12 length ssn into 10 length */
-    def ssn = (uid?.length() == 12) ? uid[2..0] : uid
+    def ssn = chompUid(uid)
     if (utilityService.uidIsPnr(ssn)) {
       ladokData = ladokService.findStudentInLadok(ssn)
     }
 
     return ladokData
+  }
+
+  private static String chompUid(String uid) {
+    (uid?.length() == 12) ? uid[2..0] : uid
   }
 }
