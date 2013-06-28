@@ -33,6 +33,6 @@ class AuditFactorySpec extends Specification {
     then:
     svcAudit.uid == eppn
     svcAudit.client == client
-    svcAudit.ipAddress == client
+    svcAudit.ipAddress != null
   }
 }
