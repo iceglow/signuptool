@@ -20,7 +20,7 @@ class UtilityServiceSpec extends Specification {
   @Unroll
   void "getUid: Parsing invalid eppns: #eppn"() {
     expect:
-    service.getUid(eppn) == expected
+    service.eppnToUid(eppn) == expected
 
     where:
     eppn << ['kaka', 'kaka@', 'kaka@kaka@kaka']
@@ -29,7 +29,7 @@ class UtilityServiceSpec extends Specification {
   @Unroll
   void "getUid: Parsing valid eppn: #eppn"() {
     expect:
-    service.getUid(eppn) == expected
+    service.eppnToUid(eppn) == expected
 
     where:
     eppn << ['kaka@su.se', 'kaka@its.uu.se', '_kaka@su.se', 'kaka0_@su.se', 'kötta@su.se', '197007077777@edu.id.se']

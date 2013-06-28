@@ -12,8 +12,6 @@ class SukatService implements Serializable {
   /** Needed if we want to use this service in the flow. */
   static transactional = false
 
-  def grailsApplication
-
   AccountServiceImpl accountWS
   EnrollmentServiceImpl enrollmentWS
   Status statusWS

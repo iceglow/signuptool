@@ -2,8 +2,8 @@ grails.servlet.version = "2.5" // Change depending on target container complianc
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
-grails.project.target.level = 1.6
-grails.project.source.level = 1.6
+grails.project.target.level = 1.7
+grails.project.source.level = 1.7
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
 // uncomment (and adjust settings) to fork the JVM to isolate classpaths
@@ -51,8 +51,6 @@ grails.project.dependency.resolution = {
 
     compile "se.su.it.cxf:sukat-cxf-svc-client:1.0.4-SNAPSHOT"
     compile "org.grails:grails-webflow:$grailsVersion"
-    compile 'se.su.it.ws.commons:su-ws-commons:1.5'
-    compile 'se.su.it.sucard.svc:sucardsvc-client:1.2'
 
     runtime 'mysql:mysql-connector-java:5.1.22'
     runtime 'se.su.it.tomcat:tomcat-header-encoding-valve:2.2'
