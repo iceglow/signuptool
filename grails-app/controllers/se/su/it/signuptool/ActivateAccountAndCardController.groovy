@@ -3,6 +3,7 @@ package se.su.it.signuptool
 class ActivateAccountAndCardController {
 
   def activateAccountAndCardService
+  def ladokService
 
   def index() {
     /** Logged in */
@@ -39,6 +40,20 @@ class ActivateAccountAndCardController {
         hasAddress:hasAddress,
         canOrderCard:canOrderCard
     ])
+  }
+
+  /**
+   * test method for fetching address from ladok.
+   * @return
+   */
+  def address(){
+    def address
+    if(params.pnr){
+      address = ladokService.getAddressFromLadokByPnr(params.pnr)
+    } else{
+      address = ladokService.getAddressFromLadokByPnr("4105211124")
+    }
+    return render(text:address)
   }
 
   def createNewAccountFlow = {
