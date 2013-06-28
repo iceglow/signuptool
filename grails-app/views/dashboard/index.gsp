@@ -7,11 +7,12 @@
 <body>
 
   <div class="section">
+    <tmpl:/shared/feedback flash="${flash}"/>
     <br/>
     <br/>
     <br/>
     <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'index']}">
-      <g:submitButton class="button" name="submit" value="${g.message(code:'dashboard.index.activateAccountButton')}"/>
+      <g:submitButton class="button" name="startAccountActivation" value="${g.message(code:'dashboard.index.activateAccountButton')}"/>
     </g:form>
   </div>
 </body>

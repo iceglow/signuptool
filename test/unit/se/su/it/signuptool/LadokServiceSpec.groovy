@@ -40,15 +40,34 @@ class LadokServiceSpec extends Specification {
   void "findStudentInLadok: When a student is found."() {
     given:
 
-    LadokService.metaClass.runQuery = { String arg1, Map arg2 ->
-      return ['someData']
+    def arg1 = 'tnamn'
+    def arg2 = 'enamn'
+
+    LadokService.metaClass.runQuery = { String iarg1, Map iarg2 ->
+      return [[arg1:arg1, arg2:arg2]]
     }
 
     when:
     def resp = service.findStudentInLadok("1234567890")
 
     then:
-    resp
+    resp.arg1 == arg1
+    resp.arg2 == arg2
+  }
+
+  void "findForwardAddressSuggestionForPnr: When fetching forward address"() {
+    given:
+    def arg1 = 'foo@bar.se'
+
+    LadokService.metaClass.runQuery = { String iarg1, Map iarg2 ->
+      return [[komadr:arg1]]
+    }
+
+    when:
+    def resp = service.findForwardAddressSuggestionForPnr('...')
+
+    then:
+    resp == arg1
   }
 
   void "withConnection: When creating a new sql connection fails"() {
