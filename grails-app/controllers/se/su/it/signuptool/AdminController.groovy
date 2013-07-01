@@ -8,6 +8,6 @@ class AdminController {
   }
 
   def foo() {
-    sukatService.findAllCardOrders()
+    sukatService.findAllCardOrdersForUid("mool3234")
   }
 }

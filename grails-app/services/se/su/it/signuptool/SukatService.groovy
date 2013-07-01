@@ -22,8 +22,8 @@ class SukatService implements Serializable {
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"
 
-  public void findAllCardOrders() {
-    cardOrderWS.findAllCardOrders(AuditFactory.auditObject)
+  public void findAllCardOrdersForUid(String uid) {
+    cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
   }
 
   public String getMailRoutingAddress(String uid) {
