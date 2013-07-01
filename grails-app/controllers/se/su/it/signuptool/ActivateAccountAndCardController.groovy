@@ -1,6 +1,5 @@
 package se.su.it.signuptool
 
-import java.util.regex.Matcher
 
 class ActivateAccountAndCardController {
 
