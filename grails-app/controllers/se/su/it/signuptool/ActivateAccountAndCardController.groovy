@@ -101,7 +101,7 @@ class ActivateAccountAndCardController {
   def createNewAccountFlow = {
     /** Prereq:
      * + pnr
-     * + personen är antagen innevarande termin.
+     * + personen är antagen innevarande termin. ( i dagsläget kollar vi bara om personen finns i namntabellen )
 
      * Req:
      * + Person godkänner avtal
@@ -121,7 +121,8 @@ class ActivateAccountAndCardController {
     prepareForwardAddress {
       action {
         // Fetch forward address from ladok / lpw
-        String forwardAddress = activateAccountAndCardService.getForwardAddress(session.pnr)
+
+        String forwardAddress = ladokService.findForwardAddressSuggestionForPnr(session.pnr)
         [forwardAddress:forwardAddress]
       }
       on("success").to("selectEmail")
