@@ -1,5 +1,7 @@
 package se.su.it.signuptool
 
+import se.su.it.svc.SvcSuPersonVO
+
 
 class ActivateAccountAndCardController {
 
@@ -71,9 +73,9 @@ class ActivateAccountAndCardController {
       return redirect(action:'createNewAccount')
     }
 
-    def user = session.user // fetch user from session for the presentation in the view.
+    SvcSuPersonVO user = session.user // fetch user from session for the presentation in the view.
 
-    def cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
+    Map cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
 
     return render(view:'index', model:[
         user:user,
@@ -86,11 +88,11 @@ class ActivateAccountAndCardController {
    * test method for fetching address from ladok.
    * @return
    */
-  def address(){
-    def address
-    if(params.pnr){
+  def address() {
+    Map address = [:]
+    if(params.pnr) {
       address = ladokService.getAddressFromLadokByPnr(params.pnr)
-    } else{
+    } else {
       address = ladokService.getAddressFromLadokByPnr("4105211124")
     }
     return render(text:address)

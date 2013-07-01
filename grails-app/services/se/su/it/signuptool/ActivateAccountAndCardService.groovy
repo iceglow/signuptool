@@ -13,7 +13,7 @@ class ActivateAccountAndCardService implements Serializable {
   private final emailPattern = /[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/
 
   /** Checks if user has any active cards or active order for a card */
-  public boolean canOrderCard() {
+  public boolean canOrderCard(SvcSuPersonVO user) {
     return true
   }
 
@@ -32,7 +32,7 @@ class ActivateAccountAndCardService implements Serializable {
   }
 
   public SvcSuPersonVO findUser(String uid, boolean uidIsPnr) {
-    def user = null
+    SvcSuPersonVO user = null
 
     if (!uid) {
       return user
@@ -61,7 +61,7 @@ class ActivateAccountAndCardService implements Serializable {
     }
 
     /** Turn 12 length ssn into 10 length */
-    def ssn = chompUid(uid)
+    String ssn = chompUid(uid)
     if (utilityService.uidIsPnr(ssn)) {
       ladokData = ladokService.findStudentInLadok(ssn)
     }
@@ -69,14 +69,14 @@ class ActivateAccountAndCardService implements Serializable {
     return ladokData
   }
 
-  public Map getCardOrderStatus(def user) {
+  public Map getCardOrderStatus(SvcSuPersonVO user) {
     Map cardInfo = [:]
 
     try {
       /** TODO: Guessing we want to use LPW to fetch the proper addr. */
       cardInfo.hasAddress = false
       /** TODO: Check if we have active orders etc */
-      cardInfo.canOrderCard = (cardInfo.hasAddress && canOrderCard())
+      cardInfo.canOrderCard = (cardInfo.hasAddress && canOrderCard(user))
     } catch (ex) {
       log.error "Failed when creating card order information object", ex
     }
