@@ -1,9 +1,11 @@
 package se.su.it.signuptool
 
+import se.su.it.svc.SuCard
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
 import se.su.it.svc.AccountServiceImpl
+import se.su.it.svc.CardInfoServiceImpl
 import se.su.it.svc.EnrollmentServiceImpl
 import se.su.it.svc.Status
 import se.su.it.svc.WebServiceAdminImpl
@@ -13,12 +15,24 @@ class SukatService implements Serializable {
   static transactional = false
 
   AccountServiceImpl accountWS
+  CardInfoServiceImpl cardInfoServiceImpl
   EnrollmentServiceImpl enrollmentWS
   Status statusWS
   WebServiceAdminImpl webAdminWS
 
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"
+
+  public List<SuCard> getCardsForUser(String uid) {
+    List<SuCard> suCards = []
+    try {
+      suCards = cardInfoServiceImpl.getAllCards(uid, true, AuditFactory.auditObject)
+    } catch (Throwable exception) {
+      log.error "Failed when getting info about users cards: ${exception.getMessage()}", exception
+      suCards = []
+    }
+    return suCards
+  }
 
   public String getMailRoutingAddress(String uid) {
     String mailRoutingAddress = null

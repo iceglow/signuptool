@@ -2,6 +2,7 @@ import org.springframework.jndi.JndiObjectFactoryBean
 import se.su.it.signuptool.AuditFactory
 import se.su.it.signuptool.WebServiceFactory
 import se.su.it.svc.AccountServiceImpl
+import se.su.it.svc.CardInfoServiceImpl
 import se.su.it.svc.EnrollmentServiceImpl
 import se.su.it.svc.Status
 import se.su.it.svc.WebServiceAdminImpl
@@ -20,6 +21,11 @@ beans = {
   accountWS(webServiceFactory) { bean ->
     bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [AccountServiceImpl.class, grailsApplication.config.sukatsvc.accountservice]
+  }
+
+  cardInfoServiceImpl(webServiceFactory) { bean ->
+    bean.factoryMethod = 'getInstanceForClass'
+    bean.constructorArgs = [CardInfoServiceImpl.class, grailsApplication.config.sukatsvc.cardinfoservice]
   }
 
   enrollmentWS(webServiceFactory) { bean ->

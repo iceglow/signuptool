@@ -1,5 +1,6 @@
 package se.su.it.signuptool
 
+import se.su.it.svc.SuCard
 import se.su.it.svc.SvcSuPersonVO
 
 class ActivateAccountAndCardService implements Serializable {
@@ -14,7 +15,14 @@ class ActivateAccountAndCardService implements Serializable {
 
   /** Checks if user has any active cards or active order for a card */
   public boolean canOrderCard(SvcSuPersonVO user) {
-    return true
+    boolean canOrder = true
+
+    List<SuCard> cards = sukatService.getCardsForUser(user.uid)
+    if(cards?.size()>0) {
+      canOrder = false
+    }
+
+    return canOrder
   }
 
   public boolean validateForwardAddress(String forwardAddress) {
@@ -75,6 +83,9 @@ class ActivateAccountAndCardService implements Serializable {
     try {
       /** TODO: Guessing we want to use LPW to fetch the proper addr. */
       cardInfo.hasAddress = false
+
+      // we may want to show info about the active cards a user already has
+      cardInfo.suCards = sukatService.getCardsForUser(user.uid)
       /** TODO: Check if we have active orders etc */
       cardInfo.canOrderCard = (cardInfo.hasAddress && canOrderCard(user))
     } catch (ex) {

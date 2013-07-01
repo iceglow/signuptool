@@ -21,10 +21,32 @@ class ActivateAccountAndCardServiceSpec extends Specification {
   def cleanup() {
   }
 
-  void "canOrderCard: Stub"() {
-    expect: 'will always return true'
-    service.canOrderCard()
+  void "canOrderCard: happy path"() {
+    when:
+    SvcSuPersonVO user = SvcSuPersonVO.newInstance()
+    user.uid = "donaldDuck"
+    boolean canOrder = service.canOrderCard(user)
+
+    then:
+    canOrder
+
+    and:
+    1 * service.sukatService.getCardsForUser(*_) >> []
   }
+
+  void "canOrderCard: user already has card"() {
+    when:
+    SvcSuPersonVO user = SvcSuPersonVO.newInstance()
+    user.uid = "donaldDuck"
+    boolean canOrder = service.canOrderCard(user)
+
+    then:
+    !canOrder
+
+    and:
+    1 * service.sukatService.getCardsForUser(*_) >> ["placeholder for card"]
+  }
+
   @Unroll
   void "validateForwardAddress (invalid): \'#email\' "() {
     expect: 'will return false'
