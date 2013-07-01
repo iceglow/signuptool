@@ -7,18 +7,24 @@ import se.su.it.svc.AccountServiceImpl
 import se.su.it.svc.EnrollmentServiceImpl
 import se.su.it.svc.Status
 import se.su.it.svc.WebServiceAdminImpl
+import se.su.it.svc.CardOrderServiceImpl
 
 class SukatService implements Serializable {
   /** Needed if we want to use this service in the flow. */
   static transactional = false
 
   AccountServiceImpl accountWS
+  CardOrderServiceImpl cardOrderWS
   EnrollmentServiceImpl enrollmentWS
   Status statusWS
   WebServiceAdminImpl webAdminWS
 
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"
+
+  public void findAllCardOrders() {
+    cardOrderWS.findAllCardOrders(AuditFactory.auditObject)
+  }
 
   public String getMailRoutingAddress(String uid) {
     String mailRoutingAddress = null
