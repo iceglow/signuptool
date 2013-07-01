@@ -1,5 +1,6 @@
 package se.su.it.signuptool
 
+import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import org.apache.commons.dbcp.BasicDataSource
 
@@ -11,8 +12,8 @@ class LadokService {
   def grailsApplication
 
   public Map findStudentInLadok(String pnr) {
-    def response = [:]
-    def responseList = runQuery("SELECT enamn, tnamn FROM NAMN WHERE pnr = :pnr", [pnr:pnr])
+    Map response = [:]
+    List<GroovyRowResult> responseList = runQuery("SELECT enamn, tnamn FROM NAMN WHERE pnr = :pnr limit 1", [pnr:pnr])
     if (responseList?.size() > 0) {
       return responseList.first()
     }
@@ -20,8 +21,8 @@ class LadokService {
   }
 
   public String findForwardAddressSuggestionForPnr(String pnr) {
-    def response = ''
-    def responseList = runQuery("SELECT komadr FROM telekom WHERE pnr = :pnr AND komtyp = 'EMAIL'", [pnr:pnr])
+    String response = ''
+    List<GroovyRowResult> responseList = runQuery("SELECT komadr FROM telekom WHERE pnr = :pnr AND komtyp = 'EMAIL' limit 1", [pnr:pnr])
     if (responseList?.size() > 0) {
       return (responseList?.first()?.komadr)?:''
     }
@@ -36,7 +37,7 @@ class LadokService {
    * @param pnr - social security number.
    * @return An address from ladok.
    */
-  public getAddressFromLadokByPnr(String pnr) {
+  public Map getAddressFromLadokByPnr(String pnr) {
     //TODO: tests :|
     boolean useTemporaryAddress = grailsApplication.config.useTemporaryAddress ?: true
 
@@ -65,7 +66,7 @@ class LadokService {
     return address
   }
 
-  private runQuery(String query, Map args) {
+  private List<GroovyRowResult> runQuery(String query, Map args) {
 
     Closure queryClosure = { Sql sql ->
       if (!sql) { return null }
@@ -75,8 +76,8 @@ class LadokService {
     return withConnection(queryClosure)
   }
 
-  private withConnection = { Closure query ->
-    def response = null
+  private List<GroovyRowResult> withConnection (Closure query) {
+    List<GroovyRowResult> response = null
     Sql sql = null
     try {
       /** getDataSource added for mock and testing purposes */
@@ -94,7 +95,7 @@ class LadokService {
     return response
   }
 
-  private def newSqlInstanceFromDataSource() {
+  private Sql newSqlInstanceFromDataSource() {
     return new Sql(ladokDataSource as BasicDataSource)
   }
 }
