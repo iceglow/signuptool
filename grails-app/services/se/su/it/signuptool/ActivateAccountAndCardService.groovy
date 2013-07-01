@@ -82,7 +82,8 @@ class ActivateAccountAndCardService implements Serializable {
 
     try {
       /** TODO: Guessing we want to use LPW to fetch the proper addr. */
-      cardInfo.hasAddress = false
+      Map address = ladokService.getAddressFromLadokByPnr(user.socialSecurityNumber)
+      cardInfo.hasAddress = (null!=address && address.size()>0)
 
       // we may want to show info about the active cards a user already has
       cardInfo.suCards = sukatService.getCardsForUser(user.uid)

@@ -11,6 +11,15 @@ class LadokService {
   def ladokDataSource
   def grailsApplication
 
+  public boolean doesUserExistInLadok(String socialSecurityNumber) {
+    boolean exists = false
+    List<GroovyRowResult> responseList = runQuery("SELECT count(*) FROM NAMN WHERE pnr = :pnr", [pnr:socialSecurityNumber])
+    responseList?.each { GroovyRowResult result ->
+      exists = (result["count(*)"]>0)
+    }
+    return exists
+  }
+
   public Map findStudentInLadok(String pnr) {
     Map response = [:]
     List<GroovyRowResult> responseList = runQuery("SELECT enamn, tnamn FROM NAMN WHERE pnr = :pnr limit 1", [pnr:pnr])
