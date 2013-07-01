@@ -1,31 +1,19 @@
 package se.su.it.signuptool
 
 import se.su.it.svc.SvcSuPersonVO
-import se.su.it.sucard.client.CardOrderVO
-import se.su.it.svc.SuCard
 
 class ActivateAccountAndCardService implements Serializable {
-
-  def sukatService
-
   /** Needed if we want to use this service in the flow. */
   static transactional = false
 
+  def sukatService
   def utilityService
   def ladokService
 
   private final emailPattern = /[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/
 
-  public boolean isAdmittedOnCurrentSemester(String socialSecurityNumber) {
-    return true
-  }
-
-  public def findAccountByPnr(String socialSecurityNumber) {
-    return [registeredAddress:'Kakgatan 13', uid: 'mano3567']
-  }
-
   /** Checks if user has any active cards or active order for a card */
-  public boolean canOrderCard(String uid) {
+  public boolean canOrderCard() {
     return true
   }
 
@@ -98,10 +86,5 @@ class ActivateAccountAndCardService implements Serializable {
 
   private static String chompUid(String uid) {
     (uid?.length() == 12) ? uid[2..0] : uid
-  }
-
-  public String getForwardAddress(String socialSecurityNumber) {
-    // lpwService get telekom ?
-    return "some@email.com"
   }
 }

@@ -1,15 +1,6 @@
 package se.su.it.signuptool
 
 import se.su.it.svc.SvcSuPersonVO
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
-import org.apache.cxf.transports.http.configuration.HTTPClientPolicy
-import org.apache.cxf.configuration.security.AuthorizationPolicy
-import org.apache.cxf.endpoint.Client
-import org.apache.cxf.frontend.ClientProxy
-import org.apache.cxf.transport.http.HTTPConduit
-import org.springframework.web.context.request.RequestContextHolder
-import se.su.it.svc.SuCard
-import se.su.it.svc.SvcAudit
 import se.su.it.svc.SvcUidPwd
 
 import se.su.it.svc.AccountServiceImpl
@@ -28,18 +19,6 @@ class SukatService implements Serializable {
 
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"
-
-  public AccountServiceImpl getAccountWS() {
-    return getFactory(AccountServiceImpl.class, grailsApplication.config.sukatsvc.accountservice)
-  }
-
-  public CardInfoServiceImpl getCardInfoWS() {
-    return getFactory(CardInfoServiceImpl.class, grailsApplication.config.sukatsvc.cardinfoservice)
-  }
-
-  public EnrollmentServiceImpl getEnrollmentWS() {
-    return getFactory(EnrollmentServiceImpl.class, grailsApplication.config.sukatsvc.enrollmentservice)
-  }
 
   public String getMailRoutingAddress(String uid) {
     String mailRoutingAddress = null
@@ -91,23 +70,6 @@ class SukatService implements Serializable {
 
     if (!sn?.trim()) {
       log.error "No sn supplied."
-  public List<SuCard> getCardsForUser(String uid) {
-    List<SuCard> cards = []
-    try {
-      cards = getCardInfoWS().getAllCards(uid,true,getAuditObject())
-    } catch (Throwable exception) {
-      cards = []
-      exception.printStackTrace(System.out)
-      log.error("Couldnt get cards for user ${uid} : ${exception.getMessage()}",exception)
-    }
-    return cards
-  }
-
-  public String getMailRoutingAddress(String uid) {
-    try {
-      return getAccountWS().getMailRoutingAddress(uid,getAuditObject())
-    } catch (Exception ex) {
-      ex.printStackTrace()
       return null
     }
 

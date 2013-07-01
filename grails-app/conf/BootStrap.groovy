@@ -38,10 +38,7 @@ class BootStrap {
     System.setProperties(sysprop)
 
     // JAAS Configuration
-//    System.setProperty("java.security.auth.login.config", "=file:" + grailsApplication.config.security.jaasloginconfigfile)
-    System.setProperty("java.security.auth.login.config", "=file:" + grailsApplication.config.security.jaasconfigfile)
-//    System.setProperty("login.config.url.1", "=file:" + grailsApplication.config.security.jaasloginconfigfile)
-//    System.setProperty("login.config.url.2", "=file:" + grailsApplication.config.security.jaasconfigfile)
+    System.setProperty("java.security.auth.login.config", "=file:" + grailsApplication.config.security.jaasloginconfigfile)
 
     def initLocalization = {
         log.info "*** Localizations: Importing translations from i18n files into the database."
