@@ -1,8 +1,6 @@
 package se.su.it.signuptool
 
-<<<<<<< HEAD
 import se.su.it.svc.SvcSuPersonVO
-=======
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy
 import org.apache.cxf.configuration.security.AuthorizationPolicy
@@ -12,7 +10,6 @@ import org.apache.cxf.transport.http.HTTPConduit
 import org.springframework.web.context.request.RequestContextHolder
 import se.su.it.svc.SuCard
 import se.su.it.svc.SvcAudit
->>>>>>> 1805cb60788313eaf210fec88ec84763f40315f2
 import se.su.it.svc.SvcUidPwd
 
 import se.su.it.svc.AccountServiceImpl
@@ -29,10 +26,9 @@ class SukatService implements Serializable {
   Status statusWS
   WebServiceAdminImpl webAdminWS
 
-<<<<<<< HEAD
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"
-=======
+
   public AccountServiceImpl getAccountWS() {
     return getFactory(AccountServiceImpl.class, grailsApplication.config.sukatsvc.accountservice)
   }
@@ -44,7 +40,6 @@ class SukatService implements Serializable {
   public EnrollmentServiceImpl getEnrollmentWS() {
     return getFactory(EnrollmentServiceImpl.class, grailsApplication.config.sukatsvc.enrollmentservice)
   }
->>>>>>> 1805cb60788313eaf210fec88ec84763f40315f2
 
   public String getMailRoutingAddress(String uid) {
     String mailRoutingAddress = null
@@ -94,10 +89,8 @@ class SukatService implements Serializable {
       return null
     }
 
-<<<<<<< HEAD
     if (!sn?.trim()) {
       log.error "No sn supplied."
-=======
   public List<SuCard> getCardsForUser(String uid) {
     List<SuCard> cards = []
     try {
@@ -115,7 +108,6 @@ class SukatService implements Serializable {
       return getAccountWS().getMailRoutingAddress(uid,getAuditObject())
     } catch (Exception ex) {
       ex.printStackTrace()
->>>>>>> 1805cb60788313eaf210fec88ec84763f40315f2
       return null
     }
 
