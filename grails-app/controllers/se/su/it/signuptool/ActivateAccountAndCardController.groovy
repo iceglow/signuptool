@@ -4,8 +4,8 @@ import java.util.regex.Matcher
 
 class ActivateAccountAndCardController {
 
-  def ladokService
   def activateAccountAndCardService
+  def ladokService
   def utilityService
 
   def index() {
@@ -83,6 +83,20 @@ class ActivateAccountAndCardController {
     ])
   }
 
+  /**
+   * test method for fetching address from ladok.
+   * @return
+   */
+  def address(){
+    def address
+    if(params.pnr){
+      address = ladokService.getAddressFromLadokByPnr(params.pnr)
+    } else{
+      address = ladokService.getAddressFromLadokByPnr("4105211124")
+    }
+    return render(text:address)
+  }
+
   def createNewAccountFlow = {
     /** Prereq:
      * + pnr
@@ -106,9 +120,8 @@ class ActivateAccountAndCardController {
     prepareForwardAddress {
       action {
         // Fetch forward address from ladok / lpw
-        if (!flow.forwardAddress) {
-          flow.forwardAddress = ladokService.findForwardAddressSuggestionForPnr(session.pnr)
-        }
+        String forwardAddress = activateAccountAndCardService.getForwardAddress(session.pnr)
+        [forwardAddress:forwardAddress]
       }
       on("success").to("selectEmail")
       on("error").to("errorHandler")
