@@ -26,7 +26,7 @@ class SukatService implements Serializable {
   public List getCardOrdersForUser(String uid) {
     List cardOrders = []
 
-    // call sukatsvc to fetch cardorders for user
+    // call sukatsvc to fetch cardorders for user , something like findAllCardOrdersForUid in the CardOrderService
 
     return cardOrders
   }

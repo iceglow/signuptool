@@ -5,6 +5,7 @@ import se.su.it.svc.SvcSuPersonVO
 class ActivateAccountAndCardController {
 
   def activateAccountAndCardService
+  def configService
   def ladokService
   def utilityService
 
@@ -75,11 +76,15 @@ class ActivateAccountAndCardController {
     SvcSuPersonVO user = session.user // fetch user from session for the presentation in the view.
 
     Map cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
+    String lpwurl = configService.getValue("URL", "lpwtool")
+    String sukaturl = configService.getValue("URL", "sukattool")
 
     return render(view:'index', model:[
         user:user,
         password:password,
-        cardInfo: cardInfo
+        cardInfo: cardInfo,
+        lpwurl: lpwurl,
+        sukaturl: sukaturl
     ])
   }
 
