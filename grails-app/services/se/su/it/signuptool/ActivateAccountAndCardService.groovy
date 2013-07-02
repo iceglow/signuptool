@@ -60,6 +60,18 @@ class ActivateAccountAndCardService implements Serializable {
     (user?.uid)? user : null
   }
 
+  public boolean userHasRegisteredAddress(String uid, boolean uidIsPnr) {
+    boolean hasRegisteredAddress = false
+
+    def user = findUser(uid, uidIsPnr)
+
+    if (user) {
+      hasRegisteredAddress = user.registeredAddress
+    }
+
+    return hasRegisteredAddress
+  }
+
   /**
    * The only time we should be fetching data from Ladok is when a student has no account
    * in SUKAT, the uid should thus be a socialSecurityNumber (10 chars)

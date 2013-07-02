@@ -2,7 +2,6 @@ package se.su.it.signuptool
 
 import se.su.it.svc.SvcSuPersonVO
 
-
 class ActivateAccountAndCardController {
 
   def activateAccountAndCardService
@@ -193,7 +192,7 @@ class ActivateAccountAndCardController {
   def orderCardFlow = {
     /** Prereq:
      * + Har konto
-     * + Har har folkbokföringsadress
+     * + Har folkbokföringsadress
      * + Har inga tidigare aktiva kort eller aktiva beställningar.
 
      * Req:
@@ -203,6 +202,78 @@ class ActivateAccountAndCardController {
      * Metoder:
      * + Skicka beställning.
     */
-    end()
+
+    prepareForwardOrderCard {
+      action {
+        if (!userHasAccount()) {
+          flow.error = "user is has no account"
+          return error()
+        }
+
+        if (!userCanOrderCards()) {
+          flow.error = "user has active cards or orders"
+        }
+
+        if (!userHasRegisteredAddress()) {
+          flow.error = "user registered address is missing"
+          return error()
+        }
+
+        return success()
+      }
+      on("success").to("cardOrder")
+      on("error").to("errorHandler")
+    }
+
+    cardOrder {
+      on("sendCardOrder").to("processCardOrder")
+    }
+
+    processCardOrder {
+
+    }
+
+    errorHandler {
+      action {
+        log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
+      }
+      on("success").to("end")
+    }
+    end() {
+      return redirect(action:'index')
+    }
+  }
+
+  private boolean userHasAccount() {
+    def userFoundWithPnr = null
+    def userFoundWithUid = null
+
+    if (session?.pnr) {
+      userFoundWithPnr = activateAccountAndCardService.findUser(session?.pnr, true)
+    }
+
+    if (session?.uid) {
+      userFoundWithUid = activateAccountAndCardService.findUser(session?.uid, false)
+    }
+
+    return userFoundWithPnr || userFoundWithUid
+  }
+
+  private boolean userHasRegisteredAddress() {
+    def hasRegisteredAddress = false
+
+    if (session?.pnr) {
+      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress(session?.pnr, true)
+    }
+
+    if (session?.uid) {
+      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress(session?.uid, false)
+    }
+
+    return hasRegisteredAddress
+  }
+
+  private boolean userCanOrderCards() {
+    return activateAccountAndCardService.canOrderCard()
   }
 }

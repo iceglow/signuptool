@@ -2,7 +2,6 @@ package se.su.it.signuptool
 
 import grails.test.mixin.TestFor
 import se.su.it.svc.SvcSuPersonVO
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -133,6 +132,37 @@ class ActivateAccountAndCardServiceSpec extends Specification {
     '***********'   | '***********'   // 11 chars, nothing happens.
     '++**********'  | '*********'     // 12 chars, first 2 chars should be cut.
     '++***********' | '++***********' // 13 chars, nothing happens.
+  }
+
+  void "userHasRegisteredAddress: When user has no registered address, should return false"() {
+    given:
+    def user = new SvcSuPersonVO()
+    user.uid = "asdasdasd"
+
+    when:
+    def res = service.userHasRegisteredAddress("asdasdasd", false)
+
+    then:
+    assert !res
+
+    and:
+    1 * service.sukatService.findUserByUid(*_) >> user
+  }
+
+  void "userHasRegisteredAddress: When user has registered address, should return true"() {
+    given:
+    def user = new SvcSuPersonVO()
+    user.registeredAddress = "Gatan 13"
+    user.uid = "asdasdasd"
+
+    when:
+    def res = service.userHasRegisteredAddress("asdasdasd", false)
+
+    then:
+    assert res
+
+    and:
+    1 * service.sukatService.findUserByUid(*_) >> user
   }
 
   void "fetchLadokData: When uid is chomped but it's not a pnr uid"() {
