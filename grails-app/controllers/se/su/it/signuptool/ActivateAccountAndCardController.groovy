@@ -78,8 +78,8 @@ class ActivateAccountAndCardController {
     SvcSuPersonVO user = session.user // fetch user from session for the presentation in the view.
 
     Map cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
-    String lpwurl = configService.getValue("URL", "lpwtool")
-    String sukaturl = configService.getValue("URL", "sukattool")
+    String lpwurl = configService.getValue("signup", "lpwtool")
+    String sukaturl = configService.getValue("signup", "sukattool")
 
     return render(view:'index', model:[
         user:user,

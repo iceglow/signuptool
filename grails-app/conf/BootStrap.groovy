@@ -30,8 +30,8 @@ class BootStrap {
     //sucardsvc
 
     // some urls to other systems
-    configService.registerValueToSection("URL", "lpwtool", "https://minastudier.su.se/registrate/")
-    configService.registerValueToSection("URL", "sukattool", "https://kontohantering.su.se/")
+    configService.registerValueToSection("signup", "lpwtool", "https://minastudier.su.se/registrate/")
+    configService.registerValueToSection("signup", "sukattool", "https://kontohantering.su.se/")
     // some urls to other systems
 
     // Get the config systemproperties and register as system properties
