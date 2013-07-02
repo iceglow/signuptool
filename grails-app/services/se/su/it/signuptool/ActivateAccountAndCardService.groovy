@@ -117,6 +117,6 @@ class ActivateAccountAndCardService implements Serializable {
   }
 
   private static String chompUid(String uid) {
-    (uid?.length() == 12) ? uid[2..0] : uid
+    (uid?.length() == 12) ? uid[2..11] : uid
   }
 }

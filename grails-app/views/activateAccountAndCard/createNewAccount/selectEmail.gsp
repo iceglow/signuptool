@@ -10,10 +10,17 @@
       <div class="error">${error}</div>
     </g:if>
     <div>
+      <p><g:message code="activateAccountAndCardController.forwardEmail.explanation"/></p>
       <g:form>
-        <label for="forwardAddress">Forwardadress</label>
-        <g:textField name="forwardAddress" value="${forwardAddress}"/>
-        <g:submitButton name="next" value="Vidare"/>
+        <div>
+          <label for="forwardAddress"><g:message code="activateAccountAndCardController.forwardEmail.emailLabel"/></label>
+          <g:textField name="forwardAddress" value="${forwardAddress}"/>
+        </div>
+        <div>
+          <g:checkBox name="acceptSuConditions"/>
+          <label for="acceptSuConditions"><g:message code="activateAccountAndCardController.forwardEmail.acceptLabel"/></label>
+        </div>
+        <g:submitButton name="activate" value="Aktivera"/>
       </g:form>
     </div>
   </div>

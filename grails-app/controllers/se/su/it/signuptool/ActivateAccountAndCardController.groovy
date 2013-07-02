@@ -40,7 +40,7 @@ class ActivateAccountAndCardController {
     if (!session.user) {
       try {
         boolean uidIsPnr = utilityService.uidIsPnr(uid)
-        session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+//        session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
       } catch (ex) {
         log.error "Failed when setting user in session", ex
         flash.error = message(
@@ -56,7 +56,9 @@ class ActivateAccountAndCardController {
       Map ladokData = [:]
 
       try {
-        ladokData = activateAccountAndCardService.fetchLadokData(uid)
+//        ladokData = activateAccountAndCardService.fetchLadokData(uid)
+        ladokData = activateAccountAndCardService.fetchLadokData("5807191381")
+        params.pnr="5807191381"
       } catch (ex) {
         log.error "Failed when fetching ladokData for uid: $uid", ex
       }
