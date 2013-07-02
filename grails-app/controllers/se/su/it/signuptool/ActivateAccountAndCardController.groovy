@@ -40,7 +40,7 @@ class ActivateAccountAndCardController {
     if (!session.user) {
       try {
         boolean uidIsPnr = utilityService.uidIsPnr(uid)
-//        session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+        session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
       } catch (ex) {
         log.error "Failed when setting user in session", ex
         flash.error = message(
@@ -56,9 +56,7 @@ class ActivateAccountAndCardController {
       Map ladokData = [:]
 
       try {
-//        ladokData = activateAccountAndCardService.fetchLadokData(uid)
-        ladokData = activateAccountAndCardService.fetchLadokData("5807191381")
-        params.pnr="5807191381"
+        ladokData = activateAccountAndCardService.fetchLadokData(uid)
       } catch (ex) {
         log.error "Failed when fetching ladokData for uid: $uid", ex
       }
@@ -119,10 +117,12 @@ class ActivateAccountAndCardController {
      * Skapa konto sent och skicka vidare till index med password.
      */
 
+    /* accepting terms of agreement happens in next step
     showTermsOfAgreement {
       on("agree").to("prepareForwardAddress")
       on("decline").to("end")
     }
+    */
 
     prepareForwardAddress {
       action {
@@ -137,7 +137,7 @@ class ActivateAccountAndCardController {
     }
 
     selectEmail {
-      on("next").to("processEmailInput")
+      on("activate").to("processEmailInput")
     }
 
     processEmailInput {
@@ -161,10 +161,10 @@ class ActivateAccountAndCardController {
         def sn = session.sn
 
         // def result = sukatService.enrollUser(givenName, sn, session.pnr)
-        log.error "<<< ENROLLED USER : $givenName $sn : ${flow.error} >>>"
+        log.info "<<< ENROLLED USER : $givenName $sn : ${flow.error} >>>"
 
 
-        def result = [:]
+        def result = [uid: 'donaldDuck', password: 'kajsa anka']
 
         if (result == null) {
           flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
