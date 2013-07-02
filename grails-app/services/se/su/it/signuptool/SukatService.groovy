@@ -23,6 +23,14 @@ class SukatService implements Serializable {
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"
 
+  public List getCardOrdersForUser(String uid) {
+    List cardOrders = []
+
+    // call sukatsvc to fetch cardorders for user
+
+    return cardOrders
+  }
+
   public List<SuCard> getCardsForUser(String uid) {
     List<SuCard> suCards = []
     try {

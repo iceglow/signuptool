@@ -22,6 +22,11 @@ class ActivateAccountAndCardService implements Serializable {
       canOrder = false
     }
 
+    List cardOrders = sukatService.getCardOrdersForUser(user.uid)
+    if(cardOrders?.size()>0) {
+      canOrder = false
+    }
+
     return canOrder
   }
 
@@ -87,6 +92,9 @@ class ActivateAccountAndCardService implements Serializable {
 
       // we may want to show info about the active cards a user already has
       cardInfo.suCards = sukatService.getCardsForUser(user.uid)
+
+      // we may want to show info about cardorders that the user may have done
+      cardInfo.cardOrders = sukatService.getCardOrdersForUser(user.uid)
       /** TODO: Check if we have active orders etc */
       cardInfo.canOrderCard = (cardInfo.hasAddress && canOrderCard(user))
     } catch (ex) {
