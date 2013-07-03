@@ -14,14 +14,14 @@ import org.apache.log4j.net.SyslogAppender
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
-def customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy"]
+def customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy"]
 
 environments {
   development {
-    customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy", DataSources]
+    customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy", DataSources]
   }
   test {
-    customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy", DataSources]
+    customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy", DataSources]
   }
 }
 /** Some custom options */
@@ -214,7 +214,7 @@ security {
  * SUKAT-SVC config
  */
 sukatsvc {
-  cardorderservice = "https://sukat-test-svc.it.su.se/CardOrderService"
+  cardorderservice = "https://sukat-test-svc.it.su.se/1/CardOrderService"
   accountservice = "https://sukat-test-svc.it.su.se/1/AccountService"
   enrollmentservice = "https://sukat-test-svc.it.su.se/1/EnrollmentService"
   statusservice = "https://sukat-test-svc.it.su.se/1/Status"
