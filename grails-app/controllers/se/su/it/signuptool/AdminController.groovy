@@ -15,7 +15,7 @@ class AdminController {
     } else {
       eventLogs = eventLogService.fetchLatestEvents()
     }
-    [eventLogs: eventLogs]
+    return render(view: 'index', model: [eventLogs: eventLogs])
   }
 
   def foo() {

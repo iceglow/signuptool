@@ -26,6 +26,10 @@ class AdminControllerSpec extends Specification {
     0 * controller.eventLogService.findEventsBySocialSecurityNumber(*_)>> []
     and:
     0 * controller.eventLogService.findEventsByUserId(*_)>> []
+    and:
+    view == '/admin/index'
+    and:
+    response.status == 200
 
   }
 }

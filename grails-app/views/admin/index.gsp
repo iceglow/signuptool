@@ -12,17 +12,26 @@
 </g:if>
 <div>
   <g:form action="index" method="post">
-    <label for="uid">UserId</label>: <g:textField name="uid" maxlength="10" size="15"/> <g:submitButton name="submit" value="Sök"/>
+    <div class="apps-float-15"><label for="uid">UserId</label>: </div>
+    <div class="apps-float-20"><g:textField name="uid" maxlength="10" size="15"/> </div>
+    <div class="apps-float-10"><g:submitButton name="submit" value="Sök"/></div>
+    <div class="clear-float"></div>
   </g:form>
 </div>
 <div>
   <g:form action="index" method="post">
-    <label for="ssn">Personnummer</label>: <g:textField name="ssn" maxlength="13" size="15"/> <g:submitButton name="submit" value="Sök"/>
+    <div class="apps-float-15"><label for="ssn">Personnummer</label>: </div>
+    <div class="apps-float-20"><g:textField name="ssn" maxlength="13" size="15"/></div>
+    <div class="apps-float-10"><g:submitButton name="submit" value="Sök"/></div>
+    <div class="clear-float"></div>
   </g:form>
 </div>
 <div>
   <g:form action="index" method="post">
-    <label for="referenceId">ReferensId</label>: <g:textField name="referenceId" maxlength="15" size="15"/> <g:submitButton name="submit" value="Sök"/>
+    <div class="apps-float-15"><label for="referenceId">ReferensId</label>:</div>
+    <div class="apps-float-20"><g:textField name="referenceId" maxlength="15" size="15"/></div>
+    <div class="apps-float-10"><g:submitButton name="submit" value="Sök"/></div>
+    <div class="clear-float"></div>
   </g:form>
 </div>
 <g:if test="${eventLogs}">
