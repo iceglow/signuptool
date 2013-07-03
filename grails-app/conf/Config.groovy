@@ -208,13 +208,16 @@ systemproperties {
 
 security {
   jaasloginconfigfile = "/local/signuptool/conf/login.config"
+  jaasconfigfile = "/local/signuptool/conf/jaas.config"
 }
 
 /**
  * SUKAT-SVC config
  */
 sukatsvc {
+  cardorderservice = "https://sukat-test-svc.it.su.se/1/CardOrderService"
   accountservice = "https://sukat-test-svc.it.su.se/1/AccountService"
+  cardinfoservice = "https://sukat-test-svc.it.su.se/1/CardInfoService"
   enrollmentservice = "https://sukat-test-svc.it.su.se/1/EnrollmentService"
   statusservice = "https://sukat-test-svc.it.su.se/1/Status"
   webserviceadmin = "https://sukat-test-svc.it.su.se/1/WebServiceAdmin"

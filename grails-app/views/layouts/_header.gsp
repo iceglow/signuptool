@@ -1,5 +1,5 @@
 <g:render template="/layouts/top_menu"/>
-<div id="head" class="head">
+<div id="head" class="head apps-darkblue">
 
   <div class="clear-float"></div>
 

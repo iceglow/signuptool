@@ -8,13 +8,16 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 @TestMixin(WebFlowUnitTestMixin)
-@TestFor(ActivateAccountAndCardController)
-
 class ActivateAccountAndCardControllerSpec extends Specification {
 
+  @Shared
+  def controller
+
   def setup() {
+    controller = mockController(ActivateAccountAndCardController)
     controller.utilityService = Mock(UtilityService)
     controller.ladokService = Mock(LadokService)
+    controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
   }
 
@@ -143,5 +146,27 @@ class ActivateAccountAndCardControllerSpec extends Specification {
   def "createNewAccountFlow"() {
     // TODO: Tests for the flow.
     return true
+  }
+
+  @IgnoreRest
+  def "orderCardFlow: test flow when user is found, has registered address and no cards or orders"() {
+    given:
+    session.uid = "abcd1234@su.se"
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    assert event == 'success'
+    assert 'success' == stateTransition
+
+    and:
+    1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
+
+    and:
+    1 * controller.activateAccountAndCardService.userHasRegisteredAddress(*_) >> true
+
+    and:
+    1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
   }
 }

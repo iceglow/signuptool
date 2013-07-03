@@ -10,7 +10,7 @@ class BootStrap {
   def accessService
 
   def init = { servletContext ->
-    String sucardsvcurl
+    String sucardsvcurl = ''
 
     switch (System.getProperty("signuptool", "dev")) {
       case ~/prod(uction)?/:
@@ -28,6 +28,11 @@ class BootStrap {
     configService.registerValueToSection("WS", "CardOrderFacade", "${sucardsvcurl}/CardOrderFacade")
     configService.registerValueToSection("WS", "CardSyncFacade", "${sucardsvcurl}/CardSyncFacade")
     //sucardsvc
+
+    // some urls to other systems
+    configService.registerValueToSection("signup", "lpwtool", "https://minastudier.su.se/registrate/")
+    configService.registerValueToSection("signup", "sukattool", "https://kontohantering.su.se/")
+    // some urls to other systems
 
     // Get the config systemproperties and register as system properties
     Properties sysprop = System.getProperties()

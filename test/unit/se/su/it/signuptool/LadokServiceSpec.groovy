@@ -74,14 +74,14 @@ class LadokServiceSpec extends Specification {
     given:
     Closure query = { Sql sql ->
       assert sql instanceof Sql
-      return "myQuery"
+      return ["myQuery"]
     }
 
     when:
-    def resp = service.withConnection(query)
+    List resp = service.withConnection(query)
 
     then:
-    resp == "myQuery"
+    resp?.first() == "myQuery"
   }
 
   void "withConnection: When creating Sql connection fails"() {
