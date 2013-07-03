@@ -32,6 +32,7 @@
           <div class="clear-float"></div>
         </div>
         <!-- ************************************************** PAGE ************************************************** -->
+        <div class="left-column"></div>
 
         <div class="main-column">
           <g:layoutBody/>

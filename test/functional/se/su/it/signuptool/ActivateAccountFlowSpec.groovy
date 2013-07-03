@@ -1,22 +1,21 @@
 package se.su.it.signuptool
 
-import geb.spock.GebReportingSpec
+import geb.spock.GebSpec
 import se.su.it.signuptool.pages.ActivateAccountPage
+import se.su.it.signuptool.pages.ShowTermsOfAgreementPage
 
-class ActivateAccountFlowSpec extends GebReportingSpec {
+class ActivateAccountFlowSpec extends GebSpec {
 
-  def setup() {}
+  def setup() {
+  }
 
-  def "test default flow where user is missing credentials, should be redirected to start page"() {
-    given:
+  def "test default flow when..."() {
+    when:
     to ActivateAccountPage
 
-
-    when:
-    startActivationButton.click()
+    startActivateAccountFlow()
 
     then:
-    at ActivateAccountPage
-
+    at ShowTermsOfAgreementPage
   }
 }
