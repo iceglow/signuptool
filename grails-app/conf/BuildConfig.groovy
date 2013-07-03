@@ -49,7 +49,7 @@ grails.project.dependency.resolution = {
     test "org.seleniumhq.selenium:selenium-support:2.33.0"
     test "org.seleniumhq.selenium:selenium-chrome-driver:2.33.0"
 
-    compile "se.su.it.cxf:sukat-cxf-svc-client:1.0.4-SNAPSHOT"
+    compile "se.su.it.cxf:sukat-cxf-svc-client:1.0.5.3"
     compile "org.grails:grails-webflow:$grailsVersion"
 
     runtime 'mysql:mysql-connector-java:5.1.22'

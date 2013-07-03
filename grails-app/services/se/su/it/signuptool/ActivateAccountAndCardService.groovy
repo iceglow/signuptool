@@ -1,6 +1,7 @@
 package se.su.it.signuptool
 
 import se.su.it.svc.SuCard
+import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
 
 class ActivateAccountAndCardService implements Serializable {
@@ -22,7 +23,7 @@ class ActivateAccountAndCardService implements Serializable {
       canOrder = false
     }
 
-    List cardOrders = sukatService.getCardOrdersForUser(user.uid)
+    List<SvcCardOrderVO> cardOrders = sukatService.getCardOrdersForUser(user.uid)
     if(cardOrders?.size()>0) {
       canOrder = false
     }

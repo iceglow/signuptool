@@ -23,11 +23,11 @@
         <p><g:message code="cardInfo.orders"/></p>
         <table>
           <thead>
-          <tr><th>Some Info</th></tr>
+          <tr><th>Namn</th><th>Serial</th></tr>
           </thead>
           <tbody>
           <g:each in="${cardInfo.cardOrders}" var="cardOrder">
-            <tr><td>Some detail on cardorder</td></tr>
+            <tr><td>${cardOrder.firstname} ${cardOrder.lastname}</td><td>${cardOrder.serial}</td></tr>
           </g:each>
           </tbody>
         </table>

@@ -1,6 +1,7 @@
 package se.su.it.signuptool
 
 import se.su.it.svc.SuCard
+import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
@@ -9,7 +10,7 @@ import se.su.it.svc.CardInfoServiceImpl
 import se.su.it.svc.EnrollmentServiceImpl
 import se.su.it.svc.Status
 import se.su.it.svc.WebServiceAdminImpl
-// import se.su.it.svc.CardOrderServiceImpl
+import se.su.it.svc.CardOrderServiceImpl
 
 class SukatService implements Serializable {
   /** Needed if we want to use this service in the flow. */
@@ -17,7 +18,7 @@ class SukatService implements Serializable {
 
   AccountServiceImpl accountWS
   CardInfoServiceImpl cardInfoServiceImpl
-//  CardOrderServiceImpl cardOrderWS
+  CardOrderServiceImpl cardOrderWS
   EnrollmentServiceImpl enrollmentWS
   Status statusWS
   WebServiceAdminImpl webAdminWS
@@ -25,12 +26,17 @@ class SukatService implements Serializable {
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"
 
-  public List getCardOrdersForUser(String uid) {
-    List cardOrders = []
+  public List<SvcCardOrderVO> getCardOrdersForUser(String uid) {
+    List<SvcCardOrderVO> cardOrders = []
 
     // call sukatsvc to fetch cardorders for user , something like findAllCardOrdersForUid in the CardOrderService
-    // cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
+    cardOrders = cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
 
+    cardOrders.each { SvcCardOrderVO orderVO ->
+      orderVO.firstname
+      orderVO.lastname
+      orderVO.serial
+    }
     return cardOrders
   }
 
@@ -46,7 +52,7 @@ class SukatService implements Serializable {
   }
 
   public void findAllCardOrdersForUid(String uid) {
-//    cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
+    cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
   }
 
   public String getMailRoutingAddress(String uid) {
