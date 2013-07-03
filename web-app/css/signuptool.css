@@ -2,12 +2,28 @@
   border-bottom: solid 1px #000000;
 }
 
-.bordered-paragraph {
+.bordered-id-provider {
   border: solid 1px #000000;
+  padding: 4px;
+}
+
+.header-id-provider {
+  font-weight: bold;
 }
 
 .large-bottom-spacer {
-  margin-bottom: 50px;
+  margin-bottom: 80px;
+}
+
+.state_progress_img {
+  width: 128px;
+  float: right;
+}
+
+.prompt {
+  width: 400px;
+  padding-right: 14px;
+  float: left;
 }
 
 .signupButton, input.signupButton {
