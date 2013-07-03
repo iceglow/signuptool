@@ -40,7 +40,7 @@ class ActivateAccountAndCardController {
         break
     }
 
-    String uid = utilityService.fetchUid(session.uid, scope, request)
+    String uid = (session.uid)?:utilityService.fetchUid(scope, request)
 
     if (!uid) {
       flash.error = message(

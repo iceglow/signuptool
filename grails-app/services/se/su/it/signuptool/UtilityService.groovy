@@ -11,7 +11,8 @@ class UtilityService {
     (uid ==~ /^(([0-9]{6})|[0-9]{8})[0-9,a-ö,A-Ö]{4}$/)
   }
 
-  public String fetchUid(String uid, String scope, request) {
+  public String fetchUid(String scope, request) {
+    String uid = null
     String eppn = (request?.eppn) ?: null
 
     switch(scope) {
