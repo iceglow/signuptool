@@ -1,4 +1,14 @@
 grails.naming.entries = [
+    "jdbc/ladok": [
+          type: "javax.sql.DataSource",
+          auth: "Container",
+          driverClassName: "com.mysql.jdbc.Driver",
+          url: "jdbc:mysql://somehost:someport/su?autoReconnect=true&useSSL=true&verifyServerCertificate=false",
+          username: ""%%LADOKUSER%%"",
+          password: "%%LADOKPASSWORD%%",
+          maxActive: "20",
+          maxIdle: "1"
+    ],
     "jdbc/signuptool-dev": [
         type: "javax.sql.DataSource",
         auth: "Container",

@@ -23,9 +23,9 @@
     </style>
   </head>
   <body>
-      <tmpl:/shared/feedback flash="${flash}"/>
-      <div id="accountInfo"><tmpl:accountInfo user="${user}" password="${password}"/></div>
-      <div id="cardInfo"><tmpl:cardInfo user="${cardInfo}"/></div>
-      <div id="webreg"><tmpl:webreg/></div>
+    <tmpl:/shared/feedback flash="${flash}"/>
+    <div id="accountInfo"><tmpl:accountInfo user="${user}" password="${password}"/></div>
+    <div id="cardInfo"><tmpl:cardInfo user="${cardInfo}"/></div>
+    <div id="webreg"><tmpl:webreg lpwurl="${lpwurl}" sukaturl="${sukaturl}"/></div>
   </body>
 </html>

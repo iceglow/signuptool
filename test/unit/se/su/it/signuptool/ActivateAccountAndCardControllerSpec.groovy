@@ -167,6 +167,6 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.activateAccountAndCardService.userHasRegisteredAddress(*_) >> true
 
     and:
-    1 * controller.activateAccountAndCardService.canOrderCard() >> true
+    1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
   }
 }

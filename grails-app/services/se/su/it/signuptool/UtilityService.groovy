@@ -10,7 +10,7 @@ class UtilityService {
     (uid ==~ /^(([0-9]{6})|[0-9]{8})[0-9,a-ö,A-Ö]{4}$/)
   }
 
-  public String fetchUid(uid, eppn) {
+  public String fetchUid(String uid, String eppn) {
       (uid)?:(eppn)? eppnToUid(eppn) : null
   }
 

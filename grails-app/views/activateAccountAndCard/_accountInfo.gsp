@@ -1,6 +1,6 @@
 <div>
-  Uid: ${user?.uid}
+  <g:message code="generic.uid"/>: ${user?.uid}
   <g:if test="${password}">
-    Password: ${password}
+    <g:message code="generic.password"/>: ${password}
   </g:if>
 </div>

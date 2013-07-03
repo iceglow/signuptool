@@ -1,8 +1,11 @@
 package se.su.it.signuptool
 
+import se.su.it.svc.SvcSuPersonVO
+
 class ActivateAccountAndCardController {
 
   def activateAccountAndCardService
+  def configService
   def ladokService
   def utilityService
 
@@ -70,14 +73,18 @@ class ActivateAccountAndCardController {
       return redirect(action:'createNewAccount')
     }
 
-    def user = session.user // fetch user from session for the presentation in the view.
+    SvcSuPersonVO user = session.user // fetch user from session for the presentation in the view.
 
-    def cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
+    Map cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
+    String lpwurl = configService.getValue("signup", "lpwtool")
+    String sukaturl = configService.getValue("signup", "sukattool")
 
     return render(view:'index', model:[
         user:user,
         password:password,
-        cardInfo: cardInfo
+        cardInfo: cardInfo,
+        lpwurl: lpwurl,
+        sukaturl: sukaturl
     ])
   }
 
@@ -88,7 +95,7 @@ class ActivateAccountAndCardController {
   def createNewAccountFlow = {
     /** Prereq:
      * + pnr
-     * + personen är antagen innevarande termin.
+     * + personen är antagen innevarande termin. ( i dagsläget kollar vi bara om personen finns i namntabellen )
 
      * Req:
      * + Person godkänner avtal
@@ -100,15 +107,18 @@ class ActivateAccountAndCardController {
      * Skapa konto sent och skicka vidare till index med password.
      */
 
+    /* accepting terms of agreement happens in next step
     showTermsOfAgreement {
       on("agree").to("prepareForwardAddress")
       on("decline").to("end")
     }
+    */
 
     prepareForwardAddress {
       action {
         // Fetch forward address from ladok / lpw
-        String forwardAddress = activateAccountAndCardService.getForwardAddress(session.pnr)
+
+        String forwardAddress = ladokService.findForwardAddressSuggestionForPnr(session.pnr)
         [forwardAddress:forwardAddress]
       }
       on("success").to("selectEmail")
@@ -117,7 +127,7 @@ class ActivateAccountAndCardController {
     }
 
     selectEmail {
-      on("next").to("processEmailInput")
+      on("activate").to("processEmailInput")
     }
 
     processEmailInput {
@@ -141,10 +151,10 @@ class ActivateAccountAndCardController {
         def sn = session.sn
 
         // def result = sukatService.enrollUser(givenName, sn, session.pnr)
-        log.error "<<< ENROLLED USER : $givenName $sn : ${flow.error} >>>"
+        log.info "<<< ENROLLED USER : $givenName $sn : ${flow.error} >>>"
 
 
-        def result = [:]
+        def result = [uid: 'donaldDuck', password: 'kajsa anka']
 
         if (result == null) {
           flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')

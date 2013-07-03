@@ -29,6 +29,11 @@ class BootStrap {
     configService.registerValueToSection("WS", "CardSyncFacade", "${sucardsvcurl}/CardSyncFacade")
     //sucardsvc
 
+    // some urls to other systems
+    configService.registerValueToSection("signup", "lpwtool", "https://minastudier.su.se/registrate/")
+    configService.registerValueToSection("signup", "sukattool", "https://kontohantering.su.se/")
+    // some urls to other systems
+
     // Get the config systemproperties and register as system properties
     Properties sysprop = System.getProperties()
     Properties systemproperties = grailsApplication.config.systemproperties.toProperties()
