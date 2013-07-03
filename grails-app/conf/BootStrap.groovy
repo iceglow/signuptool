@@ -10,7 +10,7 @@ class BootStrap {
   def accessService
 
   def init = { servletContext ->
-    String sucardsvcurl
+    String sucardsvcurl = ''
 
     switch (System.getProperty("signuptool", "dev")) {
       case ~/prod(uction)?/:
