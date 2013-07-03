@@ -2,9 +2,14 @@ package se.su.it.signuptool
 
 class AdminController {
   def sukatService
+  def eventLogService
 
   def index() {
-    return render(view:'index')
+    List<EventLog> eventLogs = EventLog.createCriteria().list {
+      order("dateCreated")
+      maxResults(100)
+    }
+    [eventLogs: eventLogs]
   }
 
   def foo() {

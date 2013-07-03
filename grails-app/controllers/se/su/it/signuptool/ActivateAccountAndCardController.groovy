@@ -6,6 +6,7 @@ class ActivateAccountAndCardController {
 
   def activateAccountAndCardService
   def configService
+  def eventLogService
   def ladokService
   def utilityService
 
@@ -20,6 +21,11 @@ class ActivateAccountAndCardController {
       flash.password = null
     }
 
+    if(!flash.referenceId) {
+      flash.referenceId = eventLogService.createReferenceId()
+      log.error("creating new referenceid ${flash.referenceId}")
+    }
+
     /** Setting uid
      * 1. First hand, use the returned uid.
      * 2. Fetch the uid from eppn
@@ -28,6 +34,7 @@ class ActivateAccountAndCardController {
     String uid = utilityService.fetchUid(session.uid, request.eppn)
 
     if (!uid) {
+      eventLogService.logEvent("No valid user found (${session?.uid} / ${request?.eppn})", (String)flash.referenceId, request)
       flash.error = message(
           code:'activateAccountAndCardController.noValidIdFound',
           args:[session?.uid, request?.eppn]) as String
@@ -42,6 +49,8 @@ class ActivateAccountAndCardController {
         boolean uidIsPnr = utilityService.uidIsPnr(uid)
         session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
       } catch (ex) {
+        eventLogService.logEvent("Failed when setting user in session for ${uid} with exception ${ex.getMessage()}", (String)flash.referenceId, request)
+
         log.error "Failed when setting user in session", ex
         flash.error = message(
             code:'activateAccountAndCardController.errorWhenFetchingUser',
@@ -52,6 +61,7 @@ class ActivateAccountAndCardController {
 
     /** If we still have no user in the session then this is a first time visit */
     if (!session.user) {
+      eventLogService.logEvent("First time visit for ${uid}", (String)flash.referenceId, request)
       /** See if we can find the new user in Ladok */
       Map ladokData = [:]
 
@@ -62,6 +72,7 @@ class ActivateAccountAndCardController {
       }
 
       if (!ladokData) {
+        eventLogService.logEvent("User ${uid} not found in ladok", (String)flash.referenceId, request)
         flash.error = message(code:'activateAccountAndCardController.userNotFoundInLadok') as String
         return redirect(controller:'dashboard', action:'index')
       }
@@ -69,6 +80,8 @@ class ActivateAccountAndCardController {
       /** Saving enamn and tnamn for enroll method */
       session.givenName = ladokData.tnamn
       session.sn = ladokData.enamn
+
+      eventLogService.logEvent("User ${uid} starting flow", (String)flash.referenceId, request)
 
       return redirect(action:'createNewAccount')
     }
@@ -78,6 +91,7 @@ class ActivateAccountAndCardController {
     Map cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
     String lpwurl = configService.getValue("signup", "lpwtool")
     String sukaturl = configService.getValue("signup", "sukattool")
+    eventLogService.logEvent("User ${uid} already exists in sukat", (String)flash.referenceId, request)
 
     return render(view:'index', model:[
         user:user,
@@ -117,13 +131,6 @@ class ActivateAccountAndCardController {
      * Skapa konto sent och skicka vidare till index med password.
      */
 
-    /* accepting terms of agreement happens in next step
-    showTermsOfAgreement {
-      on("agree").to("prepareForwardAddress")
-      on("decline").to("end")
-    }
-    */
-
     prepareForwardAddress {
       action {
         // Fetch forward address from ladok / lpw
@@ -144,6 +151,7 @@ class ActivateAccountAndCardController {
       action {
         if (!activateAccountAndCardService.validateForwardAddress(params?.forwardAddress)) {
           flow.error = "Invalid Email"
+          eventLogService.logEvent("Invalid email for ${uid}: ${params?.forwardAddress}", (String)flash.referenceId, request)
           return error()
         }
       }
