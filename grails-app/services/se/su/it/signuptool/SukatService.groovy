@@ -9,13 +9,18 @@ import se.su.it.svc.CardInfoServiceImpl
 import se.su.it.svc.EnrollmentServiceImpl
 import se.su.it.svc.Status
 import se.su.it.svc.WebServiceAdminImpl
+import se.su.it.svc.CardOrderServiceImpl
 
 class SukatService implements Serializable {
   /** Needed if we want to use this service in the flow. */
   static transactional = false
 
   AccountServiceImpl accountWS
+<<<<<<< HEAD
   CardInfoServiceImpl cardInfoServiceImpl
+=======
+  CardOrderServiceImpl cardOrderWS
+>>>>>>> tommy/DEVIDM-25
   EnrollmentServiceImpl enrollmentWS
   Status statusWS
   WebServiceAdminImpl webAdminWS
@@ -40,6 +45,9 @@ class SukatService implements Serializable {
       suCards = []
     }
     return suCards
+  }
+  public void findAllCardOrdersForUid(String uid) {
+    cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
   }
 
   public String getMailRoutingAddress(String uid) {
