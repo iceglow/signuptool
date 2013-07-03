@@ -79,15 +79,15 @@ class ActivateAccountAndCardService implements Serializable {
    * @param uid
    * @return
    */
-  public Map fetchLadokData(String uid) {
+  public Map fetchLadokData(String socialSecurityNumber) {
     Map ladokData = [:]
 
-    if (!uid) {
+    if (!socialSecurityNumber) {
       return ladokData
     }
 
     /** Turn 12 length ssn into 10 length */
-    String ssn = chompUid(uid)
+    String ssn = chompUid(socialSecurityNumber)
     if (utilityService.uidIsPnr(ssn)) {
       ladokData = ladokService.findStudentInLadok(ssn)
     }

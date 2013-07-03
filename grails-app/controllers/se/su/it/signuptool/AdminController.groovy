@@ -5,9 +5,15 @@ class AdminController {
   def eventLogService
 
   def index() {
-    List<EventLog> eventLogs = EventLog.createCriteria().list {
-      order("dateCreated")
-      maxResults(100)
+    List<EventLog> eventLogs = []
+    if(params?.ssn) {
+      eventLogs = eventLogService.findEventsBySocialSecurityNumber((String)params.ssn)
+    } else if(params?.referenceId) {
+      eventLogs = eventLogService.findEventsByReferenceId((String)params.referenceId)
+    } else if(params?.uid) {
+      eventLogs = eventLogService.findEventsByUserId((String)params.uid)
+    } else {
+      eventLogs = eventLogService.fetchLatestEvents()
     }
     [eventLogs: eventLogs]
   }

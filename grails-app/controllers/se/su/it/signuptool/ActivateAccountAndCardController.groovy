@@ -45,11 +45,15 @@ class ActivateAccountAndCardController {
      * If the user isn't already in the session we find it either by ssn or uid and put it in the session.
      */
     if (!session.user) {
+      boolean uidIsPnr = utilityService.uidIsPnr(uid)
       try {
-        boolean uidIsPnr = utilityService.uidIsPnr(uid)
         session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
       } catch (ex) {
-        eventLogService.logEvent("Failed when setting user in session for ${uid} with exception ${ex.getMessage()}", (String)flash.referenceId, request)
+        if(uidIsPnr) {
+          eventLogService.logEvent("Failed when setting user in session for ${uid} with exception ${ex.getMessage()}", (String)flash.referenceId, request,uid,"")
+        } else {
+          eventLogService.logEvent("Failed when setting user in session for ${uid} with exception ${ex.getMessage()}", (String)flash.referenceId, request,"",uid)
+        }
 
         log.error "Failed when setting user in session", ex
         flash.error = message(
@@ -61,7 +65,11 @@ class ActivateAccountAndCardController {
 
     /** If we still have no user in the session then this is a first time visit */
     if (!session.user) {
-      eventLogService.logEvent("First time visit for ${uid}", (String)flash.referenceId, request)
+      if(uidIsPnr) {
+        eventLogService.logEvent("First time visit for ${uid}", (String)flash.referenceId, request,uid,"")
+      } else {
+        eventLogService.logEvent("First time visit for ${uid}", (String)flash.referenceId, request,"",uid)
+      }
       /** See if we can find the new user in Ladok */
       Map ladokData = [:]
 
@@ -72,7 +80,7 @@ class ActivateAccountAndCardController {
       }
 
       if (!ladokData) {
-        eventLogService.logEvent("User ${uid} not found in ladok", (String)flash.referenceId, request)
+        eventLogService.logEvent("User ${uid} not found in ladok", (String)flash.referenceId, request, uid)
         flash.error = message(code:'activateAccountAndCardController.userNotFoundInLadok') as String
         return redirect(controller:'dashboard', action:'index')
       }
@@ -81,7 +89,7 @@ class ActivateAccountAndCardController {
       session.givenName = ladokData.tnamn
       session.sn = ladokData.enamn
 
-      eventLogService.logEvent("User ${uid} starting flow", (String)flash.referenceId, request)
+      eventLogService.logEvent("User ${uid} starting flow", (String)flash.referenceId, request, uid)
 
       return redirect(action:'createNewAccount')
     }
@@ -91,7 +99,7 @@ class ActivateAccountAndCardController {
     Map cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
     String lpwurl = configService.getValue("signup", "lpwtool")
     String sukaturl = configService.getValue("signup", "sukattool")
-    eventLogService.logEvent("User ${uid} already exists in sukat", (String)flash.referenceId, request)
+    eventLogService.logEvent("User ${uid} already exists in sukat", (String)flash.referenceId, request, "", uid)
 
     return render(view:'index', model:[
         user:user,
@@ -135,7 +143,7 @@ class ActivateAccountAndCardController {
       action {
         // Fetch forward address from ladok / lpw
 
-        String forwardAddress = ladokService.findForwardAddressSuggestionForPnr(session.pnr)
+        String forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String)session.pnr)
         [forwardAddress:forwardAddress]
       }
       on("success").to("selectEmail")
@@ -149,9 +157,9 @@ class ActivateAccountAndCardController {
 
     processEmailInput {
       action {
-        if (!activateAccountAndCardService.validateForwardAddress(params?.forwardAddress)) {
+        if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
           flow.error = "Invalid Email"
-          eventLogService.logEvent("Invalid email for ${uid}: ${params?.forwardAddress}", (String)flash.referenceId, request)
+          eventLogService.logEvent("Invalid email for ${session.pnr}: ${params?.forwardAddress}", (String)flash.referenceId, request, (String)session.pnr)
           return error()
         }
       }
