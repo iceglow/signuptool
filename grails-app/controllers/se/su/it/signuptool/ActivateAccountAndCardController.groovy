@@ -25,7 +25,22 @@ class ActivateAccountAndCardController {
      * 2. Fetch the uid from eppn
      */
 
-    String uid = utilityService.fetchUid(session.uid, request.eppn)
+    String scope = utilityService.getScopeFromEppn(request.eppn)
+
+    switch(scope) {
+      case "su.se":
+        break
+      case "studera.nu":
+        if (!request.norEduPersonNIN) {
+          return render(controller:'errorHandler', action:'unverifiedAccount')
+        }
+        break
+      default:
+        log.error "Blah"
+        break
+    }
+
+    String uid = utilityService.fetchUid(session.uid, scope, request)
 
     if (!uid) {
       flash.error = message(
@@ -89,7 +104,7 @@ class ActivateAccountAndCardController {
   }
 
   def showSelectIdProvider = {
-    return render(view: 'selectIdProvider')
+    return render(view: '/dashboard/selectIdProvider')
   }
 
   def createNewAccountFlow = {

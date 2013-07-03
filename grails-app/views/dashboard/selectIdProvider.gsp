@@ -14,11 +14,11 @@
             <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
           </div>
           <g:message code="activateAccountAndCardController.idProvider.promptText.antagning"/>
-          <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'showSelectIdProvider']}">
+          <g:link url="/Shibboleth.sso/WAYF/antagning.se/produktion">
             <div class="align-center">
               <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
             </div>
-          </g:form>
+          </g:link>
         </div>
 
       </div>

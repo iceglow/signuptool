@@ -13,12 +13,11 @@
         <p><g:message code="dashboard.index.activateAccountText"/></p>
         <br/>
         <br/>
-
-        <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'showSelectIdProvider']}">
+        <g:link action="activateAccountAndCard">
           <div class="align-center">
             <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'dashboard.index.startActivateAccountButton')}"/>
           </div>
-        </g:form>
+        </g:link>
       </div>
 
       <div class="state_progress_img">
@@ -30,7 +29,7 @@
     </div>
     <div class="clear-float"></div>
     <div class="section">
-      <g:link url="http://sunet.se"><g:message code="dashboard.index.forgotPassword"/></g:link>
+      <g:link action="resetAccountOrPassword"><g:message code="dashboard.index.forgotPassword"/></g:link>
     </div>
   </div>
 </body>
