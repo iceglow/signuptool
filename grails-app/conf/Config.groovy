@@ -215,7 +215,7 @@ security {
  * SUKAT-SVC config
  */
 sukatsvc {
-  cardorderservice = "https://sukat-test-svc.it.su.se/CardOrderService"
+  cardorderservice = "https://sukat-test-svc.it.su.se/1/CardOrderService"
   accountservice = "https://sukat-test-svc.it.su.se/1/AccountService"
   cardinfoservice = "https://sukat-test-svc.it.su.se/1/CardInfoService"
   enrollmentservice = "https://sukat-test-svc.it.su.se/1/EnrollmentService"
