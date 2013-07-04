@@ -54,8 +54,8 @@ class UtilityServiceSpec extends Specification {
      '01234567891Ö'   | true
   }
 
-  @Unroll
-  void "fetchUid where uid: \'#uid\' and eppn \'#eppn\' expecting \'#expected\'"() {
+  @Unroll @IgnoreRest
+  void "fetchUid where eppn=\'#eppn\' scope=\'#scope\' and nin=\'nin\' expecting \'#expected\'"() {
     Map request = [:]
     request.eppn = eppn
     request.norEduPersonNIN = nin
