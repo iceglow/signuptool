@@ -305,6 +305,19 @@ class ActivateAccountAndCardController {
   }
 
   private boolean userCanOrderCards() {
-    return activateAccountAndCardService.canOrderCard()
+    SvcSuPersonVO user = null
+
+    if (session?.pnr) {
+      user = activateAccountAndCardService.findUser(session?.pnr, true)
+    } else if (session?.uid) {
+      user = activateAccountAndCardService.findUser(session?.uid, false)
+    }
+
+    boolean canOrder = false
+    if(user) {
+      canOrder = activateAccountAndCardService.canOrderCard(user?.uid)
+    }
+
+    return canOrder
   }
 }
