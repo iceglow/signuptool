@@ -19,7 +19,6 @@ class UtilityService {
       case "studera.nu":
         uid = (request.norEduPersonNIN)?:null
         break
-      break
       case "su.se":
         uid = getUidFromEppn(eppn)
         break
