@@ -125,10 +125,6 @@ class ActivateAccountAndCardController {
     ])
   }
 
-  def showSelectIdProvider = {
-    return render(view: '/dashboard/selectIdProvider')
-  }
-
   def createNewAccountFlow = {
     /** Prereq:
      * + pnr
