@@ -4,9 +4,15 @@ class DashboardController {
 
   def index() {
     if (session.controller) {
+
+      /** Always remove stored controllers from the session */
       def savedController = session.controller
       session.controller = null
-      return redirect(controller: savedController)
+
+      /** But only redirect some controller pointers */
+      if (savedController in ['activateAccountAndCard', 'resetPassword']) {
+        return redirect(controller: savedController)
+      }
     }
 
     return render(view:'index')

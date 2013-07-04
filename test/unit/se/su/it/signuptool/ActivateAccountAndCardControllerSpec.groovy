@@ -1,24 +1,19 @@
 package se.su.it.signuptool
 
 import grails.test.mixin.*
-import grails.test.mixin.webflow.WebFlowUnitTestMixin
+import se.su.it.config.ConfigService
 import se.su.it.svc.SvcSuPersonVO
 import spock.lang.IgnoreRest
-import spock.lang.Shared
 import spock.lang.Specification
 
-@TestMixin(WebFlowUnitTestMixin)
+@TestFor(ActivateAccountAndCardController)
 class ActivateAccountAndCardControllerSpec extends Specification {
 
-  @Shared
-  def controller
-
   def setup() {
-    controller = mockController(ActivateAccountAndCardController)
     controller.utilityService = Mock(UtilityService)
     controller.ladokService = Mock(LadokService)
     controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
-    controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
+    controller.configService = Mock(ConfigService)
   }
 
   def "index: Testing the password passing."() {
@@ -131,6 +126,8 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     model.user.uid == 'foo'
     model.password == 's3cret!'
     model.cardInfo == [:]
+    model.lpwurl == "lpwtoolUrl"
+    model.sukaturl == "sukattoolUrl"
 
     and:
     flash.password == null
@@ -141,32 +138,16 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo')
     0 * controller.activateAccountAndCardService.fetchLadokData(*_)
     1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> [:]
+    2 * controller.configService.getValue(_,_) >> { String arg1, String arg2 ->
+      assert arg1 == "signup"
+      if (arg2 == "lpwtool") { return "lpwtoolUrl" }
+      if (arg2 == "sukattool") { return "sukattoolUrl" }
+      return null
+    }
   }
 
   def "createNewAccountFlow"() {
     // TODO: Tests for the flow.
     return true
-  }
-
-  @IgnoreRest
-  def "orderCardFlow: test flow when user is found, has registered address and no cards or orders"() {
-    given:
-    session.uid = "abcd1234@su.se"
-
-    when:
-    def event = orderCardFlow.prepareForwardOrderCard.action()
-
-    then:
-    assert event == 'success'
-    assert 'success' == stateTransition
-
-    and:
-    1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
-
-    and:
-    1 * controller.activateAccountAndCardService.userHasRegisteredAddress(*_) >> true
-
-    and:
-    1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
   }
 }

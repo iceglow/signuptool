@@ -1,4 +1,4 @@
-package spring.se.su.it.signuptool
+package se.su.it.signuptool
 
 import grails.test.mixin.Mock
 import spock.lang.Specification

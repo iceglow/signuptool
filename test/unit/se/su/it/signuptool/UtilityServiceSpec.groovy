@@ -20,7 +20,7 @@ class UtilityServiceSpec extends Specification {
   @Unroll
   void "getUid: Parsing invalid eppns: #eppn"() {
     expect:
-    service.eppnToUid(eppn) == expected
+    service.getUidFromEppn(eppn) == expected
 
     where:
     eppn << ['kaka', 'kaka@', 'kaka@kaka@kaka']
@@ -29,7 +29,7 @@ class UtilityServiceSpec extends Specification {
   @Unroll
   void "getUid: Parsing valid eppn: #eppn"() {
     expect:
-    service.eppnToUid(eppn) == expected
+    service.getUidFromEppn(eppn) == expected
 
     where:
     eppn << ['kaka@su.se', 'kaka@its.uu.se', '_kaka@su.se', 'kaka0_@su.se', 'kötta@su.se', '197007077777@edu.id.se']
@@ -56,18 +56,26 @@ class UtilityServiceSpec extends Specification {
 
   @Unroll
   void "fetchUid where uid: \'#uid\' and eppn \'#eppn\' expecting \'#expected\'"() {
+    Map request = [:]
+    request.eppn = eppn
+    request.norEduPersonNIN = nin
+
     expect:
-    expected == service.fetchUid(uid, eppn)
+    expected == service.fetchUid(scope, request)
 
     where:
-    uid              | eppn         | expected
-    null             | null         | null
-    ''               | null         | null
-    null             | ''           | null
-    ''               | ''           | null
-    'uid'            | null         | 'uid'
-    'uid'            | 'eppn'       | 'uid'
-    null             | 'eppn'       | null
-    null             | 'eppn@su.se' | 'eppn'
+    eppn         | scope        | nin    | expected
+    null         | "su.se"      | null   | null
+    null         | "su.se"      | null   | null
+    ''           | "su.se"      | null   | null
+    ''           | "su.se"      | null   | null
+    null         | "su.se"      | null   | null
+    'eppn'       | "su.se"      | null   | null
+    'eppn'       | "su.se"      | null   | null
+    'eppn'       | "unknown"    | null   | null
+    'eppn@su.se' | "su.se"      | null   | 'eppn'
+    'eppn@su.se' | "su.se"      | 'nin'  | 'eppn'
+    'eppn@x.se'  | "su.se"      | 'nin'  | 'eppn'
+    'eppn@x.se'  | "studera.nu" | 'nin'  | 'nin'
   }
 }

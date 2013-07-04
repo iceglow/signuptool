@@ -46,7 +46,7 @@ class ActivateAccountAndCardController {
         break
     }
 
-    String uid = utilityService.fetchUid(session.uid, scope, request)
+    String uid = (session.uid)?:utilityService.fetchUid(scope, request)
 
     if (!uid) {
       eventLogService.logEvent("No valid user found (${session?.uid} / ${request?.eppn})", (String)flash.referenceId, request)
