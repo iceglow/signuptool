@@ -14,14 +14,14 @@ import org.apache.log4j.net.SyslogAppender
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
-def customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy"]
+def customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy"]
 
 environments {
   development {
-    customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy", DataSources]
+    customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy", DataSources]
   }
   test {
-    customConfigurations = ["file:/local/signuptool/conf/SignUpTool.groovy", DataSources]
+    customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy", DataSources]
   }
 }
 /** Some custom options */

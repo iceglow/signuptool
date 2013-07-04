@@ -6,22 +6,30 @@
 </head>
 <body>
   <div class="apps-mid-column">
-    <div class="section bottom-divider">
-      <tmpl:/shared/feedback flash="${flash}"/>
-      <br/>
-      <p><g:message code="dashboard.index.activateAccountText"/></p>
-      <br/>
-      <br/>
-      <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'index']}">
-        <div class="align-center">
-          <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'dashboard.index.startActivateAccountButton')}"/>
-        </div>
-      </g:form>
+    <tmpl:/shared/feedback flash="${flash}"/>
+
+    <div class="float-left bottom-divider">
+      <div class="prompt">
+        <p><g:message code="dashboard.index.activateAccountText"/></p>
+        <br/>
+        <br/>
+        <g:link action="activateAccountAndCard">
+          <div class="align-center">
+            <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'dashboard.index.startActivateAccountButton')}"/>
+          </div>
+        </g:link>
+      </div>
+
+      <div class="state_progress_img">
+        <img src="${resource(dir: 'img', file: 'start_activate_account.png')}" border="0"
+             class="logotype" title="<g:message code='activateAccountAndCardController.step1.counter'/>">
+      </div>
 
       <div class="large-bottom-spacer"></div>
     </div>
+    <div class="clear-float"></div>
     <div class="section">
-      <g:link url="http://sunet.se"><g:message code="dashboard.index.forgotPassword"/></g:link>
+      <g:link action="resetAccountOrPassword"><g:message code="dashboard.index.forgotPassword"/></g:link>
     </div>
   </div>
 </body>

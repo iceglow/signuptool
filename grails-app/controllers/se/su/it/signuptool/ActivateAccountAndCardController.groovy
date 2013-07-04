@@ -31,7 +31,29 @@ class ActivateAccountAndCardController {
      * 2. Fetch the uid from eppn
      */
 
-    String uid = utilityService.fetchUid(session.uid, request.eppn)
+
+    /** Path only taken when no uid is already set in the session */
+    String scope = ''
+
+    if (!session.uid) {
+      scope = utilityService.getScopeFromEppn(request.eppn)
+
+      switch(scope) {
+        case "su.se":
+          break
+        case "studera.nu":
+          if (!request.norEduPersonNIN) {
+            return render(view:'unverifiedAccount')
+          }
+        default:
+          flash.error = message(
+              code:'activateAccountAndCardController.noValidScopeFound',
+              args:[request?.eppn]) as String
+          return redirect(controller:'dashboard', action:'index')
+      }
+    }
+
+    String uid = (session.uid)?:utilityService.fetchUid(scope, request)
 
     if (!uid) {
       eventLogService.logEvent("No valid user found (${session?.uid} / ${request?.eppn})", (String)flash.referenceId, request)
@@ -108,20 +130,6 @@ class ActivateAccountAndCardController {
         lpwurl: lpwurl,
         sukaturl: sukaturl
     ])
-  }
-
-  /**
-   * test method for fetching address from ladok.
-   * @return
-   */
-  def address() {
-    Map address = [:]
-    if(params.pnr) {
-      address = ladokService.getAddressFromLadokByPnr(params.pnr)
-    } else {
-      address = ladokService.getAddressFromLadokByPnr("4105211124")
-    }
-    return render(text:address)
   }
 
   def createNewAccountFlow = {
