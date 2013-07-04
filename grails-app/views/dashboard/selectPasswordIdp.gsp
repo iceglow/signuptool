@@ -9,7 +9,7 @@
     <div class="float-left">
       <div class="prompt">
         <p><g:message code="activateAccountAndCardController.selectIdProviderText"/></p>
-        <div class="bordered-id-provider">
+        <div class="bordered-detail-square">
           <div class="header-id-provider">
             <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
           </div>
