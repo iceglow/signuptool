@@ -43,7 +43,7 @@ class LadokServiceSpec extends Specification {
     def arg1 = 'tnamn'
     def arg2 = 'enamn'
 
-    LadokService.metaClass.runQuery = { String iarg1, Map iarg2 ->
+    LadokService.metaClass.doListQuery = { String iarg1, Map iarg2 ->
       return [[arg1:arg1, arg2:arg2]]
     }
 
@@ -59,7 +59,7 @@ class LadokServiceSpec extends Specification {
     given:
     def arg1 = 'foo@bar.se'
 
-    LadokService.metaClass.runQuery = { String iarg1, Map iarg2 ->
+    LadokService.metaClass.doListQuery = { String iarg1, Map iarg2 ->
       return [[komadr:arg1]]
     }
 
@@ -84,24 +84,6 @@ class LadokServiceSpec extends Specification {
     resp?.first() == "myQuery"
   }
 
-  void "withConnection: When creating Sql connection fails"() {
-    given:
-    LadokService.metaClass.newSqlInstanceFromDataSource = {
-      throw new RuntimeException('foo')
-    }
-
-    Closure query = { Sql sql ->
-      assert sql instanceof Sql
-      return "myQuery"
-    }
-
-    when:
-    def resp = service.withConnection(query)
-
-    then:
-    resp == null
-  }
-
   void "withConnection: When querying fails"() {
     given:
 
@@ -115,11 +97,5 @@ class LadokServiceSpec extends Specification {
     then:
     resp == null
   }
-
-  void "newSqlInstanceFromDataSource: Should return an Sql instance"() {
-    expect:
-    service.newSqlInstanceFromDataSource() instanceof Sql
-  }
-
 
 }

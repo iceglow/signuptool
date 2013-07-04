@@ -9,5 +9,6 @@ class ResetPasswordController {
     // KOlla input
     // Kör enrollUser
     // ... -> visa passwd mm..
+    return render(view:'index')
   }
 }
