@@ -9,6 +9,8 @@ import spock.lang.Specification
 @TestFor(ActivateAccountAndCardController)
 class ActivateAccountAndCardControllerSpec extends Specification {
 
+  private final String DEFAULT_SCOPE = "su.se"
+
   def setup() {
     controller.utilityService = Mock(UtilityService)
     controller.ladokService = Mock(LadokService)
@@ -31,7 +33,52 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     flash.error == 'activateAccountAndCardController.noValidIdFound'
 
     and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.utilityService.fetchUid(*_)
+  }
+
+  def "index: Testing when uid is already in the session."() {
+    given:
+    session.uid = 'foo'
+
+    when:
+    controller.index()
+
+    then:
+    response.redirectedUrl == '/dashboard/index'
+
+    and:
+    flash.password == null
+    flash.error == 'activateAccountAndCardController.userNotFoundInLadok'
+
+    and:
+    0 * controller.utilityService.getScopeFromEppn(*_)
+    0 * controller.utilityService.fetchUid(*_)
+  }
+
+  def "index: handle studera.nu unverified account (missing norEduPersonNIN)"() {
+    when:
+    controller.index()
+
+    then:
+    view == '/activateAccountAndCard/unverifiedAccount'
+
+    and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
+  }
+
+  def "index: Test unhandled or invalid scope"() {
+    when:
+    controller.index()
+
+    then:
+    response.redirectedUrl == '/dashboard/index'
+
+    and:
+    flash.error == 'activateAccountAndCardController.noValidScopeFound'
+
+    and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> "unknown.se"
   }
 
   def "index: When no proper uid is found."() {
@@ -45,6 +92,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     flash.error == 'activateAccountAndCardController.noValidIdFound'
 
     and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.utilityService.fetchUid(*_)
   }
 
@@ -59,6 +107,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     flash.error == 'activateAccountAndCardController.errorWhenFetchingUser'
 
     and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.utilityService.fetchUid(*_) >> 'foo'
     1 * controller.utilityService.uidIsPnr(*_) >> false
     1 * controller.activateAccountAndCardService.findUser(*_) >> { throw new RuntimeException('foo') }
@@ -75,6 +124,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     flash.error == 'activateAccountAndCardController.userNotFoundInLadok'
 
     and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.utilityService.fetchUid(*_) >> 'foo'
     1 * controller.utilityService.uidIsPnr(*_) >> false
     1 * controller.activateAccountAndCardService.findUser(*_) >> null
@@ -92,6 +142,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     flash.error == 'activateAccountAndCardController.userNotFoundInLadok'
 
     and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.utilityService.fetchUid(*_) >> 'foo'
     1 * controller.utilityService.uidIsPnr(*_) >> false
     1 * controller.activateAccountAndCardService.findUser(*_) >> null
@@ -106,6 +157,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     response.redirectedUrl == '/activateAccountAndCard/createNewAccount'
 
     and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.utilityService.fetchUid(*_) >> 'foo'
     1 * controller.utilityService.uidIsPnr(*_) >> false
     1 * controller.activateAccountAndCardService.findUser(*_) >> null
@@ -133,6 +185,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     flash.password == null
 
     and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.utilityService.fetchUid(*_) >> 'foo'
     1 * controller.utilityService.uidIsPnr(*_) >> false
     1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo')

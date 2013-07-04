@@ -25,19 +25,26 @@ class ActivateAccountAndCardController {
      * 2. Fetch the uid from eppn
      */
 
-    String scope = utilityService.getScopeFromEppn(request.eppn)
 
-    switch(scope) {
-      case "su.se":
-        break
-      case "studera.nu":
-        if (!request.norEduPersonNIN) {
-          return render(controller:'errorHandler', action:'unverifiedAccount')
-        }
-        break
-      default:
-        log.error "Blah"
-        break
+    /** Path only taken when no uid is already set in the session */
+    String scope = ''
+
+    if (!session.uid) {
+      scope = utilityService.getScopeFromEppn(request.eppn)
+
+      switch(scope) {
+        case "su.se":
+          break
+        case "studera.nu":
+          if (!request.norEduPersonNIN) {
+            return render(view:'unverifiedAccount')
+          }
+        default:
+          flash.error = message(
+              code:'activateAccountAndCardController.noValidScopeFound',
+              args:[request?.eppn]) as String
+          return redirect(controller:'dashboard', action:'index')
+      }
     }
 
     String uid = (session.uid)?:utilityService.fetchUid(scope, request)
@@ -101,10 +108,6 @@ class ActivateAccountAndCardController {
         lpwurl: lpwurl,
         sukaturl: sukaturl
     ])
-  }
-
-  def showSelectIdProvider = {
-    return render(view: '/dashboard/selectIdProvider')
   }
 
   def createNewAccountFlow = {
