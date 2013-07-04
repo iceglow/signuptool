@@ -59,8 +59,8 @@ class ActivateAccountAndCardController {
     /**
      * If the user isn't already in the session we find it either by ssn or uid and put it in the session.
      */
+    boolean uidIsPnr = utilityService.uidIsPnr(uid)
     if (!session.user) {
-      boolean uidIsPnr = utilityService.uidIsPnr(uid)
       try {
         session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
       } catch (ex) {
