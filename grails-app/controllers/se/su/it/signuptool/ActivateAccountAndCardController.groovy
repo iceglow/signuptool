@@ -1,6 +1,7 @@
 package se.su.it.signuptool
 
 import se.su.it.svc.SvcSuPersonVO
+import se.su.it.svc.SvcUidPwd
 
 class ActivateAccountAndCardController {
 
@@ -8,6 +9,7 @@ class ActivateAccountAndCardController {
   def configService
   def eventLogService
   def ladokService
+  def sukatService
   def utilityService
 
   def index() {
@@ -45,7 +47,9 @@ class ActivateAccountAndCardController {
           if (!request.norEduPersonNIN) {
             return render(view:'unverifiedAccount')
           }
+          break
         default:
+          log.error("apa: ${scope}")
           flash.error = message(
               code:'activateAccountAndCardController.noValidScopeFound',
               args:[request?.eppn]) as String
@@ -111,6 +115,7 @@ class ActivateAccountAndCardController {
       /** Saving enamn and tnamn for enroll method */
       session.givenName = ladokData.tnamn
       session.sn = ladokData.enamn
+      session.pnr = ((uid?.length() == 12) ? uid[2..11] : uid)
 
       eventLogService.logEvent("User ${uid} starting flow", (String)flash.referenceId, request, uid)
 
@@ -151,12 +156,12 @@ class ActivateAccountAndCardController {
     init {
       action {
 
-        boolean hasAccount = activateAccountAndCardService.findUser((String)session.pnr, true)
-        if (hasAccount) {
-
+        SvcSuPersonVO account = activateAccountAndCardService.findUser((String)session.pnr, true)
+        if (account) {
+          flash.info = "Account already exists"
+          session.uid = account.uid
           accountExist()
         } else {
-
           newAccount()
         }
       }
@@ -199,14 +204,13 @@ class ActivateAccountAndCardController {
     createAccount {
       action {
 
-        def givenName = session.givenName
-        def sn = session.sn
+        String givenName = session.givenName
+        String sn = session.sn
+        String socialSecurityNumber = session.pnr
 
-        // def result = sukatService.enrollUser(givenName, sn, session.pnr)
         log.info "<<< ENROLLED USER : $givenName $sn : ${flow.error} >>>"
 
-
-        def result = [uid: 'donaldDuck', password: 'kajsa anka']
+        SvcUidPwd result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
 
         if (result == null) {
           flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
@@ -219,7 +223,7 @@ class ActivateAccountAndCardController {
         session.uid = result.uid
         flash.password = result.password
 
-        return redirect(action:'index')
+        // return redirect(action:'index')
       }
       on("success").to("hasActivatedAccount")
       on("error").to("errorHandler")

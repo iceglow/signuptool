@@ -20,8 +20,10 @@
             <span class="mgn-left-30"><g:message code="activateAccountAndCardController.hasActivatedAccount.print"/></span>
           </g:link>
           <div><g:message code="activateAccountAndCardController.hasActivatedAccount.details"/></div>
-          <div><g:message code="activateAccountAndCardController.hasActivatedAccount.username"/></div>
-          <div><g:message code="activateAccountAndCardController.hasActivatedAccount.password"/></div>
+          <div><g:message code="activateAccountAndCardController.hasActivatedAccount.username"/>: ${session?.uid}</div>
+          <g:if test="${flash?.password}">
+            <div><g:message code="activateAccountAndCardController.hasActivatedAccount.password"/>: ${flash.password}</div>
+          </g:if>
         </div>
 
         <div class="clear-float"></div>
