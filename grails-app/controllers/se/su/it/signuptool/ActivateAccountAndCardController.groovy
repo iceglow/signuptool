@@ -8,6 +8,7 @@ class ActivateAccountAndCardController {
   def configService
   def ladokService
   def utilityService
+  def sukatService
 
   def index() {
     log.debug "$controllerName, $actionName, $params"
@@ -62,7 +63,10 @@ class ActivateAccountAndCardController {
     if (!session.user) {
       try {
         boolean uidIsPnr = utilityService.uidIsPnr(uid)
-        session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+        def user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+        if (user) {
+          session.user = user
+        }
       } catch (ex) {
         log.error "Failed when setting user in session", ex
         flash.error = message(
@@ -73,7 +77,7 @@ class ActivateAccountAndCardController {
     }
 
     /** If we still have no user in the session then this is a first time visit */
-    if (!session.user) {
+    if (!session.user || !session.user.accountIsActive) {
       /** See if we can find the new user in Ladok */
       Map ladokData = [:]
 
@@ -84,9 +88,10 @@ class ActivateAccountAndCardController {
       }
 
       if (!ladokData) {
-        flash.error = message(code:'activateAccountAndCardController.userNotFoundInLadok') as String
-        return redirect(controller:'dashboard', action:'index')
+        return render(view:'userNotFoundInLadok')
       }
+      /** Since the uid is a pnr we set is as pnr in the session to be used by the createAccountFlow later */
+      session.pnr = uid
 
       /** Saving enamn and tnamn for enroll method */
       session.givenName = ladokData.tnamn
@@ -167,12 +172,9 @@ class ActivateAccountAndCardController {
 
         def givenName = session.givenName
         def sn = session.sn
+        def pnr = session.pnr
 
-        // def result = sukatService.enrollUser(givenName, sn, session.pnr)
-        log.info "<<< ENROLLED USER : $givenName $sn : ${flow.error} >>>"
-
-
-        def result = [uid: 'donaldDuck', password: 'kajsa anka']
+        def result = sukatService.enrollUser(givenName, sn, pnr)
 
         if (result == null) {
           flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
