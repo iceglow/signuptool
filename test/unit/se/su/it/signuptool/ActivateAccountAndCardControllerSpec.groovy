@@ -16,6 +16,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     controller.ladokService = Mock(LadokService)
     controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     controller.configService = Mock(ConfigService)
+    controller.eventLogService = Mock(EventLogService)
   }
 
   def "index: Testing the password passing."() {
@@ -35,6 +36,8 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.utilityService.fetchUid(*_)
+    and:
+    1 * controller.eventLogService.createReferenceId(*_)>>"hej svejs"
   }
 
   def "index: Testing when uid is already in the session."() {
