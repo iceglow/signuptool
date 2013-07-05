@@ -86,6 +86,7 @@ class ActivateAccountAndCardController {
     }
 
     /** If we still have no user in the session then this is a first time visit */
+
     if (!session.user) {
       if(uidIsPnr) {
         eventLogService.logEvent("First time visit for ${uid}", (String)flash.referenceId, request,uid,"")
@@ -147,6 +148,23 @@ class ActivateAccountAndCardController {
      * Skapa konto sent och skicka vidare till index med password.
      */
 
+    init {
+      action {
+
+        boolean hasAccount = activateAccountAndCardService.findUser((String)session.pnr, true)
+        if (hasAccount) {
+
+          accountExist()
+        } else {
+
+          newAccount()
+        }
+      }
+
+      on("accountExist").to("hasActivatedAccount")
+      on("newAccount").to("prepareForwardAddress")
+    }
+
     prepareForwardAddress {
       action {
         // Fetch forward address from ladok / lpw
@@ -154,13 +172,13 @@ class ActivateAccountAndCardController {
         String forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String)session.pnr)
         [forwardAddress:forwardAddress]
       }
-      on("success").to("selectEmail")
+      on("success").to("activateAccount")
       on("error").to("errorHandler")
       on(Exception).to("errorHandler")
     }
 
-    selectEmail {
-      on("activate").to("processEmailInput")
+    activateAccount {
+      on("acceptAccountActivation").to("processEmailInput")
     }
 
     processEmailInput {
@@ -203,9 +221,17 @@ class ActivateAccountAndCardController {
 
         return redirect(action:'index')
       }
-      on("success").to("end")
+      on("success").to("hasActivatedAccount")
       on("error").to("errorHandler")
       on(Exception).to("errorHandler")
+    }
+
+    hasActivatedAccount {
+      on('orderCard').to('startCardFlow')
+    }
+
+    startCardFlow {
+      subflow(action: "orderCard")
     }
 
     errorHandler {
@@ -261,7 +287,11 @@ class ActivateAccountAndCardController {
     }
 
     processCardOrder {
-
+      action {
+      // todo: beställ kort
+      }
+      on('success').to('end')
+      on('error').to('errorHandler')
     }
 
     errorHandler {
@@ -270,8 +300,9 @@ class ActivateAccountAndCardController {
       }
       on("success").to("end")
     }
+
     end() {
-      return redirect(action:'index')
+      render(view: 'endAccountAndCard')
     }
   }
 
