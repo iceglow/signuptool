@@ -26,6 +26,16 @@
   float: left;
 }
 
+.help {
+  background-image: url(../img/help_16.gif);
+  width: 20px;
+  padding-right: 14px;
+  padding-left: 14px;
+  padding-top: 4px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .print-details {
   background-image: url(../img/icon-print.png);
   background-position: left;

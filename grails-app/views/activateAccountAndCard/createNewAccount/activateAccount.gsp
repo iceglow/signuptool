@@ -15,13 +15,16 @@
 
         <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'']}">
 
-          <label for="forwardAddress"><g:message code="activateAccountAndCardController.activateAccount.forwardAddress"/></label> <br/>
+          <label for="forwardAddress"><g:message code="activateAccountAndCardController.activateAccount.forwardAddress"/></label>
+          <a class="hint--right hint--info" data-hint="abcdefgh"><span class="help"></span></a>
+          <br/>
           <g:textField name="forwardAddress" value="${forwardAddress}"/>
 
           <div class="clear-float"></div>
 
           <g:checkBox name="approveTermsOfUse" />
           <label for="approveTermsOfUse"><g:message code="activateAccountAndCardController.activateAccount.approveTermsOfUse"/></label>
+          <a class="hint--right hint--info" data-hint="abcdefgh"><span class="help"></span></a>
           <div class="align-right">
             <g:submitButton class="signupButton" name="acceptAccountActivation" value="${g.message(code:'activateAccountAndCardController.activateAccount.activate')}"/>
           </div>
