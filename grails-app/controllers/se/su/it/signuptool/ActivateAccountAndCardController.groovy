@@ -1,6 +1,7 @@
 package se.su.it.signuptool
 
 import se.su.it.svc.SvcSuPersonVO
+import se.su.it.svc.SvcUidPwd
 
 class ActivateAccountAndCardController {
 
@@ -8,6 +9,7 @@ class ActivateAccountAndCardController {
   def configService
   def eventLogService
   def ladokService
+  def sukatService
   def utilityService
 
   def index() {
@@ -45,7 +47,9 @@ class ActivateAccountAndCardController {
           if (!request.norEduPersonNIN) {
             return render(view:'unverifiedAccount')
           }
+          break
         default:
+          log.error("apa: ${scope}")
           flash.error = message(
               code:'activateAccountAndCardController.noValidScopeFound',
               args:[request?.eppn]) as String
@@ -66,10 +70,13 @@ class ActivateAccountAndCardController {
     /**
      * If the user isn't already in the session we find it either by ssn or uid and put it in the session.
      */
+    boolean uidIsPnr = utilityService.uidIsPnr(uid)
     if (!session.user) {
-      boolean uidIsPnr = utilityService.uidIsPnr(uid)
       try {
-        session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+        def user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+        if (user) {
+          session.user = user
+        }
       } catch (ex) {
         if(uidIsPnr) {
           eventLogService.logEvent("Failed when setting user in session for ${uid} with exception ${ex.getMessage()}", (String)flash.referenceId, request,uid,"")
@@ -86,7 +93,7 @@ class ActivateAccountAndCardController {
     }
 
     /** If we still have no user in the session then this is a first time visit */
-    if (!session.user) {
+    if (!session.user || !session.user.accountIsActive) {
       if(uidIsPnr) {
         eventLogService.logEvent("First time visit for ${uid}", (String)flash.referenceId, request,uid,"")
       } else {
@@ -103,13 +110,15 @@ class ActivateAccountAndCardController {
 
       if (!ladokData) {
         eventLogService.logEvent("User ${uid} not found in ladok", (String)flash.referenceId, request, uid)
-        flash.error = message(code:'activateAccountAndCardController.userNotFoundInLadok') as String
-        return redirect(controller:'dashboard', action:'index')
+        return render(view:'userNotFoundInLadok')
       }
+      /** Since the uid is a pnr we set is as pnr in the session to be used by the createAccountFlow later */
+      session.pnr = uid
 
       /** Saving enamn and tnamn for enroll method */
       session.givenName = ladokData.tnamn
       session.sn = ladokData.enamn
+      session.pnr = ((uid?.length() == 12) ? uid[2..11] : uid)
 
       eventLogService.logEvent("User ${uid} starting flow", (String)flash.referenceId, request, uid)
 
@@ -147,6 +156,23 @@ class ActivateAccountAndCardController {
      * Skapa konto sent och skicka vidare till index med password.
      */
 
+    init {
+      action {
+
+        SvcSuPersonVO account = activateAccountAndCardService.findUser((String)session.pnr, true)
+        if (account) {
+          flash.info = "Account already exists"
+          session.uid = account.uid
+          accountExist()
+        } else {
+          newAccount()
+        }
+      }
+
+      on("accountExist").to("hasActivatedAccount")
+      on("newAccount").to("prepareForwardAddress")
+    }
+
     prepareForwardAddress {
       action {
         // Fetch forward address from ladok / lpw
@@ -154,13 +180,13 @@ class ActivateAccountAndCardController {
         String forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String)session.pnr)
         [forwardAddress:forwardAddress]
       }
-      on("success").to("selectEmail")
+      on("success").to("activateAccount")
       on("error").to("errorHandler")
       on(Exception).to("errorHandler")
     }
 
-    selectEmail {
-      on("activate").to("processEmailInput")
+    activateAccount {
+      on("acceptAccountActivation").to("processEmailInput")
     }
 
     processEmailInput {
@@ -181,14 +207,11 @@ class ActivateAccountAndCardController {
     createAccount {
       action {
 
-        def givenName = session.givenName
-        def sn = session.sn
+        String givenName = session.givenName
+        String sn = session.sn
+        String socialSecurityNumber = session.pnr
 
-        // def result = sukatService.enrollUser(givenName, sn, session.pnr)
-        log.info "<<< ENROLLED USER : $givenName $sn : ${flow.error} >>>"
-
-
-        def result = [uid: 'donaldDuck', password: 'kajsa anka']
+        SvcUidPwd result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
 
         if (result == null) {
           flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
@@ -201,11 +224,19 @@ class ActivateAccountAndCardController {
         session.uid = result.uid
         flash.password = result.password
 
-        return redirect(action:'index')
+        // return redirect(action:'index')
       }
-      on("success").to("end")
+      on("success").to("hasActivatedAccount")
       on("error").to("errorHandler")
       on(Exception).to("errorHandler")
+    }
+
+    hasActivatedAccount {
+      on('orderCard').to('startCardFlow')
+    }
+
+    startCardFlow {
+      subflow(action: "orderCard")
     }
 
     errorHandler {
@@ -261,7 +292,11 @@ class ActivateAccountAndCardController {
     }
 
     processCardOrder {
-
+      action {
+      // todo: beställ kort
+      }
+      on('success').to('end')
+      on('error').to('errorHandler')
     }
 
     errorHandler {
@@ -270,8 +305,9 @@ class ActivateAccountAndCardController {
       }
       on("success").to("end")
     }
+
     end() {
-      return redirect(action:'index')
+      render(view: 'endAccountAndCard')
     }
   }
 
@@ -305,6 +341,19 @@ class ActivateAccountAndCardController {
   }
 
   private boolean userCanOrderCards() {
-    return activateAccountAndCardService.canOrderCard()
+    SvcSuPersonVO user = null
+
+    if (session?.pnr) {
+      user = activateAccountAndCardService.findUser(session?.pnr, true)
+    } else if (session?.uid) {
+      user = activateAccountAndCardService.findUser(session?.uid, false)
+    }
+
+    boolean canOrder = false
+    if(user) {
+      canOrder = activateAccountAndCardService.canOrderCard(user?.uid)
+    }
+
+    return canOrder
   }
 }

@@ -32,11 +32,6 @@ class SukatService implements Serializable {
     // call sukatsvc to fetch cardorders for user , something like findAllCardOrdersForUid in the CardOrderService
     cardOrders = cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
 
-    cardOrders.each { SvcCardOrderVO orderVO ->
-      orderVO.firstname
-      orderVO.lastname
-      orderVO.serial
-    }
     return cardOrders
   }
 
@@ -49,10 +44,6 @@ class SukatService implements Serializable {
       suCards = []
     }
     return suCards
-  }
-
-  public void findAllCardOrdersForUid(String uid) {
-    cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
   }
 
   public String getMailRoutingAddress(String uid) {
