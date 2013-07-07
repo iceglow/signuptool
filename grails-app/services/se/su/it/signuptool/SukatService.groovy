@@ -107,7 +107,7 @@ class SukatService implements Serializable {
     SvcUidPwd response = null
 
     try {
-
+      // TODO: See why this throws a JaxWsClientProxy
       response = enrollmentWS.enrollUser(
           DEFAULT_DOMAIN,
           givenName,
