@@ -13,7 +13,7 @@
       <div class="prompt">
         <p><g:message code="activateAccountAndCardController.activateAccount.promptText"/></p>
 
-        <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'']}">
+        <g:form id="activateAccountForm">
 
           <label for="forwardAddress"><g:message code="activateAccountAndCardController.activateAccount.forwardAddress"/></label> <br/>
           <g:textField name="forwardAddress" value="${forwardAddress}"/>

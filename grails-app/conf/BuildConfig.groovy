@@ -49,7 +49,7 @@ grails.project.dependency.resolution = {
     test "org.seleniumhq.selenium:selenium-support:2.33.0"
     test "org.seleniumhq.selenium:selenium-chrome-driver:2.33.0"
 
-    compile "se.su.it.cxf:sukat-cxf-svc-client:1.0.5.3"
+    compile "se.su.it.cxf:sukat-cxf-svc-client:1.0.5.4"
     compile "org.grails:grails-webflow:$grailsVersion"
 
     runtime 'mysql:mysql-connector-java:5.1.22'
@@ -83,7 +83,7 @@ grails.project.dependency.resolution = {
         ":resources:1.1.6",
         ":role-access-manager:0.2.6.1",
         ":su-config:0.6.5",
-        ":su-localization-editor:2.0.0"
+        ":su-localization-editor:2.0.1"
     )
     runtime(':greenmail:1.3.2') {
       excludes "activation"

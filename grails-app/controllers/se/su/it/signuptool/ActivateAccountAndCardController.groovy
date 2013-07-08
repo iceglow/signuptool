@@ -73,7 +73,10 @@ class ActivateAccountAndCardController {
     boolean uidIsPnr = utilityService.uidIsPnr(uid)
     if (!session.user) {
       try {
-        session.user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+        def user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+        if (user) {
+          session.user = user
+        }
       } catch (ex) {
         if(uidIsPnr) {
           eventLogService.logEvent("Failed when setting user in session for ${uid} with exception ${ex.getMessage()}", (String)flash.referenceId, request,uid,"")
@@ -90,8 +93,7 @@ class ActivateAccountAndCardController {
     }
 
     /** If we still have no user in the session then this is a first time visit */
-
-    if (!session.user) {
+    if (!session.user || !session.user.accountIsActive) {
       if(uidIsPnr) {
         eventLogService.logEvent("First time visit for ${uid}", (String)flash.referenceId, request,uid,"")
       } else {
@@ -108,9 +110,10 @@ class ActivateAccountAndCardController {
 
       if (!ladokData) {
         eventLogService.logEvent("User ${uid} not found in ladok", (String)flash.referenceId, request, uid)
-        flash.error = message(code:'activateAccountAndCardController.userNotFoundInLadok') as String
-        return redirect(controller:'dashboard', action:'index')
+        return render(view:'userNotFoundInLadok')
       }
+      /** Since the uid is a pnr we set is as pnr in the session to be used by the createAccountFlow later */
+      session.pnr = uid
 
       /** Saving enamn and tnamn for enroll method */
       session.givenName = ladokData.tnamn
@@ -153,27 +156,8 @@ class ActivateAccountAndCardController {
      * Skapa konto sent och skicka vidare till index med password.
      */
 
-    init {
-      action {
-
-        SvcSuPersonVO account = activateAccountAndCardService.findUser((String)session.pnr, true)
-        if (account) {
-          flash.info = "Account already exists"
-          session.uid = account.uid
-          accountExist()
-        } else {
-          newAccount()
-        }
-      }
-
-      on("accountExist").to("hasActivatedAccount")
-      on("newAccount").to("prepareForwardAddress")
-    }
-
     prepareForwardAddress {
       action {
-        // Fetch forward address from ladok / lpw
-
         String forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String)session.pnr)
         [forwardAddress:forwardAddress]
       }
@@ -188,6 +172,7 @@ class ActivateAccountAndCardController {
 
     processEmailInput {
       action {
+        //TODO: Check the checkbox.
         if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
           flow.error = "Invalid Email"
           eventLogService.logEvent("Invalid email for ${session.pnr}: ${params?.forwardAddress}", (String)flash.referenceId, request, (String)session.pnr)
@@ -208,8 +193,6 @@ class ActivateAccountAndCardController {
         String sn = session.sn
         String socialSecurityNumber = session.pnr
 
-        log.info "<<< ENROLLED USER : $givenName $sn : ${flow.error} >>>"
-
         SvcUidPwd result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
 
         if (result == null) {
@@ -225,17 +208,9 @@ class ActivateAccountAndCardController {
 
         // return redirect(action:'index')
       }
-      on("success").to("hasActivatedAccount")
+      on("success").to("end")
       on("error").to("errorHandler")
       on(Exception).to("errorHandler")
-    }
-
-    hasActivatedAccount {
-      on('orderCard').to('startCardFlow')
-    }
-
-    startCardFlow {
-      subflow(action: "orderCard")
     }
 
     errorHandler {

@@ -1,31 +1,46 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
-  <head>
-    <meta name="layout" content="main"/>
-    <title>Dashboard</title>
-    <style>
-      #accountInfo {
-        min-width: 90%;
-        min-height: 200px;
-        background: #afd7e6;
-      }
-      #cardInfo {
-        min-width: 90%;
-        min-height: 200px;
-        background: #ffa07a;
-      }
-      #webreg {
-        min-width: 90%;
-        min-height: 200px;
-        background: #7aff8b;
-      }
+<head>
+  <title></title>
+  <meta name="layout" content="main"/>
+</head>
+<body>
+  <div class="apps-mid-column">
+    <g:if test="${error}">
+      <div class="error">${error}</div>
+    </g:if>
+    <div class="float-left">
+      <div class="prompt">
+        <p><g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/></p>
 
-    </style>
-  </head>
-  <body>
-    <tmpl:/shared/feedback flash="${flash}"/>
-    <div id="accountInfo"><tmpl:accountInfo user="${user}" password="${password}"/></div>
-    <div id="cardInfo"><tmpl:cardInfo user="${cardInfo}"/></div>
-    <div id="webreg"><tmpl:webreg lpwurl="${lpwurl}" sukaturl="${sukaturl}"/></div>
-  </body>
+        <div class="clear-float"></div>
+
+        <div class="bordered-detail-square apps-float-50">
+          <g:link action="" class="print-details">
+            <span class="mgn-left-30"><g:message code="activateAccountAndCardController.hasActivatedAccount.print"/></span>
+          </g:link>
+          <div><g:message code="activateAccountAndCardController.hasActivatedAccount.details"/></div>
+          <div><g:message code="activateAccountAndCardController.hasActivatedAccount.username"/>: ${session?.uid}</div>
+          <g:if test="${password}">
+            <div><g:message code="activateAccountAndCardController.hasActivatedAccount.password"/>: ${password}</div>
+          </g:if>
+        </div>
+
+        <div class="clear-float"></div>
+
+        <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'']}">
+          <div class="align-right"><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></div>
+          <div class="align-right">
+            <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
+          </div>
+        </g:form>
+      </div>
+
+      <div class="state_progress_img">
+        <img src="${resource(dir: 'img', file: 'universityaccount_activate_account.png')}" border="0"
+             class="logotype" title="<g:message code='activateAccountAndCardController.step3.counter'/>">
+      </div>
+    </div>
+  </div>
+</body>
 </html>

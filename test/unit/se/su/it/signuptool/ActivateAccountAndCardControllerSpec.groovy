@@ -48,11 +48,10 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     controller.index()
 
     then:
-    response.redirectedUrl == '/dashboard/index'
+    view == '/activateAccountAndCard/userNotFoundInLadok'
 
     and:
     flash.password == null
-    flash.error == 'activateAccountAndCardController.userNotFoundInLadok'
 
     and:
     0 * controller.utilityService.getScopeFromEppn(*_)
@@ -121,10 +120,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     controller.index()
 
     then:
-    response.redirectedUrl == '/dashboard/index'
-
-    and:
-    flash.error == 'activateAccountAndCardController.userNotFoundInLadok'
+    view == '/activateAccountAndCard/userNotFoundInLadok'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
@@ -139,10 +135,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     controller.index()
 
     then:
-    response.redirectedUrl == '/dashboard/index'
-
-    and:
-    flash.error == 'activateAccountAndCardController.userNotFoundInLadok'
+    view == '/activateAccountAndCard/userNotFoundInLadok'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
@@ -191,7 +184,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.utilityService.fetchUid(*_) >> 'foo'
     1 * controller.utilityService.uidIsPnr(*_) >> false
-    1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo')
+    1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo', accountIsActive:true)
     0 * controller.activateAccountAndCardService.fetchLadokData(*_)
     1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> [:]
     2 * controller.configService.getValue(_,_) >> { String arg1, String arg2 ->
@@ -200,10 +193,5 @@ class ActivateAccountAndCardControllerSpec extends Specification {
       if (arg2 == "sukattool") { return "sukattoolUrl" }
       return null
     }
-  }
-
-  def "createNewAccountFlow"() {
-    // TODO: Tests for the flow.
-    return true
   }
 }
