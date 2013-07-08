@@ -25,7 +25,7 @@ class ActivateAccountAndCardController {
 
     if(!flash.referenceId) {
       flash.referenceId = eventLogService.createReferenceId()
-      log.error("creating new referenceid ${flash.referenceId}")
+      log.debug("creating new referenceid ${flash.referenceId}")
     }
 
     /** Setting uid
