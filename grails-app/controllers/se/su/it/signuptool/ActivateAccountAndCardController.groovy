@@ -42,13 +42,16 @@ class ActivateAccountAndCardController {
 
       switch(scope) {
         case "su.se":
+          eventLogService.logEvent("got 'su.se' as eppn-scope but expected 'studera.nu' for ${request.eppn}", (String)flash.referenceId, request)
           break
         case "studera.nu":
           if (!request.norEduPersonNIN) {
+            eventLogService.logEvent("unverified account for ${request.eppn}", (String)flash.referenceId, request)
             return render(view:'unverifiedAccount')
           }
           break
         default:
+          eventLogService.logEvent("no valid scope (expected 'studera.nu') for ${request.eppn}", (String)flash.referenceId, request)
           flash.error = message(
               code:'activateAccountAndCardController.noValidScopeFound',
               args:[request?.eppn]) as String
@@ -195,12 +198,14 @@ class ActivateAccountAndCardController {
         SvcUidPwd result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
 
         if (result == null) {
+          eventLogService.logEvent("Failed to enroll user for ${session.pnr}", (String)flash.referenceId, request, (String)session.pnr)
           flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
           throw new Exception("Failed when creating account.")
         }
 
         /** Since we don't recieve a full account from the creation of an account we return the uid */
 
+        eventLogService.logEvent("Account created for ${session.pnr}", (String)flash.referenceId, request, (String)session.pnr, result.uid)
         flash.info = "Account created!"
         session.uid = result.uid
         flash.password = result.password
@@ -214,6 +219,7 @@ class ActivateAccountAndCardController {
 
     errorHandler {
       action {
+        eventLogService.logEvent("Webflow Exception occurred: ${flash.stateException.getMessage()}", (String)flash.referenceId, request)
         log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
       }
       on("success").to("end")
@@ -285,8 +291,8 @@ class ActivateAccountAndCardController {
   }
 
   private boolean userHasAccount() {
-    def userFoundWithPnr = null
-    def userFoundWithUid = null
+    SvcSuPersonVO userFoundWithPnr = null
+    SvcSuPersonVO userFoundWithUid = null
 
     if (session?.pnr) {
       userFoundWithPnr = activateAccountAndCardService.findUser(session?.pnr, true)
@@ -300,14 +306,14 @@ class ActivateAccountAndCardController {
   }
 
   private boolean userHasRegisteredAddress() {
-    def hasRegisteredAddress = false
+    boolean hasRegisteredAddress = false
 
     if (session?.pnr) {
-      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress(session?.pnr, true)
+      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress((String)session?.pnr, true)
     }
 
     if (session?.uid) {
-      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress(session?.uid, false)
+      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress((String)session?.uid, false)
     }
 
     return hasRegisteredAddress

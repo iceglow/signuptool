@@ -59,8 +59,8 @@ class LadokService {
 
     if (temporaryAddress && useTemporaryAddress) {
       Date now        = new Date()
-      Date fromDate   = Date.parse("yyyy-MM-dd", temporaryAddress?.fromdat)
-      Date toDate     = Date.parse("yyyy-MM-dd", temporaryAddress?.tomdat)
+      Date fromDate   = Date.parse("yyyy-MM-dd", (String)temporaryAddress?.fromdat)
+      Date toDate     = Date.parse("yyyy-MM-dd", (String)temporaryAddress?.tomdat)
       //TODO: what happens if the dates does not parse?
 
       if (fromDate < now && now < toDate) {
