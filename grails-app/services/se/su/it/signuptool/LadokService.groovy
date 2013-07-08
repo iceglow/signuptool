@@ -64,7 +64,10 @@ class LadokService {
       //TODO: what happens if the dates does not parse?
 
       if (fromDate < now && now < toDate) {
-        address = temporaryAddress
+        // according to discussion with janj and friends 2013-07-08, see mail with subject 'Land i ladoks adresstabell' or jira DEVIDM-25
+        if(temporaryAddress?.land=='SVERIGE' || temporaryAddress?.land=='') {
+          address = temporaryAddress
+        }
       }
     }
 

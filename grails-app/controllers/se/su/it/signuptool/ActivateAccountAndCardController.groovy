@@ -226,6 +226,7 @@ class ActivateAccountAndCardController {
     }
 
     end() {
+      eventLogService.logEvent("done with creation-flow", (String)flash.referenceId, request)
       return redirect(action:'index')
     }
   }
@@ -247,16 +248,19 @@ class ActivateAccountAndCardController {
     prepareForwardOrderCard {
       action {
         if (!userHasAccount()) {
+          eventLogService.logEvent("no account found for uid (${session?.uid}) or pnr (${session?.pnr})", (String)flash.referenceId, request)
           flow.error = "user is has no account"
           return error()
         }
 
         if (!userCanOrderCards()) {
+          eventLogService.logEvent("user has active cards or orders", (String)flash.referenceId, request)
           flow.error = "user has active cards or orders"
         }
 
-        if (!userHasRegisteredAddress()) {
-          flow.error = "user registered address is missing"
+        if (!userHasLadokAddress()) {
+          eventLogService.logEvent("user address is missing in ladok", (String)flash.referenceId, request)
+          flow.error = "user address is missing in ladok"
           return error()
         }
 
@@ -303,6 +307,17 @@ class ActivateAccountAndCardController {
     }
 
     return userFoundWithPnr || userFoundWithUid
+  }
+
+  private boolean userHasLadokAddress() {
+    boolean hasLadokAddress = false
+
+    if (session?.pnr) {
+      Map ladokAddress = ladokService.getAddressFromLadokByPnr((String)session?.pnr)
+      hasLadokAddress = (ladokAddress && ladokAddress.size()>0)
+    }
+
+    return hasLadokAddress
   }
 
   private boolean userHasRegisteredAddress() {

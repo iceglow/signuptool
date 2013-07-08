@@ -6,6 +6,8 @@ import org.apache.commons.dbcp.BasicDataSource
 import spock.lang.IgnoreRest
 import spock.lang.Specification
 
+import java.text.SimpleDateFormat
+
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
@@ -98,4 +100,39 @@ class LadokServiceSpec extends Specification {
     resp == null
   }
 
+  void "getAddressFromLadokByPnr: happy path with tempaddress"() {
+    given:
+    Date now = new Date()
+
+    service.metaClass.doListQuery = { String query, Map map ->
+      [[adrtyp:'2',fromdat: now.minus(7).format("yyyy-MM-dd"), tomdat:now.plus(7).format("yyyy-MM-dd"),land: 'SVERIGE',streetaddress1: 'kalle ankas gata', postnr: '123 45', ort: 'toontown'],[adrtyp:'4',land: 'SVERIGE',streetaddress1: 'snickarbacken', postnr: '123 45', ort: 'farsta']]
+    }
+
+    when:
+    Map address = service.getAddressFromLadokByPnr("1234567890")
+
+    then:
+    address
+
+    and:
+    address.ort == 'toontown'
+  }
+
+  void "getAddressFromLadokByPnr: happy path without tempaddress"() {
+    given:
+    Date now = new Date()
+
+    service.metaClass.doListQuery = { String query, Map map ->
+      [[adrtyp:'2',fromdat: now.minus(14).format("yyyy-MM-dd"), tomdat:now.minus(7).format("yyyy-MM-dd"),land: 'SVERIGE',streetaddress1: 'kalle ankas gata', postnr: '123 45', ort: 'toontown'],[adrtyp:'4',land: 'SVERIGE',streetaddress1: 'snickarbacken', postnr: '123 45', ort: 'farsta']]
+    }
+
+    when:
+    Map address = service.getAddressFromLadokByPnr("1234567890")
+
+    then:
+    address
+
+    and:
+    address.ort == 'farsta'
+  }
 }
