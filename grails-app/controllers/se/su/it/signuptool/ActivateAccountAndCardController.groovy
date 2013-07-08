@@ -49,7 +49,6 @@ class ActivateAccountAndCardController {
           }
           break
         default:
-          log.error("apa: ${scope}")
           flash.error = message(
               code:'activateAccountAndCardController.noValidScopeFound',
               args:[request?.eppn]) as String
