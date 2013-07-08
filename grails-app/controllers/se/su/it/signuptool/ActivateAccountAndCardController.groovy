@@ -156,27 +156,8 @@ class ActivateAccountAndCardController {
      * Skapa konto sent och skicka vidare till index med password.
      */
 
-    init {
-      action {
-
-        SvcSuPersonVO account = activateAccountAndCardService.findUser((String)session.pnr, true)
-        if (account) {
-          flash.info = "Account already exists"
-          session.uid = account.uid
-          accountExist()
-        } else {
-          newAccount()
-        }
-      }
-
-      on("accountExist").to("hasActivatedAccount")
-      on("newAccount").to("prepareForwardAddress")
-    }
-
     prepareForwardAddress {
       action {
-        // Fetch forward address from ladok / lpw
-
         String forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String)session.pnr)
         [forwardAddress:forwardAddress]
       }
@@ -191,6 +172,7 @@ class ActivateAccountAndCardController {
 
     processEmailInput {
       action {
+        //TODO: Check the checkbox.
         if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
           flow.error = "Invalid Email"
           eventLogService.logEvent("Invalid email for ${session.pnr}: ${params?.forwardAddress}", (String)flash.referenceId, request, (String)session.pnr)
@@ -226,17 +208,9 @@ class ActivateAccountAndCardController {
 
         // return redirect(action:'index')
       }
-      on("success").to("hasActivatedAccount")
+      on("success").to("end")
       on("error").to("errorHandler")
       on(Exception).to("errorHandler")
-    }
-
-    hasActivatedAccount {
-      on('orderCard').to('startCardFlow')
-    }
-
-    startCardFlow {
-      subflow(action: "orderCard")
     }
 
     errorHandler {
