@@ -75,7 +75,7 @@ class ActivateAccountAndCardController {
     boolean uidIsPnr = utilityService.uidIsPnr(uid)
     if (!session.user) {
       try {
-        def user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+        SvcSuPersonVO user = activateAccountAndCardService.findUser(uid, uidIsPnr)
         if (user) {
           session.user = user
         }
@@ -175,9 +175,11 @@ class ActivateAccountAndCardController {
     processEmailInput {
       action {
         //TODO: Check the checkbox.
-        if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
+        if(!(params?.approveTermsOfUse && params?.approveTermsOfUse=='on')) {
+          flow.error = "Hasnt accepted terms"
+          return error()
+        } else if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
           flow.error = "Invalid Email"
-          eventLogService.logEvent("Invalid email for ${session.pnr}: ${params?.forwardAddress}", (String)flash.referenceId, request, (String)session.pnr)
           return error()
         }
       }
@@ -198,14 +200,12 @@ class ActivateAccountAndCardController {
         SvcUidPwd result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
 
         if (result == null) {
-          eventLogService.logEvent("Failed to enroll user for ${session.pnr}", (String)flash.referenceId, request, (String)session.pnr)
           flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
           throw new Exception("Failed when creating account.")
         }
 
         /** Since we don't recieve a full account from the creation of an account we return the uid */
 
-        eventLogService.logEvent("Account created for ${session.pnr}", (String)flash.referenceId, request, (String)session.pnr, result.uid)
         flash.info = "Account created!"
         session.uid = result.uid
         flash.password = result.password
@@ -219,14 +219,12 @@ class ActivateAccountAndCardController {
 
     errorHandler {
       action {
-        eventLogService.logEvent("Webflow Exception occurred: ${flash.stateException.getMessage()}", (String)flash.referenceId, request)
         log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
       }
       on("success").to("end")
     }
 
     end() {
-      eventLogService.logEvent("done with creation-flow", (String)flash.referenceId, request)
       return redirect(action:'index')
     }
   }
