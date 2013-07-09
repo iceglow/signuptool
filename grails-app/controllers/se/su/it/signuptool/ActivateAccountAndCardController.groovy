@@ -213,8 +213,6 @@ class ActivateAccountAndCardController {
         flash.info = "Account created!"
         session.uid = result.uid
         flash.password = result.password
-
-        // return redirect(action:'index')
       }
       on("success").to("end")
       on("error").to("errorHandler")
@@ -229,7 +227,7 @@ class ActivateAccountAndCardController {
     }
 
     end() {
-      return redirect(action:'index')
+      render(view: '/activateAccountAndCard/index')
     }
   }
 
@@ -265,6 +263,8 @@ class ActivateAccountAndCardController {
           flow.error = message(code:'activateAccountAndCardController.cardOrder.ladokAddress.error')
           return error()
         }
+
+        setAddressDetailsToSession()
 
         return success()
       }
@@ -316,8 +316,17 @@ class ActivateAccountAndCardController {
     }
 
     end() {
-      render(view: 'endAccountAndCard')
+      render(view: '/activateAccountAndCard/endAccountAndCard')
     }
+  }
+
+  private void setAddressDetailsToSession() {
+    Map ladokAddress = ladokService.getAddressFromLadokByPnr((String)session?.pnr)
+
+    session.street = ladokAddress["gatadr"]
+    session.coAddr = ladokAddress["coadr"]
+    session.zip = ladokAddress["postnr"]
+    session.city = ladokAddress["ort"]
   }
 
   private boolean userHasAccount() {
