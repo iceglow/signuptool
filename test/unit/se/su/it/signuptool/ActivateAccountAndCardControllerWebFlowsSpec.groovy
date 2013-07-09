@@ -3,7 +3,6 @@ package se.su.it.signuptool
 import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
 import se.su.it.svc.SvcSuPersonVO
-import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 
