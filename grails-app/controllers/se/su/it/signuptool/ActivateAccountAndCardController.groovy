@@ -142,28 +142,20 @@ class ActivateAccountAndCardController {
   }
 
   def createNewAccountFlow = {
-    /** Prereq:
-     * + pnr
-     * + personen är antagen innevarande termin. ( i dagsläget kollar vi bara om personen finns i namntabellen )
-
-     * Req:
-     * + Person godkänner avtal
-
-     * Metoder:
-     * + Kan välja att ändra epost.
-     *
-     * Övrigt:
-     * Skapa konto sent och skicka vidare till index med password.
-     */
 
     prepareForwardAddress {
       action {
-        String forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String)session.pnr)
+        String forwardAddress = ''
+        try {
+          forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String)session.pnr)
+        } catch (ex) {
+          log.error "Fetching forward address from LADOK failed.", ex
+          return error()
+        }
         [forwardAddress:forwardAddress]
       }
       on("success").to("activateAccount")
       on("error").to("errorHandler")
-      on(Exception).to("errorHandler")
     }
 
     activateAccount {
@@ -183,21 +175,26 @@ class ActivateAccountAndCardController {
         flow.error = ''
       }.to("createAccount")
       on("error").to("selectEmail")
-      on(Exception).to("errorHandler")
     }
 
     createAccount {
       action {
 
+        SvcUidPwd result = null
+
         String givenName = session.givenName
         String sn = session.sn
         String socialSecurityNumber = session.pnr
 
-        SvcUidPwd result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
+        try {
+          result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
+        } catch(ex) {
+          log.error "Failed when enrolling user", ex
+        }
 
         if (result == null) {
-          flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
-          throw new Exception("Failed when creating account.")
+          flow.error = g.message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
+          return error()
         }
 
         /** Since we don't recieve a full account from the creation of an account we return the uid */
@@ -210,18 +207,21 @@ class ActivateAccountAndCardController {
       }
       on("success").to("end")
       on("error").to("errorHandler")
-      on(Exception).to("errorHandler")
     }
 
     errorHandler {
       action {
+        // TODO: Do something nicer than just log?
         log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
       }
       on("success").to("end")
+      // TODO: else we do?
     }
 
-    end() {
-      return redirect(action:'index')
+    end {
+      action {
+        return redirect(action:'index')
+      }
     }
   }
 
