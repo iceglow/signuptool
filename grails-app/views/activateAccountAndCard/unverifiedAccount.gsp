@@ -4,7 +4,11 @@
   <title>Overifierat konto..</title>
   <meta name="layout" content="main"/>
 </head>
-<body>
-referensId och sånt.
-</body>
+  <body>
+    <div class="apps-mid-column">
+      <g:if test="${error}">
+        <div class="error">${error}</div>
+      </g:if>
+    </div>
+  </body>
 </html>
