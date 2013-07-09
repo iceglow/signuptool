@@ -1,6 +1,6 @@
 modules = {
   application {
-      resource url:'js/application.js'
+    resource url:'js/application.js'
   }
 
   css {
@@ -14,6 +14,5 @@ modules = {
     resource url:'css/profile.css'
     resource url:'css/print.css', attrs:[media:'print']
     resource url:'css/signuptool.css'
-    resource url:'css/hint.css'
   }
 }

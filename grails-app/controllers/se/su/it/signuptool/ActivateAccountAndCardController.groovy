@@ -169,24 +169,28 @@ class ActivateAccountAndCardController {
     }
 
     activateAccount {
-      on("acceptAccountActivation").to("processEmailInput")
+      on("acceptAccountActivation") {
+        flow.approveTermsOfUse = params?.approveTermsOfUse
+      }.to("processEmailInput")
     }
 
     processEmailInput {
       action {
-        //TODO: Check the checkbox.
-        if(!(params?.approveTermsOfUse && params?.approveTermsOfUse=='on')) {
-          flow.error = "Hasnt accepted terms"
+        if (!flow.approveTermsOfUse) {
+          flow.error = message(code:'activateAccountAndCardController.forwardEmail.explanation')
           return error()
-        } else if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
-          flow.error = "Invalid Email"
+        }
+
+        if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
+          flow.error = message(code:'activateAccountAndCardController.forwardEmail.explanation')
+          eventLogService.logEvent("Invalid email for ${session.pnr}: ${params?.forwardAddress}", (String)flash.referenceId, request, (String)session.pnr)
           return error()
         }
       }
       on("success") {
         flow.error = ''
       }.to("createAccount")
-      on("error").to("selectEmail")
+      on("error").to("activateAccount")
       on(Exception).to("errorHandler")
     }
 
@@ -247,18 +251,18 @@ class ActivateAccountAndCardController {
       action {
         if (!userHasAccount()) {
           eventLogService.logEvent("no account found for uid (${session?.uid}) or pnr (${session?.pnr})", (String)flash.referenceId, request)
-          flow.error = "user is has no account"
+          flow.error = message(code:'activateAccountAndCardController.cardOrder.noAccount.error')
           return error()
         }
 
         if (!userCanOrderCards()) {
           eventLogService.logEvent("user has active cards or orders", (String)flash.referenceId, request)
-          flow.error = "user has active cards or orders"
+          flow.error = message(code:'activateAccountAndCardController.cardOrder.cardOrder.error')
         }
 
         if (!userHasLadokAddress()) {
           eventLogService.logEvent("user address is missing in ladok", (String)flash.referenceId, request)
-          flow.error = "user address is missing in ladok"
+          flow.error = message(code:'activateAccountAndCardController.cardOrder.ladokAddress.error')
           return error()
         }
 
@@ -269,15 +273,39 @@ class ActivateAccountAndCardController {
     }
 
     cardOrder {
-      on("sendCardOrder").to("processCardOrder")
+      on("sendCardOrder"){
+
+        flow.registeredAddressValid = params?.registeredAddressValid
+        flow.acceptLibraryRules = params?.acceptLibraryRules
+        flow.registeredAddressInvalid = params?.registeredAddressInvalid
+
+      }.to("processCardOrder")
     }
 
     processCardOrder {
       action {
-      // todo: beställ kort
+        if (!flow.registeredAddressValid &&
+            !flow.registeredAddressInvalid) {
+          flow.error = message(code:'activateAccountAndCardController.cardOrder.selectValidInvalid.error')
+          return error()
+        }
+
+        if (flow.registeredAddressValid) {
+          if (!flow.acceptLibraryRules) {
+            flow.error = message(code:'activateAccountAndCardController.cardOrder.approveTermsOfUse.error')
+            return error()
+          }
+          // todo: beställ kort
+
+        }
+
+        if (flow.registeredAddressInvalid) {
+          success()
+        }
+
       }
       on('success').to('end')
-      on('error').to('errorHandler')
+      on('error').to('cardOrder')
     }
 
     errorHandler {
@@ -316,20 +344,6 @@ class ActivateAccountAndCardController {
     }
 
     return hasLadokAddress
-  }
-
-  private boolean userHasRegisteredAddress() {
-    boolean hasRegisteredAddress = false
-
-    if (session?.pnr) {
-      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress((String)session?.pnr, true)
-    }
-
-    if (session?.uid) {
-      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress((String)session?.uid, false)
-    }
-
-    return hasRegisteredAddress
   }
 
   private boolean userCanOrderCards() {

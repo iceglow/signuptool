@@ -6,25 +6,31 @@
 </head>
 <body>
   <div class="apps-mid-column">
+    <g:if test="${error}">
+      <div class="error">${error}</div>
+    </g:if>
+
     <div class="float-left">
 
       <div class="prompt">
-        <div>Adressuppgifter</div>
+        <div><g:message code="activateAccountAndCardController.cardOrder.addressDetail"/></div>
         <div>Förnamn - Efternamn</div>
         <div>Gata</div>
         <div>stad</div>
 
         <g:form>
           <g:radio name="registeredAddressValid" value="1"/>
-            <label for="registeredAddressValid">Ovanstående adress stämmer - beställ och skicka kort</label><br/>
+            <label for="registeredAddressValid"><g:message code="activateAccountAndCardController.cardOrder.registeredAddressValid"/></label>
+            <a href="#" title="<g:message code="activateAccountAndCardController.cardOrder.registeredAddressValid.tooltip"/>"><span class="help"></span></a>
+          <br/>
 
           <div class="indent-small">
             <g:checkBox name="acceptLibraryRules"/>
-              <label for="acceptLibraryRules">Jag accepterar bibliotekets låneregler</label><br/>
+              <label for="acceptLibraryRules"><g:message code="activateAccountAndCardController.cardOrder.acceptLibraryRules"/></label><br/>
           </div>
 
           <g:radio name="registeredAddressInvalid" value="0"/>
-            <label for="registeredAddressInvalid">Ovanstående adress är felaktig - jag beställer kort när den är korrigerad</label><br/>
+            <label for="registeredAddressInvalid"><g:message code="activateAccountAndCardController.cardOrder.registeredAddressInvalid"/></label><br/>
 
           <div class="align-right">
             <g:submitButton class="signupButton" name="sendCardOrder" value="${g.message(code:'activateAccountAndCardController.cardOrder.continue')}"/>

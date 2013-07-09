@@ -20,7 +20,8 @@ class DashboardController {
 
   def activateAccountAndCard() {
     session.controller = 'activateAccountAndCard'
-    return render(view:'selectIdProvider')
+//    return render(view:'selectIdProvider')
+    return render(view:'/activateAccountAndCard/orderCard/cardOrder')
   }
 
   def resetAccountOrPassword() {
