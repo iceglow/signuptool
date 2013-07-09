@@ -37,7 +37,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     3 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
 
     and:
-    1 * controller.ladokService.getAddressFromLadokByPnr(*_) >> [kalle: 'anka']
+    2 * controller.ladokService.getAddressFromLadokByPnr(*_) >> [kalle: 'anka']
 
     and:
     1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true

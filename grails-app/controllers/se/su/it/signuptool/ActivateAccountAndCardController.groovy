@@ -204,6 +204,7 @@ class ActivateAccountAndCardController {
         SvcUidPwd result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
 
         if (result == null) {
+          flow.enrollUserFailure = true
           flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
           throw new Exception("Failed when creating account.")
         }
@@ -222,8 +223,17 @@ class ActivateAccountAndCardController {
     errorHandler {
       action {
         log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
+
+        if (flow.enrollUserFailure) {
+          enrollUserFailure()
+        }
       }
+      on("enrollUserFailure").to("unverfiedAccount")
       on("success").to("end")
+    }
+
+    unverfiedAccount {
+      render(view: '/activateAccountAndCard/unverifiedAccount')
     }
 
     end() {
