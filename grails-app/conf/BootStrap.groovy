@@ -10,25 +10,6 @@ class BootStrap {
   def accessService
 
   def init = { servletContext ->
-    String sucardsvcurl = ''
-
-    switch (System.getProperty("signuptool", "dev")) {
-      case ~/prod(uction)?/:
-        sucardsvcurl = "https://sucard-prod-svc.it.su.se/services"
-        break
-      case "test":
-        sucardsvcurl = "https://sucard-test-svc.it.su.se/services"
-        break
-      case ~/dev(elopment)?/:
-      default:
-        sucardsvcurl = "https://sucard-test-svc.it.su.se/services"
-    }
-
-    //sucardsvc
-    configService.registerValueToSection("WS", "CardOrderFacade", "${sucardsvcurl}/CardOrderFacade")
-    configService.registerValueToSection("WS", "CardSyncFacade", "${sucardsvcurl}/CardSyncFacade")
-    //sucardsvc
-
     // some urls to other systems
     configService.registerValueToSection("signup", "lpwtool", "https://minastudier.su.se/registrate/")
     configService.registerValueToSection("signup", "sukattool", "https://kontohantering.su.se/")

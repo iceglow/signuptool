@@ -228,7 +228,7 @@ sukatsvc {
  */
 access {
   redirect = [controller: 'dashboard']
-  unprotected = ['dashboard', 'errorHandler', 'activateAccountAndCard']
+  unprotected = ['dashboard', 'errorHandler', 'activateAccountAndCard', 'resetPassword']
   disabledInDynamicAccess = ['dashboard', 'access']
 }
 

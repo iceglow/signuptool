@@ -6,6 +6,5 @@
   </head>
   <body>
     <tmpl:/shared/feedback flash="${flash}"/>
-    hepp
   </body>
 </html>
