@@ -197,7 +197,8 @@ class ActivateAccountAndCardController {
         String sn = session.sn
         String socialSecurityNumber = session.pnr
 
-        SvcUidPwd result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
+//        SvcUidPwd result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
+        Map result = [uid: 'donduck@student.su.se',password: 'kajsaAnka']
 
         if (result == null) {
           flow.error = message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
