@@ -12,14 +12,6 @@
 </g:if>
 <div>
   <g:form action="index" method="post">
-    <div class="apps-float-15"><label for="uid">UserId</label>: </div>
-    <div class="apps-float-20"><g:textField name="uid" maxlength="10" size="15"/> </div>
-    <div class="apps-float-10"><g:submitButton name="submit" value="Sök"/></div>
-    <div class="clear-float"></div>
-  </g:form>
-</div>
-<div>
-  <g:form action="index" method="post">
     <div class="apps-float-15"><label for="ssn">Personnummer</label>: </div>
     <div class="apps-float-20"><g:textField name="ssn" maxlength="13" size="15"/></div>
     <div class="apps-float-10"><g:submitButton name="submit" value="Sök"/></div>

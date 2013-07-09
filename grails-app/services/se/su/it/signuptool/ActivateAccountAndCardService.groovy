@@ -64,7 +64,7 @@ class ActivateAccountAndCardService implements Serializable {
   public boolean userHasRegisteredAddress(String uid, boolean uidIsPnr) {
     boolean hasRegisteredAddress = false
 
-    def user = findUser(uid, uidIsPnr)
+    SvcSuPersonVO user = findUser(uid, uidIsPnr)
 
     if (user) {
       hasRegisteredAddress = user.registeredAddress
@@ -102,6 +102,7 @@ class ActivateAccountAndCardService implements Serializable {
       /** TODO: Guessing we want to use LPW to fetch the proper addr. */
       Map address = ladokService.getAddressFromLadokByPnr(user.socialSecurityNumber)
       cardInfo.hasAddress = (null!=address && address.size()>0)
+      cardInfo.ladokAddress = address
 
       // we may want to show info about the active cards a user already has
       cardInfo.suCards = sukatService.getCardsForUser(user.uid)

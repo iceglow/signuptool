@@ -4,7 +4,6 @@ import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
 import org.apache.commons.logging.Log
 import se.su.it.svc.SvcSuPersonVO
-import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -85,7 +84,24 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     flow.error == error
   }
 
+  def "createNewAccountFlow > processEmailInput: When not having accepted the terms of agreement "() {
+    when:
+    def resp = createNewAccountFlow.processEmailInput.action()
+
+    then:
+    resp == 'error'
+
+    and:
+    0 * controller.activateAccountAndCardService.validateForwardAddress(*_) >> true
+
+    and:
+    flow.error == 'activateAccountAndCardController.forwardEmail.explanation'
+  }
+
   def "createNewAccountFlow > processEmailInput: On success "() {
+    given:
+    flow.approveTermsOfUse = true
+
     when:
     createNewAccountFlow.processEmailInput.action()
 
@@ -97,6 +113,9 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   }
 
   def "createNewAccountFlow > processEmailInput: given an invalid email"() {
+    given:
+    flow.approveTermsOfUse = true
+
     when:
     createNewAccountFlow.processEmailInput.action()
 
@@ -104,7 +123,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     1 * controller.activateAccountAndCardService.validateForwardAddress(*_) >> false
 
     and:
-    flow.error == "Invalid Email"
+    flow.error == "activateAccountAndCardController.forwardEmail.explanation"
 
     and:
     1 * controller.eventLogService.logEvent(*_)
@@ -115,7 +134,9 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > processEmailInput: on successful email validation"() {
     given:
+    flow.approveTermsOfUse = true
     flow.error == 'clear me!'
+
     when:
     def resp = createNewAccountFlow.processEmailInput.on.success.action()
 
@@ -212,6 +233,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "orderCardFlow: test flow when user is found, has registered address and no cards or orders"() {
     given:
     session.uid = "abcd1234@su.se"
+    session.pnr = "1234567890"
 
     when:
 
@@ -222,12 +244,15 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     assert 'success' == stateTransition
 
     and:
-    2 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
+    3 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
 
     and:
-    1 * controller.activateAccountAndCardService.userHasRegisteredAddress(*_) >> true
+    2 * controller.ladokService.getAddressFromLadokByPnr(*_) >> [kalle: 'anka']
 
     and:
     1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
+
+    and:
+    0 * controller.eventLogService.logEvent(*_) >> null
   }
 }

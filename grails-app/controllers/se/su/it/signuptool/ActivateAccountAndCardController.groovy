@@ -25,7 +25,7 @@ class ActivateAccountAndCardController {
 
     if(!flash.referenceId) {
       flash.referenceId = eventLogService.createReferenceId()
-      log.error("creating new referenceid ${flash.referenceId}")
+      log.debug("creating new referenceid ${flash.referenceId}")
     }
 
     /** Setting uid
@@ -42,14 +42,16 @@ class ActivateAccountAndCardController {
 
       switch(scope) {
         case "su.se":
+          eventLogService.logEvent("got 'su.se' as eppn-scope but expected 'studera.nu' for ${request.eppn}", (String)flash.referenceId, request)
           break
         case "studera.nu":
           if (!request.norEduPersonNIN) {
+            eventLogService.logEvent("unverified account for ${request.eppn}", (String)flash.referenceId, request)
             return render(view:'unverifiedAccount')
           }
           break
         default:
-          log.error("apa: ${scope}")
+          eventLogService.logEvent("no valid scope (expected 'studera.nu') for ${request.eppn}", (String)flash.referenceId, request)
           flash.error = message(
               code:'activateAccountAndCardController.noValidScopeFound',
               args:[request?.eppn]) as String
@@ -73,7 +75,7 @@ class ActivateAccountAndCardController {
     boolean uidIsPnr = utilityService.uidIsPnr(uid)
     if (!session.user) {
       try {
-        def user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+        SvcSuPersonVO user = activateAccountAndCardService.findUser(uid, uidIsPnr)
         if (user) {
           session.user = user
         }
@@ -159,14 +161,20 @@ class ActivateAccountAndCardController {
     }
 
     activateAccount {
-      on("acceptAccountActivation").to("processEmailInput")
+      on("acceptAccountActivation") {
+        flow.approveTermsOfUse = params?.approveTermsOfUse
+      }.to("processEmailInput")
     }
 
     processEmailInput {
       action {
-        //TODO: Check the checkbox.
+        if (!flow.approveTermsOfUse) {
+          flow.error = g.message(code:'activateAccountAndCardController.forwardEmail.explanation')
+          return error()
+        }
+
         if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
-          flow.error = "Invalid Email"
+          flow.error = g.message(code:'activateAccountAndCardController.forwardEmail.explanation')
           eventLogService.logEvent("Invalid email for ${session.pnr}: ${params?.forwardAddress}", (String)flash.referenceId, request, (String)session.pnr)
           return error()
         }
@@ -202,8 +210,6 @@ class ActivateAccountAndCardController {
         flash.info = "Account created!"
         session.uid = result.uid
         flash.password = result.password
-
-        // return redirect(action:'index')
       }
       on("success").to("end")
       on("error").to("errorHandler")
@@ -213,7 +219,12 @@ class ActivateAccountAndCardController {
       action {
         // TODO: Do something nicer than just log?
         log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
+
+        if (flow.enrollUserFailure) {
+          enrollUserFailure()
+        }
       }
+      on("enrollUserFailure").to("unverfiedAccount")
       on("success").to("end")
       // TODO: else we do?
     }
@@ -242,18 +253,23 @@ class ActivateAccountAndCardController {
     prepareForwardOrderCard {
       action {
         if (!userHasAccount()) {
-          flow.error = "user is has no account"
+          eventLogService.logEvent("no account found for uid (${session?.uid}) or pnr (${session?.pnr})", (String)flash.referenceId, request)
+          flow.error = message(code:'activateAccountAndCardController.cardOrder.noAccount.error')
           return error()
         }
 
         if (!userCanOrderCards()) {
-          flow.error = "user has active cards or orders"
+          eventLogService.logEvent("user has active cards or orders", (String)flash.referenceId, request)
+          flow.error = message(code:'activateAccountAndCardController.cardOrder.cardOrder.error')
         }
 
-        if (!userHasRegisteredAddress()) {
-          flow.error = "user registered address is missing"
+        if (!userHasLadokAddress()) {
+          eventLogService.logEvent("user address is missing in ladok", (String)flash.referenceId, request)
+          flow.error = message(code:'activateAccountAndCardController.cardOrder.ladokAddress.error')
           return error()
         }
+
+        setAddressDetailsToSession()
 
         return success()
       }
@@ -262,15 +278,39 @@ class ActivateAccountAndCardController {
     }
 
     cardOrder {
-      on("sendCardOrder").to("processCardOrder")
+      on("sendCardOrder"){
+
+        flow.registeredAddressValid = params?.registeredAddressValid
+        flow.acceptLibraryRules = params?.acceptLibraryRules
+        flow.registeredAddressInvalid = params?.registeredAddressInvalid
+
+      }.to("processCardOrder")
     }
 
     processCardOrder {
       action {
-      // todo: beställ kort
+        if (!flow.registeredAddressValid &&
+            !flow.registeredAddressInvalid) {
+          flow.error = message(code:'activateAccountAndCardController.cardOrder.selectValidInvalid.error')
+          return error()
+        }
+
+        if (flow.registeredAddressValid) {
+          if (!flow.acceptLibraryRules) {
+            flow.error = message(code:'activateAccountAndCardController.cardOrder.approveTermsOfUse.error')
+            return error()
+          }
+          // todo: beställ kort
+
+        }
+
+        if (flow.registeredAddressInvalid) {
+          success()
+        }
+
       }
       on('success').to('end')
-      on('error').to('errorHandler')
+      on('error').to('cardOrder')
     }
 
     errorHandler {
@@ -281,13 +321,22 @@ class ActivateAccountAndCardController {
     }
 
     end() {
-      render(view: 'endAccountAndCard')
+      render(view: '/activateAccountAndCard/endAccountAndCard')
     }
   }
 
+  private void setAddressDetailsToSession() {
+    Map ladokAddress = ladokService.getAddressFromLadokByPnr((String)session?.pnr)
+
+    session.street = ladokAddress["gatadr"]
+    session.coAddr = ladokAddress["coadr"]
+    session.zip = ladokAddress["postnr"]
+    session.city = ladokAddress["ort"]
+  }
+
   private boolean userHasAccount() {
-    def userFoundWithPnr = null
-    def userFoundWithUid = null
+    SvcSuPersonVO userFoundWithPnr = null
+    SvcSuPersonVO userFoundWithUid = null
 
     if (session?.pnr) {
       userFoundWithPnr = activateAccountAndCardService.findUser(session?.pnr, true)
@@ -300,18 +349,15 @@ class ActivateAccountAndCardController {
     return userFoundWithPnr || userFoundWithUid
   }
 
-  private boolean userHasRegisteredAddress() {
-    def hasRegisteredAddress = false
+  private boolean userHasLadokAddress() {
+    boolean hasLadokAddress = false
 
     if (session?.pnr) {
-      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress(session?.pnr, true)
+      Map ladokAddress = ladokService.getAddressFromLadokByPnr((String)session?.pnr)
+      hasLadokAddress = (ladokAddress && ladokAddress.size()>0)
     }
 
-    if (session?.uid) {
-      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress(session?.uid, false)
-    }
-
-    return hasRegisteredAddress
+    return hasLadokAddress
   }
 
   private boolean userCanOrderCards() {

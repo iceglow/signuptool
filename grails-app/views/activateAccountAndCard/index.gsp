@@ -28,7 +28,7 @@
 
         <div class="clear-float"></div>
 
-        <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'']}">
+        <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
           <div class="align-right"><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></div>
           <div class="align-right">
             <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
