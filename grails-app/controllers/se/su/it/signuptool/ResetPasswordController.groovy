@@ -1,6 +1,7 @@
 package se.su.it.signuptool
 
 import se.su.it.svc.SvcSuPersonVO
+import se.su.it.svc.SvcUidPwd
 
 class ResetPasswordController {
   def activateAccountAndCardService
@@ -64,9 +65,21 @@ class ResetPasswordController {
 
     resetPassword() {
       action {
-        // TODO: reset password (enroll users changes the passwd if account already exists
+        SvcSuPersonVO account = activateAccountAndCardService.findUser((String)session.pnr, true)
+        SvcUidPwd result = sukatService.enrollUser(account.givenName, account.sn, account.socialSecurityNumber)
+        session.uid = result.uid
+        flash.password = result.password
       }
       on('ok').to('end')
+      on(Exception).to("errorHandler")
+    }
+
+    errorHandler {
+      action {
+        flash.info = "Webflow Exception occurred: ${flash.stateException}"
+        log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
+      }
+      on("success").to("end")
     }
 
     noAccount() {
@@ -74,7 +87,7 @@ class ResetPasswordController {
     }
 
     end() {
-      return redirect(action:'/')
+      return redirect(controller: 'dashboard', action:'index')
     }
   }
 }
