@@ -14,9 +14,12 @@
 
       <div class="prompt">
         <div><g:message code="activateAccountAndCardController.cardOrder.addressDetail"/></div>
-        <div>Förnamn - Efternamn</div>
-        <div>Gata</div>
-        <div>stad</div>
+        <div>${session?.givenName} ${session?.sn}</div>
+        <div>${session?.street}</div>
+        <g:if test="${session?.coAddr}">
+          <div>${session?.coAddr}</div>
+        </g:if>
+        <div>${session?.zip} ${session?.city}</div>
 
         <g:form>
           <g:radio name="registeredAddressValid" value="1"/>
