@@ -25,7 +25,7 @@ class ActivateAccountAndCardController {
 
     if(!flash.referenceId) {
       flash.referenceId = eventLogService.createReferenceId()
-      log.error("creating new referenceid ${flash.referenceId}")
+      log.debug("creating new referenceid ${flash.referenceId}")
     }
 
     /** Setting uid
@@ -42,14 +42,16 @@ class ActivateAccountAndCardController {
 
       switch(scope) {
         case "su.se":
+          eventLogService.logEvent("got 'su.se' as eppn-scope but expected 'studera.nu' for ${request.eppn}", (String)flash.referenceId, request)
           break
         case "studera.nu":
           if (!request.norEduPersonNIN) {
+            eventLogService.logEvent("unverified account for ${request.eppn}", (String)flash.referenceId, request)
             return render(view:'unverifiedAccount')
           }
           break
         default:
-          log.error("apa: ${scope}")
+          eventLogService.logEvent("no valid scope (expected 'studera.nu') for ${request.eppn}", (String)flash.referenceId, request)
           flash.error = message(
               code:'activateAccountAndCardController.noValidScopeFound',
               args:[request?.eppn]) as String
@@ -73,7 +75,7 @@ class ActivateAccountAndCardController {
     boolean uidIsPnr = utilityService.uidIsPnr(uid)
     if (!session.user) {
       try {
-        def user = activateAccountAndCardService.findUser(uid, uidIsPnr)
+        SvcSuPersonVO user = activateAccountAndCardService.findUser(uid, uidIsPnr)
         if (user) {
           session.user = user
         }
@@ -173,9 +175,11 @@ class ActivateAccountAndCardController {
     processEmailInput {
       action {
         //TODO: Check the checkbox.
-        if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
+        if(!(params?.approveTermsOfUse && params?.approveTermsOfUse=='on')) {
+          flow.error = "Hasnt accepted terms"
+          return error()
+        } else if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
           flow.error = "Invalid Email"
-          eventLogService.logEvent("Invalid email for ${session.pnr}: ${params?.forwardAddress}", (String)flash.referenceId, request, (String)session.pnr)
           return error()
         }
       }
@@ -242,16 +246,19 @@ class ActivateAccountAndCardController {
     prepareForwardOrderCard {
       action {
         if (!userHasAccount()) {
+          eventLogService.logEvent("no account found for uid (${session?.uid}) or pnr (${session?.pnr})", (String)flash.referenceId, request)
           flow.error = "user is has no account"
           return error()
         }
 
         if (!userCanOrderCards()) {
+          eventLogService.logEvent("user has active cards or orders", (String)flash.referenceId, request)
           flow.error = "user has active cards or orders"
         }
 
-        if (!userHasRegisteredAddress()) {
-          flow.error = "user registered address is missing"
+        if (!userHasLadokAddress()) {
+          eventLogService.logEvent("user address is missing in ladok", (String)flash.referenceId, request)
+          flow.error = "user address is missing in ladok"
           return error()
         }
 
@@ -286,8 +293,8 @@ class ActivateAccountAndCardController {
   }
 
   private boolean userHasAccount() {
-    def userFoundWithPnr = null
-    def userFoundWithUid = null
+    SvcSuPersonVO userFoundWithPnr = null
+    SvcSuPersonVO userFoundWithUid = null
 
     if (session?.pnr) {
       userFoundWithPnr = activateAccountAndCardService.findUser(session?.pnr, true)
@@ -300,15 +307,26 @@ class ActivateAccountAndCardController {
     return userFoundWithPnr || userFoundWithUid
   }
 
-  private boolean userHasRegisteredAddress() {
-    def hasRegisteredAddress = false
+  private boolean userHasLadokAddress() {
+    boolean hasLadokAddress = false
 
     if (session?.pnr) {
-      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress(session?.pnr, true)
+      Map ladokAddress = ladokService.getAddressFromLadokByPnr((String)session?.pnr)
+      hasLadokAddress = (ladokAddress && ladokAddress.size()>0)
+    }
+
+    return hasLadokAddress
+  }
+
+  private boolean userHasRegisteredAddress() {
+    boolean hasRegisteredAddress = false
+
+    if (session?.pnr) {
+      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress((String)session?.pnr, true)
     }
 
     if (session?.uid) {
-      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress(session?.uid, false)
+      hasRegisteredAddress = activateAccountAndCardService.userHasRegisteredAddress((String)session?.uid, false)
     }
 
     return hasRegisteredAddress

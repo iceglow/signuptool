@@ -59,12 +59,15 @@ class LadokService {
 
     if (temporaryAddress && useTemporaryAddress) {
       Date now        = new Date()
-      Date fromDate   = Date.parse("yyyy-MM-dd", temporaryAddress?.fromdat)
-      Date toDate     = Date.parse("yyyy-MM-dd", temporaryAddress?.tomdat)
+      Date fromDate   = Date.parse("yyyy-MM-dd", (String)temporaryAddress?.fromdat)
+      Date toDate     = Date.parse("yyyy-MM-dd", (String)temporaryAddress?.tomdat)
       //TODO: what happens if the dates does not parse?
 
       if (fromDate < now && now < toDate) {
-        address = temporaryAddress
+        // according to discussion with janj and friends 2013-07-08, see mail with subject 'Land i ladoks adresstabell' or jira DEVIDM-25
+        if(temporaryAddress?.land=='SVERIGE' || temporaryAddress?.land=='') {
+          address = temporaryAddress
+        }
       }
     }
 

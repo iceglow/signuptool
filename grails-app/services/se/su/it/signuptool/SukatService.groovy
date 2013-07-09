@@ -26,6 +26,18 @@ class SukatService implements Serializable {
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"
 
+  public String orderCard(SvcSuPersonVO user, Map ladokAddress) {
+    SvcCardOrderVO cardOrderVO = new SvcCardOrderVO()
+    cardOrderVO.firstname = user.givenName
+    cardOrderVO.lastname = user.sn
+    cardOrderVO.streetaddress1 = ladokAddress?.gatadr
+    cardOrderVO.streetaddress2 = ladokAddress?.coadr
+    cardOrderVO.zipcode = ladokAddress?.postnr
+    cardOrderVO.locality = ladokAddress?.ort
+    String responseFromWS = cardOrderWS.orderCard(cardOrderVO, AuditFactory.auditObject)
+    return responseFromWS
+  }
+
   public List<SvcCardOrderVO> getCardOrdersForUser(String uid) {
     List<SvcCardOrderVO> cardOrders = []
 

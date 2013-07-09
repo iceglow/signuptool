@@ -15,6 +15,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def setup() {
     controller = mockController(ActivateAccountAndCardController)
+    controller.eventLogService = Mock(EventLogService)
     controller.utilityService = Mock(UtilityService)
     controller.ladokService = Mock(LadokService)
     controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
@@ -23,6 +24,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "orderCardFlow: test flow when user is found, has registered address and no cards or orders"() {
     given:
     session.uid = "abcd1234@su.se"
+    session.pnr = "1234567890"
 
     when:
 
@@ -33,14 +35,15 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     assert 'success' == stateTransition
 
     and:
-    2 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
+    3 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
 
     and:
-    1 * controller.activateAccountAndCardService.userHasRegisteredAddress(*_) >> true
+    1 * controller.ladokService.getAddressFromLadokByPnr(*_) >> [kalle: 'anka']
 
     and:
     1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
+
+    and:
+    0 * controller.eventLogService.logEvent(*_) >> null
   }
-
-
 }
