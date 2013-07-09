@@ -64,6 +64,7 @@ class ResetPasswordController {
 
     resetPassword() {
       action {
+        // TODO: reset password (enroll users changes the passwd if account already exists
       }
       on('ok').to('end')
     }
