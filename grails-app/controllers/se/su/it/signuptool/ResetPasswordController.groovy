@@ -1,8 +1,10 @@
 package se.su.it.signuptool
 
 import se.su.it.svc.SvcSuPersonVO
+import se.su.it.svc.SvcUidPwd
 
 class ResetPasswordController {
+  def activateAccountAndCardService
   def sukatService
   def utilityService
 
@@ -35,6 +37,57 @@ class ResetPasswordController {
       return render(view:'index')
     }
 
-    return render(view:'index')
+    session.pnr = ((norEduPersonNIN?.length() == 12) ? norEduPersonNIN[2..11] : norEduPersonNIN)
+    return redirect(action:'resetPassword')
+  }
+
+  def resetPasswordFlow = {
+    init {
+      action {
+        SvcSuPersonVO account = activateAccountAndCardService.findUser((String)session.pnr, true)
+        if (account) {
+          flash.info = "Account already exists"
+          session.uid = account.uid
+          accountExist()
+        } else {
+          missingAccount()
+        }
+      }
+
+      on("accountExist").to("hasActivatedAccount")
+      on("missingAccount").to("noAccount")
+    }
+
+    hasActivatedAccount {
+      on('ok').to('resetPassword')
+      on('skip').to('end')
+    }
+
+    resetPassword() {
+      action {
+        SvcSuPersonVO account = activateAccountAndCardService.findUser((String)session.pnr, true)
+        SvcUidPwd result = sukatService.enrollUser(account.givenName, account.sn, account.socialSecurityNumber)
+        session.uid = result.uid
+        flash.password = result.password
+      }
+      on('ok').to('end')
+      on(Exception).to("errorHandler")
+    }
+
+    errorHandler {
+      action {
+        flash.info = "Webflow Exception occurred: ${flash.stateException}"
+        log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
+      }
+      on("success").to("end")
+    }
+
+    noAccount() {
+      on('ok').to('end')
+    }
+
+    end() {
+      return redirect(controller: 'dashboard', action:'index')
+    }
   }
 }
