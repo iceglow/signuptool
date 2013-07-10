@@ -236,7 +236,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     session.pnr = "1234567890"
 
     when:
-
     def event = orderCardFlow.prepareForwardOrderCard.action()
 
     then:
@@ -254,5 +253,151 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     and:
     0 * controller.eventLogService.logEvent(*_) >> null
+  }
+
+  def "orderCardFlow: test when user is missing account, should log event and redirect to error page"() {
+    given:
+    session.uid = "abcd1234@su.se"
+    session.pnr = "1234567890"
+
+    controller.metaClass.message = {LinkedHashMap code -> 'account error'}
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    assert event == 'error'
+
+    assert flow.error == 'account error'
+
+    and:
+    2 * controller.activateAccountAndCardService.findUser(*_) >> null
+
+
+    and:
+    0 * controller.activateAccountAndCardService.canOrderCard(*_)
+
+    and:
+    0 * controller.ladokService.getAddressFromLadokByPnr(*_)
+
+    and:
+    1 * controller.eventLogService.logEvent(*_)
+  }
+
+  def "orderCardFlow: test when user has an account but is not allowed to order cards, should log event and redirect to error page"() {
+    given:
+    session.uid = "abcd1234@su.se"
+    session.pnr = "1234567890"
+
+    controller.metaClass.message = {LinkedHashMap code -> 'order card error'}
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    assert event == 'error'
+
+    assert flow.error == 'order card error'
+
+    and:
+    3 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
+
+    and:
+    1 * controller.activateAccountAndCardService.canOrderCard(*_) >> false
+
+    and:
+    0 * controller.ladokService.getAddressFromLadokByPnr(*_)
+
+    and:
+    1 * controller.eventLogService.logEvent(*_)
+  }
+
+  def "orderCardFlow: test when user doesn't have ladok address, should log event and redirect to error page"() {
+    given:
+    session.uid = "abcd1234@su.se"
+    session.pnr = "1234567890"
+
+    controller.metaClass.message = {LinkedHashMap code -> 'address error'}
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    assert event == 'error'
+
+    assert flow.error == 'address error'
+
+    and:
+    3 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
+
+    and:
+    1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
+
+    and:
+    1 * controller.ladokService.getAddressFromLadokByPnr(*_) >> null
+
+    and:
+    1 * controller.eventLogService.logEvent(*_)
+  }
+
+  def "orderCardFlow: test when user doesn't select if address is valid or in valid, should log event and redirect to cardOrder page with error message"() {
+    given:
+    flow.registeredAddressValid = false
+    flow.registeredAddressInvalid = false
+
+    controller.metaClass.message = {LinkedHashMap code -> 'address select error'}
+
+    when:
+    def event = orderCardFlow.processCardOrder.action()
+
+    then:
+    assert event == 'error'
+
+    assert flow.error == 'address select error'
+
+    assert 'cardOrder' == orderCardFlow.processCardOrder.on.error.to
+
+    and:
+    1 * controller.eventLogService.logEvent(*_)
+  }
+
+  def "orderCardFlow: test when user doesn't accept library rules, should log event and redirect to cardOrder page with error message"() {
+    given:
+    flow.registeredAddressValid = true
+    flow.registeredAddressInvalid = false
+    flow.acceptLibraryRules = false
+
+    controller.metaClass.message = {LinkedHashMap code -> 'not accepting library rules error'}
+
+    when:
+    def event = orderCardFlow.processCardOrder.action()
+
+    then:
+    assert event == 'error'
+
+    assert flow.error == 'not accepting library rules error'
+
+    assert 'cardOrder' == orderCardFlow.processCardOrder.on.error.to
+
+    and:
+    1 * controller.eventLogService.logEvent(*_)
+  }
+
+  def "orderCardFlow: test when user select address is invalid, should log event and redirect to end"() {
+    given:
+    flow.registeredAddressValid = false
+    flow.registeredAddressInvalid = true
+    flow.acceptLibraryRules = false
+
+    when:
+    def event = orderCardFlow.processCardOrder.action()
+
+    then:
+    assert event == 'success'
+
+    assert 'end' == orderCardFlow.processCardOrder.on.success.to
+
+    and:
+    1 * controller.eventLogService.logEvent(*_)
   }
 }
