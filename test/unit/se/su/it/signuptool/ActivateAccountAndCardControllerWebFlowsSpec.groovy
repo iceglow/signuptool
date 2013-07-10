@@ -4,6 +4,7 @@ import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
 import org.apache.commons.logging.Log
 import se.su.it.svc.SvcSuPersonVO
+import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -29,11 +30,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     'activateAccount' == createNewAccountFlow.prepareForwardAddress.on.success.to
   }
 
-  def "createNewAccountFlow > prepareForwardAddress: Check error pathing"() {
-    expect:
-    'errorHandler' == createNewAccountFlow.prepareForwardAddress.on.error.to
-  }
-
   def "createNewAccountFlow > prepareForwardAddress: On success"() {
     given:
     def mail = 'kalle@example.com'
@@ -54,8 +50,11 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     def resp = createNewAccountFlow.prepareForwardAddress.action()
 
     then:
-    resp == 'error'
+    resp == ['forwardAddress':'']
     'prepareForwardAddress' == lastEventName
+
+    and:
+    flash.info == "activateAccountAndCardController.unableToFetchForwardAddress"
 
     and:
     1 * controller.ladokService.findForwardAddressSuggestionForPnr(*_) >> { throw new RuntimeException('foo') }
@@ -64,6 +63,17 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "createNewAccountFlow > activateAccount: Check success pathing"() {
     expect:
     'processEmailInput' == createNewAccountFlow.activateAccount.on.acceptAccountActivation.to
+  }
+
+  def "createNewAccountFlow > activateAccount: Assert that terms of use acceptance get persisted in flow."() {
+    given:
+    params.approveTermsOfUse = 'kakakaka'
+
+    when:
+    createNewAccountFlow.activateAccount.on.acceptAccountActivation.action()
+
+    then:
+    flow.approveTermsOfUse == 'kakakaka'
   }
 
   def "createNewAccountFlow > processEmailInput: Check success pathing"() {
@@ -80,7 +90,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     def resp = createNewAccountFlow.processEmailInput.on.error.to
 
     then:
-    resp == "selectEmail"
+    resp == "activateAccount"
     flow.error == error
   }
 

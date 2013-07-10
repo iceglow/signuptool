@@ -42,7 +42,8 @@ class ActivateAccountAndCardController {
 
       switch(scope) {
         case "su.se":
-          eventLogService.logEvent("got 'su.se' as eppn-scope but expected 'studera.nu' for ${request.eppn}", (String)flash.referenceId, request)
+          //TODO: If this was the case then we wouldn't handle it and let the default case grab the request?
+          eventLogService.logEvent("got 'su.se' as eppn-scope for ${request.eppn}", (String)flash.referenceId, request)
           break
         case "studera.nu":
           if (!request.norEduPersonNIN) {
@@ -51,7 +52,7 @@ class ActivateAccountAndCardController {
           }
           break
         default:
-          eventLogService.logEvent("no valid scope (expected 'studera.nu') for ${request.eppn}", (String)flash.referenceId, request)
+          eventLogService.logEvent("no valid scope supplied for ${request.eppn}", (String)flash.referenceId, request)
           flash.error = message(
               code:'activateAccountAndCardController.noValidScopeFound',
               args:[request?.eppn]) as String
@@ -148,16 +149,17 @@ class ActivateAccountAndCardController {
     prepareForwardAddress {
       action {
         String forwardAddress = ''
+        /** Even if fetching forward address fails we should not fail here. */
         try {
           forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String)session.pnr)
         } catch (ex) {
+          // TODO: Inform about not being able to fetch forwardaddr from ladok?
+          flash.info = g.message(code:'activateAccountAndCardController.unableToFetchForwardAddress')
           log.error "Fetching forward address from LADOK failed.", ex
-          return error()
         }
         [forwardAddress:forwardAddress]
       }
       on("success").to("activateAccount")
-      on("error").to("errorHandler")
     }
 
     activateAccount {
@@ -168,12 +170,15 @@ class ActivateAccountAndCardController {
 
     processEmailInput {
       action {
+
         if (!flow.approveTermsOfUse) {
+          // TODO: Separate messages for these two errors.
           flow.error = g.message(code:'activateAccountAndCardController.forwardEmail.explanation')
           return error()
         }
 
         if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
+          // TODO: Separate messages for these two errors.
           flow.error = g.message(code:'activateAccountAndCardController.forwardEmail.explanation')
           eventLogService.logEvent("Invalid email for ${session.pnr}: ${params?.forwardAddress}", (String)flash.referenceId, request, (String)session.pnr)
           return error()
@@ -182,7 +187,7 @@ class ActivateAccountAndCardController {
       on("success") {
         flow.error = ''
       }.to("createAccount")
-      on("error").to("selectEmail")
+      on("error").to("activateAccount")
     }
 
     createAccount {
@@ -219,12 +224,7 @@ class ActivateAccountAndCardController {
       action {
         // TODO: Do something nicer than just log?
         log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
-
-        if (flow.enrollUserFailure) {
-          enrollUserFailure()
-        }
       }
-      on("enrollUserFailure").to("unverfiedAccount")
       on("success").to("end")
       // TODO: else we do?
     }
