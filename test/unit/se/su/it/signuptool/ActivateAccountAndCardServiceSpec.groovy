@@ -23,9 +23,7 @@ class ActivateAccountAndCardServiceSpec extends Specification {
 
   void "canOrderCard: happy path"() {
     when:
-    SvcSuPersonVO user = SvcSuPersonVO.newInstance()
-    user.uid = "donaldDuck"
-    boolean canOrder = service.canOrderCard(user)
+    boolean canOrder = service.canOrderCard("donaldDuck")
 
     then:
     canOrder
@@ -36,9 +34,7 @@ class ActivateAccountAndCardServiceSpec extends Specification {
 
   void "canOrderCard: user already has card"() {
     when:
-    SvcSuPersonVO user = SvcSuPersonVO.newInstance()
-    user.uid = "donaldDuck"
-    boolean canOrder = service.canOrderCard(user)
+    boolean canOrder = service.canOrderCard("donaldDuck")
 
     then:
     !canOrder

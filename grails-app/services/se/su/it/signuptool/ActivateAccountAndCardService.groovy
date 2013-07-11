@@ -15,21 +15,21 @@ class ActivateAccountAndCardService implements Serializable {
   private final emailPattern = /[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/
 
   /** Checks if user has any active cards or active order for a card */
-  public boolean canOrderCard(SvcSuPersonVO user) {
-    boolean canOrder = true
+  public boolean canOrderCard(String uid) {
 
-    List<SuCard> cards = sukatService.getCardsForUser(user.uid)
+    List<SuCard> cards = sukatService.getCardsForUser(uid)
+
     if (cards?.size() > 0) {
-      canOrder = false
+      return false
     }
 
-    List<SvcCardOrderVO> cardOrders = sukatService.getCardOrdersForUser(user.uid)
+    List<SvcCardOrderVO> cardOrders = sukatService.getCardOrdersForUser(uid)
 
     if (cardOrders?.size() > 0) {
-      canOrder = false
+      return false
     }
 
-    return canOrder
+    return true
   }
 
   public boolean validateForwardAddress(String forwardAddress) {

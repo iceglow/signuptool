@@ -228,25 +228,23 @@ class ActivateAccountAndCardController {
 
         EventLog eventLog = session?.eventLog?.merge()
 
-        if (!userHasAccount()) {
-          eventLog.logEvent("no account found for uid (${session?.uid}) or pnr (${session?.pnr})")
-          flow.error = message(code:'activateAccountAndCardController.cardOrder.noAccount.error')
+        if (!session.user?.uid) {
+          eventLog.logEvent("no account found for uid (${session.user?.uid}) or pnr (${session?.pnr})")
+          flow.error = g.message(code:'activateAccountAndCardController.cardOrder.noAccount.error')
           return error()
         }
 
         if (!userCanOrderCards()) {
           eventLog.logEvent("user has active cards or orders")
-          flow.error = message(code:'activateAccountAndCardController.cardOrder.cardOrder.error')
+          flow.error = g.message(code:'activateAccountAndCardController.cardOrder.cardOrder.error')
           return error()
         }
 
         if (!userHasLadokAddress()) {
           eventLog.logEvent("user address is missing in ladok")
-          flow.error = message(code:'activateAccountAndCardController.cardOrder.ladokAddress.error')
+          flow.error = g.message(code:'activateAccountAndCardController.cardOrder.ladokAddress.error')
           return error()
         }
-
-        setAddressDetailsToSession()
 
         return success()
       }
@@ -266,11 +264,14 @@ class ActivateAccountAndCardController {
 
     processCardOrder {
       action {
+
+        EventLog eventLog = session?.eventLog?.merge()
+
         if (!flow.registeredAddressValid &&
             !flow.registeredAddressInvalid) {
 
-          flow.error = message(code:'activateAccountAndCardController.cardOrder.selectValidInvalid.error')
-          eventLogService.logEvent("user didn't select if address is valid or invalid", (String)flash.referenceId, request)
+          flow.error = g.message(code:'activateAccountAndCardController.cardOrder.selectValidInvalid.error')
+          eventLog.logEvent("user didn't select if address is valid or invalid")
           return error()
         }
 
@@ -278,8 +279,8 @@ class ActivateAccountAndCardController {
 
           if (!flow.acceptLibraryRules) {
 
-            flow.error = message(code:'activateAccountAndCardController.cardOrder.approveTermsOfUse.error')
-            eventLogService.logEvent("user didn't approve terms of use", (String)flash.referenceId, request)
+            flow.error = g.message(code:'activateAccountAndCardController.cardOrder.approveTermsOfUse.error')
+            eventLog.logEvent("user didn't approve terms of use")
             return error()
           }
           // todo: beställ kort
@@ -287,10 +288,10 @@ class ActivateAccountAndCardController {
         }
 
         if (flow.registeredAddressInvalid) {
-          eventLogService.logEvent("user says address is invalid", (String)flash.referenceId, request)
-          success()
-        }
+          eventLog.logEvent("user says address is invalid")
 
+        }
+        return success()
       }
       on('success').to('end')
       on('error').to('cardOrder')
@@ -308,55 +309,33 @@ class ActivateAccountAndCardController {
     }
   }
 
-  private void setAddressDetailsToSession() {
-    Map ladokAddress = ladokService.getAddressFromLadokByPnr((String)session?.pnr)
-
-    session.street = ladokAddress["gatadr"]
-    session.coAddr = ladokAddress["coadr"]
-    session.zip = ladokAddress["postnr"]
-    session.city = ladokAddress["ort"]
-  }
-
-  private boolean userHasAccount() {
-    SvcSuPersonVO userFoundWithPnr = null
-    SvcSuPersonVO userFoundWithUid = null
-
-    if (session?.pnr) {
-      userFoundWithPnr = activateAccountAndCardService.findUser(session?.pnr, true)
-    }
-
-    if (session?.uid) {
-      userFoundWithUid = activateAccountAndCardService.findUser(session?.uid, false)
-    }
-
-    return userFoundWithPnr || userFoundWithUid
-  }
-
   private boolean userHasLadokAddress() {
     boolean hasLadokAddress = false
 
     if (session?.pnr) {
       Map ladokAddress = ladokService.getAddressFromLadokByPnr((String)session?.pnr)
+
       hasLadokAddress = (ladokAddress && ladokAddress.size()>0)
+
+      if (hasLadokAddress) {
+        session.street = ladokAddress["gatadr"]
+        session.coAddr = ladokAddress["coadr"]
+        session.zip = ladokAddress["postnr"]
+        session.city = ladokAddress["ort"]
+      }
     }
 
     return hasLadokAddress
   }
 
   private boolean userCanOrderCards() {
-    SvcSuPersonVO user = null
 
-    if (session?.pnr) {
-      user = activateAccountAndCardService.findUser(session?.pnr, true)
-    } else if (session?.uid) {
-      user = activateAccountAndCardService.findUser(session?.uid, false)
+    def uid = session.user?.uid
+
+    if (!uid) {
+      return false
     }
 
-    boolean canOrder = false
-    if(user) {
-      canOrder = activateAccountAndCardService.canOrderCard(user?.uid)
-    }
-
-    return canOrder
+    return activateAccountAndCardService.canOrderCard(uid)
   }
 }
