@@ -5,6 +5,7 @@ import groovy.sql.Sql
 import org.apache.commons.dbcp.BasicDataSource
 import spock.lang.IgnoreRest
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import java.text.SimpleDateFormat
 
@@ -135,4 +136,16 @@ class LadokServiceSpec extends Specification {
     and:
     address.ort == 'farsta'
   }
+  @Unroll
+  void "chompPnr: When given pnr: \'#pnr\' we expect '\'#expected\'"() {
+    expect:
+    LadokService.chompPnr(pnr)
+
+    where:
+    pnr             | expected
+    '***********'   | '***********'   // 11 chars, nothing happens.
+    '++**********'  | '*********'     // 12 chars, first 2 chars should be cut.
+    '++***********' | '++***********' // 13 chars, nothing happens.
+  }
+
 }

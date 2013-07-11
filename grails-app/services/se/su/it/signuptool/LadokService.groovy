@@ -12,6 +12,7 @@ class LadokService {
   def grailsApplication
 
   public Map findStudentInLadok(String pnr) {
+    pnr = chompPnr(pnr)
     Map response = [:]
     List<GroovyRowResult> responseList = doListQuery(
         "SELECT enamn, tnamn FROM NAMN WHERE pnr = :pnr limit 1",
@@ -101,4 +102,9 @@ class LadokService {
     }
     return response
   }
+
+  private static String chompPnr(String pnr) {
+    (pnr?.length() == 12) ? pnr[2..11] : pnr
+  }
+
 }

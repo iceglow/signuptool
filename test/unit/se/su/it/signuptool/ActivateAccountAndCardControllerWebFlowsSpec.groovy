@@ -1,14 +1,17 @@
 package se.su.it.signuptool
 
+import grails.test.mixin.Mock
 import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
 import org.apache.commons.logging.Log
 import se.su.it.svc.SvcSuPersonVO
+import spock.lang.Ignore
+import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 
 @TestMixin(WebFlowUnitTestMixin)
-
+@Mock([EventLog, EventLogEvent])
 class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   @Shared
@@ -19,7 +22,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     myController.utilityService = Mock(UtilityService)
     myController.ladokService = Mock(LadokService)
     myController.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
-    myController.eventLogService = Mock(EventLogService)
     myController.sukatService = Mock(SukatService)
     controller = myController
   }
@@ -27,11 +29,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "createNewAccountFlow > prepareForwardAddress: Check success pathing"() {
     expect:
     'activateAccount' == createNewAccountFlow.prepareForwardAddress.on.success.to
-  }
-
-  def "createNewAccountFlow > prepareForwardAddress: Check error pathing"() {
-    expect:
-    'errorHandler' == createNewAccountFlow.prepareForwardAddress.on.error.to
   }
 
   def "createNewAccountFlow > prepareForwardAddress: On success"() {
@@ -54,8 +51,11 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     def resp = createNewAccountFlow.prepareForwardAddress.action()
 
     then:
-    resp == 'error'
+    resp == ['forwardAddress':'']
     'prepareForwardAddress' == lastEventName
+
+    and:
+    flash.info == "activateAccountAndCardController.unableToFetchForwardAddress"
 
     and:
     1 * controller.ladokService.findForwardAddressSuggestionForPnr(*_) >> { throw new RuntimeException('foo') }
@@ -64,6 +64,17 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "createNewAccountFlow > activateAccount: Check success pathing"() {
     expect:
     'processEmailInput' == createNewAccountFlow.activateAccount.on.acceptAccountActivation.to
+  }
+
+  def "createNewAccountFlow > activateAccount: Assert that terms of use acceptance get persisted in flow."() {
+    given:
+    params.approveTermsOfUse = 'kakakaka'
+
+    when:
+    createNewAccountFlow.activateAccount.on.acceptAccountActivation.action()
+
+    then:
+    flow.approveTermsOfUse == 'kakakaka'
   }
 
   def "createNewAccountFlow > processEmailInput: Check success pathing"() {
@@ -80,7 +91,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     def resp = createNewAccountFlow.processEmailInput.on.error.to
 
     then:
-    resp == "selectEmail"
+    resp == "activateAccount"
     flow.error == error
   }
 
@@ -114,6 +125,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > processEmailInput: given an invalid email"() {
     given:
+    session?.eventLog = new EventLog().save(flush:true)
     flow.approveTermsOfUse = true
 
     when:
@@ -124,9 +136,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     and:
     flow.error == "activateAccountAndCardController.forwardEmail.explanation"
-
-    and:
-    1 * controller.eventLogService.logEvent(*_)
 
     and:
     lastEventName == 'processEmailInput'
@@ -168,10 +177,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     then:
     session.uid == response.uid
-    flash.password == response.password
-
-    and:
-    flash.info == 'Account created!'
+    session.password == response.password
 
     and:
     1 * controller.sukatService.enrollUser(*_) >> { String arg1, String arg2, String arg3 ->
@@ -224,7 +230,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > end: see that we end up on index again."()  {
     when:
-    createNewAccountFlow.end.action()
+    createNewAccountFlow.end
 
     then:
     response.redirectedUrl == '/activateAccountAndCard/index'
@@ -232,35 +238,28 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: test flow when user is found, has registered address and no cards or orders"() {
     given:
-    session.uid = "abcd1234@su.se"
+    session.user = [uid:"abcd1234@su.se"]
     session.pnr = "1234567890"
+    session.eventLog = new EventLog().save(flush:true)
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
 
     then:
-    assert event == 'success'
+    event == 'success'
     assert 'success' == stateTransition
 
     and:
-    3 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
-
-    and:
-    2 * controller.ladokService.getAddressFromLadokByPnr(*_) >> [kalle: 'anka']
+    1 * controller.ladokService.getAddressFromLadokByPnr(*_) >> [kalle: 'anka']
 
     and:
     1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
-
-    and:
-    0 * controller.eventLogService.logEvent(*_) >> null
   }
 
   def "orderCardFlow: test when user is missing account, should log event and redirect to error page"() {
     given:
-    session.uid = "abcd1234@su.se"
     session.pnr = "1234567890"
-
-    controller.metaClass.message = {LinkedHashMap code -> 'account error'}
+    session.eventLog = new EventLog().save(flush:true)
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
@@ -268,28 +267,20 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     then:
     assert event == 'error'
 
-    assert flow.error == 'account error'
-
-    and:
-    2 * controller.activateAccountAndCardService.findUser(*_) >> null
-
+    assert flow.error == 'activateAccountAndCardController.cardOrder.noAccount.error'
 
     and:
     0 * controller.activateAccountAndCardService.canOrderCard(*_)
 
     and:
     0 * controller.ladokService.getAddressFromLadokByPnr(*_)
-
-    and:
-    1 * controller.eventLogService.logEvent(*_)
   }
 
   def "orderCardFlow: test when user has an account but is not allowed to order cards, should log event and redirect to error page"() {
     given:
-    session.uid = "abcd1234@su.se"
+    session.user = [uid:"abcd1234@su.se"]
     session.pnr = "1234567890"
-
-    controller.metaClass.message = {LinkedHashMap code -> 'order card error'}
+    session.eventLog = new EventLog().save(flush:true)
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
@@ -297,27 +288,20 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     then:
     assert event == 'error'
 
-    assert flow.error == 'order card error'
-
-    and:
-    3 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
+    assert flow.error == 'activateAccountAndCardController.cardOrder.cardOrder.error'
 
     and:
     1 * controller.activateAccountAndCardService.canOrderCard(*_) >> false
 
     and:
     0 * controller.ladokService.getAddressFromLadokByPnr(*_)
-
-    and:
-    1 * controller.eventLogService.logEvent(*_)
   }
 
   def "orderCardFlow: test when user doesn't have ladok address, should log event and redirect to error page"() {
     given:
-    session.uid = "abcd1234@su.se"
+    session.user = [uid:"abcd1234@su.se"]
     session.pnr = "1234567890"
-
-    controller.metaClass.message = {LinkedHashMap code -> 'address error'}
+    session.eventLog = new EventLog().save(flush:true)
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
@@ -325,10 +309,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     then:
     assert event == 'error'
 
-    assert flow.error == 'address error'
-
-    and:
-    3 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO()
+    assert flow.error == 'activateAccountAndCardController.cardOrder.ladokAddress.error'
 
     and:
     1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
@@ -336,16 +317,13 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     and:
     1 * controller.ladokService.getAddressFromLadokByPnr(*_) >> null
 
-    and:
-    1 * controller.eventLogService.logEvent(*_)
   }
 
   def "orderCardFlow: test when user doesn't select if address is valid or in valid, should log event and redirect to cardOrder page with error message"() {
     given:
     flow.registeredAddressValid = false
     flow.registeredAddressInvalid = false
-
-    controller.metaClass.message = {LinkedHashMap code -> 'address select error'}
+    session.eventLog = new EventLog().save(flush:true)
 
     when:
     def event = orderCardFlow.processCardOrder.action()
@@ -353,12 +331,10 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     then:
     assert event == 'error'
 
-    assert flow.error == 'address select error'
+    assert flow.error == 'activateAccountAndCardController.cardOrder.selectValidInvalid.error'
 
     assert 'cardOrder' == orderCardFlow.processCardOrder.on.error.to
 
-    and:
-    1 * controller.eventLogService.logEvent(*_)
   }
 
   def "orderCardFlow: test when user doesn't accept library rules, should log event and redirect to cardOrder page with error message"() {
@@ -366,8 +342,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     flow.registeredAddressValid = true
     flow.registeredAddressInvalid = false
     flow.acceptLibraryRules = false
-
-    controller.metaClass.message = {LinkedHashMap code -> 'not accepting library rules error'}
+    session.eventLog = new EventLog().save(flush:true)
 
     when:
     def event = orderCardFlow.processCardOrder.action()
@@ -375,12 +350,9 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     then:
     assert event == 'error'
 
-    assert flow.error == 'not accepting library rules error'
+    assert flow.error == 'activateAccountAndCardController.cardOrder.approveTermsOfUse.error'
 
     assert 'cardOrder' == orderCardFlow.processCardOrder.on.error.to
-
-    and:
-    1 * controller.eventLogService.logEvent(*_)
   }
 
   def "orderCardFlow: test when user select address is invalid, should log event and redirect to end"() {
@@ -388,6 +360,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     flow.registeredAddressValid = false
     flow.registeredAddressInvalid = true
     flow.acceptLibraryRules = false
+    session.eventLog = new EventLog().save(flush:true)
 
     when:
     def event = orderCardFlow.processCardOrder.action()
@@ -396,8 +369,5 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     assert event == 'success'
 
     assert 'end' == orderCardFlow.processCardOrder.on.success.to
-
-    and:
-    1 * controller.eventLogService.logEvent(*_)
   }
 }

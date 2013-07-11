@@ -1,23 +1,30 @@
 package se.su.it.signuptool
 
-class EventLog {
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode
+@ToString
+class EventLog implements Serializable {
+
+  String socialSecurityNumber
+
   Date dateCreated
   Date lastUpdated
-  String referenceId
-  String socialSecurityNumber
-  String userId
-  String description
-  String localServer
-  String remoteHost
+
+  static hasMany = [events:EventLogEvent]
 
   static constraints = {
-    description (blank: false)
-    dateCreated (nullable: true)
-    lastUpdated (nullable: true)
-    referenceId (nullable: true)
     socialSecurityNumber (nullable: true)
-    userId (nullable: true)
-    localServer (nullable: true)
-    remoteHost (nullable: true)
+  }
+
+  static mapping = {
+    events lazy: false
+    events: batchSize(100)
+    version false
+  }
+
+  public void logEvent(String description) {
+    this.addToEvents(new EventLogEvent(description:description)).save(flush:true)
   }
 }

@@ -36,8 +36,8 @@ class DashboardControllerSpec extends Specification {
 
     where:
     target                    | destination
-    'activateAccountAndCard'  | '/activateAccountAndCard'
-    'resetPassword'           | '/resetPassword'
+    'activateAccountAndCard'  | '/activateAccountAndCard/index'
+    'resetPassword'           | '/resetPassword/index'
     'admin'                   | null
     null                      | null
   }
