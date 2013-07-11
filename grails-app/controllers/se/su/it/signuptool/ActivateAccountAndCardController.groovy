@@ -237,6 +237,7 @@ class ActivateAccountAndCardController {
         if (!userCanOrderCards()) {
           eventLog.logEvent("user has active cards or orders")
           flow.error = message(code:'activateAccountAndCardController.cardOrder.cardOrder.error')
+          return error()
         }
 
         if (!userHasLadokAddress()) {
@@ -267,13 +268,18 @@ class ActivateAccountAndCardController {
       action {
         if (!flow.registeredAddressValid &&
             !flow.registeredAddressInvalid) {
+
           flow.error = message(code:'activateAccountAndCardController.cardOrder.selectValidInvalid.error')
+          eventLogService.logEvent("user didn't select if address is valid or invalid", (String)flash.referenceId, request)
           return error()
         }
 
         if (flow.registeredAddressValid) {
+
           if (!flow.acceptLibraryRules) {
+
             flow.error = message(code:'activateAccountAndCardController.cardOrder.approveTermsOfUse.error')
+            eventLogService.logEvent("user didn't approve terms of use", (String)flash.referenceId, request)
             return error()
           }
           // todo: beställ kort
@@ -281,6 +287,7 @@ class ActivateAccountAndCardController {
         }
 
         if (flow.registeredAddressInvalid) {
+          eventLogService.logEvent("user says address is invalid", (String)flash.referenceId, request)
           success()
         }
 
