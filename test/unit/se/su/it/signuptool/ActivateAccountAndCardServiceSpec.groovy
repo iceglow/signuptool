@@ -2,6 +2,7 @@ package se.su.it.signuptool
 
 import grails.test.mixin.TestFor
 import se.su.it.svc.SvcSuPersonVO
+import spock.lang.IgnoreRest
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -64,7 +65,7 @@ class ActivateAccountAndCardServiceSpec extends Specification {
 
   void "findUser: when given user \'#user\'"() {
     expect:
-    null == service.findUser(user, false)
+    null == service.findUser(user)
 
     where:
     user << [null, '']
@@ -72,7 +73,7 @@ class ActivateAccountAndCardServiceSpec extends Specification {
 
   void "findUser: When uid is pnr but no user is found."() {
     when:
-    def resp = service.findUser('someUid', true)
+    def resp = service.findUser('someUid')
 
     then:
     resp == null
@@ -83,35 +84,13 @@ class ActivateAccountAndCardServiceSpec extends Specification {
 
   void "findUser: When uid is pnr."() {
     when:
-    def resp = service.findUser('someUid', true)
+    def resp = service.findUser('someUid')
 
     then:
     resp instanceof SvcSuPersonVO
 
     and:
     1 * service.sukatService.findUserBySocialSecurityNumber(*_) >> new SvcSuPersonVO(uid:'withUid')
-  }
-
-  void "findUser: with regular sukat uid but no user is found."() {
-    when:
-    def resp = service.findUser('someUid', false)
-
-    then:
-    resp == null
-
-    and:
-    1 * service.sukatService.findUserByUid(*_) >> new SvcSuPersonVO()
-  }
-
-  void "findUser: with regular sukat uid"() {
-    when:
-    def resp = service.findUser('someUid', false)
-
-    then:
-    resp instanceof SvcSuPersonVO
-
-    and:
-    1 * service.sukatService.findUserByUid(*_) >> new SvcSuPersonVO(uid:'withUid')
   }
 
   void "fetchLadokData: Given uid \'#uid\'"() {
@@ -122,62 +101,7 @@ class ActivateAccountAndCardServiceSpec extends Specification {
     uid << [null, '']
   }
 
-  @Unroll
-  void "chompUid: When given uid: \'#uid\' we expect '\'#expected\'"() {
-    expect:
-    ActivateAccountAndCardService.chompUid(uid)
-
-    where:
-    uid             | expected
-    '***********'   | '***********'   // 11 chars, nothing happens.
-    '++**********'  | '*********'     // 12 chars, first 2 chars should be cut.
-    '++***********' | '++***********' // 13 chars, nothing happens.
-  }
-
-  void "userHasRegisteredAddress: When user has no registered address, should return false"() {
-    given:
-    def user = new SvcSuPersonVO()
-    user.uid = "asdasdasd"
-
-    when:
-    def res = service.userHasRegisteredAddress("asdasdasd", false)
-
-    then:
-    assert !res
-
-    and:
-    1 * service.sukatService.findUserByUid(*_) >> user
-  }
-
-  void "userHasRegisteredAddress: When user has registered address, should return true"() {
-    given:
-    def user = new SvcSuPersonVO()
-    user.registeredAddress = "Gatan 13"
-    user.uid = "asdasdasd"
-
-    when:
-    def res = service.userHasRegisteredAddress("asdasdasd", false)
-
-    then:
-    assert res
-
-    and:
-    1 * service.sukatService.findUserByUid(*_) >> user
-  }
-
-  void "fetchLadokData: When uid is chomped but it's not a pnr uid"() {
-    when:
-    def resp = service.fetchLadokData('abc123efg456')
-
-    then:
-    resp == [:]
-
-    and:
-    1 * service.utilityService.uidIsPnr(*_) >> false
-    0 * service.ladokService.findStudentInLadok(*_)
-  }
-
-  void "fetchLadokData: When uid is chomped and is a pnr uid"() {
+  void "fetchLadokData: Happy path"() {
     when:
     def resp = service.fetchLadokData('abc123efg456')
 
@@ -186,7 +110,6 @@ class ActivateAccountAndCardServiceSpec extends Specification {
     resp.tnamn == 'foo'
 
     and:
-    1 * service.utilityService.uidIsPnr(*_) >> true
     1 * service.ladokService.findStudentInLadok(*_) >> [enamn:'kaka', tnamn:'foo']
   }
 }

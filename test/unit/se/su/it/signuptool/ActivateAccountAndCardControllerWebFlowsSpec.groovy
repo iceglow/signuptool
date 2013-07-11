@@ -1,15 +1,17 @@
 package se.su.it.signuptool
 
+import grails.test.mixin.Mock
 import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
 import org.apache.commons.logging.Log
 import se.su.it.svc.SvcSuPersonVO
+import spock.lang.Ignore
 import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 
 @TestMixin(WebFlowUnitTestMixin)
-
+@Mock([EventLog, EventLogEvent])
 class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   @Shared
@@ -20,7 +22,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     myController.utilityService = Mock(UtilityService)
     myController.ladokService = Mock(LadokService)
     myController.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
-    myController.eventLogService = Mock(EventLogService)
     myController.sukatService = Mock(SukatService)
     controller = myController
   }
@@ -124,6 +125,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > processEmailInput: given an invalid email"() {
     given:
+    session?.eventLog = new EventLog().save(flush:true)
     flow.approveTermsOfUse = true
 
     when:
@@ -134,9 +136,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     and:
     flow.error == "activateAccountAndCardController.forwardEmail.explanation"
-
-    and:
-    1 * controller.eventLogService.logEvent(*_)
 
     and:
     lastEventName == 'processEmailInput'
@@ -178,10 +177,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     then:
     session.uid == response.uid
-    flash.password == response.password
-
-    and:
-    flash.info == 'Account created!'
+    session.password == response.password
 
     and:
     1 * controller.sukatService.enrollUser(*_) >> { String arg1, String arg2, String arg3 ->
@@ -234,7 +230,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > end: see that we end up on index again."()  {
     when:
-    createNewAccountFlow.end.action()
+    createNewAccountFlow.end
 
     then:
     response.redirectedUrl == '/activateAccountAndCard/index'
@@ -261,8 +257,5 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     and:
     1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
-
-    and:
-    0 * controller.eventLogService.logEvent(*_) >> null
   }
 }

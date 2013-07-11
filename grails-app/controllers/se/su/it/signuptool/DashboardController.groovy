@@ -11,7 +11,7 @@ class DashboardController {
 
       /** But only redirect some controller pointers */
       if (savedController in ['activateAccountAndCard', 'resetPassword']) {
-        return redirect(controller: savedController)
+        return redirect(controller: savedController, action:'index')
       }
     }
 

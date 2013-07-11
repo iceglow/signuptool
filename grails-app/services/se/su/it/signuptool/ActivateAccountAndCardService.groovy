@@ -19,12 +19,13 @@ class ActivateAccountAndCardService implements Serializable {
     boolean canOrder = true
 
     List<SuCard> cards = sukatService.getCardsForUser(user.uid)
-    if(cards?.size()>0) {
+    if (cards?.size() > 0) {
       canOrder = false
     }
 
     List<SvcCardOrderVO> cardOrders = sukatService.getCardOrdersForUser(user.uid)
-    if(cardOrders?.size()>0) {
+
+    if (cardOrders?.size() > 0) {
       canOrder = false
     }
 
@@ -45,32 +46,17 @@ class ActivateAccountAndCardService implements Serializable {
     return true
   }
 
-  public SvcSuPersonVO findUser(String uid, boolean uidIsPnr) {
+  public SvcSuPersonVO findUser(String pnr) {
     SvcSuPersonVO user = null
 
-    if (!uid) {
+    if (!pnr) {
       return user
     }
 
-    if (uidIsPnr) {
-      user = sukatService.findUserBySocialSecurityNumber(uid)
-    } else {
-      user = sukatService.findUserByUid(uid)
-    }
+    user = sukatService.findUserBySocialSecurityNumber(pnr)
+
     /** Return object could be empty, uid should mean we did get a hit. */
-    (user?.uid)? user : null
-  }
-
-  public boolean userHasRegisteredAddress(String uid, boolean uidIsPnr) {
-    boolean hasRegisteredAddress = false
-
-    SvcSuPersonVO user = findUser(uid, uidIsPnr)
-
-    if (user) {
-      hasRegisteredAddress = user.registeredAddress
-    }
-
-    return hasRegisteredAddress
+    (user?.uid) ? user : null
   }
 
   /**
@@ -87,21 +73,18 @@ class ActivateAccountAndCardService implements Serializable {
     }
 
     /** Turn 12 length ssn into 10 length */
-    String ssn = chompUid(socialSecurityNumber)
-    if (utilityService.uidIsPnr(ssn)) {
-      ladokData = ladokService.findStudentInLadok(ssn)
-    }
+    ladokData = ladokService.findStudentInLadok(socialSecurityNumber)
 
     return ladokData
   }
-
+  // TODO: Write tests
   public Map getCardOrderStatus(SvcSuPersonVO user) {
     Map cardInfo = [:]
 
     try {
       /** TODO: Guessing we want to use LPW to fetch the proper addr. */
       Map address = ladokService.getAddressFromLadokByPnr(user.socialSecurityNumber)
-      cardInfo.hasAddress = (null!=address && address.size()>0)
+      cardInfo.hasAddress = (null != address && address.size() > 0)
       cardInfo.ladokAddress = address
 
       // we may want to show info about the active cards a user already has
@@ -116,9 +99,5 @@ class ActivateAccountAndCardService implements Serializable {
     }
 
     return cardInfo
-  }
-
-  private static String chompUid(String uid) {
-    (uid?.length() == 12) ? uid[2..11] : uid
   }
 }
