@@ -26,12 +26,6 @@ class ActivateAccountAndCardController {
 
     EventLog eventLog = session.eventLog
 
-    /** Setting uid
-     * 1. First hand, use the returned uid.
-     * 2. Fetch the uid from eppn
-     */
-
-    /** Path only taken when no uid is already set in the session */
     String scope = ''
     String pnr = session.pnr
     String uid = session.user?.uid
@@ -45,7 +39,7 @@ class ActivateAccountAndCardController {
             pnr = request.norEduPersonNIN
           } else {
             eventLog.logEvent("unverified account for ${request.eppn}")
-            return render(view:'unverifiedAccount')
+            return render(view:'unverifiedAccount', model:[referenceId:eventLog?.id])
           }
           break
         default:
@@ -99,7 +93,7 @@ class ActivateAccountAndCardController {
 
       if (!ladokData) {
         eventLog.logEvent("User ${pnr} not found in ladok")
-        return render(view:'userNotFoundInLadok')
+        return render(view:'userNotFoundInLadok', model:[referenceId:eventLog?.id])
       }
 
       /** Saving enamn and tnamn for enroll method */
@@ -114,7 +108,6 @@ class ActivateAccountAndCardController {
 
     SvcSuPersonVO user = session.user // fetch user from session for the presentation in the view.
 
-    Map cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
     String lpwurl = configService.getValue("signup", "lpwtool")
     String sukaturl = configService.getValue("signup", "sukattool")
     eventLog.logEvent("Person with pnr: ${pnr} and uid: ${user.uid} already exists in sukat")
@@ -122,7 +115,6 @@ class ActivateAccountAndCardController {
     return render(view:'index', model:[
         user:user,
         password:password,
-        cardInfo: cardInfo,
         lpwurl: lpwurl,
         sukaturl: sukaturl
     ])
@@ -155,6 +147,8 @@ class ActivateAccountAndCardController {
     processEmailInput {
       action {
 
+        flow.forwardAddress = params.forwardAddress
+
         EventLog eventLog = session?.eventLog?.merge()
 
         if (!flow.approveTermsOfUse) {
@@ -182,12 +176,13 @@ class ActivateAccountAndCardController {
 
         SvcUidPwd result = null
 
+        String forwardAddress = flow.forwardAddress
         String givenName = session.givenName
         String sn = session.sn
         String socialSecurityNumber = session.pnr
 
         try {
-          result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
+          result = sukatService.enrollUser(givenName, sn, socialSecurityNumber, forwardAddress)
         } catch(ex) {
           log.error "Failed when enrolling user", ex
         }
@@ -234,22 +229,23 @@ class ActivateAccountAndCardController {
           return error()
         }
 
-        if (!userCanOrderCards()) {
-          eventLog.logEvent("user has active cards or orders")
-          flow.error = g.message(code:'activateAccountAndCardController.cardOrder.cardOrder.error')
-          return error()
-        }
+        flow.cardInfo = activateAccountAndCardService.getCardOrderStatus(session.user)
 
-        if (!userHasLadokAddress()) {
-          eventLog.logEvent("user address is missing in ladok")
-          flow.error = g.message(code:'activateAccountAndCardController.cardOrder.ladokAddress.error')
-          return error()
+        if (!flow.cardInfo?.canOrderCard) {
+          // TODO: Make logEvent more talkative.
+          eventLog.logEvent("User can't order card")
+          return cantOrderCard()
         }
 
         return success()
       }
       on("success").to("cardOrder")
       on("error").to("errorHandler")
+      on("cantOrderCard").to("cantOrderCard")
+    }
+
+    cantOrderCard {
+      on("...").to("...")
     }
 
     cardOrder {
@@ -308,7 +304,7 @@ class ActivateAccountAndCardController {
       render(view: '/activateAccountAndCard/endAccountAndCard')
     }
   }
-
+  /*
   private boolean userHasLadokAddress() {
     boolean hasLadokAddress = false
 
@@ -327,15 +323,5 @@ class ActivateAccountAndCardController {
 
     return hasLadokAddress
   }
-
-  private boolean userCanOrderCards() {
-
-    def uid = session.user?.uid
-
-    if (!uid) {
-      return false
-    }
-
-    return activateAccountAndCardService.canOrderCard(uid)
-  }
+  */
 }

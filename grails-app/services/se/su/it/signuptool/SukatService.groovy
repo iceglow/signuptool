@@ -25,8 +25,30 @@ class SukatService implements Serializable {
 
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"
+  private final CARD_ORDER_STATUSES_TO_SKIP = ["DISCARDED", "WRITTEN_TO_SUKAT"]
 
   public String orderCard(SvcSuPersonVO user, Map ladokAddress) {
+    String response = null
+
+    try {
+      SvcCardOrderVO cardOrderVO = createCardOrderVO(user, ladokAddress)
+      response = cardOrderWS.orderCard(cardOrderVO, AuditFactory.auditObject)
+    } catch (ex) {
+      log.error "Card order failed", ex
+      throw(ex)
+    }
+    return response
+  }
+
+  private static SvcCardOrderVO createCardOrderVO(SvcSuPersonVO user, Map ladokAddress) {
+    if (user == null) {
+      throw new IllegalArgumentException('user is null')
+    }
+
+    if (!ladokAddress) {
+      throw new IllegalArgumentException("Ladok address supplied is invalid ${ladokAddress?.dump()}")
+    }
+
     SvcCardOrderVO cardOrderVO = new SvcCardOrderVO()
     cardOrderVO.firstname = user.givenName
     cardOrderVO.lastname = user.sn
@@ -34,8 +56,7 @@ class SukatService implements Serializable {
     cardOrderVO.streetaddress2 = ladokAddress?.coadr
     cardOrderVO.zipcode = ladokAddress?.postnr
     cardOrderVO.locality = ladokAddress?.ort
-    String responseFromWS = cardOrderWS.orderCard(cardOrderVO, AuditFactory.auditObject)
-    return responseFromWS
+    return cardOrderVO
   }
 
   public List<SvcCardOrderVO> getCardOrdersForUser(String uid) {
@@ -43,6 +64,12 @@ class SukatService implements Serializable {
 
     // call sukatsvc to fetch cardorders for user , something like findAllCardOrdersForUid in the CardOrderService
     cardOrders = cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
+
+    if (!cardOrders) {
+      return []
+    }
+
+    cardOrders.removeAll { (it?.value in CARD_ORDER_STATUSES_TO_SKIP) }
 
     return cardOrders
   }
@@ -58,27 +85,6 @@ class SukatService implements Serializable {
     return suCards
   }
 
-  public String getMailRoutingAddress(String uid) {
-    String mailRoutingAddress = null
-    try {
-      mailRoutingAddress = accountWS.getMailRoutingAddress(uid, AuditFactory.auditObject)
-    } catch (ex) {
-      log.error "Failed when getting mail routing address", ex
-      return null
-    }
-    return mailRoutingAddress
-  }
-
-  public boolean setMailRoutingAddress(String uid, String mailRoutingAddress) {
-    try {
-      accountWS.setMailRoutingAddress(uid, mailRoutingAddress, AuditFactory.auditObject)
-    } catch (ex) {
-      log.error "Failed when setting mail routing address", ex
-      return false
-    }
-    return true
-  }
-
   public SvcSuPersonVO findUserBySocialSecurityNumber(String pnr) {
     SvcSuPersonVO suPerson = null
     try {
@@ -89,17 +95,7 @@ class SukatService implements Serializable {
     return suPerson
   }
 
-  public SvcSuPersonVO findUserByUid(String uid) {
-    SvcSuPersonVO suPerson = null
-    try {
-      suPerson = accountWS.findSuPersonByUid(uid, AuditFactory.auditObject)
-    } catch (ex) {
-      log.error "Failed when finding user by ssn in ldap.", ex
-    }
-    return suPerson
-  }
-
-  public SvcUidPwd enrollUser(String givenName, String sn, String socialSecurityNumber) {
+  public SvcUidPwd enrollUser(String givenName, String sn, String socialSecurityNumber, String forwardAddress) {
 
     if (!givenName?.trim()) {
       log.error "No givenName supplied."
@@ -119,13 +115,13 @@ class SukatService implements Serializable {
     SvcUidPwd response = null
 
     try {
-      // TODO: See why this throws a JaxWsClientProxy
-      response = enrollmentWS.enrollUser(
+      response = enrollmentWS.enrollUserWithMailRoutingAddress(
           DEFAULT_DOMAIN,
           givenName,
           sn,
           DEFAULT_AFFILATION,
           socialSecurityNumber,
+          forwardAddress,
           AuditFactory.auditObject
       )
     } catch (ex) {

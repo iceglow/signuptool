@@ -14,24 +14,6 @@ class ActivateAccountAndCardService implements Serializable {
 
   private final emailPattern = /[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/
 
-  /** Checks if user has any active cards or active order for a card */
-  public boolean canOrderCard(String uid) {
-
-    List<SuCard> cards = sukatService.getCardsForUser(uid)
-
-    if (cards?.size() > 0) {
-      return false
-    }
-
-    List<SvcCardOrderVO> cardOrders = sukatService.getCardOrdersForUser(uid)
-
-    if (cardOrders?.size() > 0) {
-      return false
-    }
-
-    return true
-  }
-
   public boolean validateForwardAddress(String forwardAddress) {
     forwardAddress = forwardAddress?.trim()
 
@@ -77,27 +59,41 @@ class ActivateAccountAndCardService implements Serializable {
 
     return ladokData
   }
-  // TODO: Write tests
+
   public Map getCardOrderStatus(SvcSuPersonVO user) {
     Map cardInfo = [:]
 
     try {
-      /** TODO: Guessing we want to use LPW to fetch the proper addr. */
       Map address = ladokService.getAddressFromLadokByPnr(user.socialSecurityNumber)
       cardInfo.hasAddress = (null != address && address.size() > 0)
       cardInfo.ladokAddress = address
 
       // we may want to show info about the active cards a user already has
-      cardInfo.suCards = sukatService.getCardsForUser(user.uid)
+      cardInfo.suCards = (sukatService.getCardsForUser(user.uid))
 
       // we may want to show info about cardorders that the user may have done
-      cardInfo.cardOrders = sukatService.getCardOrdersForUser(user.uid)
-      /** TODO: Check if we have active orders etc */
-      cardInfo.canOrderCard = (cardInfo.hasAddress && canOrderCard(user))
+      cardInfo.cardOrders = (sukatService.getCardOrdersForUser(user.uid))
+      cardInfo.canOrderCard = canOrderCard(cardInfo)
     } catch (ex) {
       log.error "Failed when creating card order information object", ex
     }
 
     return cardInfo
+  }
+
+  private static boolean canOrderCard(Map cardInfo) {
+    if (!cardInfo.hasAddress) {
+      return false
+    }
+
+    if (cardInfo.suCards) {
+      return false
+    }
+
+    if (cardInfo.cardOrders) {
+      return false
+    }
+
+    return true
   }
 }

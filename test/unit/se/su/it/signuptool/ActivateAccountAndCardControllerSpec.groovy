@@ -151,7 +151,6 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     and:
     model.user.uid == 'foo'
     model.password == 's3cret!'
-    model.cardInfo == [:]
     model.lpwurl == "lpwtoolUrl"
     model.sukaturl == "sukattoolUrl"
 
@@ -162,7 +161,6 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo', accountIsActive: true)
     0 * controller.activateAccountAndCardService.fetchLadokData(*_)
-    1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> [:]
     2 * controller.configService.getValue(_,_) >> { String arg1, String arg2 ->
       assert arg1 == "signup"
       if (arg2 == "lpwtool") { return "lpwtoolUrl" }
