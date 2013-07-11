@@ -52,6 +52,7 @@ class SukatService implements Serializable {
     SvcCardOrderVO cardOrderVO = new SvcCardOrderVO()
     cardOrderVO.firstname = user.givenName
     cardOrderVO.lastname = user.sn
+    cardOrderVO.owner = user.uid
     cardOrderVO.streetaddress1 = ladokAddress?.gatadr
     cardOrderVO.streetaddress2 = ladokAddress?.coadr
     cardOrderVO.zipcode = ladokAddress?.postnr

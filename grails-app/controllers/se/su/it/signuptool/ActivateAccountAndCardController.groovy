@@ -15,6 +15,8 @@ class ActivateAccountAndCardController {
     /** Only display the password if returned and remove it right after. */
     String password = ''
 
+    boolean hasCompletedCardOrder = (session.hasCompletedCardOrder)
+
     if (session.password) {
       password = session.password
       session.password = null
@@ -106,17 +108,16 @@ class ActivateAccountAndCardController {
       return redirect(action:'createNewAccount')
     }
 
-    SvcSuPersonVO user = session.user // fetch user from session for the presentation in the view.
-
     String lpwurl = configService.getValue("signup", "lpwtool")
     String sukaturl = configService.getValue("signup", "sukattool")
-    eventLog.logEvent("Person with pnr: ${pnr} and uid: ${user.uid} already exists in sukat")
+    eventLog.logEvent("Person with pnr: ${pnr} and uid: ${session.uid} already exists in sukat")
 
     return render(view:'index', model:[
-        user:user,
+        uid:session?.uid,
         password:password,
         lpwurl: lpwurl,
-        sukaturl: sukaturl
+        sukaturl: sukaturl,
+        hasCompletedCardOrder:hasCompletedCardOrder
     ])
   }
 
@@ -220,8 +221,14 @@ class ActivateAccountAndCardController {
 
     prepareForwardOrderCard {
       action {
+        EventLog eventLog = null
 
-        EventLog eventLog = session?.eventLog?.merge()
+        try {
+          eventLog = session?.eventLog?.merge()
+        } catch (ex) {
+          log.error "Error when fetching logger", ex
+          return sessionTimedOut()
+        }
 
         if (!session.user?.uid) {
           eventLog.logEvent("no account found for uid (${session.user?.uid}) or pnr (${session?.pnr})")
@@ -245,7 +252,9 @@ class ActivateAccountAndCardController {
     }
 
     cantOrderCard {
-      on("...").to("...")
+      on("continue") {
+        session.hasCompletedCardOrder = true
+      }.to("end")
     }
 
     cardOrder {
@@ -279,8 +288,12 @@ class ActivateAccountAndCardController {
             eventLog.logEvent("user didn't approve terms of use")
             return error()
           }
-          // todo: beställ kort
-
+          try {
+            sukatService.orderCard(session.user, flow.cardInfo?.ladokAddress)
+          } catch (ex) {
+            log.error "Failed to order card", ex
+            return error()
+          }
         }
 
         if (flow.registeredAddressInvalid) {
@@ -289,7 +302,9 @@ class ActivateAccountAndCardController {
         }
         return success()
       }
-      on('success').to('end')
+      on('success'){
+        session.hasCompletedCardOrder = true
+      }.to('end')
       on('error').to('cardOrder')
     }
 
@@ -301,27 +316,7 @@ class ActivateAccountAndCardController {
     }
 
     end() {
-      render(view: '/activateAccountAndCard/endAccountAndCard')
+      return redirect(action:'index')
     }
   }
-  /*
-  private boolean userHasLadokAddress() {
-    boolean hasLadokAddress = false
-
-    if (session?.pnr) {
-      Map ladokAddress = ladokService.getAddressFromLadokByPnr((String)session?.pnr)
-
-      hasLadokAddress = (ladokAddress && ladokAddress.size()>0)
-
-      if (hasLadokAddress) {
-        session.street = ladokAddress["gatadr"]
-        session.coAddr = ladokAddress["coadr"]
-        session.zip = ladokAddress["postnr"]
-        session.city = ladokAddress["ort"]
-      }
-    }
-
-    return hasLadokAddress
-  }
-  */
 }
