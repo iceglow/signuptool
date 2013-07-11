@@ -21,6 +21,10 @@
       <a class="accessibility-link" accesskey="s" href="#content-top" title="Skip navigation"></a>
       <!-- /accessibility links -->
 
+      <!-- head top -->
+      <g:render template="/layouts/top_menu"/>
+      <!-- /head top -->
+
       <!-- head -->
       <g:render template="/layouts/header"/>
       <!-- /head -->
