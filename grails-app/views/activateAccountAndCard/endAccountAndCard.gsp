@@ -9,18 +9,18 @@
   <div class="float-left">
     <div class="prompt">
       <div class="apps-float-80">
-        <div>Kortuppgifter</div>
-        <div>Kort är beställt och levereras till din adress tidigast om en vecka</div>
+        <div><g:message code='activateAccountAndCardController.endAccountAndCard.cardDetails'/></div>
+        <div><g:message code='activateAccountAndCardController.endAccountAndCard.cardIsDelivered'/></div>
 
         <br/>
 
-        <div>Nu kan du:</div>
-        <div>Registrera dig på kurser i <g:link url="">Mina studier</g:link></div>
-        <div>Aktivera åtkomst till det trådlösa nätverket (eduroam) i <g:link url="">Kontohantering</g:link></div>
+        <div><g:message code='activateAccountAndCardController.endAccountAndCard.nowYouCan'/></div>
+        <div><g:message code='activateAccountAndCardController.endAccountAndCard.registerOnCourse'/><g:link url=""><g:message code='activateAccountAndCardController.endAccountAndCard.myStudies'/></g:link></div>
+        <div><g:message code='activateAccountAndCardController.endAccountAndCard.activateEduroam'/><g:link url=""><g:message code='activateAccountAndCardController.endAccountAndCard.accountHandling'/></g:link></div>
 
         <br/>
 
-        <div>Övriga tjänster hittar du på <g:link url="">Mitt universitet</g:link></div>
+        <div><g:message code='activateAccountAndCardController.endAccountAndCard.otherServices'/><g:link url=""><g:message code='activateAccountAndCardController.endAccountAndCard.myUniversity'/></g:link></div>
       </div>
 
       <div class="clear-float"></div>
@@ -28,15 +28,15 @@
       <br/>
 
       <div class="align-right">
-        <div>Registrera dig på kurser i</div>
+        <div><g:message code='activateAccountAndCardController.endAccountAndCard.registerOnCourse'/></div>
         <g:link url="">
-          <g:submitButton class="signupButton" name="toMinaStudier" value="Mina Studier"/>
+          <g:submitButton class="signupButton" name="toMinaStudier" value="${message(code:'activateAccountAndCardController.endAccountAndCard.myStudies', default: 'Mina studier')}"/>
         </g:link>
     </div>
     </div>
 
     <div class="state_progress_img">
-      <img src="${resource(dir: 'img', file: 'end_activate_account.png')}" border="0"
+      <img src="${resource(dir: 'img', file: (request.getLocale() =~ /sv_SE/) ? 'end_activate_account_se.png' : 'end_activate_account_en.png')}" border="0"
         class="logotype" title="<g:message code='activateAccountAndCardController.step5.counter'/>">
     </div>
   </div>

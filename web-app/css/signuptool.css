@@ -20,6 +20,10 @@
   float: right;
 }
 
+.pointer_cursor {
+  cursor: pointer;
+}
+
 .prompt {
   width: 400px;
   padding-right: 14px;

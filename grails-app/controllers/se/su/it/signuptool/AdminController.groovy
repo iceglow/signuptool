@@ -9,8 +9,6 @@ class AdminController {
       eventLogs = eventLogService.findEventsBySocialSecurityNumber((String) params.ssn)
     } else if (params?.referenceId) {
       eventLogs = eventLogService.findEventsByReferenceId((String) params.referenceId)
-    } else {
-      eventLogs = eventLogService.fetchLatestEvents()
     }
     return render(view: 'index', model: [eventLogs: eventLogs])
   }
