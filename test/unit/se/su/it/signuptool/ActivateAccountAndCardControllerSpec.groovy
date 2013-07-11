@@ -7,56 +7,30 @@ import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 @TestFor(ActivateAccountAndCardController)
+@Mock([EventLog, EventLogEvent])
 class ActivateAccountAndCardControllerSpec extends Specification {
 
-  private final String DEFAULT_SCOPE = "su.se"
+  private final String DEFAULT_SCOPE = "studera.nu"
 
   def setup() {
     controller.utilityService = Mock(UtilityService)
     controller.ladokService = Mock(LadokService)
     controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     controller.configService = Mock(ConfigService)
-    controller.eventLogService = Mock(EventLogService)
   }
 
   def "index: Testing the password passing."() {
     given:
-    flash.password = 's3cret!'
+    session.password = 's3cret!'
 
     when:
     controller.index()
 
     then:
-    response.redirectedUrl == '/dashboard/index'
-
-    and:
-    flash.password == null
-    flash.error == 'activateAccountAndCardController.noValidIdFound'
+    session.password == null
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.utilityService.fetchUid(*_)
-    and:
-    1 * controller.eventLogService.createReferenceId(*_)>>"hej svejs"
-  }
-
-  def "index: Testing when uid is already in the session."() {
-    given:
-    session.uid = 'foo'
-
-    when:
-    controller.index()
-
-    then:
-    response.redirectedUrl == '/dashboard/index'
-
-    and:
-    flash.password == null
-    flash.error == 'activateAccountAndCardController.userNotFoundInLadok'
-
-    and:
-    0 * controller.utilityService.getScopeFromEppn(*_)
-    0 * controller.utilityService.fetchUid(*_)
   }
 
   def "index: handle studera.nu unverified account (missing norEduPersonNIN)"() {
@@ -70,36 +44,37 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
   }
 
-  def "index: Test unhandled or invalid scope"() {
+  def "index: Test unhandled scope when users pnr is not in the session."() {
     when:
     controller.index()
 
     then:
     response.redirectedUrl == '/dashboard/index'
+    and:
+    flash.error == "activateAccountAndCardController.noValidScopeFound"
 
     and:
-    flash.error == 'activateAccountAndCardController.noValidScopeFound'
-
-    and:
-    1 * controller.utilityService.getScopeFromEppn(*_) >> "unknown.se"
+    1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.sen"
   }
 
-  def "index: When no proper uid is found."() {
+  def "index: Testing when pnr is already in the session."() {
+    given:
+    session.pnr = 'socialSecurityNumber'
+
     when:
     controller.index()
 
     then:
-    response.redirectedUrl == '/dashboard/index'
+    view == '/activateAccountAndCard/userNotFoundInLadok'
 
     and:
-    flash.error == 'activateAccountAndCardController.noValidIdFound'
-
-    and:
-    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.utilityService.fetchUid(*_)
+    0 * controller.utilityService.getScopeFromEppn(*_)
   }
 
-  def "index: When uid is set in the session but finding the user throws an exception."() {
+  def "index: When pnr is set in the session but finding the user throws an exception."() {
+    given:
+    request.norEduPersonNIN = '191102023333'
+
     when:
     controller.index()
 
@@ -111,48 +86,45 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.utilityService.fetchUid(*_) >> 'foo'
-    1 * controller.utilityService.uidIsPnr(*_) >> false
     1 * controller.activateAccountAndCardService.findUser(*_) >> { throw new RuntimeException('foo') }
   }
 
   def "index: Trying to create a new user (uid not found in sukat), but user is not found in ladok.."() {
+    given:
+    request.norEduPersonNIN = '191102023333'
+
     when:
     controller.index()
 
     then:
-    response.redirectedUrl == '/dashboard/index'
-
-    and:
-    flash.error == 'activateAccountAndCardController.userNotFoundInLadok'
+    view == '/activateAccountAndCard/userNotFoundInLadok'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.utilityService.fetchUid(*_) >> 'foo'
-    1 * controller.utilityService.uidIsPnr(*_) >> false
     1 * controller.activateAccountAndCardService.findUser(*_) >> null
     1 * controller.activateAccountAndCardService.fetchLadokData(*_) >> null
   }
 
   def "index: Trying to create a new user (uid not found in sukat), and fetching ladok data throws an exception"() {
+    given:
+    request.norEduPersonNIN = '191102023333'
+
     when:
     controller.index()
 
     then:
-    response.redirectedUrl == '/dashboard/index'
-
-    and:
-    flash.error == 'activateAccountAndCardController.userNotFoundInLadok'
+    view == '/activateAccountAndCard/userNotFoundInLadok'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.utilityService.fetchUid(*_) >> 'foo'
-    1 * controller.utilityService.uidIsPnr(*_) >> false
     1 * controller.activateAccountAndCardService.findUser(*_) >> null
     1 * controller.activateAccountAndCardService.fetchLadokData(*_) >> { throw new RuntimeException('foo')}
   }
 
   def "index: Trying to create a new user (uid not found in sukat)"() {
+    given:
+    request.norEduPersonNIN = '191102023333'
+
     when:
     controller.index()
 
@@ -161,15 +133,14 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.utilityService.fetchUid(*_) >> 'foo'
-    1 * controller.utilityService.uidIsPnr(*_) >> false
     1 * controller.activateAccountAndCardService.findUser(*_) >> null
     1 * controller.activateAccountAndCardService.fetchLadokData(*_) >> [enamn:'foo', tnamn:'kaka']
   }
 
   def "index: When a user is found in sukat"() {
     given:
-    flash.password = 's3cret!'
+    session.password = 's3cret!'
+    request.norEduPersonNIN = '191102023333'
 
     when:
     controller.index()
@@ -185,13 +156,11 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     model.sukaturl == "sukattoolUrl"
 
     and:
-    flash.password == null
+    session.password == null
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.utilityService.fetchUid(*_) >> 'foo'
-    1 * controller.utilityService.uidIsPnr(*_) >> false
-    1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo')
+    1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo', accountIsActive: true)
     0 * controller.activateAccountAndCardService.fetchLadokData(*_)
     1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> [:]
     2 * controller.configService.getValue(_,_) >> { String arg1, String arg2 ->
@@ -202,8 +171,20 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     }
   }
 
-  def "createNewAccountFlow"() {
-    // TODO: Tests for the flow.
-    return true
+  def "index: When a stub is found in SUKAT"() {
+    given:
+    request.norEduPersonNIN = '191102023333'
+    flash.password = 's3cret!'
+
+    when:
+    controller.index()
+
+    then:
+    response.redirectedUrl == '/activateAccountAndCard/createNewAccount'
+
+    and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
+    1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo', accountIsActive: false)
+    1 * controller.activateAccountAndCardService.fetchLadokData(*_) >> [enamn:'enamn', tnamn:'tnamn']
   }
 }

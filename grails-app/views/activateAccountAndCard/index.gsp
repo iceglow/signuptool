@@ -19,11 +19,15 @@
           <g:link action="" class="print-details">
             <span class="mgn-left-30"><g:message code="activateAccountAndCardController.hasActivatedAccount.print"/></span>
           </g:link>
-          <div><g:message code="activateAccountAndCardController.hasActivatedAccount.details"/></div>
           <div><g:message code="activateAccountAndCardController.hasActivatedAccount.username"/>: ${session?.uid}</div>
           <g:if test="${password}">
             <div><g:message code="activateAccountAndCardController.hasActivatedAccount.password"/>: ${password}</div>
           </g:if>
+          <g:else>
+            <g:link controller="dashboard" action="resetAccountOrPassword">
+              <g:message code="activateAccountAndCardController.forgotten_password"/>
+            </g:link>
+          </g:else>
         </div>
 
         <div class="clear-float"></div>
