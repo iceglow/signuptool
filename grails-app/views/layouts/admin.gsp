@@ -37,6 +37,7 @@
         </div>
         <!-- ************************************************** PAGE ************************************************** -->
         <div class="left-column">
+          <g:render template="/layouts/menu"/>
         </div>
 
         <div class="main-column">
