@@ -389,4 +389,14 @@ class ActivateAccountAndCardController {
       return redirect(action:'index')
     }
   }
+
+  def changeLanguage = {
+    if (session.locale && session.locale == "sv_SE") {
+      session.locale = "en_US"
+    } else {
+      session.locale = "sv_SE"
+    }
+
+    redirect(controller: params.c, action: params.a, params:['lang':session.locale])
+  }
 }

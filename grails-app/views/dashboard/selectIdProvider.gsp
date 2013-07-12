@@ -24,7 +24,7 @@
       </div>
 
       <div class="state_progress_img">
-        <img src="${resource(dir: 'img', file: 'identify_activate_account.png')}" border="0"
+        <img src="${resource(dir: 'img', file: (session.locale =~ /sv_SE/) ? 'identify_activate_account_se.png' : 'identify_activate_account_en.png') }" border="0"
              class="logotype" title="<g:message code='activateAccountAndCardController.step2.counter'/>">
       </div>
     </div>

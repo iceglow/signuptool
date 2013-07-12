@@ -21,6 +21,10 @@
       <a class="accessibility-link" accesskey="s" href="#content-top" title="Skip navigation"></a>
       <!-- /accessibility links -->
 
+      <!-- head top -->
+      <g:render template="/layouts/top_menu"/>
+      <!-- /head top -->
+
       <!-- head -->
       <g:render template="/layouts/header"/>
       <!-- /head -->
@@ -32,7 +36,9 @@
           <div class="clear-float"></div>
         </div>
         <!-- ************************************************** PAGE ************************************************** -->
-        <div class="left-column"></div>
+        <div class="left-column">
+          <g:render template="/layouts/menu"/>
+        </div>
 
         <div class="main-column">
           <g:layoutBody/>

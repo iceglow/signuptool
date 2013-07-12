@@ -42,7 +42,7 @@
       </div>
 
       <div class="state_progress_img">
-        <img src="${resource(dir: 'img', file: 'universitycard_activate_account.png')}" border="0"
+        <img src="${resource(dir: 'img', file: (request.getLocale() =~ /sv_SE/) ? 'universitycard_activate_account_se.png' : 'universityaccount_activate_account_en.png')}" border="0"
              class="logotype" title="<g:message code='activateAccountAndCardController.step4.counter'/>">
       </div>
     </div>
