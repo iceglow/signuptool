@@ -3,91 +3,106 @@ package se.su.it.signuptool
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
+// TODO: TESTS
+
 class ResetPasswordController {
   def activateAccountAndCardService
   def sukatService
   def utilityService
 
   def index() {
-    // Kolla scope (antagning.se / studera.nu)
-    // Kolla norEduPersonNIN
-    // Kolla att kontot finns.
-    // KOlla input
-    // Kör enrollUser
-    // ... -> visa passwd mm..
+
+    EventLog eventLog = utilityService.eventLog
+    session.referenceId = eventLog?.id
+
     String scope = utilityService.getScopeFromEppn(request.eppn)
-    if(!(scope && scope == 'studera.nu')) {
-      log.error("scope (${scope}) must be defined and set to 'studera.nu' or 'antagning.se'!")
-      flash.error = "scope undefined or not equal to 'studera.nu' or 'antagning.se'!"
-      return render(view:'index')
+
+    switch(scope) {
+      case "studera.nu":
+        if (request.norEduPersonNIN) {
+          session.pnr = request.norEduPersonNIN
+          eventLog.logEvent("verified account for ${request.eppn}, pnr set to ${session.pnr} from norEduPersonNIN")
+        } else {
+          eventLog.logEvent("unverified account for ${request.eppn}")
+          return render(view:'/shared/unverifiedAccount', model:[referenceId:eventLog?.id])
+        }
+        break
+      default:
+        eventLog.logEvent("no handled or valid scope supplied for ${request.eppn}")
+        flash.error = message(
+            code:'activateAccountAndCardController.noValidScopeFound',
+            args:[request?.eppn]) as String
+        return redirect(controller:'dashboard', action:'index')
     }
 
-    String norEduPersonNIN = request.norEduPersonNIN
-    if(!norEduPersonNIN) {
-      log.error("norEduPersonNIN not defined")
-      flash.error = "norEduPersonNIN not defined!"
-      return render(view:'index')
+    SvcSuPersonVO user = sukatService.findUserBySocialSecurityNumber(session.pnr)
+
+    if (!user || !user.accountIsActive) {
+      eventLog.logEvent("User with social security number ${session.pnr} doesnt have an account!")
+      log.error "User with social security number ${session.pnr} doesnt have an account!"
+      flash.error = g.message(code:'resetPassword.errors.userNotFound')
+      return redirect(controller:'dashboard', action:'index')
     }
 
-    SvcSuPersonVO user = sukatService.findUserBySocialSecurityNumber(norEduPersonNIN)
+    session.user = user
 
-    if(!user) {
-      log.error("User with nin${norEduPersonNIN} doesnt have any account!")
-      flash.error = "norEduPersonNIN not defined!"
-      return render(view:'index')
-    }
-
-    session.pnr = ((norEduPersonNIN?.length() == 12) ? norEduPersonNIN[2..11] : norEduPersonNIN)
-    return redirect(action:'resetPassword')
+    return redirect(action: 'resetPassword')
   }
 
   def resetPasswordFlow = {
-    init {
-      action {
-        SvcSuPersonVO account = activateAccountAndCardService.findUser((String)session.pnr, true)
-        if (account) {
-          flash.info = "Account already exists"
-          session.uid = account.uid
-          accountExist()
-        } else {
-          missingAccount()
-        }
-      }
-
-      on("accountExist").to("hasActivatedAccount")
-      on("missingAccount").to("noAccount")
-    }
-
-    hasActivatedAccount {
+    confirmResetPassword {
       on('ok').to('resetPassword')
-      on('skip').to('end')
     }
 
     resetPassword() {
       action {
-        SvcSuPersonVO account = activateAccountAndCardService.findUser((String)session.pnr, true)
-        SvcUidPwd result = sukatService.enrollUser(account.givenName, account.sn, account.socialSecurityNumber)
-        session.uid = result.uid
-        flash.password = result.password
+
+        EventLog eventLog = null
+        try {
+          eventLog = utilityService.getEventLog(session.referenceId)
+        } catch (ex) {
+          log.error "Fetching EventLog failed", ex
+          return error()
+        }
+
+        try {
+          flash.password = sukatService.resetPassword(session?.user?.uid)
+          flash.uid = session.user?.uid
+        } catch (ex) {
+          flow.error = g.message(code:'resetPassword.errors.passwordResetFailed')
+          log.error "Reset Password failed for user with uid ${session?.user?.uid}.", ex
+          eventLog.logEvent("Reset Password failed for user with uid ${session?.user?.uid}: ${ex?.message}")
+          return error()
+        }
       }
-      on('ok').to('end')
-      on(Exception).to("errorHandler")
+      on("success").to('end')
+      on("error").to("errorHandler")
     }
 
     errorHandler {
       action {
-        flash.info = "Webflow Exception occurred: ${flash.stateException}"
-        log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
+        if (flash.stateException) {
+          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException
+        }
+      }
+      on("success").to("errorPage")
+    }
+
+    errorPage {
+      on("continue") {
+        flow.error = null
+      }.to("dashboard")
+    }
+
+    dashboard {
+      action {
+        return redirect(controller: 'dashboard', action:'index')
       }
       on("success").to("end")
     }
 
-    noAccount() {
-      on('ok').to('end')
-    }
-
     end() {
-      return redirect(controller: 'dashboard', action:'index')
+      [password:flash.password, uid:flash.uid]
     }
   }
 }
