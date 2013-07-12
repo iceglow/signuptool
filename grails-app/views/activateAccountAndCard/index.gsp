@@ -10,7 +10,7 @@
       <tmpl:endAccountAndCard model="[lpwurl:lpwurl]"/>
     </g:if>
     <g:else>
-      <tmpl:showAccountInformation model="[password:password, uid:uid]"/>
+      <tmpl:/shared/showAccountInformation model="[password:password, uid:uid]"/>
     </g:else>
   </div>
 </body>

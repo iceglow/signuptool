@@ -30,7 +30,9 @@
   </div>
 
   <div class="state_progress_img">
-    <img src="${resource(dir: 'img', file: 'universityaccount_activate_account.png')}" border="0"
-         class="logotype" title="<g:message code='activateAccountAndCardController.step3.counter'/>">
+    <img src="${resource(dir: 'img', file: 'universityaccount_activate_account_se.png')}"
+         border="0"
+         class="logotype"
+         title="<g:message code='activateAccountAndCardController.step3.counter'/>">
   </div>
 </div>

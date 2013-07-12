@@ -123,4 +123,8 @@ class SukatService implements Serializable {
 
     return response
   }
+
+  public String resetPassword(String uid) {
+    return accountWS.resetPassword(uid, AuditFactory.auditObject)
+  }
 }

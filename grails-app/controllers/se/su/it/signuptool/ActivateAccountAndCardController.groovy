@@ -24,7 +24,15 @@ class ActivateAccountAndCardController {
 
     EventLog eventLog = null
 
-    if (!session.referenceId) {
+    if (session.referenceId) {
+      try {
+        eventLog = utilityService.getEventLog(session.referenceId)
+      } catch (ex) {
+        log.error "Failed to fetch eventLog for referenceId ${session.referenceId}", ex
+        flash.error = g.message(code:'activateAccountAndCardController.errors.genericError')
+        return redirect(controller:'dashboard', action:'index')
+      }
+    } else {
       eventLog = utilityService.eventLog
       session.referenceId = eventLog?.id
     }
@@ -43,7 +51,7 @@ class ActivateAccountAndCardController {
             eventLog.logEvent("verified account for ${request.eppn}, pnr set to ${session.pnr} from norEduPersonNIN")
           } else {
             eventLog.logEvent("unverified account for ${request.eppn}")
-            return render(view:'unverifiedAccount', model:[referenceId:eventLog?.id])
+            return render(view:'/shared/unverifiedAccount', model:[referenceId:eventLog?.id])
           }
           break
         default:
@@ -55,7 +63,7 @@ class ActivateAccountAndCardController {
       }
     }
 
-    if (!eventLog.socialSecurityNumber) {
+    if (!eventLog?.socialSecurityNumber) {
       eventLog.socialSecurityNumber = session.pnr
       eventLog.save(flush:true)
     }
@@ -239,14 +247,14 @@ class ActivateAccountAndCardController {
     dashboard() {
       /** We don't want to send the user back into the same flow that crashed so we send him / her to the dashboard */
       action {
-        return redirect(controller:'dashboard', action:'index')
+        redirect(controller:'dashboard', action:'index')
       }
       on("success").to("end")
     }
 
     beforeEnd {
       action {
-        return redirect(action:'index')
+        redirect(action:'index')
       }
       on("success").to("end")
     }
