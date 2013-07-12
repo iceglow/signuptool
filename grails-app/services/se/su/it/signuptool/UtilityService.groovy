@@ -13,4 +13,11 @@ class UtilityService {
     log.debug "scope: ${scope} found for eppn: $eppn"
     return scope
   }
+
+  public EventLog getEventLog(String referenceId) {
+    return EventLog.get(referenceId)
+  }
+  public EventLog getEventLog() {
+    return new EventLog().save(flush:true)
+  }
 }

@@ -22,11 +22,12 @@ class ActivateAccountAndCardController {
       session.password = null
     }
 
-    if (!session.eventLog) {
-      session.eventLog = new EventLog().save(flush:true)
-    }
+    EventLog eventLog = null
 
-    EventLog eventLog = session.eventLog
+    if (!session.referenceId) {
+      eventLog = utilityService.eventLog
+      session.referenceId = eventLog?.id
+    }
 
     String scope = ''
 
@@ -127,10 +128,9 @@ class ActivateAccountAndCardController {
       action {
         EventLog eventLog = null
         try {
-          eventLog = session?.eventLog?.merge()
+          eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
-          log.error "Error when fetching logger", ex
-          flow.error = g.message(code:'activateAccountAndCardController.errors.sessionTimedOut')
+          log.error "Fetching EventLog failed", ex
           return error()
         }
 
@@ -160,10 +160,9 @@ class ActivateAccountAndCardController {
       action {
         EventLog eventLog = null
         try {
-          eventLog = session?.eventLog?.merge()
+          eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
-          log.error "Error when fetching logger", ex
-          flow.error = g.message(code:'activateAccountAndCardController.errors.sessionTimedOut')
+          log.error "Fetching EventLog failed", ex
           return error()
         }
 
@@ -191,12 +190,12 @@ class ActivateAccountAndCardController {
 
         EventLog eventLog = null
         try {
-          eventLog = session?.eventLog?.merge()
+          eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
-          log.error "Error when fetching logger", ex
-          flow.error = g.message(code:'activateAccountAndCardController.errors.sessionTimedOut')
+          log.error "Fetching EventLog failed", ex
           return error()
         }
+
 
         SvcUidPwd result = null
 
@@ -216,7 +215,7 @@ class ActivateAccountAndCardController {
         session.uid = result.uid
         session.password = result.password
       }
-      on("success").to("end")
+      on("success").to("beforeEnd")
       on("error").to("errorHandler")
     }
 
@@ -237,15 +236,27 @@ class ActivateAccountAndCardController {
       }.to("dashboard")
     }
 
-    dashboard {
+    dashboard() {
       /** We don't want to send the user back into the same flow that crashed so we send him / her to the dashboard */
-      return redirect(controller:'dashboard', action:'index')
+      action {
+        return redirect(controller:'dashboard', action:'index')
+      }
+      on("success").to("end")
     }
 
-    end {
-      return redirect(action:'index')
+    beforeEnd {
+      action {
+        return redirect(action:'index')
+      }
+      on("success").to("end")
+    }
+
+    end() {
+      // Ugly placeholder will never be shown
     }
   }
+
+
 
   private void clearSession() {
     session.uid = null
@@ -259,10 +270,9 @@ class ActivateAccountAndCardController {
 
         EventLog eventLog = null
         try {
-          eventLog = session?.eventLog?.merge()
+          eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
-          log.error "Error when fetching logger", ex
-          flow.error = g.message(code:'activateAccountAndCardController.errors.sessionTimedOut')
+          log.error "Fetching EventLog failed", ex
           return error()
         }
 
@@ -302,7 +312,7 @@ class ActivateAccountAndCardController {
       on("continue") {
         /** We consider this a successful completion of the flow since the user can't order a card */
         session.hasCompletedCardOrder = true
-      }.to("end")
+      }.to("beforeEnd")
     }
 
     cardOrder {
@@ -320,10 +330,9 @@ class ActivateAccountAndCardController {
 
         EventLog eventLog = null
         try {
-          eventLog = session?.eventLog?.merge()
+          eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
-          log.error "Error when fetching logger", ex
-          flow.error = g.message(code:'activateAccountAndCardController.errors.sessionTimedOut')
+          log.error "Fetching EventLog failed", ex
           return error()
         }
 
@@ -333,11 +342,6 @@ class ActivateAccountAndCardController {
           flow.error = g.message(code:'activateAccountAndCardController.cardOrder.selectValidInvalid.error')
           eventLog.logEvent("User didn't select if address is valid or invalid")
           return error()
-        }
-
-        if (flow.registeredAddressInvalid) {
-          eventLog.logEvent("User says address is invalid")
-          return hasInvalidAddress()
         }
 
         if (flow.registeredAddressValid) {
@@ -353,20 +357,21 @@ class ActivateAccountAndCardController {
             eventLog.logEvent("Failed to order card: ${ex.message}")
             return error()
           }
+
+          if (flow.registeredAddressInvalid) {
+            eventLog.logEvent("User says address is invalid")
+          }
+
         }
         return success()
       }
       on('success'){
         session.hasCompletedCardOrder = true
-      }.to('end')
+      }.to('beforeEnd')
       on("hasInvalidAddress"){
         session.hasCompletedCardOrder = true
       }.to("hasInvalidAddress")
       on('error').to('cardOrder')
-    }
-
-    hasInvalidAddress() {
-       on("continue").to("end")
     }
 
     errorHandler {
@@ -382,11 +387,18 @@ class ActivateAccountAndCardController {
     errorPage {
       on("continue"){
         flow.error = null
-      }.to("end")
+      }.to("beforeEnd")
+    }
+
+    beforeEnd() {
+      action {
+        return redirect(action:'index')
+      }
+      on("success").to("end")
     }
 
     end() {
-      return redirect(action:'index')
+      // Placeholder
     }
   }
 

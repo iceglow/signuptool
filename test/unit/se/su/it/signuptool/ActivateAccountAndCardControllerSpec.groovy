@@ -13,7 +13,9 @@ class ActivateAccountAndCardControllerSpec extends Specification {
   private final String DEFAULT_SCOPE = "studera.nu"
 
   def setup() {
-    controller.utilityService = Mock(UtilityService)
+    controller.utilityService = Mock(UtilityService) {
+      getEventLog(*_) >> { return new EventLog().save(flush:true) }
+    }
     controller.ladokService = Mock(LadokService)
     controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     controller.configService = Mock(ConfigService)
@@ -149,7 +151,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     view == '/activateAccountAndCard/index'
 
     and:
-    model.user.uid == 'foo'
+    model.uid == 'foo'
     model.password == 's3cret!'
     model.lpwurl == "lpwtoolUrl"
     model.sukaturl == "sukattoolUrl"
