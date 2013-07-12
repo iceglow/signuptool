@@ -22,23 +22,25 @@ class ActivateAccountAndCardController {
       session.password = null
     }
 
-    if (!session.eventLog) {
-      session.eventLog = new EventLog().save(flush:true)
+    EventLog eventLog = null
+
+    if (!session.referenceId) {
+      eventLog = utilityService.eventLog
+      session.referenceId = eventLog?.id
     }
 
-    EventLog eventLog = session.eventLog
-
     String scope = ''
-    String pnr = session.pnr
+
     String uid = session.user?.uid
 
-    if (!pnr) {
+    if (!session.pnr) {
       scope = utilityService.getScopeFromEppn(request.eppn)
 
       switch(scope) {
         case "studera.nu":
           if (request.norEduPersonNIN) {
-            pnr = request.norEduPersonNIN
+            session.pnr = request.norEduPersonNIN
+            eventLog.logEvent("verified account for ${request.eppn}, pnr set to ${session.pnr} from norEduPersonNIN")
           } else {
             eventLog.logEvent("unverified account for ${request.eppn}")
             return render(view:'unverifiedAccount', model:[referenceId:eventLog?.id])
@@ -54,7 +56,7 @@ class ActivateAccountAndCardController {
     }
 
     if (!eventLog.socialSecurityNumber) {
-      eventLog.socialSecurityNumber = pnr
+      eventLog.socialSecurityNumber = session.pnr
       eventLog.save(flush:true)
     }
 
@@ -63,7 +65,7 @@ class ActivateAccountAndCardController {
      */
     if (!session.user) {
       try {
-        SvcSuPersonVO user = activateAccountAndCardService.findUser(pnr)
+        SvcSuPersonVO user = activateAccountAndCardService.findUser(session.pnr)
         if (user) {
           session.user = user
           session.uid = user?.uid
@@ -75,7 +77,7 @@ class ActivateAccountAndCardController {
         log.error "Failed when setting user in session", ex
         flash.error = message(
             code:'activateAccountAndCardController.errorWhenFetchingUser',
-            args:[pnr]) as String
+            args:[session.pnr]) as String
 
         return redirect(controller:'dashboard', action:'index')
       }
@@ -83,34 +85,33 @@ class ActivateAccountAndCardController {
 
     /** If we still have no user in the session then this is a first time visit */
     if (!session.user || !session.user.accountIsActive) {
-      eventLog.logEvent("First time visit for ${pnr}")
+      eventLog.logEvent("First time visit for ${session.pnr}")
       /** See if we can find the new user in Ladok */
       Map ladokData = [:]
 
       try {
-        ladokData = activateAccountAndCardService.fetchLadokData(pnr)
+        ladokData = activateAccountAndCardService.fetchLadokData(session.pnr)
       } catch (ex) {
-        log.error "Failed when fetching ladokData for uid: $pnr", ex
+        log.error "Failed when fetching ladokData for uid: $session.pnr", ex
       }
 
       if (!ladokData) {
-        eventLog.logEvent("User ${pnr} not found in ladok")
+        eventLog.logEvent("User ${session.pnr} not found in ladok")
         return render(view:'userNotFoundInLadok', model:[referenceId:eventLog?.id])
       }
 
       /** Saving enamn and tnamn for enroll method */
       session.givenName = ladokData.tnamn
       session.sn = ladokData.enamn
-      session.pnr = ((pnr?.length() == 12) ? pnr[2..11] : pnr)
 
-      eventLog.logEvent("User ${pnr} starting flow")
+      eventLog.logEvent("User ${session.pnr} starting flow")
 
       return redirect(action:'createNewAccount')
     }
 
     String lpwurl = configService.getValue("signup", "lpwtool")
     String sukaturl = configService.getValue("signup", "sukattool")
-    eventLog.logEvent("Person with pnr: ${pnr} and uid: ${session.uid} already exists in sukat")
+    eventLog.logEvent("Person with pnr: ${session.pnr} and uid: ${session.uid} already exists in sukat")
 
     return render(view:'index', model:[
         uid:session?.uid,
@@ -125,122 +126,178 @@ class ActivateAccountAndCardController {
 
     prepareForwardAddress {
       action {
+        EventLog eventLog = null
+        try {
+          eventLog = utilityService.getEventLog(session.referenceId)
+        } catch (ex) {
+          log.error "Fetching EventLog failed", ex
+          return error()
+        }
+
         String forwardAddress = ''
         /** Even if fetching forward address fails we should not fail here. */
         try {
-          forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String)session.pnr)
+          forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String) session.pnr)
         } catch (ex) {
-          // TODO: Inform about not being able to fetch forwardaddr from ladok?
-          flash.info = g.message(code:'activateAccountAndCardController.unableToFetchForwardAddress')
+          eventLog.logEvent("Failed when fetching forward address from Ladok: ${ex?.message}")
           log.error "Fetching forward address from LADOK failed.", ex
         }
+        eventLog.logEvent("Fetched forward address from Ladok: $forwardAddress")
         [forwardAddress:forwardAddress]
       }
       on("success").to("activateAccount")
+      on("error").to("errorHandler")
     }
 
     activateAccount {
       on("acceptAccountActivation") {
+        flow.forwardAddress = params.forwardAddress
         flow.approveTermsOfUse = params?.approveTermsOfUse
       }.to("processEmailInput")
     }
 
     processEmailInput {
       action {
-
-        flow.forwardAddress = params.forwardAddress
-
-        EventLog eventLog = session?.eventLog?.merge()
-
-        if (!flow.approveTermsOfUse) {
-          // TODO: Separate messages for these two errors.
-          flow.error = g.message(code:'activateAccountAndCardController.forwardEmail.explanation')
+        EventLog eventLog = null
+        try {
+          eventLog = utilityService.getEventLog(session.referenceId)
+        } catch (ex) {
+          log.error "Fetching EventLog failed", ex
           return error()
         }
 
-        if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
-          // TODO: Separate messages for these two errors.
-          flow.error = g.message(code:'activateAccountAndCardController.forwardEmail.explanation')
+        if (!flow.approveTermsOfUse) {
+          flow.error = g.message(code:'activateAccountAndCardController.errors.notHavingApprovedTermsOfUse')
+          eventLog.logEvent("User did not accept the terms of use.")
+          return retry()
+        }
 
-          eventLog.logEvent("Invalid email for ${session.pnr}: ${params?.forwardAddress}")
-          return error()
+        if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
+          flow.error = g.message(code:'activateAccountAndCardController.errors.notHavingSuppliedValidForwardAddress')
+          eventLog.logEvent("Invalid email for ${session.pnr}: ${flow.forwardAddress}")
+          return retry()
         }
       }
       on("success") {
         flow.error = ''
       }.to("createAccount")
-      on("error").to("activateAccount")
+      on("retry").to("activateAccount")
+      on("error").to("errorHandler")
     }
 
     createAccount {
       action {
 
-        SvcUidPwd result = null
-
-        String forwardAddress = flow.forwardAddress
-        String givenName = session.givenName
-        String sn = session.sn
-        String socialSecurityNumber = session.pnr
-
+        EventLog eventLog = null
         try {
-          result = sukatService.enrollUser(givenName, sn, socialSecurityNumber, forwardAddress)
-        } catch(ex) {
-          log.error "Failed when enrolling user", ex
+          eventLog = utilityService.getEventLog(session.referenceId)
+        } catch (ex) {
+          log.error "Fetching EventLog failed", ex
+          return error()
         }
 
-        if (result == null) {
-          flow.error = g.message(code:'activateAccountAndCardController.failedWhenEnrollingUser')
+
+        SvcUidPwd result = null
+
+        try {
+          result = sukatService.enrollUser(session.givenName, session.sn, session.pnr, flow.forwardAddress)
+          if (!result) {
+            throw new Exception("Could not enroll user.")
+          }
+        } catch(ex) {
+          log.error "Failed when enrolling user", ex
+          eventLog.logEvent("Failed to enroll user: ${ex?.message}")
+          flow.error = g.message(code:'activateAccountAndCardController.errors.failedWhenEnrollingUser')
           return error()
         }
 
         /** Since we don't recieve a full account from the creation of an account we return the uid */
-
         session.uid = result.uid
         session.password = result.password
       }
-      on("success").to("end")
+      on("success").to("beforeEnd")
       on("error").to("errorHandler")
     }
 
     errorHandler {
       action {
-        // TODO: Do something nicer than just log?
-        log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
-        session.uid = null
-        session.password = null
+        if (flash.stateException) {
+          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException
+        }
+        flow.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
+        clearSession()
+      }
+      on("success").to("errorPage")
+    }
+
+    errorPage {
+      on("continue"){
+        flow.error = null
+      }.to("dashboard")
+    }
+
+    dashboard() {
+      /** We don't want to send the user back into the same flow that crashed so we send him / her to the dashboard */
+      action {
+        return redirect(controller:'dashboard', action:'index')
       }
       on("success").to("end")
     }
 
-    end {
-      return redirect(action:'index')
+    beforeEnd {
+      action {
+        return redirect(action:'index')
+      }
+      on("success").to("end")
     }
+
+    end() {
+      // Ugly placeholder will never be shown
+    }
+  }
+
+
+
+  private void clearSession() {
+    session.uid = null
+    session.password = null
   }
 
   def orderCardFlow = {
 
     prepareForwardOrderCard {
       action {
-        EventLog eventLog = null
 
+        EventLog eventLog = null
         try {
-          eventLog = session?.eventLog?.merge()
+          eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
-          log.error "Error when fetching logger", ex
-          return sessionTimedOut()
+          log.error "Fetching EventLog failed", ex
+          return error()
         }
 
         if (!session.user?.uid) {
-          eventLog.logEvent("no account found for uid (${session.user?.uid}) or pnr (${session?.pnr})")
+          eventLog.logEvent("User has no valid user in session, this should not happen. Value is currently set to ${session.user}")
           flow.error = g.message(code:'activateAccountAndCardController.cardOrder.noAccount.error')
           return error()
         }
 
-        flow.cardInfo = activateAccountAndCardService.getCardOrderStatus(session.user)
+        try {
+          flow.cardInfo = activateAccountAndCardService.getCardOrderStatus(session.user)
+        } catch (ex) {
+          log.error "Error when fetching card order status", ex
+          eventLog.logEvent("Error when fetching card order status: ${ex?.message}")
+          return error()
+        }
 
         if (!flow.cardInfo?.canOrderCard) {
-          // TODO: Make logEvent more talkative.
-          eventLog.logEvent("User can't order card")
+          if (!flow.cardInfo.hasAddress) {
+            eventLog.logEvent("User can't order card cause: User is missing address.")
+          } else if (flow.cardInfo.suCards) {
+            eventLog.logEvent("User can't order card cause: User already has active card(s).")
+          } else if (flow.cardInfo.cardOrders) {
+            eventLog.logEvent("User can't order card cause: User already has active card order(s).")
+          }
           return cantOrderCard()
         }
 
@@ -253,8 +310,9 @@ class ActivateAccountAndCardController {
 
     cantOrderCard {
       on("continue") {
+        /** We consider this a successful completion of the flow since the user can't order a card */
         session.hasCompletedCardOrder = true
-      }.to("end")
+      }.to("beforeEnd")
     }
 
     cardOrder {
@@ -270,53 +328,77 @@ class ActivateAccountAndCardController {
     processCardOrder {
       action {
 
-        EventLog eventLog = session?.eventLog?.merge()
+        EventLog eventLog = null
+        try {
+          eventLog = utilityService.getEventLog(session.referenceId)
+        } catch (ex) {
+          log.error "Fetching EventLog failed", ex
+          return error()
+        }
 
         if (!flow.registeredAddressValid &&
             !flow.registeredAddressInvalid) {
 
           flow.error = g.message(code:'activateAccountAndCardController.cardOrder.selectValidInvalid.error')
-          eventLog.logEvent("user didn't select if address is valid or invalid")
+          eventLog.logEvent("User didn't select if address is valid or invalid")
           return error()
         }
 
         if (flow.registeredAddressValid) {
-
           if (!flow.acceptLibraryRules) {
-
             flow.error = g.message(code:'activateAccountAndCardController.cardOrder.approveTermsOfUse.error')
-            eventLog.logEvent("user didn't approve terms of use")
+            eventLog.logEvent("User didn't approve terms of use")
             return error()
           }
           try {
             sukatService.orderCard(session.user, flow.cardInfo?.ladokAddress)
           } catch (ex) {
             log.error "Failed to order card", ex
+            eventLog.logEvent("Failed to order card: ${ex.message}")
             return error()
           }
-        }
 
-        if (flow.registeredAddressInvalid) {
-          eventLog.logEvent("user says address is invalid")
+          if (flow.registeredAddressInvalid) {
+            eventLog.logEvent("User says address is invalid")
+          }
 
         }
         return success()
       }
       on('success'){
         session.hasCompletedCardOrder = true
-      }.to('end')
+      }.to('beforeEnd')
+      on("hasInvalidAddress"){
+        session.hasCompletedCardOrder = true
+      }.to("hasInvalidAddress")
       on('error').to('cardOrder')
     }
 
     errorHandler {
       action {
-        log.error("Webflow Exception occurred: ${flash.stateException}", flash.stateException)
+        if (flash.stateException) {
+          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException
+        }
+        flow.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
+      }
+      on("success").to("errorPage")
+    }
+
+    errorPage {
+      on("continue"){
+        flow.error = null
+      }.to("beforeEnd")
+    }
+
+    beforeEnd() {
+      action {
+        return redirect(action:'index')
       }
       on("success").to("end")
     }
 
     end() {
-      return redirect(action:'index')
+      // Placeholder
     }
   }
 

@@ -13,4 +13,16 @@ class UtilityService {
     log.debug "scope: ${scope} found for eppn: $eppn"
     return scope
   }
+
+  public EventLog getEventLog(def referenceId) {
+    def eventLog = EventLog.get(referenceId)
+    if (!eventLog) {
+      throw new Exception("Failed to get eventLog from referenceId: ${referenceId}")
+    }
+    return eventLog
+  }
+
+  public EventLog getEventLog() {
+    return new EventLog().save(flush:true)
+  }
 }

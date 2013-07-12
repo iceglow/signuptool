@@ -19,11 +19,14 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def setup() {
     def myController = mockController(ActivateAccountAndCardController)
-    myController.utilityService = Mock(UtilityService)
+    myController.utilityService = Mock(UtilityService) {
+      getEventLog(*_) >> { return new EventLog().save(flush:true) }
+    }
     myController.ladokService = Mock(LadokService)
     myController.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     myController.sukatService = Mock(SukatService)
     controller = myController
+
   }
 
   def "createNewAccountFlow > prepareForwardAddress: Check success pathing"() {
@@ -53,9 +56,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     then:
     resp == ['forwardAddress':'']
     'prepareForwardAddress' == lastEventName
-
-    and:
-    flash.info == "activateAccountAndCardController.unableToFetchForwardAddress"
 
     and:
     1 * controller.ladokService.findForwardAddressSuggestionForPnr(*_) >> { throw new RuntimeException('foo') }
@@ -91,7 +91,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     def resp = createNewAccountFlow.processEmailInput.on.error.to
 
     then:
-    resp == "activateAccount"
+    resp == "errorHandler"
     flow.error == error
   }
 
@@ -100,13 +100,13 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     def resp = createNewAccountFlow.processEmailInput.action()
 
     then:
-    resp == 'error'
+    resp == 'retry'
 
     and:
     0 * controller.activateAccountAndCardService.validateForwardAddress(*_) >> true
 
     and:
-    flow.error == 'activateAccountAndCardController.forwardEmail.explanation'
+    flow.error == 'activateAccountAndCardController.errors.notHavingApprovedTermsOfUse'
   }
 
   def "createNewAccountFlow > processEmailInput: On success "() {
@@ -135,7 +135,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     1 * controller.activateAccountAndCardService.validateForwardAddress(*_) >> false
 
     and:
-    flow.error == "activateAccountAndCardController.forwardEmail.explanation"
+    flow.error == "activateAccountAndCardController.errors.notHavingSuppliedValidForwardAddress"
 
     and:
     lastEventName == 'processEmailInput'
@@ -157,7 +157,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > createAccount: Check success pathing"() {
     expect:
-    'end' == createNewAccountFlow.createAccount.on.success.to
+    'beforeEnd' == createNewAccountFlow.createAccount.on.success.to
   }
 
   def "createNewAccountFlow > createAccount: Check error pathing"() {
@@ -205,7 +205,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     and:
     flash.info == null
-    flow.error == "activateAccountAndCardController.failedWhenEnrollingUser"
+    flow.error == "activateAccountAndCardController.errors.failedWhenEnrollingUser"
 
     and:
     1 * controller.sukatService.enrollUser(*_) >> { throw new RuntimeException('foo') }
@@ -213,7 +213,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > errorHandler: Check success pathing"()  {
     expect:
-    'end' == createNewAccountFlow.errorHandler.on.success.to
+    'errorPage' == createNewAccountFlow.errorHandler.on.success.to
   }
 
   def "createNewAccountFlow > errorHandler: Test the errorhandler"()  {
@@ -230,9 +230,9 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     assert true
   }
 
-  def "createNewAccountFlow > end: see that we end up on index again."()  {
+  def "createNewAccountFlow > beforeEnd: see that we end up on index again."()  {
     when:
-    createNewAccountFlow.end
+    createNewAccountFlow.beforeEnd.action()
 
     then:
     response.redirectedUrl == '/activateAccountAndCard/index'
@@ -242,7 +242,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     given:
     session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
     session.pnr = "1234567890"
-    session.eventLog = new EventLog().save(flush:true)
+
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
@@ -258,7 +258,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "orderCardFlow: test when user is missing account, should log event and redirect to error page"() {
     given:
     session.pnr = "1234567890"
-    session.eventLog = new EventLog().save(flush:true)
+
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
@@ -273,7 +273,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     given:
     session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
     session.pnr = "1234567890"
-    session.eventLog = new EventLog().save(flush:true)
+
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
@@ -289,7 +289,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     given:
     flow.registeredAddressValid = false
     flow.registeredAddressInvalid = false
-    session.eventLog = new EventLog().save(flush:true)
+
 
     when:
     def event = orderCardFlow.processCardOrder.action()
@@ -308,7 +308,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     flow.registeredAddressValid = true
     flow.registeredAddressInvalid = false
     flow.acceptLibraryRules = false
-    session.eventLog = new EventLog().save(flush:true)
+
 
     when:
     def event = orderCardFlow.processCardOrder.action()
@@ -326,7 +326,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     flow.registeredAddressValid = false
     flow.registeredAddressInvalid = true
     flow.acceptLibraryRules = false
-    session.eventLog = new EventLog().save(flush:true)
+
 
     when:
     def event = orderCardFlow.processCardOrder.action()
@@ -334,6 +334,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     then:
     assert event == 'success'
 
-    assert 'end' == orderCardFlow.processCardOrder.on.success.to
+    assert 'beforeEnd' == orderCardFlow.processCardOrder.on.success.to
   }
 }

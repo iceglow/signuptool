@@ -14,24 +14,40 @@ class LadokService {
   public Map findStudentInLadok(String pnr) {
     pnr = chompPnr(pnr)
     Map response = [:]
+
+    log.debug "findStudentInLadok: Trying to find person with pnr $pnr"
     List<GroovyRowResult> responseList = doListQuery(
         "SELECT enamn, tnamn FROM NAMN WHERE pnr = :pnr limit 1",
         [pnr:pnr])
+
     if (responseList?.size() > 0) {
+      log.debug "findStudentInLadok: Found person with pnr $pnr in Ladok."
       return responseList.first()
     }
+
+    log.debug "findStudentInLadok: Found no person with pnr $pnr in Ladok."
     return response
   }
 
   public String findForwardAddressSuggestionForPnr(String pnr) {
+    pnr = chompPnr(pnr)
     String response = ''
+    log.debug "findForwardAddressSuggestionForPnr: Querying address for person with pnr $pnr in Ladok."
+
     List<GroovyRowResult> responseList = doListQuery(
         "SELECT komadr FROM telekom WHERE pnr = :pnr AND komtyp = 'EMAIL' limit 1",
         [pnr:pnr])
+
     if (responseList?.size() > 0) {
-      return (responseList?.first()?.komadr)?:''
+      def address = responseList?.first()?.komadr
+
+      if (address) {
+        log.debug "findForwardAddressSuggestionForPnr: Found address for person with pnr $pnr in Ladok: $address"
+        return address
+      }
     }
 
+    log.debug "findForwardAddressSuggestionForPnr: Found no address for person with pnr $pnr in Ladok."
     return response
   }
 
@@ -43,7 +59,7 @@ class LadokService {
    * @return An address from ladok.
    */
   public Map getAddressFromLadokByPnr(String pnr) {
-    //TODO: tests :|
+    pnr = chompPnr(pnr)
     boolean useTemporaryAddress = grailsApplication.config.useTemporaryAddress ?: true
 
     HashMap address
@@ -82,7 +98,6 @@ class LadokService {
     }
     return withConnection(queryClosure)
   }
-
 
   private withConnection (Closure query) {
     def response = null
