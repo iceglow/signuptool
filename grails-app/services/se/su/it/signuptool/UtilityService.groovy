@@ -14,9 +14,14 @@ class UtilityService {
     return scope
   }
 
-  public EventLog getEventLog(String referenceId) {
-    return EventLog.get(referenceId)
+  public EventLog getEventLog(def referenceId) {
+    def eventLog = EventLog.get(referenceId)
+    if (!eventLog) {
+      throw new Exception("Failed to get eventLog from referenceId: ${referenceId}")
+    }
+    return eventLog
   }
+
   public EventLog getEventLog() {
     return new EventLog().save(flush:true)
   }

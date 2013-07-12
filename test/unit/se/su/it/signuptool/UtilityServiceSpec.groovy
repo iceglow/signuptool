@@ -1,5 +1,6 @@
 package se.su.it.signuptool
 
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.IgnoreRest
 import spock.lang.Specification
@@ -9,6 +10,7 @@ import spock.lang.Unroll
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(UtilityService)
+@Mock([EventLog, EventLogEvent])
 class UtilityServiceSpec extends Specification {
 
   def setup() {
@@ -41,4 +43,24 @@ class UtilityServiceSpec extends Specification {
     'foo_@foo_.se'| 'foo_.se'
     'åäöÅÄÖ019@åäöÅÄÖ019' | 'åäöÅÄÖ019'
   }
+
+  void "getEventLog: Get new eventLog"() {
+    expect:
+    service.eventLog instanceof EventLog
+  }
+
+  void "getEventLog: When eventLog does not exist"() {
+    when:
+    service.getEventLog('1')
+    then:
+    thrown(Exception)
+  }
+
+  void "getEventLog: When eventLog does exist"() {
+    given:
+    def id = new EventLog().save(flush:true).id
+    expect:
+    service.getEventLog(id) instanceof EventLog
+  }
+
 }
