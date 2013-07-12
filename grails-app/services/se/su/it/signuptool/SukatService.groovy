@@ -28,16 +28,8 @@ class SukatService implements Serializable {
   private final CARD_ORDER_STATUSES_TO_SKIP = ["DISCARDED", "WRITTEN_TO_SUKAT"]
 
   public String orderCard(SvcSuPersonVO user, Map ladokAddress) {
-    String response = null
-
-    try {
-      SvcCardOrderVO cardOrderVO = createCardOrderVO(user, ladokAddress)
-      response = cardOrderWS.orderCard(cardOrderVO, AuditFactory.auditObject)
-    } catch (ex) {
-      log.error "Card order failed", ex
-      throw(ex)
-    }
-    return response
+    SvcCardOrderVO cardOrderVO = createCardOrderVO(user, ladokAddress)
+    return cardOrderWS.orderCard(cardOrderVO, AuditFactory.auditObject)
   }
 
   private static SvcCardOrderVO createCardOrderVO(SvcSuPersonVO user, Map ladokAddress) {

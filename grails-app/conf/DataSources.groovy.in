@@ -7,7 +7,13 @@ grails.naming.entries = [
           username: ""%%LADOKUSER%%"",
           password: "%%LADOKPASSWORD%%",
           maxActive: "20",
-          maxIdle: "1"
+          maxIdle: "1",
+          minIdle: "1",
+          initialSize: "1",
+          minEvictableIdleTimeMillis: "60000",
+          timeBetweenEvictionRunsMillis:"60000",
+          maxWait: "10000",
+          validationQuery: "/* ping */"
     ],
     "jdbc/signuptool-dev": [
         type: "javax.sql.DataSource",
@@ -17,7 +23,8 @@ grails.naming.entries = [
         maxActive: "20",
         maxIdle: "1",
         username: "%%USER%%",
-        password: "%%PASSWORD%%"
+        password: "%%PASSWORD%%",
+        validationQuery: "/* ping */"
     ],
     "jdbc/signuptool": [
         type: "javax.sql.DataSource",
@@ -28,5 +35,6 @@ grails.naming.entries = [
         maxIdle: "1",
         username: "%%USER%%",
         password: "%%PASSWORD%%"
+        validationQuery: "/* ping */"
     ]
 ]

@@ -24,7 +24,7 @@
 
           <div class="clear-float"></div>
 
-          <g:checkBox name="approveTermsOfUse" />
+          <g:checkBox name="approveTermsOfUse" value="${approveTermsOfUse}"/>
           <label for="approveTermsOfUse"><g:message code="activateAccountAndCardController.activateAccount.approveTermsOfUse"/></label>
           <a href="#" title="<g:message code="activateAccountAndCardController.activateAccount.approveTermsOfUse.tooltip"/>"><span class="help"></span></a>
           <div class="align-right">
