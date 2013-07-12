@@ -170,6 +170,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     session.givenName = 'givenName'
     session.sn = 'sn'
     session.pnr = 'socialSecurityNumber'
+    flow.forwardAddress = 'mailRoutingAddress'
     def response = [uid:'uid', password:'password']
 
     when:
@@ -180,10 +181,11 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     session.password == response.password
 
     and:
-    1 * controller.sukatService.enrollUser(*_) >> { String arg1, String arg2, String arg3 ->
+    1 * controller.sukatService.enrollUser(*_) >> { String arg1, String arg2, String arg3, String arg4 ->
       assert arg1 == session.givenName
       assert arg2 == session.sn
       assert arg3 == session.pnr
+      assert arg4 == flow.forwardAddress
       return response
     }
   }
@@ -238,7 +240,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: test flow when user is found, has registered address and no cards or orders"() {
     given:
-    session.user = [uid:"abcd1234@su.se"]
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
     session.pnr = "1234567890"
     session.eventLog = new EventLog().save(flush:true)
 
@@ -250,10 +252,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     assert 'success' == stateTransition
 
     and:
-    1 * controller.ladokService.getAddressFromLadokByPnr(*_) >> [kalle: 'anka']
-
-    and:
-    1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
+    1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> [canOrderCard:true]
   }
 
   def "orderCardFlow: test when user is missing account, should log event and redirect to error page"() {
@@ -268,17 +267,11 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     assert event == 'error'
 
     assert flow.error == 'activateAccountAndCardController.cardOrder.noAccount.error'
-
-    and:
-    0 * controller.activateAccountAndCardService.canOrderCard(*_)
-
-    and:
-    0 * controller.ladokService.getAddressFromLadokByPnr(*_)
   }
 
   def "orderCardFlow: test when user has an account but is not allowed to order cards, should log event and redirect to error page"() {
     given:
-    session.user = [uid:"abcd1234@su.se"]
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
     session.pnr = "1234567890"
     session.eventLog = new EventLog().save(flush:true)
 
@@ -286,37 +279,10 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     def event = orderCardFlow.prepareForwardOrderCard.action()
 
     then:
-    assert event == 'error'
-
-    assert flow.error == 'activateAccountAndCardController.cardOrder.cardOrder.error'
+    event == 'cantOrderCard'
 
     and:
-    1 * controller.activateAccountAndCardService.canOrderCard(*_) >> false
-
-    and:
-    0 * controller.ladokService.getAddressFromLadokByPnr(*_)
-  }
-
-  def "orderCardFlow: test when user doesn't have ladok address, should log event and redirect to error page"() {
-    given:
-    session.user = [uid:"abcd1234@su.se"]
-    session.pnr = "1234567890"
-    session.eventLog = new EventLog().save(flush:true)
-
-    when:
-    def event = orderCardFlow.prepareForwardOrderCard.action()
-
-    then:
-    assert event == 'error'
-
-    assert flow.error == 'activateAccountAndCardController.cardOrder.ladokAddress.error'
-
-    and:
-    1 * controller.activateAccountAndCardService.canOrderCard(*_) >> true
-
-    and:
-    1 * controller.ladokService.getAddressFromLadokByPnr(*_) >> null
-
+    1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> [canOrderCard:false]
   }
 
   def "orderCardFlow: test when user doesn't select if address is valid or in valid, should log event and redirect to cardOrder page with error message"() {

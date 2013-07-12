@@ -1,6 +1,8 @@
 package se.su.it.signuptool
 
 import grails.test.mixin.TestFor
+import se.su.it.svc.SuCard
+import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
 import spock.lang.IgnoreRest
 import spock.lang.Specification
@@ -19,28 +21,6 @@ class ActivateAccountAndCardServiceSpec extends Specification {
   }
 
   def cleanup() {
-  }
-
-  void "canOrderCard: happy path"() {
-    when:
-    boolean canOrder = service.canOrderCard("donaldDuck")
-
-    then:
-    canOrder
-
-    and:
-    1 * service.sukatService.getCardsForUser(*_) >> []
-  }
-
-  void "canOrderCard: user already has card"() {
-    when:
-    boolean canOrder = service.canOrderCard("donaldDuck")
-
-    then:
-    !canOrder
-
-    and:
-    1 * service.sukatService.getCardsForUser(*_) >> ["placeholder for card"]
   }
 
   @Unroll
@@ -107,5 +87,53 @@ class ActivateAccountAndCardServiceSpec extends Specification {
 
     and:
     1 * service.ladokService.findStudentInLadok(*_) >> [enamn:'kaka', tnamn:'foo']
+  }
+
+  void "getCardOrderStatus: In case of an exception an empty map is returned"() {
+    when:
+    def resp = service.getCardOrderStatus(new SvcSuPersonVO())
+
+    then:
+    [:] == resp
+
+    and:
+    service.ladokService.getAddressFromLadokByPnr(*_) >> { throw new RuntimeException('foo') }
+  }
+
+  void "getCardOrderStatus: When no valid address is returned"() {
+    when:
+    def resp = service.getCardOrderStatus(new SvcSuPersonVO())
+
+    then:
+    resp.hasAddress == false
+    resp.ladokAddress == [:]
+    resp.suCards?.size() == 1
+    resp.cardOrders?.size() == 1
+    resp.canOrderCard == false
+
+    and:
+    service.ladokService.getAddressFromLadokByPnr(*_) >> [:]
+
+    and:
+    service.sukatService.getCardsForUser(*_) >> [new SuCard(suCardUUID:'suCardUUID')]
+
+    and:
+    service.sukatService.getCardOrdersForUser(*_) >> [new SvcCardOrderVO(id:1)]
+  }
+  @Unroll
+  void "canOrderCard: hasAddress: #hasAddress suCards: #suCards cardOrders: #cardOrders => #expected"() {
+    expect:
+    expected == service.canOrderCard([
+        hasAddress:hasAddress,
+        suCards:suCards,
+        cardOrders:cardOrders,
+    ])
+
+    where:
+    hasAddress | suCards | cardOrders | expected
+    false      | false   | false      | false
+    true       | true    | false      | false
+    true       | false   | true       | false
+    true       | false   | false      | true
   }
 }

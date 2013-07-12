@@ -14,12 +14,12 @@
 
       <div class="prompt">
         <div><g:message code="activateAccountAndCardController.cardOrder.addressDetail"/></div>
-        <div>${session?.givenName} ${session?.sn}</div>
-        <div>${session?.street}</div>
-        <g:if test="${session?.coAddr}">
-          <div>${session?.coAddr}</div>
+        <div>${session?.user?.givenName} ${session?.user?.sn}</div>
+        <div>${cardInfo?.ladokAddress?.gatadr}</div>
+        <g:if test="${cardInfo?.ladokAddress?.coadr}">
+          <div>${cardInfo?.ladokAddress?.coadr}</div>
         </g:if>
-        <div>${session?.zip} ${session?.city}</div>
+        <div>${cardInfo?.ladokAddress?.postnr} ${cardInfo?.ladokAddress?.ort}</div>
 
         <g:form>
           <g:radio name="registeredAddressValid" value="1"/>

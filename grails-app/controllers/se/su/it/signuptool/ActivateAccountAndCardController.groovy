@@ -15,6 +15,8 @@ class ActivateAccountAndCardController {
     /** Only display the password if returned and remove it right after. */
     String password = ''
 
+    boolean hasCompletedCardOrder = (session.hasCompletedCardOrder)
+
     if (session.password) {
       password = session.password
       session.password = null
@@ -26,12 +28,6 @@ class ActivateAccountAndCardController {
 
     EventLog eventLog = session.eventLog
 
-    /** Setting uid
-     * 1. First hand, use the returned uid.
-     * 2. Fetch the uid from eppn
-     */
-
-    /** Path only taken when no uid is already set in the session */
     String scope = ''
     String pnr = session.pnr
     String uid = session.user?.uid
@@ -45,7 +41,7 @@ class ActivateAccountAndCardController {
             pnr = request.norEduPersonNIN
           } else {
             eventLog.logEvent("unverified account for ${request.eppn}")
-            return render(view:'unverifiedAccount')
+            return render(view:'unverifiedAccount', model:[referenceId:eventLog?.id])
           }
           break
         default:
@@ -99,7 +95,7 @@ class ActivateAccountAndCardController {
 
       if (!ladokData) {
         eventLog.logEvent("User ${pnr} not found in ladok")
-        return render(view:'userNotFoundInLadok')
+        return render(view:'userNotFoundInLadok', model:[referenceId:eventLog?.id])
       }
 
       /** Saving enamn and tnamn for enroll method */
@@ -112,19 +108,16 @@ class ActivateAccountAndCardController {
       return redirect(action:'createNewAccount')
     }
 
-    SvcSuPersonVO user = session.user // fetch user from session for the presentation in the view.
-
-    Map cardInfo = activateAccountAndCardService.getCardOrderStatus(user)
     String lpwurl = configService.getValue("signup", "lpwtool")
     String sukaturl = configService.getValue("signup", "sukattool")
-    eventLog.logEvent("Person with pnr: ${pnr} and uid: ${user.uid} already exists in sukat")
+    eventLog.logEvent("Person with pnr: ${pnr} and uid: ${session.uid} already exists in sukat")
 
     return render(view:'index', model:[
-        user:user,
+        uid:session?.uid,
         password:password,
-        cardInfo: cardInfo,
         lpwurl: lpwurl,
-        sukaturl: sukaturl
+        sukaturl: sukaturl,
+        hasCompletedCardOrder:hasCompletedCardOrder
     ])
   }
 
@@ -155,6 +148,8 @@ class ActivateAccountAndCardController {
     processEmailInput {
       action {
 
+        flow.forwardAddress = params.forwardAddress
+
         EventLog eventLog = session?.eventLog?.merge()
 
         if (!flow.approveTermsOfUse) {
@@ -182,12 +177,13 @@ class ActivateAccountAndCardController {
 
         SvcUidPwd result = null
 
+        String forwardAddress = flow.forwardAddress
         String givenName = session.givenName
         String sn = session.sn
         String socialSecurityNumber = session.pnr
 
         try {
-          result = sukatService.enrollUser(givenName, sn, socialSecurityNumber)
+          result = sukatService.enrollUser(givenName, sn, socialSecurityNumber, forwardAddress)
         } catch(ex) {
           log.error "Failed when enrolling user", ex
         }
@@ -225,8 +221,14 @@ class ActivateAccountAndCardController {
 
     prepareForwardOrderCard {
       action {
+        EventLog eventLog = null
 
-        EventLog eventLog = session?.eventLog?.merge()
+        try {
+          eventLog = session?.eventLog?.merge()
+        } catch (ex) {
+          log.error "Error when fetching logger", ex
+          return sessionTimedOut()
+        }
 
         if (!session.user?.uid) {
           eventLog.logEvent("no account found for uid (${session.user?.uid}) or pnr (${session?.pnr})")
@@ -234,22 +236,25 @@ class ActivateAccountAndCardController {
           return error()
         }
 
-        if (!userCanOrderCards()) {
-          eventLog.logEvent("user has active cards or orders")
-          flow.error = g.message(code:'activateAccountAndCardController.cardOrder.cardOrder.error')
-          return error()
-        }
+        flow.cardInfo = activateAccountAndCardService.getCardOrderStatus(session.user)
 
-        if (!userHasLadokAddress()) {
-          eventLog.logEvent("user address is missing in ladok")
-          flow.error = g.message(code:'activateAccountAndCardController.cardOrder.ladokAddress.error')
-          return error()
+        if (!flow.cardInfo?.canOrderCard) {
+          // TODO: Make logEvent more talkative.
+          eventLog.logEvent("User can't order card")
+          return cantOrderCard()
         }
 
         return success()
       }
       on("success").to("cardOrder")
       on("error").to("errorHandler")
+      on("cantOrderCard").to("cantOrderCard")
+    }
+
+    cantOrderCard {
+      on("continue") {
+        session.hasCompletedCardOrder = true
+      }.to("end")
     }
 
     cardOrder {
@@ -283,8 +288,12 @@ class ActivateAccountAndCardController {
             eventLog.logEvent("user didn't approve terms of use")
             return error()
           }
-          // todo: beställ kort
-
+          try {
+            sukatService.orderCard(session.user, flow.cardInfo?.ladokAddress)
+          } catch (ex) {
+            log.error "Failed to order card", ex
+            return error()
+          }
         }
 
         if (flow.registeredAddressInvalid) {
@@ -293,7 +302,9 @@ class ActivateAccountAndCardController {
         }
         return success()
       }
-      on('success').to('end')
+      on('success'){
+        session.hasCompletedCardOrder = true
+      }.to('end')
       on('error').to('cardOrder')
     }
 
@@ -305,38 +316,8 @@ class ActivateAccountAndCardController {
     }
 
     end() {
-      render(view: '/activateAccountAndCard/endAccountAndCard')
+      return redirect(action:'index')
     }
-  }
-
-  private boolean userHasLadokAddress() {
-    boolean hasLadokAddress = false
-
-    if (session?.pnr) {
-      Map ladokAddress = ladokService.getAddressFromLadokByPnr((String)session?.pnr)
-
-      hasLadokAddress = (ladokAddress && ladokAddress.size()>0)
-
-      if (hasLadokAddress) {
-        session.street = ladokAddress["gatadr"]
-        session.coAddr = ladokAddress["coadr"]
-        session.zip = ladokAddress["postnr"]
-        session.city = ladokAddress["ort"]
-      }
-    }
-
-    return hasLadokAddress
-  }
-
-  private boolean userCanOrderCards() {
-
-    def uid = session.user?.uid
-
-    if (!uid) {
-      return false
-    }
-
-    return activateAccountAndCardService.canOrderCard(uid)
   }
 
   def changeLanguage = {
