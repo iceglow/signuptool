@@ -22,18 +22,29 @@
         <div>${cardInfo?.ladokAddress?.postnr} ${cardInfo?.ladokAddress?.ort}</div>
 
         <g:form>
-          <g:radio name="registeredAddressValid" value="1"/>
-            <label for="registeredAddressValid"><g:message code="activateAccountAndCardController.cardOrder.registeredAddressValid"/></label>
-            <a href="#" title="<g:message code="activateAccountAndCardController.cardOrder.registeredAddressValid.tooltip"/>"><span class="help"></span></a>
+          <g:radio id="registeredAddressValid" name="addressIsValid" value="1" checked="${(addressIsValid == "1")}"/>
+            <label for="registeredAddressValid">
+              <g:message code="activateAccountAndCardController.cardOrder.registeredAddressValid"/>
+            </label>
+            <a href="#" title="${g.message(code:"activateAccountAndCardController.cardOrder.registeredAddressValid.tooltip")}">
+              <span class="help"></span>
+            </a>
           <br/>
 
           <div class="indent-small">
-            <g:checkBox name="acceptLibraryRules"/>
-              <label for="acceptLibraryRules"><g:message code="activateAccountAndCardController.cardOrder.acceptLibraryRules"/></label><br/>
+            <g:checkBox name="acceptLibraryRules" value="${acceptLibraryRules}"/>
+              <label for="acceptLibraryRules">
+            <g:message code="activateAccountAndCardController.cardOrder.acceptLibraryRules"/>
+            </label>
+            <br/>
           </div>
 
-          <g:radio name="registeredAddressInvalid" value="0"/>
-            <label for="registeredAddressInvalid"><g:message code="activateAccountAndCardController.cardOrder.registeredAddressInvalid"/></label><br/>
+          <g:radio id="registeredAddressInvalid" name="addressIsValid" value="0"/>
+          <label for="registeredAddressInvalid">
+            <g:message code="activateAccountAndCardController.cardOrder.registeredAddressInvalid"/>
+          </label>
+
+          <br/>
 
           <div class="align-right">
             <g:submitButton class="signupButton" name="sendCardOrder" value="${g.message(code:'activateAccountAndCardController.cardOrder.continue')}"/>

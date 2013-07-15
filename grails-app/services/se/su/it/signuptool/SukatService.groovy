@@ -83,7 +83,8 @@ class SukatService implements Serializable {
     try {
       suPerson = accountWS.findSuPersonBySocialSecurityNumber(pnr, AuditFactory.auditObject)
     } catch (ex) {
-      log.error "Failed when finding user by ssn in ldap.", ex
+      log.error "Failed when finding user by ssn in SUKAT.", ex
+      throw(ex)
     }
     return suPerson
   }

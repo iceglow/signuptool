@@ -79,7 +79,6 @@ class ActivateAccountAndCardController {
           session.uid = user?.uid
         }
       } catch (ex) {
-        // TODO: ?
         eventLog.logEvent("Failed when setting user in session for ${uid} with exception ${ex.getMessage()}")
 
         log.error "Failed when setting user in session", ex
@@ -122,7 +121,7 @@ class ActivateAccountAndCardController {
     eventLog.logEvent("Person with pnr: ${session.pnr} and uid: ${session.uid} already exists in sukat")
 
     return render(view:'index', model:[
-        uid:session?.uid,
+        uid:session?.user?.uid,
         password:password,
         lpwurl: lpwurl,
         sukaturl: sukaturl,
@@ -325,11 +324,8 @@ class ActivateAccountAndCardController {
 
     cardOrder {
       on("sendCardOrder"){
-
-        flow.registeredAddressValid = params?.registeredAddressValid
+        flow.addressIsValid = params?.addressIsValid
         flow.acceptLibraryRules = params?.acceptLibraryRules
-        flow.registeredAddressInvalid = params?.registeredAddressInvalid
-
       }.to("processCardOrder")
     }
 
@@ -344,17 +340,15 @@ class ActivateAccountAndCardController {
           return error()
         }
 
-        if (!flow.registeredAddressValid &&
-            !flow.registeredAddressInvalid) {
-
+        if (flow.addressIsValid == null) {
           flow.error = g.message(code:'activateAccountAndCardController.cardOrder.selectValidInvalid.error')
           eventLog.logEvent("User didn't select if address is valid or invalid")
           return error()
         }
 
-        if (flow.registeredAddressValid) {
+        if (flow.addressIsValid == "1") {
           if (!flow.acceptLibraryRules) {
-            flow.error = g.message(code:'activateAccountAndCardController.cardOrder.approveTermsOfUse.error')
+            flow.error = g.message(code: 'activateAccountAndCardController.cardOrder.approveTermsOfUse.error')
             eventLog.logEvent("User didn't approve terms of use")
             return error()
           }
@@ -365,11 +359,8 @@ class ActivateAccountAndCardController {
             eventLog.logEvent("Failed to order card: ${ex.message}")
             return error()
           }
-
-          if (flow.registeredAddressInvalid) {
-            eventLog.logEvent("User says address is invalid")
-          }
-
+        } else {
+          eventLog.logEvent("User says address is invalid")
         }
         return success()
       }
