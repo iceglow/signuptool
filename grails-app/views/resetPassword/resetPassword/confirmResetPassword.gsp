@@ -8,7 +8,7 @@
     <tmpl:/shared/feedback flash="${flash}"/>
     <div>
       <div class="bordered-detail-square apps-float-50">
-        <g:link action="" class="print-details">
+        <g:link action="#" class="print-details" onclick="window.print(); return false;">
           <span class="mgn-left-30"><g:message code="resetPassword.passwordReset.print"/></span>
         </g:link>
         <div><g:message code="resetPassword.passwordReset.username"/>: ${session?.user?.uid}</div>
