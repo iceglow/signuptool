@@ -2,43 +2,62 @@
 <html>
 <head>
   <meta name="layout" content="admin"/>
-  <title>Admin</title>
+  <title><g:message code="admin.title"/></title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script>
+    $(function() {
+      $("#searchForm").on("submit", function(event) {
+        var searchFor = $("input[name=searchFor]:checked").val();
+        var searchText = $("#searchText").val();
+
+        if (searchText.length === 0) {
+          return false;
+        }
+
+        $.ajax({
+          url:"/admin/search",
+          type:"POST",
+          data:{searchFor:searchFor, searchText:searchText},
+          success:function(data) {
+            $("#searchResults").html(data)
+          },
+          error: function(data) {
+            console.log(data)
+          }
+        });
+
+        return false;
+      });
+    });
+  </script>
+  <style>
+    #searchForm {
+      max-width: 300px;
+      border: 1px solid black;
+      padding: 5px;
+    }
+    #searchForm p {
+      margin-bottom: 0;
+    }
+    #searchText {
+      min-width: 250px;
+      margin: 5px;
+    }
+    #searchResults {
+      margin-top: 20px;
+    }
+    #searchResults ul {
+      padding-left: 2px;
+      list-style: none;
+    }
+  </style>
 </head>
 <body>
-  <div class="apps-mid-column">
-    <g:if test="${flash.error}">
-      <div class="error">${flash.error}</div>
-    </g:if>
-  <div>
-    <g:form action="index" method="post">
-      <div class="apps-float-15"><label for="ssn">Personnummer</label>: </div>
-      <div class="apps-float-20"><g:textField name="ssn" maxlength="13" size="15"/></div>
-      <div class="apps-float-10"><g:submitButton name="submit" value="Sök"/></div>
-      <div class="clear-float"></div>
-    </g:form>
-  </div>
-  <div>
-    <g:form action="index" method="post">
-      <div class="apps-float-15"><label for="referenceId">ReferensId</label>:</div>
-      <div class="apps-float-20"><g:textField name="referenceId" maxlength="15" size="15"/></div>
-      <div class="apps-float-10"><g:submitButton name="submit" value="Sök"/></div>
-      <div class="clear-float"></div>
-    </g:form>
-  </div>
-    <g:if test="${eventLogs}">
-      <div>
-        <table>
-          <g:each in="${eventLogs}" var="eventLog">
-            <tr>
-              <td><g:formatDate format="yyyy-MM-dd HH:mm" date="${eventLog.dateCreated}"/></td>
-              <td>${eventLog.description}</td>
-              <td>${eventLog.referenceId}</td>
-              <td>${eventLog.userId}</td>
-            </tr>
-          </g:each>
-        </table>
-      </div>
-    </g:if>
+  <div id="content">
+    <div id="searchForm">
+      <tmpl:searchForm />
+    </div>
+    <div id="searchResults"></div>
   </div>
 </body>
 </html>
