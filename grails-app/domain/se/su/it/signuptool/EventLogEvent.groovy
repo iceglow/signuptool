@@ -4,7 +4,7 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 @EqualsAndHashCode @ToString
-class EventLogEvent implements Serializable {
+class EventLogEvent implements Serializable, Comparable {
 
   String description = ''
 
@@ -19,5 +19,10 @@ class EventLogEvent implements Serializable {
 
   static mapping = {
     version false
+  }
+
+  @Override
+  int compareTo(Object o) {
+    this.dateCreated.compareTo((o as EventLogEvent).dateCreated)
   }
 }
