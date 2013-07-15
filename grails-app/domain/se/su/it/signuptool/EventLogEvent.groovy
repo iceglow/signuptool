@@ -23,6 +23,12 @@ class EventLogEvent implements Serializable, Comparable {
 
   @Override
   int compareTo(Object o) {
-    this.dateCreated.compareTo((o as EventLogEvent).dateCreated)
+    if (o?.dateCreated == this?.dateCreated) {
+      return 0
+    } else if (o?.dateCreated > this?.dateCreated) {
+      return -1
+    } else {
+      return 1
+    }
   }
 }
