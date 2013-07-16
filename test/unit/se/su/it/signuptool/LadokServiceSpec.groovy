@@ -2,7 +2,7 @@ package se.su.it.signuptool
 
 import grails.test.mixin.TestFor
 import groovy.sql.Sql
-import org.apache.commons.dbcp.BasicDataSource
+import javax.sql.DataSource
 import spock.lang.IgnoreRest
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -24,7 +24,7 @@ class LadokServiceSpec extends Specification {
    */
 
   def setup() {
-    service.ladokDataSource = Mock(BasicDataSource)
+    service.ladokDataSource = Mock(DataSource)
   }
 
   def cleanup() {
