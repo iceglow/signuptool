@@ -75,7 +75,9 @@ class ActivateAccountAndCardService implements Serializable {
       cardInfo.cardOrders = (sukatService.getCardOrdersForUser(user.uid))
       cardInfo.canOrderCard = canOrderCard(cardInfo)
     } catch (ex) {
+
       log.error "Failed when creating card order information object", ex
+      throw new Exception("Failed when creating card order information object")
     }
 
     return cardInfo

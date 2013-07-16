@@ -2,7 +2,7 @@ package se.su.it.signuptool
 
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
-import org.apache.commons.dbcp.BasicDataSource
+import javax.sql.DataSource
 
 class LadokService {
 
@@ -104,10 +104,12 @@ class LadokService {
     Sql sql = null
     try {
       /** getDataSource added for mock and testing purposes */
-      sql = new Sql(ladokDataSource as BasicDataSource)
+      sql = new Sql(ladokDataSource as DataSource)
       response = query(sql)
     } catch (ex) {
       log.error "Connection to LADOK failed", ex
+
+      throw new Exception("Connection to LADOK failed")
     } finally {
       try {
         sql.close()
