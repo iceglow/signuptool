@@ -57,7 +57,9 @@
     <div id="searchForm">
       <tmpl:searchForm />
     </div>
-    <div id="searchResults"></div>
+    <div id="searchResults">
+      <g:render template="searchResults" model="[eventLog: eventLog]"/>
+    </div>
   </div>
 </body>
 </html>
