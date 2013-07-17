@@ -3,7 +3,6 @@ package se.su.it.signuptool
 import grails.test.mixin.*
 import se.su.it.config.ConfigService
 import se.su.it.svc.SvcSuPersonVO
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 @TestFor(ActivateAccountAndCardController)
@@ -40,7 +39,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     controller.index()
 
     then:
-    view == '/activateAccountAndCard/unverifiedAccount'
+    view == '/shared/unverifiedAccount'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
@@ -115,7 +114,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     controller.index()
 
     then:
-    view == '/activateAccountAndCard/userNotFoundInLadok'
+    response.redirectedUrl == '/dashboard/index'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE

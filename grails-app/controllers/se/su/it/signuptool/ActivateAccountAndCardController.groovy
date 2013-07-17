@@ -99,7 +99,11 @@ class ActivateAccountAndCardController {
       try {
         ladokData = activateAccountAndCardService.fetchLadokData(session.pnr)
       } catch (ex) {
+        eventLog.logEvent("Failed when fetching ladokData for uid: $session.pnr")
         log.error "Failed when fetching ladokData for uid: $session.pnr", ex
+
+        flash.error = message(code: "activateAccountAndCardController.errorWhenContactingLadok")
+        return redirect(controller:'dashboard', action:'index')
       }
 
       if (!ladokData) {

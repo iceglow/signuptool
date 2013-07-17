@@ -108,19 +108,15 @@ class SukatService implements Serializable {
 
     SvcUidPwd response = null
 
-    try {
-      response = enrollmentWS.enrollUserWithMailRoutingAddress(
-          DEFAULT_DOMAIN,
-          givenName,
-          sn,
-          DEFAULT_AFFILATION,
-          socialSecurityNumber,
-          forwardAddress,
-          AuditFactory.auditObject
-      )
-    } catch (ex) {
-      log.error "Enrolling student failed.", ex
-    }
+    response = enrollmentWS.enrollUserWithMailRoutingAddress(
+        DEFAULT_DOMAIN,
+        givenName,
+        sn,
+        DEFAULT_AFFILATION,
+        socialSecurityNumber,
+        forwardAddress,
+        AuditFactory.auditObject
+    )
 
     return response
   }
