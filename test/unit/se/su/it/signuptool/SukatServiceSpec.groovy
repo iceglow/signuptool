@@ -56,7 +56,7 @@ class SukatServiceSpec extends Specification {
     def resp = service.findUserBySocialSecurityNumber('8008080000')
 
     then:
-    resp == null
+    thrown(Exception)
 
     and:
     1 * service.accountWS.findSuPersonBySocialSecurityNumber(*_) >> { throw new RuntimeException('foo') }
@@ -82,7 +82,7 @@ class SukatServiceSpec extends Specification {
     def resp = service.enrollUser('givenName', 'sn', 'socialSecurityNumber', 'mailRoutingAddress')
 
     then:
-    resp == null
+    thrown(Exception)
 
     and:
     1 * service.enrollmentWS.enrollUserWithMailRoutingAddress(*_) >> { throw new RuntimeException('foo') }
