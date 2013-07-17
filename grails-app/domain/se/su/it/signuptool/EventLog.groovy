@@ -11,7 +11,6 @@ class EventLog implements Serializable {
 
   Date dateCreated
   Date lastUpdated
-  SortedSet events
 
   static hasMany = [events:EventLogEvent]
 
