@@ -5,8 +5,6 @@ import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
 import org.apache.commons.logging.Log
 import se.su.it.svc.SvcSuPersonVO
-import spock.lang.Ignore
-import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -305,10 +303,8 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: test when user doesn't accept library rules, should log event and redirect to cardOrder page with error message"() {
     given:
-    flow.registeredAddressValid = true
-    flow.registeredAddressInvalid = false
+    flow.addressIsValid = "1"
     flow.acceptLibraryRules = false
-
 
     when:
     def event = orderCardFlow.processCardOrder.action()
@@ -323,10 +319,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: test when user select address is invalid, should log event and redirect to end"() {
     given:
-    flow.registeredAddressValid = false
-    flow.registeredAddressInvalid = true
-    flow.acceptLibraryRules = false
-
+    flow.addressIsValid = "0"
 
     when:
     def event = orderCardFlow.processCardOrder.action()
