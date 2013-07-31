@@ -33,6 +33,13 @@ class LadokServiceSpec extends Specification {
 
   void "findStudentInLadok: When no student is found."() {
     given:
+    def arg1 = 'tnamn'
+    def arg2 = 'enamn'
+
+    LadokService.metaClass.doListQuery = { String iarg1, Map iarg2 ->
+      return null
+    }
+
     when:
     def resp = service.findStudentInLadok("1234567890")
 
@@ -95,10 +102,10 @@ class LadokServiceSpec extends Specification {
     }
 
     when:
-    def resp = service.withConnection(query)
+    service.withConnection(query)
 
     then:
-    resp == null
+    thrown(Exception)
   }
 
   void "getAddressFromLadokByPnr: happy path with tempaddress"() {

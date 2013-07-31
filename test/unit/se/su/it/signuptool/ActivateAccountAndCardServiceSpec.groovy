@@ -89,15 +89,15 @@ class ActivateAccountAndCardServiceSpec extends Specification {
     1 * service.ladokService.findStudentInLadok(*_) >> [enamn:'kaka', tnamn:'foo']
   }
 
-  void "getCardOrderStatus: In case of an exception an empty map is returned"() {
+  void "getCardOrderStatus: When connection to ladok fails, should log and throw exception"() {
     when:
-    def resp = service.getCardOrderStatus(new SvcSuPersonVO())
+    service.getCardOrderStatus(new SvcSuPersonVO())
 
     then:
-    [:] == resp
+    thrown(Exception)
 
     and:
-    service.ladokService.getAddressFromLadokByPnr(*_) >> { throw new RuntimeException('foo') }
+    1 * service.ladokService.getAddressFromLadokByPnr(*_) >> { throw new RuntimeException('foo') }
   }
 
   void "getCardOrderStatus: When no valid address is returned"() {
