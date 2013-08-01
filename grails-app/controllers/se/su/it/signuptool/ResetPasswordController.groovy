@@ -3,8 +3,6 @@ package se.su.it.signuptool
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
-// TODO: TESTS
-
 class ResetPasswordController {
   def activateAccountAndCardService
   def sukatService
