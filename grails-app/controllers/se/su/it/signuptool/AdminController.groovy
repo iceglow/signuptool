@@ -1,6 +1,5 @@
 package se.su.it.signuptool
 
-// TODO: tests
 class AdminController {
   def index() {}
 
