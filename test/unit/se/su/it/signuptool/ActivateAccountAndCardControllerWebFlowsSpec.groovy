@@ -5,6 +5,7 @@ import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
 import org.apache.commons.logging.Log
 import se.su.it.svc.SvcSuPersonVO
+import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -45,6 +46,17 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     and:
     1 * controller.ladokService.findForwardAddressSuggestionForPnr(*_) >> mail
+  }
+
+  def "createNewAccountFlow > prepareForwardAddress: When eventlog throws exception, should log and return error"() {
+    when:
+    def resp = createNewAccountFlow.prepareForwardAddress.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.utilityService.getEventLog(*_) >> { throw new RuntimeException("Booom!") }
   }
 
   def "createNewAccountFlow > prepareForwardAddress: throws an exception"() {
@@ -91,6 +103,17 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     then:
     resp == "errorHandler"
     flow.error == error
+  }
+
+  def "createNewAccountFlow > processEmailInput: When eventlog throws exception, should log and return error"() {
+    when:
+    def resp = createNewAccountFlow.processEmailInput.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.utilityService.getEventLog(*_) >> { throw new RuntimeException("Booom!") }
   }
 
   def "createNewAccountFlow > processEmailInput: When not having accepted the terms of agreement "() {
@@ -161,6 +184,17 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "createNewAccountFlow > createAccount: Check error pathing"() {
     expect:
     'errorHandler' == createNewAccountFlow.createAccount.on.error.to
+  }
+
+  def "createNewAccountFlow > createAccount: When eventlog throws exception, should log and return error"() {
+    when:
+    def resp = createNewAccountFlow.createAccount.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.utilityService.getEventLog(*_) >> { throw new RuntimeException("Booom!") }
   }
 
   def "createNewAccountFlow > createAccount: On successful creation"() {
