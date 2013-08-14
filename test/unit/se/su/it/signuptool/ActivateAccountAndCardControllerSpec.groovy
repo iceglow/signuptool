@@ -3,6 +3,7 @@ package se.su.it.signuptool
 import grails.test.mixin.*
 import se.su.it.config.ConfigService
 import se.su.it.svc.SvcSuPersonVO
+import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 @TestFor(ActivateAccountAndCardController)
@@ -56,6 +57,34 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.sen"
+  }
+
+  def "index: Test when session has reference id, should log to event log"() {
+    given:
+    session.referenceId = "1234567"
+
+    when:
+    controller.index()
+
+    then:
+    1 * controller.utilityService.getEventLog(*_) >> { return new EventLog().save(flush:true) }
+  }
+
+  def "index: Test when session has reference id and eventlog throws exception, should log error, create user error message and redirect to dashboard"() {
+    given:
+    session.referenceId = "1234567"
+
+    when:
+    controller.index()
+
+    then:
+    response.redirectedUrl == '/dashboard/index'
+
+    and:
+    flash.error == 'activateAccountAndCardController.errors.genericError'
+
+    and:
+    1 * controller.utilityService.getEventLog(*_) >> { throw new RuntimeException("Booom!") }
   }
 
   def "index: Testing when pnr is already in the session."() {
