@@ -126,7 +126,7 @@ log4j = {
             appender new DailyRollingFileAppender(
                 name: "logFile",
                 datePattern: "'.'yyyy-MM-dd",
-                fileName: "${System.properties["catalina.home"]}/logs/${appName}-${Environment?.current?.name}.log",
+                fileName: "${System.properties["catalina.home"]}/logs/${appName}-production.log",
                 layout: pattern(conversionPattern: '%d [%t] %-5p %c{2} %x - %m%n')
             )
             appender new SyslogAppender(name: "syslog",
@@ -137,6 +137,7 @@ log4j = {
           }
 
       root {
+        info 'logFile'
         error 'syslog', 'logFile'
         additivity: true
       }
