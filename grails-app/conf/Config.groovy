@@ -119,7 +119,7 @@ log4j = {
           "grails.app.domain.se.su.it",
           "grails.app.services.se.su.it",
           "grails.app.taglib.se.su.it",
-          "grails.app.conf.se.su.it",
+          "grails.app.conf.se.su.it"
 
           appenders {
             'null' name: 'stacktrace' // this makes sure we don't get a stacktrace.log
