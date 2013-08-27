@@ -5,13 +5,6 @@ import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
-import se.su.it.svc.AccountServiceImpl
-import se.su.it.svc.CardInfoServiceImpl
-import se.su.it.svc.EnrollmentServiceImpl
-import se.su.it.svc.Status
-import se.su.it.svc.WebServiceAdminImpl
-import se.su.it.svc.CardOrderServiceImpl
-
 class SukatService implements Serializable {
   /** Needed if we want to use this service in the flow. */
   static transactional = false
