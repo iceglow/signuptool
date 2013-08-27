@@ -3,6 +3,7 @@ package se.su.it.signuptool
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import javax.sql.DataSource
+import java.sql.SQLException
 
 class LadokService {
 
@@ -109,7 +110,7 @@ class LadokService {
     } catch (ex) {
       log.error "Connection to LADOK failed", ex
 
-      throw new Exception("Connection to LADOK failed")
+      throw new SQLException("Connection to LADOK failed")
     } finally {
       try {
         sql.close()
