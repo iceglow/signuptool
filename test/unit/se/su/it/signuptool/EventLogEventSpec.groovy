@@ -1,12 +1,15 @@
 package se.su.it.signuptool
 
+import grails.buildtestdata.mixin.Build
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import spock.lang.IgnoreRest
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
 @TestFor(EventLogEvent)
+@Build([EventLog, EventLogEvent])
+@Mock([EventLog, EventLogEvent])
 class EventLogEventSpec extends Specification {
 
   EventLogEvent event
@@ -61,4 +64,21 @@ class EventLogEventSpec extends Specification {
     and:
     event.errors["description"] == 'maxSize'
   }
+
+  void "Listing events should return a sorted set."() {
+    given:
+    def el1 = EventLog.build()
+
+    def ev2 = new EventLogEvent(description: 'bar')
+    def ev1 = new EventLogEvent(description: 'foo')
+
+    el1.addToEvents(ev1)
+    el1.addToEvents(ev2)
+
+    el1.save()
+
+    expect:
+    el1.events*.timeCreated == [ev2.timeCreated, ev1.timeCreated]
+  }
+
 }
