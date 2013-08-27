@@ -81,4 +81,26 @@ class EventLogEventSpec extends Specification {
     el1.events*.timeCreated == [ev2.timeCreated, ev1.timeCreated]
   }
 
+  void "Test that a EventLogEvent don't validate without a EventLog"() {
+    given:
+    def ev = new EventLogEvent(description: 'bar')
+
+    when:
+    ev.validate()
+
+    then:
+    assert ev.errors.hasFieldErrors('eventLog')
+  }
+
+  void "Test that a EventLogEvent validates when a EventLog is set"() {
+    given:
+    def ev = new EventLogEvent(description: 'bar', eventLog: new EventLog())
+
+    when:
+    ev.validate()
+
+    then:
+    assert !ev.errors.hasFieldErrors('eventLog')
+  }
+
 }

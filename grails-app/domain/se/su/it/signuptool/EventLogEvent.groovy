@@ -8,6 +8,8 @@ class EventLogEvent implements Serializable, Comparable {
   Date timeCreated = new Date() // Added at constructor time.
   String description = ''
 
+  EventLog eventLog
+
   static belongsTo = EventLog
 
   static constraints = {

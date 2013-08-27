@@ -3,7 +3,6 @@ package se.su.it.signuptool
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import javax.sql.DataSource
-import java.sql.SQLException
 
 class LadokService {
 

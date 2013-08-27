@@ -4,7 +4,7 @@ grails.naming.entries = [
           auth: "Container",
           driverClassName: "com.mysql.jdbc.Driver",
           url: "jdbc:mysql://somehost:someport/su?autoReconnect=true&useSSL=true&verifyServerCertificate=false",
-          username: ""%%LADOKUSER%%"",
+          username: "%%LADOKUSER%%",
           password: "%%LADOKPASSWORD%%",
           maxActive: "20",
           maxIdle: "1",
@@ -34,7 +34,7 @@ grails.naming.entries = [
         maxActive: "20",
         maxIdle: "1",
         username: "%%USER%%",
-        password: "%%PASSWORD%%"
+        password: "%%PASSWORD%%",
         validationQuery: "/* ping */"
     ]
 ]
