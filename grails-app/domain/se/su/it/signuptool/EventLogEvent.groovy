@@ -1,19 +1,17 @@
 package se.su.it.signuptool
 
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
-
-@EqualsAndHashCode @ToString
 class EventLogEvent implements Serializable, Comparable {
-
-  String description = ''
 
   Date dateCreated
   Date lastUpdated
 
+  Date timeCreated = new Date() // Added at constructor time.
+  String description = ''
+
   static belongsTo = EventLog
 
   static constraints = {
+    timeCreated(nullable:false, blank:false)
     description(nullable:false, blank:false, maxSize: 2000)
   }
 
@@ -23,12 +21,6 @@ class EventLogEvent implements Serializable, Comparable {
 
   @Override
   int compareTo(Object o) {
-    if (o?.dateCreated == this?.dateCreated) {
-      return 0
-    } else if (o?.dateCreated > this?.dateCreated) {
-      return -1
-    } else {
-      return 1
-    }
+    this?.timeCreated <=> o?.timeCreated
   }
 }
