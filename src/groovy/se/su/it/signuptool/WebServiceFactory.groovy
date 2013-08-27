@@ -31,6 +31,7 @@ class WebServiceFactory {
     return instance
   }
 
+  /** This method is not unused, it's used from resources.groovy as factory method */
   private Object getInstanceForClass(Class cz, String url) {
 
     if (!cz) {

@@ -16,12 +16,12 @@ class SukatService implements Serializable {
   /** Needed if we want to use this service in the flow. */
   static transactional = false
 
-  AccountServiceImpl accountWS
-  CardInfoServiceImpl cardInfoServiceImpl
-  CardOrderServiceImpl cardOrderWS
-  EnrollmentServiceImpl enrollmentWS
-  Status statusWS
-  WebServiceAdminImpl webAdminWS
+  def accountWS
+  def cardInfoServiceImpl
+  def cardOrderWS
+  def enrollmentWS
+  def statusWS
+  def webAdminWS
 
   private final DEFAULT_DOMAIN = "student.su.se"
   private final DEFAULT_AFFILATION = "other"

@@ -109,8 +109,7 @@ class LadokService {
       response = query(sql)
     } catch (ex) {
       log.error "Connection to LADOK failed", ex
-
-      throw new SQLException("Connection to LADOK failed")
+      throw ex // Propagate the exception after logging the error.
     } finally {
       try {
         sql.close()
