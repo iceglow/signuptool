@@ -7,6 +7,7 @@ import spock.lang.IgnoreRest
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.sql.SQLException
 import java.text.SimpleDateFormat
 
 /**
@@ -94,6 +95,7 @@ class LadokServiceSpec extends Specification {
     resp?.first() == "myQuery"
   }
 
+  @IgnoreRest
   void "withConnection: When querying fails"() {
     given:
 
@@ -105,7 +107,7 @@ class LadokServiceSpec extends Specification {
     service.withConnection(query)
 
     then:
-    thrown(Exception)
+    thrown(SQLException)
   }
 
   void "getAddressFromLadokByPnr: happy path with tempaddress"() {
