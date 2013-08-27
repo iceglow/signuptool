@@ -15,7 +15,7 @@ class AdminController {
         }
         break
       case "socialSecurityNumber":
-        eventLogs << EventLog.findAllBySocialSecurityNumber(searchText, [sort:'dateCreated', order:'desc'])
+        eventLogs = EventLog.findAllBySocialSecurityNumber(searchText, [sort:'dateCreated', order:'desc'])
         break
       default:
         break
@@ -23,6 +23,6 @@ class AdminController {
     if (eventLogs?.size() == 0) {
       return render(text:g.message(code:'admin.search.noResults.for', args:[searchText]))
     }
-    return render(template: 'searchResults', collection: eventLogs?.flatten(), var: "eventLog")
+    return render(template: 'searchResults', collection: eventLogs, var: "eventLog")
   }
 }

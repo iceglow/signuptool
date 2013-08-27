@@ -115,14 +115,14 @@ class ActivateAccountAndCardController {
       session.givenName = ladokData.tnamn
       session.sn = ladokData.enamn
 
-      eventLog.logEvent("User ${session.pnr} starting flow")
+      eventLog.logEvent("Account for user with pnr: ${session.pnr} not found in SUKAT, starting create user account flow.")
 
       return redirect(action:'createNewAccount')
     }
 
     String lpwurl = configService.getValue("signup", "lpwtool")
     String sukaturl = configService.getValue("signup", "sukattool")
-    eventLog.logEvent("Person with pnr: ${session.pnr} and uid: ${session.uid} already exists in sukat")
+    eventLog.logEvent("Found account with pnr: ${session.pnr} and uid: ${session.uid} in SUKAT, displaying information.")
 
     return render(view:'index', model:[
         uid:session?.user?.uid,

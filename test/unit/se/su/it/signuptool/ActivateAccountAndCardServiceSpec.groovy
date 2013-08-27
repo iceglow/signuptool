@@ -4,13 +4,9 @@ import grails.test.mixin.TestFor
 import se.su.it.svc.SuCard
 import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 import spock.lang.Unroll
 
-/**
- * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
- */
 @TestFor(ActivateAccountAndCardService)
 class ActivateAccountAndCardServiceSpec extends Specification {
 

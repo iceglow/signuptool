@@ -12,7 +12,7 @@ class ActivateAccountAndCardService implements Serializable {
   def utilityService
   def ladokService
 
-  private final emailPattern = /[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/
+  private final String emailPattern = /[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/
 
   public boolean validateForwardAddress(String forwardAddress) {
     forwardAddress = forwardAddress?.trim()
@@ -65,7 +65,7 @@ class ActivateAccountAndCardService implements Serializable {
 
     try {
       Map address = ladokService.getAddressFromLadokByPnr(user.socialSecurityNumber)
-      cardInfo.hasAddress = (null != address && address.size() > 0)
+      cardInfo.hasAddress = address ? true : false
       cardInfo.ladokAddress = address
 
       // we may want to show info about the active cards a user already has

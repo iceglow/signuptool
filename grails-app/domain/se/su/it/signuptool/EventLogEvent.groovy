@@ -5,7 +5,7 @@ class EventLogEvent implements Serializable, Comparable {
   Date dateCreated
   Date lastUpdated
 
-  Date timeCreated = new Date() // Added at constructor time.
+  Long timeCreated = System.currentTimeMillis()
   String description = ''
 
   static belongsTo = EventLog
