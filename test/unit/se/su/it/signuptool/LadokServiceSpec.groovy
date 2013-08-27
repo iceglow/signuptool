@@ -95,10 +95,8 @@ class LadokServiceSpec extends Specification {
     resp?.first() == "myQuery"
   }
 
-  @IgnoreRest
   void "withConnection: When querying fails"() {
     given:
-
     Closure query = { Sql sql ->
       throw new RuntimeException('foo')
     }
@@ -107,7 +105,7 @@ class LadokServiceSpec extends Specification {
     service.withConnection(query)
 
     then:
-    thrown(SQLException)
+    thrown(RuntimeException)
   }
 
   void "getAddressFromLadokByPnr: happy path with tempaddress"() {
