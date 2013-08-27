@@ -1,7 +1,5 @@
 package se.su.it.signuptool
 
-import se.su.it.svc.SuCard
-import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
 
 class ActivateAccountAndCardService implements Serializable {
@@ -75,9 +73,8 @@ class ActivateAccountAndCardService implements Serializable {
       cardInfo.cardOrders = (sukatService.getCardOrdersForUser(user.uid))
       cardInfo.canOrderCard = canOrderCard(cardInfo)
     } catch (ex) {
-
       log.error "Failed when creating card order information object", ex
-      throw new Exception("Failed when creating card order information object")
+      throw ex // Propagate exception after logging.
     }
 
     return cardInfo

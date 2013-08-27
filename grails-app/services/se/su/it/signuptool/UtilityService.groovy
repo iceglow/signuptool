@@ -1,7 +1,6 @@
 package se.su.it.signuptool
 
 import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 class UtilityService {
 
@@ -17,7 +16,7 @@ class UtilityService {
   public EventLog getEventLog(def referenceId) {
     def eventLog = EventLog.get(referenceId)
     if (!eventLog) {
-      throw new Exception("Failed to get eventLog from referenceId: ${referenceId}")
+      throw new IllegalArgumentException("Failed to get eventLog from referenceId: ${referenceId}")
     }
     return eventLog
   }
