@@ -20,11 +20,11 @@ import spock.lang.Specification
 class SukatServiceSpec extends Specification {
 
   def setup() {
-    service.accountWS = Mock(AccountServiceImpl)
-    service.enrollmentWS = Mock(EnrollmentServiceImpl)
-    service.statusWS = Mock(Status)
-    service.webAdminWS = Mock(WebServiceAdminImpl)
-    service.cardOrderWS = Mock(CardOrderServiceImpl)
+    service.accountWS     = Mock(AccountServiceImpl)
+    service.enrollmentWS  = Mock(EnrollmentServiceImpl)
+    service.statusWS      = Mock(Status)
+    service.webAdminWS    = Mock(WebServiceAdminImpl)
+    service.cardOrderWS   = Mock(CardOrderServiceImpl)
 
     AuditFactory.metaClass.static.auditObject = {
       return new SvcAudit()

@@ -213,7 +213,10 @@ class ActivateAccountAndCardController {
         try {
           result = sukatService.enrollUser(session.givenName, session.sn, session.pnr, flow.forwardAddress)
           if (!result) {
-            throw new Exception("Could not enroll user.")
+            log.error "Failed when enrolling user"
+            eventLog.logEvent("Failed to enroll user.")
+            flow.error = g.message(code:'activateAccountAndCardController.errors.failedWhenEnrollingUser')
+            return error()
           }
         } catch(ex) {
           log.error "Failed when enrolling user", ex

@@ -1,7 +1,6 @@
 package se.su.it.signuptool
 
 import se.su.it.svc.SvcSuPersonVO
-import se.su.it.svc.SvcUidPwd
 
 class ResetPasswordController {
   def activateAccountAndCardService
