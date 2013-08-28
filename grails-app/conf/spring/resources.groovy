@@ -59,7 +59,7 @@ beans = {
     bean.constructorArgs = [AccountServiceImpl.class, grailsApplication.config.sukatsvc.accountservice]
   }
 
-  cardInfoServiceImpl(webServiceFactory) { bean ->
+  cardInfoWS(webServiceFactory) { bean ->
     bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [CardInfoServiceImpl.class, grailsApplication.config.sukatsvc.cardinfoservice]
   }

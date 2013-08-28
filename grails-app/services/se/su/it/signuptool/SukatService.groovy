@@ -41,7 +41,7 @@ class SukatService implements Serializable {
   static transactional = false
 
   def accountWS
-  def cardInfoServiceImpl
+  def cardInfoWS
   def cardOrderWS
   def enrollmentWS
   def statusWS
@@ -77,10 +77,8 @@ class SukatService implements Serializable {
   }
 
   public List<SvcCardOrderVO> getCardOrdersForUser(String uid) {
-    List<SvcCardOrderVO> cardOrders = []
-
     // call sukatsvc to fetch cardorders for user , something like findAllCardOrdersForUid in the CardOrderService
-    cardOrders = cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
+    List<SvcCardOrderVO> cardOrders = cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
 
     if (!cardOrders) {
       return []
@@ -94,7 +92,7 @@ class SukatService implements Serializable {
   public List<SuCard> getCardsForUser(String uid) {
     List<SuCard> suCards = []
     try {
-      suCards = cardInfoServiceImpl.getAllCards(uid, true, AuditFactory.auditObject)
+      suCards = cardInfoWS.getAllCards(uid, true, AuditFactory.auditObject)
     } catch (Throwable exception) {
       log.error "Failed when getting info about users cards: ${exception.getMessage()}", exception
       suCards = []
@@ -104,12 +102,14 @@ class SukatService implements Serializable {
 
   public SvcSuPersonVO findUserBySocialSecurityNumber(String pnr) {
     SvcSuPersonVO suPerson = null
+
     try {
       suPerson = accountWS.findSuPersonBySocialSecurityNumber(pnr, AuditFactory.auditObject)
     } catch (ex) {
       log.error "Failed when finding user by ssn in SUKAT.", ex
-      throw(ex)
+      throw ex
     }
+
     return suPerson
   }
 
@@ -130,9 +130,7 @@ class SukatService implements Serializable {
       return null
     }
 
-    SvcUidPwd response = null
-
-    response = enrollmentWS.enrollUserWithMailRoutingAddress(
+    SvcUidPwd response = enrollmentWS.enrollUserWithMailRoutingAddress(
         DEFAULT_DOMAIN,
         givenName,
         sn,
