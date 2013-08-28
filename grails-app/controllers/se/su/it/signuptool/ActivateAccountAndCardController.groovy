@@ -257,6 +257,7 @@ class ActivateAccountAndCardController {
         }
 
         /** Since we don't recieve a full account from the creation of an account we return the uid */
+        session.user = null
         session.uid = result.uid
         session.password = result.password
       }
