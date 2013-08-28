@@ -6,5 +6,5 @@ target/
 .project
 .classpath
 cobertura.ser
-grails-app/conf/DataSources.groovy
+grails-app/conf/CustomDataSources.groovy
 out

@@ -49,10 +49,10 @@ def customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy"]
 
 environments {
   development {
-    customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy", DataSources]
+    customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy", CustomDataSources]
   }
   test {
-    customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy", DataSources]
+    customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy", CustomDataSources]
   }
 }
 /** Some custom options */
