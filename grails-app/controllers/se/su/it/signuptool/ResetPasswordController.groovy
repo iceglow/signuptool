@@ -63,16 +63,23 @@ class ResetPasswordController {
         return redirect(controller:'dashboard', action:'index')
     }
 
-    SvcSuPersonVO user = sukatService.findUserBySocialSecurityNumber(session.pnr)
+    List<SvcSuPersonVO> users = sukatService.findUsersBySocialSecurityNumber(session.pnr)
 
-    if (!user || !user.accountIsActive) {
+    if (users?.size() > 1) {
+      eventLog.logEvent "Found multiple accounts with social security number ${session.pnr}. Aborting password reset."
+      log.error "Found multiple accounts with social security number ${session.pnr}. Aborting password reset."
+      flash.error = g.message(code:'sukat.errors.multipleUsersForSSN')
+      return redirect(controller:'dashboard', action:'index')
+    }
+
+    if (!users || !users.first() || !users.first().accountIsActive) {
       eventLog.logEvent("User with social security number ${session.pnr} doesnt have an account!")
       log.error "User with social security number ${session.pnr} doesnt have an account!"
       flash.error = g.message(code:'resetPassword.errors.userNotFound')
       return redirect(controller:'dashboard', action:'index')
     }
 
-    session.user = user
+    session.user = users.first()
 
     return redirect(action: 'resetPassword')
   }

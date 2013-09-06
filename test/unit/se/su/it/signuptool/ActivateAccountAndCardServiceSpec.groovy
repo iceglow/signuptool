@@ -66,36 +66,6 @@ class ActivateAccountAndCardServiceSpec extends Specification {
     email << ['a@b.se', 'a@b.info', 'a.b@c.nu', 'a_b@cd.ef']
   }
 
-  void "findUser: when given user \'#user\'"() {
-    expect:
-    null == service.findUser(user)
-
-    where:
-    user << [null, '']
-  }
-
-  void "findUser: When uid is pnr but no user is found."() {
-    when:
-    def resp = service.findUser('someUid')
-
-    then:
-    resp == null
-
-    and:
-    1 * service.sukatService.findUserBySocialSecurityNumber(*_) >> new SvcSuPersonVO()
-  }
-
-  void "findUser: When uid is pnr."() {
-    when:
-    def resp = service.findUser('someUid')
-
-    then:
-    resp instanceof SvcSuPersonVO
-
-    and:
-    1 * service.sukatService.findUserBySocialSecurityNumber(*_) >> new SvcSuPersonVO(uid:'withUid')
-  }
-
   void "fetchLadokData: Given uid \'#uid\'"() {
     expect:
     [:] == service.fetchLadokData(uid)

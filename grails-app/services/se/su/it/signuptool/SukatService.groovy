@@ -36,6 +36,9 @@ import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
+import org.apache.commons.collections.Predicate
+import se.su.it.commons.PrincipalUtils
+
 class SukatService implements Serializable {
   /** Needed if we want to use this service in the flow. */
   static transactional = false
@@ -47,8 +50,8 @@ class SukatService implements Serializable {
   def statusWS
   def webAdminWS
 
-  private final DEFAULT_DOMAIN = "student.su.se"
-  private final DEFAULT_AFFILATION = "other"
+  public static final DEFAULT_DOMAIN = "student.su.se"
+  public static final DEFAULT_AFFILATION = "other"
   private final CARD_ORDER_STATUSES_TO_SKIP = ["DISCARDED", "WRITTEN_TO_SUKAT"]
 
   public String orderCard(SvcSuPersonVO user, Map ladokAddress) {
@@ -100,49 +103,84 @@ class SukatService implements Serializable {
     return suCards
   }
 
-  public SvcSuPersonVO findUserBySocialSecurityNumber(String pnr) {
-    SvcSuPersonVO suPerson = null
+  public List<SvcSuPersonVO> findUsersBySocialSecurityNumber(String pnr) {
+    List<SvcSuPersonVO> suPersons
 
     try {
-      suPerson = accountWS.findSuPersonBySocialSecurityNumber(pnr, AuditFactory.auditObject)
+      suPersons = accountWS.findAllSuPersonsBySocialSecurityNumber(pnr, AuditFactory.auditObject)
     } catch (ex) {
       log.error "Failed when finding user by ssn in SUKAT.", ex
       throw ex
     }
 
-    return suPerson
+    return suPersons
   }
 
-  public SvcUidPwd enrollUser(String givenName, String sn, String socialSecurityNumber, String forwardAddress) {
+  /**
+   * Generate a new student uid, check against svc for uniqueness
+   *
+   * @param givenName the giveNname to base the new uid on
+   * @param sn the sn to base the new uid on
+   * @return a new uid
+   */
+  public String generateStudentUid(String givenName, String sn) {
+    String uid = PrincipalUtils.suniqueUID(givenName, sn, new Predicate() {
+          public boolean evaluate(Object object) {
+            try {
+              return accountWS.findSuPersonByUid((String) object, AuditFactory.auditObject) == null
+            } catch (ex) {
+              log.error "Failed when getting SuPerson from GID", ex
+              return false
+            }
+          }
+        })
 
-    if (!givenName?.trim()) {
-      log.error "No givenName supplied."
-      return null
-    }
-
-    if (!sn?.trim()) {
-      log.error "No sn supplied."
-      return null
-    }
-
-    if (!socialSecurityNumber?.trim()) {
-      log.error "No socialSecurityNumber supplied."
-      return null
-    }
-
-    SvcUidPwd response = enrollmentWS.enrollUserWithMailRoutingAddress(
-        DEFAULT_DOMAIN,
-        givenName,
-        sn,
-        DEFAULT_AFFILATION,
-        socialSecurityNumber,
-        forwardAddress,
-        AuditFactory.auditObject
-    )
-
-    return response
+    log.debug "Returning $uid for user with name $givenName $sn"
+    return uid
   }
 
+  /**
+   * Create a SuPerson stub in SUKAT
+   *
+   * @param givenName the given name
+   * @param sn the surname
+   * @param ssn the social security number
+   * @return the uid of the stub
+   */
+  public String createSuPersonStub(String givenName, String sn, String ssn) {
+    String uid = generateStudentUid(givenName, sn)
+
+    accountWS.createSuPerson(uid, givenName, sn, ssn, AuditFactory.auditObject)
+
+    return uid
+  }
+
+  /**
+   * Set a new mailRoutingAddress on a user account
+   *
+   * @param uid the user to update mailRoutingAddress for
+   * @param mail the new mailRoutingAddress
+   */
+  void setMailRoutingAddress(String uid, String mail) {
+    accountWS.setMailRoutingAddress(uid, mail, AuditFactory.auditObject)
+  }
+
+  /**
+   * Activate a user account
+   *
+   * @param uid
+   * @return a SvcUidPwd containing the username and password of the activated account.
+   */
+  SvcUidPwd activateUser(String uid) {
+    return accountWS.activateSuPerson(uid, DEFAULT_DOMAIN, [DEFAULT_AFFILATION], AuditFactory.auditObject)
+  }
+
+  /**
+   * Reset the password for a user account
+   *
+   * @param uid
+   * @return the new password
+   */
   public String resetPassword(String uid) {
     return accountWS.resetPassword(uid, AuditFactory.auditObject)
   }

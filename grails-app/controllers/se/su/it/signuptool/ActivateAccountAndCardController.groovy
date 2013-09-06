@@ -45,13 +45,12 @@ class ActivateAccountAndCardController {
   def index() {
     /** Only display the password if returned and remove it right after. */
     String password = ''
-
-    boolean hasCompletedCardOrder = (session.hasCompletedCardOrder)
-
     if (session.password) {
       password = session.password
       session.password = null
     }
+
+    boolean hasCompletedCardOrder = (session.hasCompletedCardOrder)
 
     EventLog eventLog = null
 
@@ -104,7 +103,17 @@ class ActivateAccountAndCardController {
      */
     if (!session.user) {
       try {
-        SvcSuPersonVO user = activateAccountAndCardService.findUser(session.pnr)
+        List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(session.pnr)
+
+        if (vos?.size() > 1) {
+          eventLog.logEvent "Found multiple accounts with social security number ${session.pnr}. Aborting activation."
+          log.error "Found multiple accounts with social security number ${session.pnr}. Aborting activation."
+          flash.error = g.message(code:'sukat.errors.multipleUsersForSSN')
+          return redirect(controller:'dashboard', action:'index')
+        }
+
+        SvcSuPersonVO user = vos?.first()
+
         if (user) {
           session.user = user
           session.uid = user?.uid
@@ -242,7 +251,15 @@ class ActivateAccountAndCardController {
         SvcUidPwd result = null
 
         try {
-          result = sukatService.enrollUser(session.givenName, session.sn, session.pnr, flow.forwardAddress)
+          String uid = sukatService.createSuPersonStub(session.givenName, session.sn, session.pnr,)
+          eventLog.logEvent("SuPerson stub created with uid=${uid}")
+
+          sukatService.setMailRoutingAddress(uid, flow.forwardAddress)
+          eventLog.logEvent("MailRoutingAddress updated for uid=${uid}")
+
+          result = sukatService.activateUser(uid)
+          eventLog.logEvent("User uid=${uid} activated")
+
           if (!result) {
             log.error "Failed when enrolling user"
             eventLog.logEvent("Failed to enroll user.")

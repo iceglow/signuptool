@@ -1,6 +1,7 @@
 package se.su.it.signuptool
 
 import grails.test.mixin.TestFor
+import org.junit.Before
 import se.su.it.svc.AccountServiceImpl
 import se.su.it.svc.CardOrderServiceImpl
 import se.su.it.svc.EnrollmentServiceImpl
@@ -8,9 +9,7 @@ import se.su.it.svc.Status
 import se.su.it.svc.SvcAudit
 import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
-import se.su.it.svc.SvcUidPwd
 import se.su.it.svc.WebServiceAdminImpl
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 /**
@@ -19,6 +18,7 @@ import spock.lang.Specification
 @TestFor(SukatService)
 class SukatServiceSpec extends Specification {
 
+  @Before
   def setup() {
     service.accountWS     = Mock(AccountServiceImpl)
     service.enrollmentWS  = Mock(EnrollmentServiceImpl)
@@ -26,80 +26,32 @@ class SukatServiceSpec extends Specification {
     service.webAdminWS    = Mock(WebServiceAdminImpl)
     service.cardOrderWS   = Mock(CardOrderServiceImpl)
 
-    AuditFactory.metaClass.static.auditObject = {
-      return new SvcAudit()
-    }
-  }
-
-  def cleanup() {
-    AuditFactory.metaClass = null
+    GroovyMock(AuditFactory, global: true)
+    AuditFactory.auditObject >> new SvcAudit()
   }
 
   def "findUserBySocialSecurityNumber"() {
-    given:
-
     when:
-    def resp = service.findUserBySocialSecurityNumber('8008080000')
+    def resp = service.findUsersBySocialSecurityNumber('8008080000')
 
     then:
-    resp.givenName == 'kaka'
+    resp instanceof List
+    resp.first().givenName == 'kaka'
 
     and:
-    1 * service.accountWS.findSuPersonBySocialSecurityNumber(*_) >> { return new SvcSuPersonVO(givenName:'kaka') }
+    1 * service.accountWS.findAllSuPersonsBySocialSecurityNumber(*_) >> { return [new SvcSuPersonVO(givenName:'kaka')] }
   }
 
 
   def "findUserBySocialSecurityNumber: On error returns null"() {
-    given:
-
     when:
-    def resp = service.findUserBySocialSecurityNumber('8008080000')
+    service.findUsersBySocialSecurityNumber('8008080000')
 
     then:
     thrown(Exception)
 
     and:
-    1 * service.accountWS.findSuPersonBySocialSecurityNumber(*_) >> { throw new RuntimeException('foo') }
-  }
-
-  def "enrollUser: No givenName returns null"() {
-    expect:
-    null == service.enrollUser('', 'sn', 'socialSecurityNumber', 'mailRoutingAddress')
-  }
-
-  def "enrollUser: No sn returns null"() {
-    expect:
-    null == service.enrollUser('givenName', '', 'socialSecurityNumber', 'mailRoutingAddress')
-  }
-
-  def "enrollUser: No socialSecurityNumber returns null"() {
-    expect:
-    null == service.enrollUser('givenName', 'sn', '', 'mailRoutingAddress')
-  }
-
-  def "enrollUser: When enrolling service fails with an exception."() {
-    when:
-    def resp = service.enrollUser('givenName', 'sn', 'socialSecurityNumber', 'mailRoutingAddress')
-
-    then:
-    thrown(Exception)
-
-    and:
-    1 * service.enrollmentWS.enrollUserWithMailRoutingAddress(*_) >> { throw new RuntimeException('foo') }
-  }
-
-  def "enrollUser: When enrolling succeeds."() {
-    def response = new SvcUidPwd(uid: 'kaka', password: 'foo123')
-
-    when:
-    def resp = service.enrollUser('givenName', 'sn', 'socialSecurityNumber', 'mailRoutingAddress')
-
-    then:
-    resp.uid == 'kaka'
-    resp.password == 'foo123'
-
-    and:
-    1 * service.enrollmentWS.enrollUserWithMailRoutingAddress(*_) >> { return response }
+    1 * service.accountWS.findAllSuPersonsBySocialSecurityNumber(*_) >> { throw new RuntimeException('foo') }
   }
 
   def "createCardOrderVO: when supplied user is null"() {
@@ -121,6 +73,76 @@ class SukatServiceSpec extends Specification {
     thrown(IllegalArgumentException)
   }
 
+  //TODO: Test new methods
+
+  def "generateStudentUid"() {
+    when:
+    def res = service.generateStudentUid('foo', 'bar')
+
+    then:
+    1 * service.accountWS.findSuPersonByUid(*_) >> null
+    res
+  }
+
+  def "generateStudentUid: retries on collision"() {
+    when:
+    def res = service.generateStudentUid('foo', 'bar')
+
+    then:
+    2 * service.accountWS.findSuPersonByUid(*_) >>> [new SvcSuPersonVO(), null]
+    res
+  }
+
+  def "generateStudentUid: retries on exception"() {
+    when:
+    def res = service.generateStudentUid('foo', 'bar')
+
+    then:
+    1 * service.accountWS.findSuPersonByUid(*_) >> {throw new RuntimeException('')}
+    1 * service.accountWS.findSuPersonByUid(*_) >> null
+    res
+  }
+
+  def "createSuPersonStub"() {
+    given:
+    def givenName = 'given'
+    def sn = 'sn'
+    def ssn = '1' *10
+    def uid = 'gisn1234'
+    def spy = Spy(SukatService)
+    spy.accountWS = service.accountWS
+
+    when:
+    def res = spy.createSuPersonStub(givenName, sn, ssn)
+
+    then:
+    1 * spy.generateStudentUid(givenName, sn) >> uid
+    1 * spy.accountWS.createSuPerson(uid, givenName, sn, ssn, _)
+    res == uid
+  }
+
+  def "setMailRoutingAddress"() {
+    given:
+    def uid = 'gisn1234'
+    def mail = 'mail'
+
+    when:
+    service.setMailRoutingAddress(uid, mail)
+
+    then:
+    1 * service.accountWS.setMailRoutingAddress(uid, mail, _)
+  }
+
+  def "activateUser"() {
+    given:
+    def uid = 'gisn1234'
+
+    when:
+    service.activateUser(uid)
+
+    then:
+    1 * service.accountWS.activateSuPerson(uid, SukatService.DEFAULT_DOMAIN, [SukatService.DEFAULT_AFFILATION], _)
+  }
 
   def "createCardOrderVO: when applying attributes to the orderVO"() {
     given:

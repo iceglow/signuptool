@@ -67,7 +67,7 @@ class ResetPasswordControllerSpec extends Specification {
     1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
 
     and:
-    1 * controller.sukatService.findUserBySocialSecurityNumber(pnr) >> {return user}
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(pnr) >> [user]
   }
 
   def "index: test when scope is 'studera.nu' and none 'norEduPersonNIN' is set on request, should redirect to unverified account"() {
@@ -113,7 +113,7 @@ class ResetPasswordControllerSpec extends Specification {
     1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
 
     and:
-    1 * controller.sukatService.findUserBySocialSecurityNumber(pnr) >> {return null}
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(pnr) >> [null]
   }
 
   def "index: test when user is found but account is inactive, should render flash error and redirect to dashboard"() {
@@ -136,6 +136,29 @@ class ResetPasswordControllerSpec extends Specification {
     1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
 
     and:
-    1 * controller.sukatService.findUserBySocialSecurityNumber(pnr) >> {return user}
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(pnr) >> [user]
+  }
+
+  def "index: test when multiple users are found, should render flash error and redirect to dashboard"() {
+    given:
+    def pnr = "8112129999"
+    def user = new SvcSuPersonVO()
+    user.setAccountIsActive(false)
+
+    request.norEduPersonNIN = pnr
+
+    when:
+    controller.index()
+
+    then:
+    assert session.pnr == pnr
+
+    assert response.redirectedUrl == '/dashboard/index'
+
+    and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
+
+    and:
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(pnr) >> [user, user]
   }
 }
