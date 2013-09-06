@@ -230,11 +230,12 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > createAccount: On successful creation"() {
     given:
+    def uid = 'uid'
     session.givenName = 'givenName'
     session.sn = 'sn'
     session.pnr = 'socialSecurityNumber'
     flow.forwardAddress = 'mailRoutingAddress'
-    def response = [uid:'uid', password:'password']
+    def response = [uid:uid, password:'password']
 
     when:
     createNewAccountFlow.createAccount.action()
@@ -244,13 +245,11 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     session.password == response.password
 
     and:
-    1 * controller.sukatService.enrollUser(*_) >> { String arg1, String arg2, String arg3, String arg4 ->
-      assert arg1 == session.givenName
-      assert arg2 == session.sn
-      assert arg3 == session.pnr
-      assert arg4 == flow.forwardAddress
-      return response
-    }
+    1 * controller.sukatService.createSuPersonStub(session.givenName,session.sn,session.pnr) >> uid
+
+    1 * controller.sukatService.setMailRoutingAddress(uid, flow.forwardAddress)
+
+    1 * controller.sukatService.activateUser(uid) >> response
   }
 
   def "createNewAccountFlow > createAccount: creation fails."() {
@@ -271,7 +270,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     flow.error == "activateAccountAndCardController.errors.failedWhenEnrollingUser"
 
     and:
-    1 * controller.sukatService.enrollUser(*_) >> { throw new RuntimeException('foo') }
+    1 * controller.sukatService.createSuPersonStub(*_) >> { throw new RuntimeException('foo') }
   }
 
   def "createNewAccountFlow > errorHandler: Check success pathing"()  {

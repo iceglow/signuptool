@@ -34,7 +34,6 @@ package se.su.it.signuptool
 import grails.test.mixin.*
 import se.su.it.config.ConfigService
 import se.su.it.svc.SvcSuPersonVO
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 @TestFor(ActivateAccountAndCardController)
@@ -50,6 +49,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     controller.ladokService = Mock(LadokService)
     controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     controller.configService = Mock(ConfigService)
+    controller.sukatService = Mock(SukatService)
   }
 
   def "index: Testing the password passing."() {
@@ -147,7 +147,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.activateAccountAndCardService.findUser(*_) >> { throw new RuntimeException('foo') }
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(*_) >> { throw new RuntimeException('foo') }
   }
 
   def "index: Trying to create a new user (uid not found in sukat), but user is not found in ladok.."() {
@@ -162,7 +162,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.activateAccountAndCardService.findUser(*_) >> null
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(*_) >> null
     1 * controller.activateAccountAndCardService.fetchLadokData(*_) >> null
   }
 
@@ -178,7 +178,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.activateAccountAndCardService.findUser(*_) >> null
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(*_) >> null
     1 * controller.activateAccountAndCardService.fetchLadokData(*_) >> { throw new RuntimeException('foo')}
   }
 
@@ -194,7 +194,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.activateAccountAndCardService.findUser(*_) >> null
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(*_) >> null
     1 * controller.activateAccountAndCardService.fetchLadokData(*_) >> [enamn:'foo', tnamn:'kaka']
   }
 
@@ -220,7 +220,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo', accountIsActive: true)
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(*_) >> [new SvcSuPersonVO(uid:'foo', accountIsActive: true)]
     0 * controller.activateAccountAndCardService.fetchLadokData(*_)
     2 * controller.configService.getValue(_,_) >> { String arg1, String arg2 ->
       assert arg1 == "signup"
@@ -243,8 +243,26 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.activateAccountAndCardService.findUser(*_) >> new SvcSuPersonVO(uid:'foo', accountIsActive: false)
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(*_) >> [new SvcSuPersonVO(uid:'foo', accountIsActive: false)]
     1 * controller.activateAccountAndCardService.fetchLadokData(*_) >> [enamn:'enamn', tnamn:'tnamn']
+  }
+
+  def "index: When multiple users are found in sukat"() {
+    given:
+    request.norEduPersonNIN = '191102023333'
+
+    when:
+    controller.index()
+
+    then:
+    response.redirectedUrl == '/dashboard/index'
+
+    and:
+    flash.error == 'sukat.errors.multipleUsersForSSN'
+
+    and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
+    1 * controller.sukatService.findUsersBySocialSecurityNumber(*_) >> [new SvcSuPersonVO(), new SvcSuPersonVO()]
   }
 
   def "changeLanguage: test when the locale is sv_SE, should toggle to en_US"() {

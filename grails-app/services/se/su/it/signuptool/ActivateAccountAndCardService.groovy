@@ -57,19 +57,6 @@ class ActivateAccountAndCardService implements Serializable {
     return true
   }
 
-  public SvcSuPersonVO findUser(String pnr) {
-    SvcSuPersonVO user = null
-
-    if (!pnr) {
-      return user
-    }
-
-    user = sukatService.findUserBySocialSecurityNumber(pnr)
-
-    /** Return object could be empty, uid should mean we did get a hit. */
-    (user?.uid) ? user : null
-  }
-
   /**
    * The only time we should be fetching data from Ladok is when a student has no account
    * in SUKAT, the uid should thus be a socialSecurityNumber (10 chars)
