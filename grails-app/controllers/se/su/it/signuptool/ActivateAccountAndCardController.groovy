@@ -67,6 +67,9 @@ class ActivateAccountAndCardController {
       session.referenceId = eventLog?.id
     }
 
+    boolean hasUser = session.user
+    boolean stubUser = !session.user?.accountIsActive
+
     String scope = ''
 
     String uid = session.user?.uid
@@ -101,7 +104,7 @@ class ActivateAccountAndCardController {
     /**
      * If the user isn't already in the session we find it either by ssn or uid and put it in the session.
      */
-    if (!session.user) {
+    if (!hasUser) {
       try {
         List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(session.pnr)
 
@@ -115,6 +118,8 @@ class ActivateAccountAndCardController {
         SvcSuPersonVO user = vos?.first()
 
         if (user) {
+          hasUser = true
+          stubUser = !user?.accountIsActive
           session.user = user
           session.uid = user?.uid
         }
@@ -131,7 +136,8 @@ class ActivateAccountAndCardController {
     }
 
     /** If we still have no user in the session then this is a first time visit */
-    if (!session.user || !session.user.accountIsActive) {
+    if (!hasUser || stubUser) {
+
       eventLog.logEvent("First time visit for ${session.pnr}")
       /** See if we can find the new user in Ladok */
       Map ladokData = [:]
@@ -257,7 +263,9 @@ class ActivateAccountAndCardController {
           String forwardAddress = flow.forwardAddress
 
           if (session.user && !uid) {
-            throw new IllegalStateException("There is a user but the user has no uid, likely a broken stub.")
+            String msg = "There is a user but the user has no uid, likely a broken stub."
+            eventLog.logEvent(msg)
+            throw new IllegalStateException(msg)
           }
 
           if (!uid) {
