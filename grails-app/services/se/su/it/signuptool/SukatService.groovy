@@ -46,7 +46,6 @@ class SukatService implements Serializable {
   def accountWS
   def cardInfoWS
   def cardOrderWS
-  def enrollmentWS
   def statusWS
   def webAdminWS
 

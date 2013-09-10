@@ -21,7 +21,6 @@ class SukatServiceSpec extends Specification {
   @Before
   def setup() {
     service.accountWS     = Mock(AccountServiceImpl)
-    service.enrollmentWS  = Mock(EnrollmentServiceImpl)
     service.statusWS      = Mock(Status)
     service.webAdminWS    = Mock(WebServiceAdminImpl)
     service.cardOrderWS   = Mock(CardOrderServiceImpl)
