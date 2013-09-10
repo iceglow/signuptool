@@ -44,7 +44,7 @@ class EventLogEvent implements Serializable, Comparable {
   static belongsTo = EventLog
 
   static constraints = {
-    timeCreated(nullable:false, blank:false)
+    timeCreated(nullable:false)
     description(nullable:false, blank:false, maxSize: 2000)
   }
 

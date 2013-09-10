@@ -4,7 +4,6 @@ import grails.test.mixin.TestFor
 import org.junit.Before
 import se.su.it.svc.AccountServiceImpl
 import se.su.it.svc.CardOrderServiceImpl
-import se.su.it.svc.EnrollmentServiceImpl
 import se.su.it.svc.Status
 import se.su.it.svc.SvcAudit
 import se.su.it.svc.SvcCardOrderVO
@@ -21,7 +20,6 @@ class SukatServiceSpec extends Specification {
   @Before
   def setup() {
     service.accountWS     = Mock(AccountServiceImpl)
-    service.enrollmentWS  = Mock(EnrollmentServiceImpl)
     service.statusWS      = Mock(Status)
     service.webAdminWS    = Mock(WebServiceAdminImpl)
     service.cardOrderWS   = Mock(CardOrderServiceImpl)
