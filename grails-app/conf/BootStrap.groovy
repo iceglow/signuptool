@@ -61,16 +61,11 @@ class BootStrap {
         log.info "*** Localizations: Importing translations from i18n files into the database."
         def context = grailsApplication.mainContext
         def files = []
-        def languages = ['sv']
         def locale = "*" // rework this when we get more locales..
 
         files << [name:"messages.properties", locale:"*"]
         files << [name:"localizations.properties", locale:"*"]
         files << [name:"criteria.properties", locale:"*"]
-        for (lang in languages) {
-          /** Should do something more automatic here, like check what files we have in the directory and iterate over lang */
-          files << [name:"messages_${lang}.properties", locale:"$lang"]
-        }
 
         def counts = [imported: 0, skipped: 0, error: 0]
 
