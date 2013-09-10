@@ -4,7 +4,6 @@ import grails.test.mixin.TestFor
 import org.junit.Before
 import se.su.it.svc.AccountServiceImpl
 import se.su.it.svc.CardOrderServiceImpl
-import se.su.it.svc.EnrollmentServiceImpl
 import se.su.it.svc.Status
 import se.su.it.svc.SvcAudit
 import se.su.it.svc.SvcCardOrderVO
