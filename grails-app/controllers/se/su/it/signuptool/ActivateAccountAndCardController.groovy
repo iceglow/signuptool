@@ -247,14 +247,25 @@ class ActivateAccountAndCardController {
           return error()
         }
 
-
         SvcUidPwd result = null
 
         try {
-          String uid = sukatService.createSuPersonStub(session.givenName, session.sn, session.pnr,)
-          eventLog.logEvent("SuPerson stub created with uid=${uid}")
+          String givenName = session.givenName
+          String sn = session.sn
+          String pnr = session.pnr
+          String uid = session.user?.uid
+          String forwardAddress = flow.forwardAddress
 
-          sukatService.setMailRoutingAddress(uid, flow.forwardAddress)
+          if (session.user && !uid) {
+            throw new IllegalStateException("There is a user but the user has no uid, likely a broken stub.")
+          }
+
+          if (!uid) {
+            uid = sukatService.createSuPersonStub(givenName, sn, pnr)
+            eventLog.logEvent("SuPerson stub created with uid=${uid}")
+          }
+
+          sukatService.setMailRoutingAddress(uid, forwardAddress)
           eventLog.logEvent("MailRoutingAddress updated for uid=${uid}")
 
           result = sukatService.activateUser(uid)
