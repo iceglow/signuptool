@@ -45,8 +45,8 @@ class AdminController {
           eventLogs << eventLog
         }
         break
-      case "socialSecurityNumber":
-        eventLogs = EventLog.findAllBySocialSecurityNumber(searchText, [sort:'dateCreated', order:'desc'])
+      case "norEduPersonNIN":
+        eventLogs = EventLog.findAllByUserId(searchText, [sort:'dateCreated', order:'desc'])
         break
       default:
         break

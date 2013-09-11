@@ -55,4 +55,8 @@ class UtilityService {
   public EventLog getEventLog() {
     return new EventLog().save(flush:true)
   }
+
+  public String chompNinToSsn(String ssn) {
+    (ssn?.length() == 12) ? ssn[2..11] : ssn
+  }
 }

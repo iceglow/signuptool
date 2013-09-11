@@ -233,7 +233,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     def uid = 'uid'
     session.givenName = 'givenName'
     session.sn = 'sn'
-    session.pnr = 'socialSecurityNumber'
+    session.nin = 'socialSecurityNumber'
     flow.forwardAddress = 'mailRoutingAddress'
     def response = [uid:uid, password:'password']
 
@@ -245,7 +245,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     session.password == response.password
 
     and:
-    1 * controller.sukatService.createSuPersonStub(session.givenName,session.sn,session.pnr) >> uid
+    1 * controller.sukatService.createSuPersonStub(session.givenName,session.sn,session.nin) >> uid
 
     1 * controller.sukatService.setMailRoutingAddress(uid, flow.forwardAddress)
 
@@ -256,7 +256,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     given:
     session.givenName = 'givenName'
     session.sn = 'sn'
-    session.pnr = 'socialSecurityNumber'
+    session.nin = 'socialSecurityNumber'
 
     when:
     def resp = createNewAccountFlow.createAccount.action()
@@ -303,7 +303,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "orderCardFlow: test flow when user is found, has registered address and no cards or orders"() {
     given:
     session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
-    session.pnr = "1234567890"
+    session.nin = "1234567890"
 
 
     when:
@@ -319,7 +319,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: test when user is missing account, should log event and redirect to error page"() {
     given:
-    session.pnr = "1234567890"
+    session.nin = "1234567890"
 
 
     when:
@@ -334,7 +334,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "orderCardFlow: test when user has an account but is not allowed to order cards, should log event and redirect to error page"() {
     given:
     session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
-    session.pnr = "1234567890"
+    session.nin = "1234567890"
 
 
     when:

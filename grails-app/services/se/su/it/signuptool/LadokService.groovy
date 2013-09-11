@@ -40,45 +40,46 @@ class LadokService {
   static transactional = false
 
   def ladokDataSource
+  def utilityService
   def grailsApplication
 
-  public Map findStudentInLadok(String pnr) {
-    pnr = chompPnr(pnr)
+  public Map findStudentInLadok(String nin) {
+    String ssn = utilityService.chompNinToSsn(nin)
     Map response = [:]
 
-    log.debug "findStudentInLadok: Trying to find person with pnr $pnr"
+    log.debug "findStudentInLadok: Trying to find person with ssn $ssn"
     List<GroovyRowResult> responseList = doListQuery(
-        "SELECT enamn, tnamn FROM NAMN WHERE pnr = :pnr limit 1",
-        [pnr:pnr])
+        "SELECT enamn, tnamn FROM NAMN WHERE pnr = :ssn limit 1",
+        [ssn:ssn])
 
     if (responseList?.size() > 0) {
-      log.debug "findStudentInLadok: Found person with pnr $pnr in Ladok."
+      log.debug "findStudentInLadok: Found person with ssn $ssn in Ladok."
       return responseList.first()
     }
 
-    log.debug "findStudentInLadok: Found no person with pnr $pnr in Ladok."
+    log.debug "findStudentInLadok: Found no person with ssn $ssn in Ladok."
     return response
   }
 
-  public String findForwardAddressSuggestionForPnr(String pnr) {
-    pnr = chompPnr(pnr)
+  public String findForwardAddressSuggestionForPnr(String nin) {
+    String ssn = utilityService.chompNinToSsn(nin)
     String response = ''
-    log.debug "findForwardAddressSuggestionForPnr: Querying address for person with pnr $pnr in Ladok."
+    log.debug "findForwardAddressSuggestionForPnr: Querying address for person with ssn $ssn in Ladok."
 
     List<GroovyRowResult> responseList = doListQuery(
-        "SELECT komadr FROM telekom WHERE pnr = :pnr AND komtyp = 'EMAIL' limit 1",
-        [pnr:pnr])
+        "SELECT komadr FROM telekom WHERE pnr = :ssn AND komtyp = 'EMAIL' limit 1",
+        [ssn:ssn])
 
     if (responseList?.size() > 0) {
       def address = responseList?.first()?.komadr
 
       if (address) {
-        log.debug "findForwardAddressSuggestionForPnr: Found address for person with pnr $pnr in Ladok: $address"
+        log.debug "findForwardAddressSuggestionForPnr: Found address for person with ssn $ssn in Ladok: $address"
         return address
       }
     }
 
-    log.debug "findForwardAddressSuggestionForPnr: Found no address for person with pnr $pnr in Ladok."
+    log.debug "findForwardAddressSuggestionForPnr: Found no address for person with ssn $ssn in Ladok."
     return response
   }
 
@@ -89,15 +90,15 @@ class LadokService {
    * @param pnr - social security number.
    * @return An address from ladok.
    */
-  public Map getAddressFromLadokByPnr(String pnr) {
-    pnr = chompPnr(pnr)
+  public Map getAddressFromLadokByPnr(String nin) {
+    String ssn = utilityService.chompNinToSsn(nin)
     boolean useTemporaryAddress = grailsApplication.config.useTemporaryAddress ?: true
 
     HashMap address
 
     List addresses = doListQuery(
-        "SELECT * FROM ADRESS WHERE pnr = :pnr",
-        [pnr:pnr]
+        "SELECT * FROM ADRESS WHERE pnr = :ssn",
+        [ssn:ssn]
     )
 
     HashMap temporaryAddress = addresses?.find { it.adrtyp == "2" } as HashMap
@@ -149,9 +150,4 @@ class LadokService {
     }
     return response
   }
-
-  private static String chompPnr(String pnr) {
-    (pnr?.length() == 12) ? pnr[2..11] : pnr
-  }
-
 }

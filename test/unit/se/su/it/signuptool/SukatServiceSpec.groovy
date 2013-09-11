@@ -19,18 +19,21 @@ class SukatServiceSpec extends Specification {
 
   @Before
   def setup() {
-    service.accountWS     = Mock(AccountServiceImpl)
-    service.statusWS      = Mock(Status)
-    service.webAdminWS    = Mock(WebServiceAdminImpl)
-    service.cardOrderWS   = Mock(CardOrderServiceImpl)
+    service.accountWS       = Mock(AccountServiceImpl)
+    service.statusWS        = Mock(Status)
+    service.webAdminWS      = Mock(WebServiceAdminImpl)
+    service.cardOrderWS     = Mock(CardOrderServiceImpl)
+    service.utilityService  = Mock(UtilityService)
 
     GroovyMock(AuditFactory, global: true)
     AuditFactory.auditObject >> new SvcAudit()
   }
 
   def "findUserBySocialSecurityNumber"() {
+    given:
+    def ssn = '8008080000'
     when:
-    def resp = service.findUsersBySocialSecurityNumber('8008080000')
+    def resp = service.findUsersBySocialSecurityNumber(ssn)
 
     then:
     resp instanceof List
@@ -38,18 +41,23 @@ class SukatServiceSpec extends Specification {
 
     and:
     1 * service.accountWS.findAllSuPersonsBySocialSecurityNumber(*_) >> { return [new SvcSuPersonVO(givenName:'kaka')] }
+    1 * service.utilityService.chompNinToSsn(ssn)
   }
 
 
   def "findUserBySocialSecurityNumber: On error returns null"() {
+    given:
+    def ssn = '8008080000'
+
     when:
-    service.findUsersBySocialSecurityNumber('8008080000')
+    service.findUsersBySocialSecurityNumber(ssn)
 
     then:
     thrown(Exception)
 
     and:
     1 * service.accountWS.findAllSuPersonsBySocialSecurityNumber(*_) >> { throw new RuntimeException('foo') }
+    1 * service.utilityService.chompNinToSsn(ssn)
   }
 
   def "createCardOrderVO: when supplied user is null"() {
@@ -109,6 +117,9 @@ class SukatServiceSpec extends Specification {
     def uid = 'gisn1234'
     def spy = Spy(SukatService)
     spy.accountWS = service.accountWS
+    spy.utilityService = Mock(UtilityService) {
+      1 * chompNinToSsn(ssn) >> ssn
+    }
 
     when:
     def res = spy.createSuPersonStub(givenName, sn, ssn)

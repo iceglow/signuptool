@@ -33,7 +33,7 @@ package se.su.it.signuptool
 
 class EventLog implements Serializable {
 
-  String socialSecurityNumber
+  String userId
 
   Date dateCreated
   Date lastUpdated
@@ -43,7 +43,7 @@ class EventLog implements Serializable {
   static hasMany = [events:EventLogEvent]
 
   static constraints = {
-    socialSecurityNumber (nullable: true)
+    userId(nullable:true, blank:false)
   }
 
   static mapping = {

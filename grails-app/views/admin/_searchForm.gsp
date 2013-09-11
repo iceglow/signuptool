@@ -35,10 +35,10 @@
   <g:radioGroup
       values="[
           'referenceId',
-          'socialSecurityNumber'
+          'norEduPersonNIN'
       ]" labels="[
       g.message(code:'admin.searchFor.referenceId'),
-      g.message(code:'admin.searchFor.socialSecurityNumber')
+      g.message(code:'admin.searchFor.norEduPersonNIN')
   ]" name="searchFor" value="referenceId">
     <p>${it.radio} ${it.label}</p>
   </g:radioGroup>

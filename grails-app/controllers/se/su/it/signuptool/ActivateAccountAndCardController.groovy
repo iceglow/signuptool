@@ -74,14 +74,14 @@ class ActivateAccountAndCardController {
 
     String uid = session.user?.uid
 
-    if (!session.pnr) {
+    if (!session.nin) {
       scope = utilityService.getScopeFromEppn(request.eppn)
 
       switch(scope) {
         case "studera.nu":
           if (request.norEduPersonNIN) {
-            session.pnr = request.norEduPersonNIN
-            eventLog.logEvent("verified account for ${request.eppn}, pnr set to ${session.pnr} from norEduPersonNIN")
+            session.nin = request.norEduPersonNIN
+            eventLog.logEvent("verified account for ${request.eppn}, nin set to ${session.nin} from norEduPersonNIN")
           } else {
             eventLog.logEvent("unverified account for ${request.eppn}")
             return render(view:'/shared/unverifiedAccount', model:[referenceId:eventLog?.id])
@@ -96,8 +96,8 @@ class ActivateAccountAndCardController {
       }
     }
 
-    if (!eventLog?.socialSecurityNumber) {
-      eventLog.socialSecurityNumber = session.pnr
+    if (!eventLog?.userId) {
+      eventLog.userId = session.nin
       eventLog.save(flush:true)
     }
 
@@ -106,11 +106,12 @@ class ActivateAccountAndCardController {
      */
     if (!hasUser) {
       try {
-        List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(session.pnr)
+        List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(session.nin)
 
         if (vos?.size() > 1) {
-          eventLog.logEvent "Found multiple accounts with social security number ${session.pnr}. Aborting activation."
-          log.error "Found multiple accounts with social security number ${session.pnr}. Aborting activation."
+          String msg = "Found multiple accounts with social security number based on norEduPersonNIN: ${session.nin}. Aborting activation."
+          eventLog.logEvent(msg)
+          log.error msg
           flash.error = g.message(code:'sukat.errors.multipleUsersForSSN')
           return redirect(controller:'dashboard', action:'index')
         }
@@ -129,7 +130,7 @@ class ActivateAccountAndCardController {
         log.error "Failed when setting user in session", ex
         flash.error = message(
             code:'activateAccountAndCardController.errorWhenFetchingUser',
-            args:[session.pnr]) as String
+            args:[session.nin]) as String
 
         return redirect(controller:'dashboard', action:'index')
       }
@@ -138,22 +139,22 @@ class ActivateAccountAndCardController {
     /** If we still have no user in the session then this is a first time visit */
     if (!hasUser || stubUser) {
 
-      eventLog.logEvent("First time visit for ${session.pnr}")
+      eventLog.logEvent("First time visit for ${session.nin}")
       /** See if we can find the new user in Ladok */
       Map ladokData = [:]
 
       try {
-        ladokData = activateAccountAndCardService.fetchLadokData(session.pnr)
+        ladokData = activateAccountAndCardService.fetchLadokData(session.nin)
       } catch (ex) {
-        eventLog.logEvent("Failed when fetching ladokData for uid: $session.pnr")
-        log.error "Failed when fetching ladokData for uid: $session.pnr", ex
+        eventLog.logEvent("Failed when fetching ladokData for uid: $session.nin")
+        log.error "Failed when fetching ladokData for uid: $session.nin", ex
 
         flash.error = message(code: "activateAccountAndCardController.errorWhenContactingLadok")
         return redirect(controller:'dashboard', action:'index')
       }
 
       if (!ladokData) {
-        eventLog.logEvent("User ${session.pnr} not found in ladok")
+        eventLog.logEvent("User ${session.nin} not found in ladok")
         return render(view:'userNotFoundInLadok', model:[referenceId:eventLog?.id])
       }
 
@@ -161,14 +162,14 @@ class ActivateAccountAndCardController {
       session.givenName = ladokData.tnamn
       session.sn = ladokData.enamn
 
-      eventLog.logEvent("Account for user with pnr: ${session.pnr} not found in SUKAT, starting create user account flow.")
+      eventLog.logEvent("Account for user with nin: ${session.nin} not found in SUKAT, starting create user account flow.")
 
       return redirect(action:'createNewAccount')
     }
 
     String lpwurl = configService.getValue("signup", "lpwtool")
     String sukaturl = configService.getValue("signup", "sukattool")
-    eventLog.logEvent("Found account with pnr: ${session.pnr} and uid: ${session.uid} in SUKAT, displaying information.")
+    eventLog.logEvent("Found account with nin: ${session.nin} and uid: ${session.uid} in SUKAT, displaying information.")
 
     return render(view:'index', model:[
         uid:session?.user?.uid,
@@ -194,7 +195,7 @@ class ActivateAccountAndCardController {
         String forwardAddress = ''
         /** Even if fetching forward address fails we should not fail here. */
         try {
-          forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String) session.pnr)
+          forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String) session.nin)
         } catch (ex) {
           eventLog.logEvent("Failed when fetching forward address from Ladok: ${ex?.message}")
           log.error "Fetching forward address from LADOK failed.", ex
@@ -231,7 +232,7 @@ class ActivateAccountAndCardController {
 
         if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
           flow.error = g.message(code:'activateAccountAndCardController.errors.notHavingSuppliedValidForwardAddress')
-          eventLog.logEvent("Invalid email for ${session.pnr}: ${flow.forwardAddress}")
+          eventLog.logEvent("Invalid email for ${session.nin}: ${flow.forwardAddress}")
           return retry()
         }
       }
@@ -258,7 +259,7 @@ class ActivateAccountAndCardController {
         try {
           String givenName = session.givenName
           String sn = session.sn
-          String pnr = session.pnr
+          String nin = session.nin
           String uid = session.user?.uid
           String forwardAddress = flow.forwardAddress
 
@@ -269,7 +270,7 @@ class ActivateAccountAndCardController {
           }
 
           if (!uid) {
-            uid = sukatService.createSuPersonStub(givenName, sn, pnr)
+            uid = sukatService.createSuPersonStub(givenName, sn, nin)
             eventLog.logEvent("SuPerson stub created with uid=${uid}")
           }
 
