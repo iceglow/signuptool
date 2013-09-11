@@ -49,6 +49,8 @@ class SukatService implements Serializable {
   def statusWS
   def webAdminWS
 
+  def utilityService
+
   public static final DEFAULT_DOMAIN = "student.su.se"
   public static final DEFAULT_AFFILATION = "other"
   private final CARD_ORDER_STATUSES_TO_SKIP = ["DISCARDED", "WRITTEN_TO_SUKAT"]
@@ -102,11 +104,13 @@ class SukatService implements Serializable {
     return suCards
   }
 
-  public List<SvcSuPersonVO> findUsersBySocialSecurityNumber(String pnr) {
+  public List<SvcSuPersonVO> findUsersBySocialSecurityNumber(String nin) {
+    String ssn = utilityService.chompNinToSsn(nin)
+
     List<SvcSuPersonVO> suPersons
 
     try {
-      suPersons = accountWS.findAllSuPersonsBySocialSecurityNumber(pnr, AuditFactory.auditObject)
+      suPersons = accountWS.findAllSuPersonsBySocialSecurityNumber(ssn, AuditFactory.auditObject)
     } catch (ex) {
       log.error "Failed when finding user by ssn in SUKAT.", ex
       throw ex
@@ -146,7 +150,8 @@ class SukatService implements Serializable {
    * @param ssn the social security number
    * @return the uid of the stub
    */
-  public String createSuPersonStub(String givenName, String sn, String ssn) {
+  public String createSuPersonStub(String givenName, String sn, String nin) {
+    String ssn = utilityService.chompNinToSsn(nin)
     String uid = generateStudentUid(givenName, sn)
 
     accountWS.createSuPerson(uid, givenName, sn, ssn, AuditFactory.auditObject)
@@ -160,7 +165,7 @@ class SukatService implements Serializable {
    * @param uid the user to update mailRoutingAddress for
    * @param mail the new mailRoutingAddress
    */
-  void setMailRoutingAddress(String uid, String mail) {
+  public void setMailRoutingAddress(String uid, String mail) {
     accountWS.setMailRoutingAddress(uid, mail, AuditFactory.auditObject)
   }
 
@@ -170,7 +175,7 @@ class SukatService implements Serializable {
    * @param uid
    * @return a SvcUidPwd containing the username and password of the activated account.
    */
-  SvcUidPwd activateUser(String uid) {
+  public SvcUidPwd activateUser(String uid) {
     return accountWS.activateSuPerson(uid, DEFAULT_DOMAIN, [DEFAULT_AFFILATION], AuditFactory.auditObject)
   }
 

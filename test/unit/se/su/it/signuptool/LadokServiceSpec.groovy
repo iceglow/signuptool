@@ -34,12 +34,8 @@ package se.su.it.signuptool
 import grails.test.mixin.TestFor
 import groovy.sql.Sql
 import javax.sql.DataSource
-import spock.lang.IgnoreRest
-import spock.lang.Specification
-import spock.lang.Unroll
 
-import java.sql.SQLException
-import java.text.SimpleDateFormat
+import spock.lang.Specification
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
@@ -56,6 +52,7 @@ class LadokServiceSpec extends Specification {
    */
 
   def setup() {
+    service.utilityService  = Mock(UtilityService)
     service.ladokDataSource = Mock(DataSource)
   }
 
@@ -67,16 +64,20 @@ class LadokServiceSpec extends Specification {
     given:
     def arg1 = 'tnamn'
     def arg2 = 'enamn'
+    def ssn = "1234567890"
 
     LadokService.metaClass.doListQuery = { String iarg1, Map iarg2 ->
       return null
     }
 
     when:
-    def resp = service.findStudentInLadok("1234567890")
+    def resp = service.findStudentInLadok(ssn)
 
     then:
     !resp
+
+    and:
+    1 * service.utilityService.chompNinToSsn(ssn)
   }
 
   void "findStudentInLadok: When a student is found."() {
@@ -84,32 +85,40 @@ class LadokServiceSpec extends Specification {
 
     def arg1 = 'tnamn'
     def arg2 = 'enamn'
+    def ssn = "1234567890"
 
     LadokService.metaClass.doListQuery = { String iarg1, Map iarg2 ->
       return [[arg1:arg1, arg2:arg2]]
     }
 
     when:
-    def resp = service.findStudentInLadok("1234567890")
+    def resp = service.findStudentInLadok(ssn)
 
     then:
     resp.arg1 == arg1
     resp.arg2 == arg2
+
+    and:
+    1 * service.utilityService.chompNinToSsn(ssn)
   }
 
   void "findForwardAddressSuggestionForPnr: When fetching forward address"() {
     given:
     def arg1 = 'foo@bar.se'
+    def ssn = "..."
 
     LadokService.metaClass.doListQuery = { String iarg1, Map iarg2 ->
       return [[komadr:arg1]]
     }
 
     when:
-    def resp = service.findForwardAddressSuggestionForPnr('...')
+    def resp = service.findForwardAddressSuggestionForPnr(ssn)
 
     then:
     resp == arg1
+
+    and:
+    1 * service.utilityService.chompNinToSsn(ssn)
   }
 
   void "withConnection: When creating a new sql connection fails"() {
@@ -159,6 +168,8 @@ class LadokServiceSpec extends Specification {
 
   void "getAddressFromLadokByPnr: happy path without tempaddress"() {
     given:
+
+    def ssn = "1234567890"
     Date now = new Date()
 
     service.metaClass.doListQuery = { String query, Map map ->
@@ -166,24 +177,15 @@ class LadokServiceSpec extends Specification {
     }
 
     when:
-    Map address = service.getAddressFromLadokByPnr("1234567890")
+    Map address = service.getAddressFromLadokByPnr(ssn)
 
     then:
     address
 
     and:
     address.ort == 'farsta'
-  }
-  @Unroll
-  void "chompPnr: When given pnr: \'#pnr\' we expect '\'#expected\'"() {
-    expect:
-    LadokService.chompPnr(pnr)
 
-    where:
-    pnr             | expected
-    '***********'   | '***********'   // 11 chars, nothing happens.
-    '++**********'  | '*********'     // 12 chars, first 2 chars should be cut.
-    '++***********' | '++***********' // 13 chars, nothing happens.
+    and:
+    1 * service.utilityService.chompNinToSsn(ssn)
   }
-
 }

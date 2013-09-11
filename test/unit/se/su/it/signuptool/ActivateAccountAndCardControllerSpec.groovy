@@ -77,7 +77,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
   }
 
-  def "index: Test unhandled scope when users pnr is not in the session."() {
+  def "index: Test unhandled scope when users nin is not in the session."() {
     when:
     controller.index()
 
@@ -118,9 +118,9 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.utilityService.getEventLog(*_) >> { throw new RuntimeException("Booom!") }
   }
 
-  def "index: Testing when pnr is already in the session."() {
+  def "index: Testing when nin is already in the session."() {
     given:
-    session.pnr = 'socialSecurityNumber'
+    session.nin = 'socialSecurityNumber'
 
     when:
     controller.index()
@@ -132,7 +132,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     0 * controller.utilityService.getScopeFromEppn(*_)
   }
 
-  def "index: When pnr is set in the session but finding the user throws an exception."() {
+  def "index: When nin is set in the session but finding the user throws an exception."() {
     given:
     request.norEduPersonNIN = '191102023333'
 

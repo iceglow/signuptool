@@ -33,7 +33,6 @@ package se.su.it.signuptool
 
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -93,5 +92,15 @@ class UtilityServiceSpec extends Specification {
     expect:
     service.getEventLog(id) instanceof EventLog
   }
+  @Unroll
+  void "chompNinToSsn: When given nin: \'#ssn\' we expect '\'#expected\'"() {
+    expect:
+    service.chompNinToSsn(nin)
 
+    where:
+    nin             | expected
+    '***********'   | '***********'   // 11 chars, nothing happens.
+    '++**********'  | '*********'     // 12 chars, first 2 chars should be cut.
+    '++***********' | '++***********' // 13 chars, nothing happens.
+  }
 }
