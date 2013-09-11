@@ -65,12 +65,12 @@ class  AdminControllerSpec extends Specification {
 
   def "search: test search for 'socialSecurityNumber', should render search result template and return collection of event log"() {
     given:
-    def searchFor = 'socialSecurityNumber'
+    def searchFor = 'norEduPersonNIN'
     def searchText = '191212121212'
     def mockViewData = "viewData"
 
     def logEvent = EventLogEvent.build().save(flush: true)
-    def log = EventLog.build(socialSecurityNumber: searchText).save(flush: true)
+    def log = EventLog.build(userId: searchText).save(flush: true)
     log.addToEvents(logEvent)
 
     views['/admin/_searchResults.gsp'] = mockViewData

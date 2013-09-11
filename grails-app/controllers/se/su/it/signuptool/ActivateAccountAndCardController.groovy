@@ -96,8 +96,8 @@ class ActivateAccountAndCardController {
       }
     }
 
-    if (!eventLog?.socialSecurityNumber) {
-      eventLog.socialSecurityNumber = session.nin
+    if (!eventLog?.userId) {
+      eventLog.userId = session.nin
       eventLog.save(flush:true)
     }
 
@@ -109,8 +109,9 @@ class ActivateAccountAndCardController {
         List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(session.nin)
 
         if (vos?.size() > 1) {
-          eventLog.logEvent "Found multiple accounts with social security number ${session.nin}. Aborting activation."
-          log.error "Found multiple accounts with social security number ${session.nin}. Aborting activation."
+          String msg = "Found multiple accounts with social security number based on norEduPersonNIN: ${session.nin}. Aborting activation."
+          eventLog.logEvent(msg)
+          log.error msg
           flash.error = g.message(code:'sukat.errors.multipleUsersForSSN')
           return redirect(controller:'dashboard', action:'index')
         }

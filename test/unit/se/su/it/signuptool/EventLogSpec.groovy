@@ -53,7 +53,7 @@ class EventLogSpec extends Specification {
   def cleanup() {
   }
 
-  void "Test socialSecurityNumber constraint"() {
+  void "Test nin constraint"() {
     when:
     eventLog.validate()
 
@@ -61,11 +61,19 @@ class EventLogSpec extends Specification {
     !eventLog.hasErrors()
 
     when:
-    eventLog.socialSecurityNumber == 'foo'
+    eventLog.userId == 'foo'
     eventLog.validate()
 
     then:
     !eventLog.hasErrors()
+
+    when:
+    eventLog.userId = ''
+    eventLog.validate()
+
+    then:
+    eventLog.errors["userId"] == "blank"
+
   }
 
   void "Test adding and removing events"() {
