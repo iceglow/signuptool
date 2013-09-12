@@ -35,7 +35,7 @@ grails.project.dependency.resolution = {
     compile 'se.su.it.ws.commons:su-ws-commons:1.5'
     compile 'se.su.it.sukat.svc:sukatsvc-client:1.7'
     compile 'se.su.it.sucard.svc:sucardsvc-client:1.2'
-    compile 'se.su.it.lpw:su-lpw-client:2013_1'
+    compile 'se.su.it.lpw:su-lpw-client:2013_3'
     compile 'se.su.it.tickethandler:su-lpw-tickethandler:1.0'
     compile 'javax.mail:mail:1.4'
     compile 'commons-logging:commons-logging:1.1.1'
