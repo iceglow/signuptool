@@ -31,13 +31,12 @@
 
 package se.su.it.signuptool
 
+import org.apache.commons.collections.Predicate
+import se.su.it.commons.PrincipalUtils
 import se.su.it.svc.SuCard
 import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
-
-import org.apache.commons.collections.Predicate
-import se.su.it.commons.PrincipalUtils
 
 class SukatService implements Serializable {
   /** Needed if we want to use this service in the flow. */
@@ -111,16 +110,16 @@ class SukatService implements Serializable {
    */
   public String generateStudentUid(String givenName, String sn) {
     String uid = PrincipalUtils.suniqueUID(givenName, sn, new Predicate() {
-          public boolean evaluate(Object object) {
-            try {
-              /* When the search returns null (ie the ) we return true */
-              return null == accountWS.findSuPersonByUid((String) object, AuditFactory.auditObject)
-            } catch (ex) {
-              log.error "Failed when getting SuPerson from GID", ex
-              return false
-            }
-          }
-        })
+      public boolean evaluate(Object object) {
+        try {
+          /* When the search returns null (ie the ) we return true */
+          return null == accountWS.findSuPersonByUid((String) object, AuditFactory.auditObject)
+        } catch (ex) {
+          log.error "Failed when getting SuPerson from GID", ex
+          return false
+        }
+      }
+    })
 
     log.debug "Returning $uid for user with name $givenName $sn"
     return uid
