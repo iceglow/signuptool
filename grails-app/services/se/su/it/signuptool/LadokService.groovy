@@ -43,7 +43,7 @@ class LadokService {
   def utilityService
   def grailsApplication
 
-  public Map findStudentInLadok(String nin) {
+  public Map findStudentInLadok(String nin) throws Exception {
     String ssn = utilityService.chompNinToSsn(nin)
     Map response = [:]
 
@@ -61,7 +61,7 @@ class LadokService {
     return response
   }
 
-  public String findForwardAddressSuggestionForPnr(String nin) {
+  public String findForwardAddressSuggestionForPnr(String nin) throws Exception {
     String ssn = utilityService.chompNinToSsn(nin)
     String response = ''
     log.debug "findForwardAddressSuggestionForPnr: Querying address for person with ssn $ssn in Ladok."
@@ -90,7 +90,7 @@ class LadokService {
    * @param pnr - social security number.
    * @return An address from ladok.
    */
-  public Map getAddressFromLadokByPnr(String nin) {
+  public Map getAddressFromLadokByPnr(String nin) throws Exception {
     String ssn = utilityService.chompNinToSsn(nin)
     boolean useTemporaryAddress = grailsApplication.config.useTemporaryAddress ?: true
 
@@ -131,7 +131,7 @@ class LadokService {
     return withConnection(queryClosure)
   }
 
-  private withConnection (Closure query) {
+  private withConnection(Closure query) throws Exception {
     def response = null
     Sql sql = null
     try {

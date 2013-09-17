@@ -63,7 +63,15 @@ class ResetPasswordController {
         return redirect(controller:'dashboard', action:'index')
     }
 
-    List<SvcSuPersonVO> users = sukatService.findUsersBySocialSecurityNumber(session.nin)
+    List<SvcSuPersonVO> users = []
+
+    try {
+      users = sukatService.findUsersBySocialSecurityNumber(session.nin)
+    } catch (ex) {
+      log.error "Failed to fetch user using social security number ${session.nin}", ex
+      flash.error = g.message(code:'sukat.errors.errorWhenFetchingUser')
+      return redirect(controller:'dashboard', action:'index')
+    }
 
     if (users?.size() > 1) {
       eventLog.logEvent "Found multiple accounts with social security number ${session.nin}. Aborting password reset."
@@ -101,7 +109,8 @@ class ResetPasswordController {
         }
 
         try {
-          flash.password = sukatService.resetPassword(session?.user?.uid)
+          String uid = session?.user?.uid
+          flash.password = sukatService.resetPassword(uid)
           flash.uid = session.user?.uid
         } catch (ex) {
           flow.error = g.message(code:'resetPassword.errors.passwordResetFailed')
@@ -117,7 +126,7 @@ class ResetPasswordController {
     errorHandler {
       action {
         if (flash.stateException) {
-          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException
+          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException as Throwable
         }
       }
       on("success").to("errorPage")

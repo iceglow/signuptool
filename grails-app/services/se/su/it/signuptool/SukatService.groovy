@@ -31,13 +31,12 @@
 
 package se.su.it.signuptool
 
+import org.apache.commons.collections.Predicate
+import se.su.it.commons.PrincipalUtils
 import se.su.it.svc.SuCard
 import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
-
-import org.apache.commons.collections.Predicate
-import se.su.it.commons.PrincipalUtils
 
 class SukatService implements Serializable {
   /** Needed if we want to use this service in the flow. */
@@ -55,12 +54,105 @@ class SukatService implements Serializable {
   public static final DEFAULT_AFFILATION = "other"
   private final CARD_ORDER_STATUSES_TO_SKIP = ["DISCARDED", "WRITTEN_TO_SUKAT"]
 
-  public String orderCard(SvcSuPersonVO user, Map ladokAddress) {
+  public String orderCard(SvcSuPersonVO user, Map ladokAddress) throws Exception {
     SvcCardOrderVO cardOrderVO = createCardOrderVO(user, ladokAddress)
     return cardOrderWS.orderCard(cardOrderVO, AuditFactory.auditObject)
   }
 
-  private static SvcCardOrderVO createCardOrderVO(SvcSuPersonVO user, Map ladokAddress) {
+  public List<SvcCardOrderVO> getCardOrdersForUser(String uid) throws Exception {
+    // call sukatsvc to fetch cardorders for user , something like findAllCardOrdersForUid in the CardOrderService
+    List<SvcCardOrderVO> cardOrders = cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
+
+    if (!cardOrders) {
+      return []
+    }
+
+    cardOrders.removeAll { (it?.value in CARD_ORDER_STATUSES_TO_SKIP) }
+
+    return cardOrders
+  }
+
+  public List<SuCard> getCardsForUser(String uid) throws Exception {
+    return cardInfoWS.getAllCards(uid, true, AuditFactory.auditObject)
+  }
+
+  public List<SvcSuPersonVO> findUsersBySocialSecurityNumber(String nin) throws Exception {
+    String ssn = utilityService.chompNinToSsn(nin)
+    return accountWS.findAllSuPersonsBySocialSecurityNumber(ssn, AuditFactory.auditObject)
+  }
+
+  /**
+   * Generate a new student uid, check against svc for uniqueness
+   *
+   * @param givenName the giveNname to base the new uid on
+   * @param sn the sn to base the new uid on
+   * @return a new uid
+   */
+  public String generateStudentUid(String givenName, String sn) {
+    String uid = PrincipalUtils.suniqueUID(givenName, sn, new Predicate() {
+      public boolean evaluate(Object object) {
+        try {
+          /* When the search returns null (ie the ) we return true */
+          return null == accountWS.findSuPersonByUid((String) object, AuditFactory.auditObject)
+        } catch (ex) {
+          log.error "Failed when getting SuPerson from GID", ex
+          return false
+        }
+      }
+    })
+
+    log.debug "Returning $uid for user with name $givenName $sn"
+    return uid
+  }
+
+  /**
+   * Create a SuPerson stub in SUKAT
+   *
+   * @param givenName the given name
+   * @param sn the surname
+   * @param ssn the social security number
+   * @return the uid of the stub
+   */
+  public String createSuPersonStub(String givenName, String sn, String nin) throws Exception {
+    String ssn = utilityService.chompNinToSsn(nin)
+    String uid = generateStudentUid(givenName, sn)
+
+    accountWS.createSuPerson(uid, givenName, sn, ssn, AuditFactory.auditObject)
+
+    return uid
+  }
+
+  /**
+   * Set a new mailRoutingAddress on a user account
+   *
+   * @param uid the user to update mailRoutingAddress for
+   * @param mail the new mailRoutingAddress
+   */
+  public void setMailRoutingAddress(String uid, String mail) throws Exception {
+    accountWS.setMailRoutingAddress(uid, mail, AuditFactory.auditObject)
+  }
+
+  /**
+   * Activate a user account
+   *
+   * @param uid
+   * @return a SvcUidPwd containing the username and password of the activated account.
+   */
+  public SvcUidPwd activateUser(String uid) throws Exception {
+    return accountWS.activateSuPerson(uid, DEFAULT_DOMAIN, [DEFAULT_AFFILATION], AuditFactory.auditObject)
+  }
+
+  /**
+   * Reset the password for a user account
+   *
+   * @param uid
+   * @return the new password
+   */
+  public String resetPassword(String uid) throws Exception {
+    return accountWS.resetPassword(uid, AuditFactory.auditObject)
+  }
+
+  private static SvcCardOrderVO createCardOrderVO(SvcSuPersonVO user, Map ladokAddress) throws Exception {
     if (user == null) {
       throw new IllegalArgumentException('user is null')
     }
@@ -78,114 +170,5 @@ class SukatService implements Serializable {
     cardOrderVO.zipcode = ladokAddress?.postnr
     cardOrderVO.locality = ladokAddress?.ort
     return cardOrderVO
-  }
-
-  public List<SvcCardOrderVO> getCardOrdersForUser(String uid) {
-    // call sukatsvc to fetch cardorders for user , something like findAllCardOrdersForUid in the CardOrderService
-    List<SvcCardOrderVO> cardOrders = cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
-
-    if (!cardOrders) {
-      return []
-    }
-
-    cardOrders.removeAll { (it?.value in CARD_ORDER_STATUSES_TO_SKIP) }
-
-    return cardOrders
-  }
-
-  public List<SuCard> getCardsForUser(String uid) {
-    List<SuCard> suCards = []
-    try {
-      suCards = cardInfoWS.getAllCards(uid, true, AuditFactory.auditObject)
-    } catch (Throwable exception) {
-      log.error "Failed when getting info about users cards: ${exception.getMessage()}", exception
-      suCards = []
-    }
-    return suCards
-  }
-
-  public List<SvcSuPersonVO> findUsersBySocialSecurityNumber(String nin) {
-    String ssn = utilityService.chompNinToSsn(nin)
-
-    List<SvcSuPersonVO> suPersons
-
-    try {
-      suPersons = accountWS.findAllSuPersonsBySocialSecurityNumber(ssn, AuditFactory.auditObject)
-    } catch (ex) {
-      log.error "Failed when finding user by ssn in SUKAT.", ex
-      throw ex
-    }
-
-    return suPersons
-  }
-
-  /**
-   * Generate a new student uid, check against svc for uniqueness
-   *
-   * @param givenName the giveNname to base the new uid on
-   * @param sn the sn to base the new uid on
-   * @return a new uid
-   */
-  public String generateStudentUid(String givenName, String sn) {
-    String uid = PrincipalUtils.suniqueUID(givenName, sn, new Predicate() {
-          public boolean evaluate(Object object) {
-            try {
-              return accountWS.findSuPersonByUid((String) object, AuditFactory.auditObject) == null
-            } catch (ex) {
-              log.error "Failed when getting SuPerson from GID", ex
-              return false
-            }
-          }
-        })
-
-    log.debug "Returning $uid for user with name $givenName $sn"
-    return uid
-  }
-
-  /**
-   * Create a SuPerson stub in SUKAT
-   *
-   * @param givenName the given name
-   * @param sn the surname
-   * @param ssn the social security number
-   * @return the uid of the stub
-   */
-  public String createSuPersonStub(String givenName, String sn, String nin) {
-    String ssn = utilityService.chompNinToSsn(nin)
-    String uid = generateStudentUid(givenName, sn)
-
-    accountWS.createSuPerson(uid, givenName, sn, ssn, AuditFactory.auditObject)
-
-    return uid
-  }
-
-  /**
-   * Set a new mailRoutingAddress on a user account
-   *
-   * @param uid the user to update mailRoutingAddress for
-   * @param mail the new mailRoutingAddress
-   */
-  public void setMailRoutingAddress(String uid, String mail) {
-    accountWS.setMailRoutingAddress(uid, mail, AuditFactory.auditObject)
-  }
-
-  /**
-   * Activate a user account
-   *
-   * @param uid
-   * @return a SvcUidPwd containing the username and password of the activated account.
-   */
-  public SvcUidPwd activateUser(String uid) {
-    return accountWS.activateSuPerson(uid, DEFAULT_DOMAIN, [DEFAULT_AFFILATION], AuditFactory.auditObject)
-  }
-
-  /**
-   * Reset the password for a user account
-   *
-   * @param uid
-   * @return the new password
-   */
-  public String resetPassword(String uid) {
-    return accountWS.resetPassword(uid, AuditFactory.auditObject)
   }
 }

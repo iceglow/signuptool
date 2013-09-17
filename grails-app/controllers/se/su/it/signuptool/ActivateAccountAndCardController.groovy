@@ -75,7 +75,7 @@ class ActivateAccountAndCardController {
     String uid = session.user?.uid
 
     if (!session.nin) {
-      scope = utilityService.getScopeFromEppn(request.eppn)
+      scope = utilityService.getScopeFromEppn(request.eppn as String)
 
       switch(scope) {
         case "studera.nu":
@@ -106,7 +106,7 @@ class ActivateAccountAndCardController {
      */
     if (!hasUser) {
       try {
-        List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(session.nin)
+        List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(session.nin as String)
 
         if (vos?.size() > 1) {
           String msg = "Found multiple accounts with social security number based on norEduPersonNIN: ${session.nin}. Aborting activation."
@@ -125,7 +125,7 @@ class ActivateAccountAndCardController {
           session.uid = user?.uid
         }
       } catch (ex) {
-        eventLog.logEvent("Failed when setting user in session for ${uid} with exception ${ex.getMessage()}")
+        eventLog.logEvent("Failed when setting user in session for ${uid} with exception ${ex.message}")
 
         log.error "Failed when setting user in session", ex
         flash.error = message(
@@ -144,7 +144,7 @@ class ActivateAccountAndCardController {
       Map ladokData = [:]
 
       try {
-        ladokData = activateAccountAndCardService.fetchLadokData(session.nin)
+        ladokData = activateAccountAndCardService.fetchLadokData(session.nin as String)
       } catch (ex) {
         eventLog.logEvent("Failed when fetching ladokData for uid: $session.nin")
         log.error "Failed when fetching ladokData for uid: $session.nin", ex
@@ -195,7 +195,7 @@ class ActivateAccountAndCardController {
         String forwardAddress = ''
         /** Even if fetching forward address fails we should not fail here. */
         try {
-          forwardAddress = ladokService.findForwardAddressSuggestionForPnr((String) session.nin)
+          forwardAddress = ladokService.findForwardAddressSuggestionForPnr(session.nin as String)
         } catch (ex) {
           eventLog.logEvent("Failed when fetching forward address from Ladok: ${ex?.message}")
           log.error "Fetching forward address from LADOK failed.", ex
@@ -270,14 +270,35 @@ class ActivateAccountAndCardController {
           }
 
           if (!uid) {
-            uid = sukatService.createSuPersonStub(givenName, sn, nin)
+            try {
+              uid = sukatService.createSuPersonStub(givenName, sn, nin)
+            } catch (ex) {
+              eventLog.logEvent("Failed to create SUKAT stub for user with social security number: ${session.nin}")
+              log.error "Failed to create SUKAT stub", ex
+              flow.error = g.message(code:'activateAccountAndCardController.errors.failedWhenEnrollingUser')
+              return error()
+            }
             eventLog.logEvent("SuPerson stub created with uid=${uid}")
           }
 
-          sukatService.setMailRoutingAddress(uid, forwardAddress)
+          try {
+            sukatService.setMailRoutingAddress(uid, forwardAddress)
+          } catch (ex) {
+            eventLog.logEvent("Failed to set MailRoutingAddress for user with uid: $uid, ssn: ${session.nin}")
+            log.error "Failed to set mailRoutingAddress for user with uid $uid", ex
+            flow.error = g.message(code:'activateAccountAndCardController.errors.failedWhenEnrollingUser')
+            return error()
+          }
           eventLog.logEvent("MailRoutingAddress updated for uid=${uid}")
 
-          result = sukatService.activateUser(uid)
+          try {
+            result = sukatService.activateUser(uid)
+          } catch (ex) {
+            eventLog.logEvent("Failed to activate user with uid: $uid")
+            log.error "Failed to activate user with uid: $uid", ex
+            flow.error = g.message(code:'activateAccountAndCardController.errors.failedWhenEnrollingUser')
+            return error()
+          }
           eventLog.logEvent("User uid=${uid} activated")
 
           if (!result) {
@@ -305,7 +326,7 @@ class ActivateAccountAndCardController {
     errorHandler {
       action {
         if (flash.stateException) {
-          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException
+          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException as Throwable
         }
         flow.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
         clearSession()
@@ -366,7 +387,7 @@ class ActivateAccountAndCardController {
         }
 
         try {
-          flow.cardInfo = activateAccountAndCardService.getCardOrderStatus(session.user)
+          flow.cardInfo = activateAccountAndCardService.getCardOrderStatus(session.user as SvcSuPersonVO)
         } catch (ex) {
           log.error "Error when fetching card order status", ex
           eventLog.logEvent("Error when fetching card order status: ${ex?.message}")
@@ -429,7 +450,9 @@ class ActivateAccountAndCardController {
             return error()
           }
           try {
-            sukatService.orderCard(session.user, flow.cardInfo?.ladokAddress)
+            SvcSuPersonVO user = session.user
+            Map ladokAddress = flow.cardInfo?.ladokAddress
+            sukatService.orderCard(user, ladokAddress)
           } catch (ex) {
             log.error "Failed to order card", ex
             eventLog.logEvent("Failed to order card: ${ex.message}")
@@ -452,7 +475,7 @@ class ActivateAccountAndCardController {
     errorHandler {
       action {
         if (flash.stateException) {
-          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException
+          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException as Throwable
         }
         flow.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
       }

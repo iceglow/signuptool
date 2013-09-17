@@ -76,24 +76,19 @@ class ActivateAccountAndCardService implements Serializable {
     return ladokData
   }
 
-  public Map getCardOrderStatus(SvcSuPersonVO user) {
+  public Map getCardOrderStatus(SvcSuPersonVO user) throws Exception {
     Map cardInfo = [:]
 
-    try {
-      Map address = ladokService.getAddressFromLadokByPnr(user.socialSecurityNumber)
-      cardInfo.hasAddress = address ? true : false
-      cardInfo.ladokAddress = address
+    Map address = ladokService.getAddressFromLadokByPnr(user.socialSecurityNumber)
+    cardInfo.hasAddress = address ? true : false
+    cardInfo.ladokAddress = address
 
-      // we may want to show info about the active cards a user already has
-      cardInfo.suCards = (sukatService.getCardsForUser(user.uid))
+    // we may want to show info about the active cards a user already has
+    cardInfo.suCards = (sukatService.getCardsForUser(user.uid))
 
-      // we may want to show info about cardorders that the user may have done
-      cardInfo.cardOrders = (sukatService.getCardOrdersForUser(user.uid))
-      cardInfo.canOrderCard = canOrderCard(cardInfo)
-    } catch (ex) {
-      log.error "Failed when creating card order information object", ex
-      throw ex // Propagate exception after logging.
-    }
+    // we may want to show info about cardorders that the user may have done
+    cardInfo.cardOrders = (sukatService.getCardOrdersForUser(user.uid))
+    cardInfo.canOrderCard = canOrderCard(cardInfo)
 
     return cardInfo
   }

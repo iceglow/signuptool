@@ -37,14 +37,14 @@ class UtilityService {
 
   static transactional = false
 
-  public String getScopeFromEppn(String eppn) {
+  public String getScopeFromEppn(String eppn) throws Exception {
     Matcher matcher = (eppn =~ /^[_a-ö,A-Ö,0-9]+@([_a-ö,A-Ö,0-9\.]+)$/)
     String scope = (matcher.matches()) ? matcher.group(1) : null
     log.debug "scope: ${scope} found for eppn: $eppn"
     return scope
   }
 
-  public EventLog getEventLog(def referenceId) {
+  public EventLog getEventLog(def referenceId) throws Exception {
     def eventLog = EventLog.get(referenceId)
     if (!eventLog) {
       throw new IllegalArgumentException("Failed to get eventLog from referenceId: ${referenceId}")
@@ -52,11 +52,11 @@ class UtilityService {
     return eventLog
   }
 
-  public EventLog getEventLog() {
+  public EventLog getEventLog() throws Exception {
     return new EventLog().save(flush:true)
   }
 
-  public String chompNinToSsn(String ssn) {
+  public String chompNinToSsn(String ssn) throws Exception {
     (ssn?.length() == 12) ? ssn[2..11] : ssn
   }
 }
