@@ -59,26 +59,6 @@ class SukatService implements Serializable {
     return cardOrderWS.orderCard(cardOrderVO, AuditFactory.auditObject)
   }
 
-  private static SvcCardOrderVO createCardOrderVO(SvcSuPersonVO user, Map ladokAddress) throws Exception {
-    if (user == null) {
-      throw new IllegalArgumentException('user is null')
-    }
-
-    if (!ladokAddress) {
-      throw new IllegalArgumentException("Ladok address supplied is invalid ${ladokAddress?.dump()}")
-    }
-
-    SvcCardOrderVO cardOrderVO = new SvcCardOrderVO()
-    cardOrderVO.firstname = user.givenName
-    cardOrderVO.lastname = user.sn
-    cardOrderVO.owner = user.uid
-    cardOrderVO.streetaddress1 = ladokAddress?.gatadr
-    cardOrderVO.streetaddress2 = ladokAddress?.coadr
-    cardOrderVO.zipcode = ladokAddress?.postnr
-    cardOrderVO.locality = ladokAddress?.ort
-    return cardOrderVO
-  }
-
   public List<SvcCardOrderVO> getCardOrdersForUser(String uid) throws Exception {
     // call sukatsvc to fetch cardorders for user , something like findAllCardOrdersForUid in the CardOrderService
     List<SvcCardOrderVO> cardOrders = cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
@@ -170,5 +150,25 @@ class SukatService implements Serializable {
    */
   public String resetPassword(String uid) throws Exception {
     return accountWS.resetPassword(uid, AuditFactory.auditObject)
+  }
+
+  private static SvcCardOrderVO createCardOrderVO(SvcSuPersonVO user, Map ladokAddress) throws Exception {
+    if (user == null) {
+      throw new IllegalArgumentException('user is null')
+    }
+
+    if (!ladokAddress) {
+      throw new IllegalArgumentException("Ladok address supplied is invalid ${ladokAddress?.dump()}")
+    }
+
+    SvcCardOrderVO cardOrderVO = new SvcCardOrderVO()
+    cardOrderVO.firstname = user.givenName
+    cardOrderVO.lastname = user.sn
+    cardOrderVO.owner = user.uid
+    cardOrderVO.streetaddress1 = ladokAddress?.gatadr
+    cardOrderVO.streetaddress2 = ladokAddress?.coadr
+    cardOrderVO.zipcode = ladokAddress?.postnr
+    cardOrderVO.locality = ladokAddress?.ort
+    return cardOrderVO
   }
 }

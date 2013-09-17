@@ -262,6 +262,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     def resp = createNewAccountFlow.createAccount.action()
 
     then:
+    resp == "error"
     session.uid == null
     flash.password == null
 
