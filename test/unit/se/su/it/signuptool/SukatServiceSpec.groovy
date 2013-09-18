@@ -1,7 +1,6 @@
 package se.su.it.signuptool
 
 import grails.test.mixin.TestFor
-import org.junit.Before
 import se.su.it.svc.AccountServiceImpl
 import se.su.it.svc.CardOrderServiceImpl
 import se.su.it.svc.Status
@@ -17,16 +16,21 @@ import spock.lang.Specification
 @TestFor(SukatService)
 class SukatServiceSpec extends Specification {
 
-  @Before
   def setup() {
+    cleanup()
     service.accountWS       = Mock(AccountServiceImpl)
     service.statusWS        = Mock(Status)
     service.webAdminWS      = Mock(WebServiceAdminImpl)
     service.cardOrderWS     = Mock(CardOrderServiceImpl)
     service.utilityService  = Mock(UtilityService)
 
-    GroovyMock(AuditFactory, global: true)
-    AuditFactory.auditObject >> new SvcAudit()
+    AuditFactory.metaClass.static.getAuditObject = {
+      return new SvcAudit()
+    }
+  }
+
+  def cleanup() {
+    AuditFactory.metaClass = null
   }
 
   def "findUserBySocialSecurityNumber"() {
