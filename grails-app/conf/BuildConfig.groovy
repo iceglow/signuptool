@@ -1,4 +1,4 @@
-grails.servlet.version = "2.5" /*
+/*
  * Copyright (c) 2013, IT Services, Stockholm University
  * All rights reserved.
  *
@@ -27,7 +27,10 @@ grails.servlet.version = "2.5" /*
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- */ // Change depending on target container compliance (2.5 or 3.0)
+ */
+
+// Change depending on target container compliance (2.5 or 3.0)
+grails.servlet.version = "2.5"
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
