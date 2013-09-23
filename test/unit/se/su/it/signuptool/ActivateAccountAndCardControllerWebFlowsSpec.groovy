@@ -284,6 +284,48 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     resp == "error"
   }
 
+  def "createNewAccountFlow > createAccount: exception during setMailRoutingAddress."() {
+    given:
+    session.user = new SvcSuPersonVO(uid: 'apa')
+
+    when:
+    def resp = createNewAccountFlow.createAccount.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.sukatService.setMailRoutingAddress(*_) >> { throw new Exception() }
+  }
+
+  def "createNewAccountFlow > createAccount: exception during activateUser."() {
+    given:
+    session.user = new SvcSuPersonVO(uid: 'apa')
+
+    when:
+    def resp = createNewAccountFlow.createAccount.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.sukatService.activateUser(*_) >> { throw new Exception() }
+  }
+
+  def "createNewAccountFlow > createAccount: no result from activateUser."() {
+    given:
+    session.user = new SvcSuPersonVO(uid: 'apa')
+
+    when:
+    def resp = createNewAccountFlow.createAccount.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.sukatService.activateUser(*_) >> { null }
+  }
+
   def "createNewAccountFlow > errorHandler: Check success pathing"()  {
     expect:
     'errorPage' == createNewAccountFlow.errorHandler.on.success.to
