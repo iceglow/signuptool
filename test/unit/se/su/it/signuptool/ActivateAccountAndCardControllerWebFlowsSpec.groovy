@@ -273,6 +273,17 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     1 * controller.sukatService.createSuPersonStub(*_) >> { throw new RuntimeException('foo') }
   }
 
+  def "createNewAccountFlow > createAccount: user with no uid."() {
+    given:
+    session.user = new SvcSuPersonVO(uid: null)
+
+    when:
+    def resp = createNewAccountFlow.createAccount.action()
+
+    then:
+    resp == "error"
+  }
+
   def "createNewAccountFlow > errorHandler: Check success pathing"()  {
     expect:
     'errorPage' == createNewAccountFlow.errorHandler.on.success.to
