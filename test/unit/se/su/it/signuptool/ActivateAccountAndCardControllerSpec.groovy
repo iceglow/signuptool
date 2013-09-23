@@ -32,6 +32,7 @@
 package se.su.it.signuptool
 
 import grails.test.mixin.*
+import org.apache.commons.logging.Log
 import se.su.it.config.ConfigService
 import se.su.it.svc.SvcSuPersonVO
 import spock.lang.Specification
@@ -50,6 +51,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     controller.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     controller.configService = Mock(ConfigService)
     controller.sukatService = Mock(SukatService)
+    controller.log = Mock(Log)
   }
 
   def "index: Testing the password passing."() {
@@ -116,6 +118,22 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     1 * controller.utilityService.getEventLog(*_) >> { throw new RuntimeException("Booom!") }
+  }
+
+  def "index: if we have an active user, we should use it"() {
+    given:
+    def user = new SvcSuPersonVO(uid: 'foo', accountIsActive: true)
+    session.user = user
+    session.nin = 'socialSecurityNumber'
+
+    when:
+    controller.index()
+
+    then:
+    view == '/activateAccountAndCard/index'
+
+    and:
+    model.uid == user.uid
   }
 
   def "index: Testing when nin is already in the session."() {

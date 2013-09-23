@@ -56,7 +56,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     myController.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     myController.sukatService = Mock(SukatService)
     controller = myController
-
   }
 
   def "createNewAccountFlow > prepareForwardAddress: Check success pathing"() {
