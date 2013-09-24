@@ -332,17 +332,11 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   }
 
   def "createNewAccountFlow > errorHandler: Test the errorhandler"()  {
-    given:
-    controller.log = Spy(Log) {
-      error(_,_) >> { Object arg1, Throwable arg2 ->
-        assert arg1.contains("Webflow Exception occurred")
-      }
-    }
     when:
     createNewAccountFlow.errorHandler.action()
 
-    then: 'nothing to test here..'
-    assert true
+    then: 'flow.error contains message'
+    flow.error
   }
 
   def "createNewAccountFlow > beforeEnd: see that we end up on index again."()  {
@@ -389,7 +383,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
     session.nin = "1234567890"
 
-
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
 
@@ -398,6 +391,105 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     and:
     1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> [canOrderCard:false]
+  }
+
+  def "orderCardFlow: exception on getting event log"() {
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'error'
+
+    and:
+    1 * controller.utilityService.getEventLog(*_) >> { throw new Exception('Blam!') }
+  }
+
+  def "orderCardFlow: exception on getting card order status"() {
+    given:
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'error'
+
+    and:
+    1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> { throw new Exception('Blam!') }
+  }
+
+  def "orderCardFlow: can't order card"() {
+    given:
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    controller.activateAccountAndCardService.getCardOrderStatus(*_) >> {
+      [canOrderCard: false]
+    }
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'cantOrderCard'
+  }
+
+  def "orderCardFlow: can't order card & has no address"() {
+    given:
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    def eventLog = Mock(EventLog)
+    controller.utilityService = Mock(UtilityService)
+    controller.utilityService.getEventLog(*_) >> { eventLog }
+    controller.activateAccountAndCardService.getCardOrderStatus(*_) >> {
+      [canOrderCard: false, hasAddress: false]
+    }
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'cantOrderCard'
+
+    and:
+    1 * eventLog.logEvent(_)
+  }
+
+  def "orderCardFlow: can't order card & has cards already"() {
+    given:
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    def eventLog = Mock(EventLog)
+    controller.utilityService = Mock(UtilityService)
+    controller.utilityService.getEventLog(*_) >> { eventLog }
+    controller.activateAccountAndCardService.getCardOrderStatus(*_) >> {
+      [canOrderCard: false, hasAddress: true, suCards: true]
+    }
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'cantOrderCard'
+
+    and:
+    1 * eventLog.logEvent(_)
+  }
+
+  def "orderCardFlow: can't order card & has card orders already"() {
+    given:
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    def eventLog = Mock(EventLog)
+    controller.utilityService = Mock(UtilityService)
+    controller.utilityService.getEventLog(*_) >> { eventLog }
+    controller.activateAccountAndCardService.getCardOrderStatus(*_) >> {
+      [canOrderCard: false, hasAddress: true, suCards: false, cardOrders: true]
+    }
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'cantOrderCard'
+
+    and:
+    1 * eventLog.logEvent(_)
   }
 
   def "orderCardFlow: test when user doesn't select if address is valid or in valid, should log event and redirect to cardOrder page with error message"() {
