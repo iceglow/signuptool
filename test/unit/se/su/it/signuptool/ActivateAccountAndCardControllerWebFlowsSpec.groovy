@@ -56,7 +56,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     myController.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     myController.sukatService = Mock(SukatService)
     controller = myController
-
   }
 
   def "createNewAccountFlow > prepareForwardAddress: Check success pathing"() {
@@ -274,23 +273,70 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     1 * controller.sukatService.createSuPersonStub(*_) >> { throw new RuntimeException('foo') }
   }
 
+  def "createNewAccountFlow > createAccount: user with no uid."() {
+    given:
+    session.user = new SvcSuPersonVO(uid: null)
+
+    when:
+    def resp = createNewAccountFlow.createAccount.action()
+
+    then:
+    resp == "error"
+  }
+
+  def "createNewAccountFlow > createAccount: exception during setMailRoutingAddress."() {
+    given:
+    session.user = new SvcSuPersonVO(uid: 'apa')
+
+    when:
+    def resp = createNewAccountFlow.createAccount.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.sukatService.setMailRoutingAddress(*_) >> { throw new Exception() }
+  }
+
+  def "createNewAccountFlow > createAccount: exception during activateUser."() {
+    given:
+    session.user = new SvcSuPersonVO(uid: 'apa')
+
+    when:
+    def resp = createNewAccountFlow.createAccount.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.sukatService.activateUser(*_) >> { throw new Exception() }
+  }
+
+  def "createNewAccountFlow > createAccount: no result from activateUser."() {
+    given:
+    session.user = new SvcSuPersonVO(uid: 'apa')
+
+    when:
+    def resp = createNewAccountFlow.createAccount.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.sukatService.activateUser(*_) >> { null }
+  }
+
   def "createNewAccountFlow > errorHandler: Check success pathing"()  {
     expect:
     'errorPage' == createNewAccountFlow.errorHandler.on.success.to
   }
 
   def "createNewAccountFlow > errorHandler: Test the errorhandler"()  {
-    given:
-    controller.log = Spy(Log) {
-      error(_,_) >> { Object arg1, Throwable arg2 ->
-        assert arg1.contains("Webflow Exception occurred")
-      }
-    }
     when:
     createNewAccountFlow.errorHandler.action()
 
-    then: 'nothing to test here..'
-    assert true
+    then: 'flow.error contains message'
+    flow.error
   }
 
   def "createNewAccountFlow > beforeEnd: see that we end up on index again."()  {
@@ -337,7 +383,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
     session.nin = "1234567890"
 
-
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
 
@@ -346,6 +391,129 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     and:
     1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> [canOrderCard:false]
+  }
+
+  def "orderCardFlow: exception on getting event log"() {
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'error'
+
+    and:
+    1 * controller.utilityService.getEventLog(*_) >> { throw new Exception('Blam!') }
+  }
+
+  def "orderCardFlow: exception on getting card order status"() {
+    given:
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'error'
+
+    and:
+    1 * controller.activateAccountAndCardService.getCardOrderStatus(*_) >> { throw new Exception('Blam!') }
+  }
+
+  def "orderCardFlow: can't order card"() {
+    given:
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    controller.activateAccountAndCardService.getCardOrderStatus(*_) >> {
+      [canOrderCard: false]
+    }
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'cantOrderCard'
+  }
+
+  def "orderCardFlow: can't order card & has no address"() {
+    given:
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    def eventLog = Mock(EventLog)
+    controller.utilityService = Mock(UtilityService)
+    controller.utilityService.getEventLog(*_) >> { eventLog }
+    controller.activateAccountAndCardService.getCardOrderStatus(*_) >> {
+      [canOrderCard: false, hasAddress: false]
+    }
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'cantOrderCard'
+
+    and:
+    1 * eventLog.logEvent(_)
+  }
+
+  def "orderCardFlow: can't order card & has cards already"() {
+    given:
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    def eventLog = Mock(EventLog)
+    controller.utilityService = Mock(UtilityService)
+    controller.utilityService.getEventLog(*_) >> { eventLog }
+    controller.activateAccountAndCardService.getCardOrderStatus(*_) >> {
+      [canOrderCard: false, hasAddress: true, suCards: true]
+    }
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'cantOrderCard'
+
+    and:
+    1 * eventLog.logEvent(_)
+  }
+
+  def "orderCardFlow: can't order card & has card orders already"() {
+    given:
+    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    def eventLog = Mock(EventLog)
+    controller.utilityService = Mock(UtilityService)
+    controller.utilityService.getEventLog(*_) >> { eventLog }
+    controller.activateAccountAndCardService.getCardOrderStatus(*_) >> {
+      [canOrderCard: false, hasAddress: true, suCards: false, cardOrders: true]
+    }
+
+    when:
+    def event = orderCardFlow.prepareForwardOrderCard.action()
+
+    then:
+    event == 'cantOrderCard'
+
+    and:
+    1 * eventLog.logEvent(_)
+  }
+
+  def "orderCardFlow: sendCardOrder sets addressIsValid from params"() {
+    given:
+    flow.addressIsValid = false
+    params.addressIsValid = true
+
+    when:
+    orderCardFlow.cardOrder.on.sendCardOrder.action()
+
+    then:
+    flow.addressIsValid
+  }
+
+  def "orderCardFlow: sendCardOrder sets acceptLibraryRules from params"() {
+    given:
+    flow.acceptLibraryRules = false
+    params.acceptLibraryRules = true
+
+    when:
+    orderCardFlow.cardOrder.on.sendCardOrder.action()
+
+    then:
+    flow.acceptLibraryRules
   }
 
   def "orderCardFlow: test when user doesn't select if address is valid or in valid, should log event and redirect to cardOrder page with error message"() {
@@ -393,5 +561,67 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     assert event == 'success'
 
     assert 'beforeEnd' == orderCardFlow.processCardOrder.on.success.to
+  }
+
+  def "orderCardFlow: goes to error if no EventLog"() {
+    when:
+    def resp = orderCardFlow.processCardOrder.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.utilityService.getEventLog(*_) >> { throw new RuntimeException("Booom!") }
+  }
+
+  def "orderCardFlow: processCardOrder happy path"() {
+    given:
+    SvcSuPersonVO user = new SvcSuPersonVO()
+    session.user = user
+    flow.cardInfo = [ladokAddress: [foo:'foo']]
+    flow.addressIsValid = "1"
+    flow.acceptLibraryRules = true
+
+    when:
+    orderCardFlow.processCardOrder.action()
+
+    then:
+    1 * controller.sukatService.orderCard(user, flow.cardInfo.ladokAddress)
+  }
+
+  def "orderCardFlow: exception during orderCard"() {
+    given:
+    flow.cardInfo = [ladokAddress: [foo:'foo']]
+    flow.addressIsValid = "1"
+    flow.acceptLibraryRules = true
+    controller.sukatService.orderCard(*_) >> { throw new Exception('Blamo!') }
+
+    when:
+    def ret = orderCardFlow.processCardOrder.action()
+
+    then:
+    ret == 'error'
+  }
+
+  def "orderCardFlow: processCardOrder success"() {
+    given:
+    session.hasCompletedCardOrder = false
+
+    when:
+    orderCardFlow.processCardOrder.on.success.action()
+
+    then:
+    session.hasCompletedCardOrder
+  }
+
+  def "orderCardFlow: processCardOrder hasInvalidAddress"() {
+    given:
+    session.hasCompletedCardOrder = false
+
+    when:
+    orderCardFlow.processCardOrder.on.hasInvalidAddress.action()
+
+    then:
+    session.hasCompletedCardOrder
   }
 }
