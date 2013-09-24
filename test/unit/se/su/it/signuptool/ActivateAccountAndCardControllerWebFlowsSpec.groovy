@@ -492,6 +492,30 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     1 * eventLog.logEvent(_)
   }
 
+  def "orderCardFlow: sendCardOrder sets addressIsValid from params"() {
+    given:
+    flow.addressIsValid = false
+    params.addressIsValid = true
+
+    when:
+    orderCardFlow.cardOrder.on.sendCardOrder.action()
+
+    then:
+    flow.addressIsValid
+  }
+
+  def "orderCardFlow: sendCardOrder sets acceptLibraryRules from params"() {
+    given:
+    flow.acceptLibraryRules = false
+    params.acceptLibraryRules = true
+
+    when:
+    orderCardFlow.cardOrder.on.sendCardOrder.action()
+
+    then:
+    flow.acceptLibraryRules
+  }
+
   def "orderCardFlow: test when user doesn't select if address is valid or in valid, should log event and redirect to cardOrder page with error message"() {
     given:
     flow.registeredAddressValid = false
@@ -537,5 +561,67 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     assert event == 'success'
 
     assert 'beforeEnd' == orderCardFlow.processCardOrder.on.success.to
+  }
+
+  def "orderCardFlow: goes to error if no EventLog"() {
+    when:
+    def resp = orderCardFlow.processCardOrder.action()
+
+    then:
+    resp == "error"
+
+    and:
+    1 * controller.utilityService.getEventLog(*_) >> { throw new RuntimeException("Booom!") }
+  }
+
+  def "orderCardFlow: processCardOrder happy path"() {
+    given:
+    SvcSuPersonVO user = new SvcSuPersonVO()
+    session.user = user
+    flow.cardInfo = [ladokAddress: [foo:'foo']]
+    flow.addressIsValid = "1"
+    flow.acceptLibraryRules = true
+
+    when:
+    orderCardFlow.processCardOrder.action()
+
+    then:
+    1 * controller.sukatService.orderCard(user, flow.cardInfo.ladokAddress)
+  }
+
+  def "orderCardFlow: exception during orderCard"() {
+    given:
+    flow.cardInfo = [ladokAddress: [foo:'foo']]
+    flow.addressIsValid = "1"
+    flow.acceptLibraryRules = true
+    controller.sukatService.orderCard(*_) >> { throw new Exception('Blamo!') }
+
+    when:
+    def ret = orderCardFlow.processCardOrder.action()
+
+    then:
+    ret == 'error'
+  }
+
+  def "orderCardFlow: processCardOrder success"() {
+    given:
+    session.hasCompletedCardOrder = false
+
+    when:
+    orderCardFlow.processCardOrder.on.success.action()
+
+    then:
+    session.hasCompletedCardOrder
+  }
+
+  def "orderCardFlow: processCardOrder hasInvalidAddress"() {
+    given:
+    session.hasCompletedCardOrder = false
+
+    when:
+    orderCardFlow.processCardOrder.on.hasInvalidAddress.action()
+
+    then:
+    session.hasCompletedCardOrder
   }
 }
