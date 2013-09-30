@@ -108,15 +108,18 @@ class ActivateAccountAndCardController {
       try {
         List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(session.nin as String)
 
-        if (vos?.size() > 1) {
+        SvcSuPersonVO user = null
+        int voCount = (vos) ? vos?.size() : 0
+
+        if (voCount > 1) {
           String msg = "Found multiple accounts with social security number based on norEduPersonNIN: ${session.nin}. Aborting activation."
           eventLog.logEvent(msg)
           log.error msg
           flash.error = g.message(code:'sukat.errors.multipleUsersForSSN')
           return redirect(controller:'dashboard', action:'index')
+        } else if (voCount == 1) {
+          user = vos?.first()
         }
-
-        SvcSuPersonVO user = vos?.first()
 
         if (user) {
           hasUser = true
