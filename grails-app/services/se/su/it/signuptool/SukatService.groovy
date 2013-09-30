@@ -117,7 +117,7 @@ class SukatService implements Serializable {
     String ssn = utilityService.chompNinToSsn(nin)
     String uid = generateStudentUid(givenName, sn)
 
-    accountWS.createSuPerson(uid, givenName, sn, ssn, AuditFactory.auditObject)
+    accountWS.createSuPerson(uid, ssn, givenName, sn, AuditFactory.auditObject)
 
     return uid
   }
