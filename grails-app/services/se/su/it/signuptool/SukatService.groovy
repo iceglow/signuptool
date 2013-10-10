@@ -56,12 +56,12 @@ class SukatService implements Serializable {
 
   public String orderCard(SvcSuPersonVO user, Map ladokAddress) throws Exception {
     SvcCardOrderVO cardOrderVO = createCardOrderVO(user, ladokAddress)
-    return cardOrderWS.orderCard(cardOrderVO, AuditFactory.auditObject)
+    return cardOrderWS.orderCard(cardOrderVO)
   }
 
   public List<SvcCardOrderVO> getCardOrdersForUser(String uid) throws Exception {
     // call sukatsvc to fetch cardorders for user , something like findAllCardOrdersForUid in the CardOrderService
-    List<SvcCardOrderVO> cardOrders = cardOrderWS.findAllCardOrdersForUid(uid, AuditFactory.auditObject)
+    List<SvcCardOrderVO> cardOrders = cardOrderWS.findAllCardOrdersForUid(uid)
 
     if (!cardOrders) {
       return []
@@ -73,12 +73,12 @@ class SukatService implements Serializable {
   }
 
   public List<SuCard> getCardsForUser(String uid) throws Exception {
-    return cardInfoWS.getAllCards(uid, true, AuditFactory.auditObject)
+    return cardInfoWS.getAllCards(uid, true)
   }
 
   public List<SvcSuPersonVO> findUsersBySocialSecurityNumber(String nin) throws Exception {
     String ssn = utilityService.chompNinToSsn(nin)
-    return accountWS.findAllSuPersonsBySocialSecurityNumber(ssn, AuditFactory.auditObject)
+    return accountWS.findAllSuPersonsBySocialSecurityNumber(ssn)
   }
 
   /**
@@ -93,7 +93,7 @@ class SukatService implements Serializable {
       public boolean evaluate(Object object) {
         try {
           /* When the search returns null (ie the ) we return true */
-          return null == accountWS.findSuPersonByUid((String) object, AuditFactory.auditObject)
+          return null == accountWS.findSuPersonByUid((String) object)
         } catch (ex) {
           log.error "Failed when getting SuPerson from GID", ex
           return false
@@ -117,7 +117,7 @@ class SukatService implements Serializable {
     String ssn = utilityService.chompNinToSsn(nin)
     String uid = generateStudentUid(givenName, sn)
 
-    accountWS.createSuPerson(uid, ssn, givenName, sn, AuditFactory.auditObject)
+    accountWS.createSuPerson(uid, ssn, givenName, sn)
 
     return uid
   }
@@ -129,7 +129,7 @@ class SukatService implements Serializable {
    * @param mail the new mailRoutingAddress
    */
   public void setMailRoutingAddress(String uid, String mail) throws Exception {
-    accountWS.setMailRoutingAddress(uid, mail, AuditFactory.auditObject)
+    accountWS.setMailRoutingAddress(uid, mail)
   }
 
   /**
@@ -139,7 +139,7 @@ class SukatService implements Serializable {
    * @return a SvcUidPwd containing the username and password of the activated account.
    */
   public SvcUidPwd activateUser(String uid) throws Exception {
-    return accountWS.activateSuPerson(uid, DEFAULT_DOMAIN, [DEFAULT_AFFILATION], AuditFactory.auditObject)
+    return accountWS.activateSuPerson(uid, DEFAULT_DOMAIN, [DEFAULT_AFFILATION])
   }
 
   /**
@@ -149,7 +149,7 @@ class SukatService implements Serializable {
    * @return the new password
    */
   public String resetPassword(String uid) throws Exception {
-    return accountWS.resetPassword(uid, AuditFactory.auditObject)
+    return accountWS.resetPassword(uid)
   }
 
   private static SvcCardOrderVO createCardOrderVO(SvcSuPersonVO user, Map ladokAddress) throws Exception {
