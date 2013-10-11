@@ -4,7 +4,6 @@ import grails.test.mixin.TestFor
 import se.su.it.svc.AccountServiceImpl
 import se.su.it.svc.CardOrderServiceImpl
 import se.su.it.svc.Status
-import se.su.it.svc.SvcAudit
 import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.WebServiceAdminImpl
@@ -23,15 +22,9 @@ class SukatServiceSpec extends Specification {
     service.webAdminWS      = Mock(WebServiceAdminImpl)
     service.cardOrderWS     = Mock(CardOrderServiceImpl)
     service.utilityService  = Mock(UtilityService)
-
-    AuditFactory.metaClass.static.getAuditObject = {
-      return new SvcAudit()
-    }
   }
 
-  def cleanup() {
-    AuditFactory.metaClass = null
-  }
+  def cleanup() {}
 
   def "findUserBySocialSecurityNumber"() {
     given:
