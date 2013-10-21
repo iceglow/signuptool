@@ -49,26 +49,31 @@ beans = {
   }
 
   cardOrderWS(webServiceFactory) { bean ->
+    bean.lazyInit = false
     bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [CardOrderServiceImpl.class, grailsApplication.config.sukatsvc.cardorderservice]
   }
 
   accountWS(webServiceFactory) { bean ->
+    bean.lazyInit = false
     bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [AccountServiceImpl.class, grailsApplication.config.sukatsvc.accountservice]
   }
 
   cardInfoWS(webServiceFactory) { bean ->
+    bean.lazyInit = false
     bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [CardInfoServiceImpl.class, grailsApplication.config.sukatsvc.cardinfoservice]
   }
 
   statusWS(webServiceFactory) { bean ->
+    bean.lazyInit = false
     bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [Status.class, grailsApplication.config.sukatsvc.statusservice]
   }
 
   webAdminWS(webServiceFactory) { bean ->
+    bean.lazyInit = false
     bean.factoryMethod = 'getInstanceForClass'
     bean.constructorArgs = [WebServiceAdminImpl.class, grailsApplication.config.sukatsvc.webserviceadmin]
   }
