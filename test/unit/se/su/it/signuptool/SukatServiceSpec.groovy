@@ -113,7 +113,11 @@ class SukatServiceSpec extends Specification {
     def ssn = '1' *10
     def uid = 'gisn1234'
     def spy = Spy(SukatService)
-    spy.accountWS = service.accountWS
+    def accMock = Mock(AccountServiceImpl) {
+      1 * createSuPerson('gisn1234', '1' *10, 'given', 'sn')
+    }
+
+    spy.accountWS = accMock
     spy.utilityService = Mock(UtilityService) {
       1 * chompNinToSsn(ssn) >> ssn
     }
@@ -123,7 +127,6 @@ class SukatServiceSpec extends Specification {
 
     then:
     1 * spy.generateStudentUid(givenName, sn) >> uid
-    1 * spy.accountWS.createSuPerson(uid, givenName, sn, ssn, _)
     res == uid
   }
 
@@ -136,7 +139,7 @@ class SukatServiceSpec extends Specification {
     service.setMailRoutingAddress(uid, mail)
 
     then:
-    1 * service.accountWS.setMailRoutingAddress(uid, mail, _)
+    1 * service.accountWS.setMailRoutingAddress('gisn1234', 'mail')
   }
 
   def "activateUser"() {
@@ -147,7 +150,7 @@ class SukatServiceSpec extends Specification {
     service.activateUser(uid)
 
     then:
-    1 * service.accountWS.activateSuPerson(uid, SukatService.DEFAULT_DOMAIN, [SukatService.DEFAULT_AFFILATION], _)
+    1 * service.accountWS.activateSuPerson(uid, SukatService.DEFAULT_DOMAIN, [SukatService.DEFAULT_AFFILATION])
   }
 
   def "createCardOrderVO: when applying attributes to the orderVO"() {
