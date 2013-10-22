@@ -629,7 +629,23 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     !session.errorWhileOrderingCard
   }
 
-  def "Error handler"() {
+  def "Error handler with provided message"() {
+    given:
+    flash.stateException = new Exception("kaka")
+    def message = "this superior message"
+    flow.error = message
+
+    when:
+    orderCardFlow.errorHandler.action()
+
+    then:
+    session.error == message
+    flash.stateException == null
+    session.errorWhileOrderingCard
+  }
+
+
+  def "Error handler without provided message"() {
     given:
     flash.stateException = new Exception("kaka")
 
@@ -638,34 +654,8 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     then:
     flash.stateException == null
-    session.errorWhileOrderingCard
-  }
-
-  def "beforeEnd with provided message"() {
-    given:
-    def message = "myLittleMessage"
-    flow.error = message
-
-    when:
-    orderCardFlow.beforeEnd.action()
-
-    then:
-    session.error == message
-
-    and:
-    response.redirectedUrl == '/activateAccountAndCard/index'
-  }
-
-  def "beforeEnd without provided message"() {
-    given:
-    when:
-    orderCardFlow.beforeEnd.action()
-
-    then:
     session.error == "activateAccountAndCardController.errors.genericError"
-
-    and:
-    response.redirectedUrl == '/activateAccountAndCard/index'
+    session.errorWhileOrderingCard
   }
 
   def "cantOrderCard"() {

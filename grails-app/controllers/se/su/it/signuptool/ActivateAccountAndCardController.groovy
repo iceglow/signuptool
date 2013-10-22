@@ -492,6 +492,7 @@ class ActivateAccountAndCardController {
           log.error "Exception was thrown in the Order Card Flow", flash.stateException as Throwable
           flash.stateException = null
         }
+        session.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
         session.errorWhileOrderingCard = true
       }
       on("success").to("beforeEnd")
@@ -499,7 +500,6 @@ class ActivateAccountAndCardController {
 
     beforeEnd() {
       action {
-        session.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
         return redirect(action:'index')
       }
       on("success").to("end")
