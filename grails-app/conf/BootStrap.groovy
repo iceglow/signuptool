@@ -30,6 +30,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+import grails.util.Environment
 import org.grails.plugins.localization.Localization
 import org.springframework.core.io.Resource
 import se.su.it.grails.plugins.access.AccessRole
@@ -119,7 +120,26 @@ class BootStrap {
       AccessRole.withTransaction { status ->
         try {
           def displayName = "Sysadmin"
-          def uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=dev"
+          def uri = ""
+
+          switch(Environment.current.name) {
+            case Environment.PRODUCTION.name:
+              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=prod"
+              break
+            case Environment.DEVELOPMENT.name:
+              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=dev"
+              break
+            case Environment.TEST.name:
+              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=test"
+              break
+            case "mock":
+              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=mock"
+              break
+            default:
+              log.error "Unhandled environment $Environment.current with name ${Environment.current.name}"
+          }
+
+
           def sysadmin = AccessRole.createOrUpdateInstance(displayName, uri)
           accessService.addAccess(sysadmin, 'admin')
           accessService.addAccess(sysadmin, 'access')
