@@ -45,7 +45,7 @@ class UtilityService {
   }
 
   public EventLog getEventLog(def referenceId) throws Exception {
-    def eventLog = EventLog.get(referenceId)
+    def eventLog = EventLog.get((long) referenceId)
     if (!eventLog) {
       throw new IllegalArgumentException("Failed to get eventLog from referenceId: ${referenceId}")
     }
