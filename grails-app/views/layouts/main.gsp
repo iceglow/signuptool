@@ -50,7 +50,6 @@
     <!-- content -->
     <div id="content">
       <!-- accessibility links -->
-      <a class="accessibility-link" accesskey="s" href="#content-top" title="Skip navigation"></a>
       <!-- /accessibility links -->
 
       <!-- head top -->
