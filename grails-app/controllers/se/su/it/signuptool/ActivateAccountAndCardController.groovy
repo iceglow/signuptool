@@ -43,6 +43,13 @@ class ActivateAccountAndCardController {
   def utilityService
 
   def index() {
+
+    if (session.error) {
+      /** We don't want the error to hang around so we let it live in the shortest lived scope. */
+      request.error = session.error
+      session.error = null
+    }
+
     /** Only display the password if returned and remove it right after. */
     String password = ''
     if (session.password) {
@@ -393,6 +400,7 @@ class ActivateAccountAndCardController {
           flow.cardInfo = activateAccountAndCardService.getCardOrderStatus(session.user as SvcSuPersonVO)
         } catch (ex) {
           log.error "Error when fetching card order status", ex
+          flow.error = g.message(code:'activateAccountAndCardController.cardOrder.optionalError.errorWhenFetchingCardOrderStatus')
           eventLog.logEvent("Error when fetching card order status: ${ex?.message}")
           return error()
         }
@@ -467,10 +475,13 @@ class ActivateAccountAndCardController {
         return success()
       }
       on('success'){
+        flow.error = null
         session.hasCompletedCardOrder = true
+        session.errorWhileOrderingCard = false
       }.to('beforeEnd')
       on("hasInvalidAddress"){
         session.hasCompletedCardOrder = true
+        session.errorWhileOrderingCard = false
       }.to("hasInvalidAddress")
       on('error').to('cardOrder')
     }
@@ -478,17 +489,13 @@ class ActivateAccountAndCardController {
     errorHandler {
       action {
         if (flash.stateException) {
-          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException as Throwable
+          log.error "Exception was thrown in the Order Card Flow", flash.stateException as Throwable
+          flash.stateException = null
         }
-        flow.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
+        session.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
+        session.errorWhileOrderingCard = true
       }
-      on("success").to("errorPage")
-    }
-
-    errorPage {
-      on("continue"){
-        flow.error = null
-      }.to("beforeEnd")
+      on("success").to("beforeEnd")
     }
 
     beforeEnd() {

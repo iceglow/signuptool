@@ -37,12 +37,57 @@
 </head>
 <body>
   <div class="apps-mid-column">
-    <g:if test="${(session.hasCompletedCardOrder)}">
-      <tmpl:endAccountAndCard model="[lpwurl:lpwurl]"/>
-    </g:if>
-    <g:else>
-      <tmpl:showAccountInformation model="[password:password, uid:uid]"/>
-    </g:else>
+
+    <div class="float-left">
+      <div class="prompt">
+
+        <g:if test="${request.error}">
+          <div class="error"> ${request.error} </div>
+        </g:if>
+
+        <!-- showAccount: When hasCompletedCardOrder and errorWhileOrderingCard when both are false. -->
+        <g:set var="showAccountInfo" value="${!(session.hasCompletedCardOrder) && !(session.errorWhileOrderingCard)}"/>
+
+        <!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
+        <g:set var="showOrderCard" value="${!(session.hasCompletedCardOrder) || (session.errorWhileOrderingCard)}"/>
+
+        <!-- Webreg:  When either hasCompletedCardOrder or errorWhileOrderingCard is true (when showAccountInfo == false) -->
+
+        <g:if test="${showAccountInfo}">
+          <tmpl:showAccountInformation model="[password:password, uid:uid]"/>
+        </g:if>
+        <g:else>
+          <tmpl:endAccountAndCard model="[lpwurl:lpwurl]"/>
+        </g:else>
+
+        <div class="clear-float"></div>
+
+        <g:if test="${showOrderCard}">
+          <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
+            <div class="align-right"><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></div>
+            <div class="align-right">
+              <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
+            </div>
+          </g:form>
+        </g:if>
+      </div>
+
+      <div class="state_progress_img">
+        <g:if test="${showAccountInfo}">
+          <img src="${resource(dir: 'img', file: 'universityaccount_activate_account_se.png')}"
+               border="0"
+               class="logotype"
+               title="<g:message code='activateAccountAndCardController.step3.counter'/>">
+        </g:if>
+        <g:else>
+          <img src="${resource(dir: 'img', file: 'end_activate_account_se.png')}"
+               border="0"
+               class="logotype"
+               title="<g:message code='activateAccountAndCardController.step5.counter'/>">
+        </g:else>
+      </div>
+
+    </div>
   </div>
 </body>
 </html>

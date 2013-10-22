@@ -606,22 +606,63 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "orderCardFlow: processCardOrder success"() {
     given:
     session.hasCompletedCardOrder = false
+    session.errorWhileOrderingCard = true
 
     when:
     orderCardFlow.processCardOrder.on.success.action()
 
     then:
     session.hasCompletedCardOrder
+    !session.errorWhileOrderingCard
   }
 
   def "orderCardFlow: processCardOrder hasInvalidAddress"() {
     given:
     session.hasCompletedCardOrder = false
+    session.errorWhileOrderingCard = true
 
     when:
     orderCardFlow.processCardOrder.on.hasInvalidAddress.action()
 
     then:
     session.hasCompletedCardOrder
+    !session.errorWhileOrderingCard
+  }
+
+  def "Error handler with provided message"() {
+    given:
+    flash.stateException = new Exception("kaka")
+    def message = "this superior message"
+    flow.error = message
+
+    when:
+    orderCardFlow.errorHandler.action()
+
+    then:
+    session.error == message
+    flash.stateException == null
+    session.errorWhileOrderingCard
+  }
+
+
+  def "Error handler without provided message"() {
+    given:
+    flash.stateException = new Exception("kaka")
+
+    when:
+    orderCardFlow.errorHandler.action()
+
+    then:
+    flash.stateException == null
+    session.error == "activateAccountAndCardController.errors.genericError"
+    session.errorWhileOrderingCard
+  }
+
+  def "cantOrderCard"() {
+    when:
+    orderCardFlow.cantOrderCard.on.continue.action() == 'beforeEnd'
+
+    then:
+    session.hasCompletedCardOrder == true
   }
 }

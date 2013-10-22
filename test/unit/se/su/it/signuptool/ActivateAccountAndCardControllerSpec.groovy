@@ -68,6 +68,25 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
   }
 
+  def "index: Passing the session error message to the index view."() {
+    given:
+    def message = 'message'
+    session.error = message
+
+    when:
+    controller.index()
+
+    then:
+    session.error == null
+
+    and:
+    request.error == message
+
+    and:
+    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
+  }
+
+
   def "index: handle studera.nu unverified account (missing norEduPersonNIN)"() {
     when:
     controller.index()

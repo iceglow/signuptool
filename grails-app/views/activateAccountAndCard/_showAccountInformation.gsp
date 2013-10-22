@@ -29,8 +29,6 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-<div class="float-left">
-  <div class="prompt">
     <p><g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/></p>
 
     <div class="clear-float"></div>
@@ -49,21 +47,3 @@
         </g:link>
       </g:else>
     </div>
-
-    <div class="clear-float"></div>
-
-    <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
-      <div class="align-right"><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></div>
-      <div class="align-right">
-        <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
-      </div>
-    </g:form>
-  </div>
-
-  <div class="state_progress_img">
-    <img src="${resource(dir: 'img', file: 'universityaccount_activate_account_se.png')}"
-         border="0"
-         class="logotype"
-         title="<g:message code='activateAccountAndCardController.step3.counter'/>">
-  </div>
-</div>
