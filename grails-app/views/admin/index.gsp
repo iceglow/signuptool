@@ -37,7 +37,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script>
     $(function() {
-      $("#searchForm").on("submit", function(event) {
+      $("#searchForm").on("submit", function() {
         var searchFor = $("input[name=searchFor]:checked").val();
         var searchText = $("#searchText").val();
 

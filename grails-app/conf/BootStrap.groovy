@@ -71,9 +71,9 @@ class BootStrap {
 
         for (file in files) {
           Resource res = context.getResource("/WEB-INF/grails-app/i18n/${file?.name}")
-          def stream
+          Reader stream
           if (res?.exists()) {
-            stream = res?.getInputStream()
+            stream = new BufferedReader(new InputStreamReader(res?.getInputStream()))
           } else {
             stream = new BufferedReader(
                 new InputStreamReader(
@@ -84,7 +84,9 @@ class BootStrap {
           }
 
           def props = new Properties()
+
           props.load(stream)
+
           for (key in props?.stringPropertyNames()) {
             def loc = Localization.findByCodeAndLocale(key, locale)
             if (!loc) {

@@ -52,7 +52,7 @@ class ActivateAccountAndCardController {
 
     boolean hasCompletedCardOrder = (session.hasCompletedCardOrder)
 
-    EventLog eventLog = null
+    EventLog eventLog
 
     if (session.referenceId) {
       try {
@@ -70,7 +70,7 @@ class ActivateAccountAndCardController {
     boolean hasUser = session.user
     boolean stubUser = !session.user?.accountIsActive
 
-    String scope = ''
+    String scope
 
     String uid = session.user?.uid
 
@@ -144,7 +144,7 @@ class ActivateAccountAndCardController {
 
       eventLog.logEvent("First time visit for ${session.nin}")
       /** See if we can find the new user in Ladok */
-      Map ladokData = [:]
+      def ladokData
 
       try {
         ladokData = activateAccountAndCardService.fetchLadokData(session.nin as String)
@@ -187,7 +187,7 @@ class ActivateAccountAndCardController {
 
     prepareForwardAddress {
       action {
-        EventLog eventLog = null
+        EventLog eventLog
         try {
           eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
@@ -219,7 +219,7 @@ class ActivateAccountAndCardController {
 
     processEmailInput {
       action {
-        EventLog eventLog = null
+        EventLog eventLog
         try {
           eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
@@ -249,7 +249,7 @@ class ActivateAccountAndCardController {
     createAccount {
       action {
 
-        EventLog eventLog = null
+        EventLog eventLog
         try {
           eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
@@ -257,7 +257,7 @@ class ActivateAccountAndCardController {
           return error()
         }
 
-        SvcUidPwd result = null
+        SvcUidPwd result
 
         try {
           String givenName = session.givenName
@@ -375,7 +375,7 @@ class ActivateAccountAndCardController {
     prepareForwardOrderCard {
       action {
 
-        EventLog eventLog = null
+        EventLog eventLog
         try {
           eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
@@ -432,7 +432,7 @@ class ActivateAccountAndCardController {
     processCardOrder {
       action {
 
-        EventLog eventLog = null
+        EventLog eventLog
         try {
           eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {

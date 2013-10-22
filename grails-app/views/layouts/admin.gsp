@@ -30,6 +30,7 @@
   --}%
 
 <!DOCTYPE html>
+<html>
   <head>
     <title><g:layoutTitle default="${g.message(code:'application.title')}"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -49,7 +50,6 @@
     <!-- content -->
     <div id="content">
       <!-- accessibility links -->
-      <a class="accessibility-link" accesskey="s" href="#content-top" title="Skip navigation"></a>
       <!-- /accessibility links -->
 
       <!-- head top -->

@@ -43,7 +43,7 @@ class ResetPasswordController {
     EventLog eventLog = utilityService.eventLog
     session.referenceId = eventLog?.id
 
-    String scope = utilityService.getScopeFromEppn(request.eppn)
+    String scope = utilityService.getScopeFromEppn(request.eppn as String)
 
     switch(scope) {
       case "studera.nu":
@@ -63,10 +63,10 @@ class ResetPasswordController {
         return redirect(controller:'dashboard', action:'index')
     }
 
-    List<SvcSuPersonVO> users = []
+    List<SvcSuPersonVO> users
 
     try {
-      users = sukatService.findUsersBySocialSecurityNumber(session.nin)
+      users = sukatService.findUsersBySocialSecurityNumber(session.nin as String)
     } catch (ex) {
       log.error "Failed to fetch user using social security number ${session.nin}", ex
       flash.error = g.message(code:'sukat.errors.errorWhenFetchingUser')
@@ -100,7 +100,7 @@ class ResetPasswordController {
     resetPassword() {
       action {
 
-        EventLog eventLog = null
+        EventLog eventLog
         try {
           eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
