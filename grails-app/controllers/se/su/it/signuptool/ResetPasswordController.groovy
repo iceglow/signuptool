@@ -63,7 +63,7 @@ class ResetPasswordController {
         return redirect(controller:'dashboard', action:'index')
     }
 
-    List<SvcSuPersonVO> users = []
+    List<SvcSuPersonVO> users
 
     try {
       users = sukatService.findUsersBySocialSecurityNumber(session.nin as String)
@@ -100,7 +100,7 @@ class ResetPasswordController {
     resetPassword() {
       action {
 
-        EventLog eventLog = null
+        EventLog eventLog
         try {
           eventLog = utilityService.getEventLog(session.referenceId)
         } catch (ex) {
