@@ -31,7 +31,12 @@
 
 package se.su.it.signuptool
 
+import se.su.it.svc.SvcSuPersonVO
+
 class AdminController {
+
+  def sukatService
+
   def index() {}
 
   def search(String searchFor, String searchText) {
@@ -55,5 +60,9 @@ class AdminController {
       return render(text:g.message(code:'admin.search.noResults.for', args:[searchText]))
     }
     return render(template: 'searchResults', collection: eventLogs, var: "eventLog")
+  }
+
+  def foo() {
+    sukatService.orderCard(new SvcSuPersonVO(), [:])
   }
 }
