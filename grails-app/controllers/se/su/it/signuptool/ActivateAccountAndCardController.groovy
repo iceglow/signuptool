@@ -489,7 +489,8 @@ class ActivateAccountAndCardController {
     errorHandler {
       action {
         if (flash.stateException) {
-          log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException as Throwable
+          log.error "Exception was thrown in the Order Card Flow", flash.stateException as Throwable
+          flash.stateException = null
         }
         session.errorWhileOrderingCard = true
       }
