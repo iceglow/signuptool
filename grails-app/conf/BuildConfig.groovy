@@ -88,8 +88,10 @@ grails.project.dependency.resolution = {
   }
 
   plugins {
-    test ":code-coverage:1.2.6"
-    test ":geb:0.9.0"
+    test(
+        ":code-coverage:1.2.6",
+        ":geb:0.9.0"
+    )
 
     test(":spock:0.7") {
       exclude "spock-grails-support"
@@ -101,11 +103,15 @@ grails.project.dependency.resolution = {
         ":criteria:1.6",
         ":cxf-client:1.5.3"
     )
+
     compile(':webflow:2.0.0') {
       exclude 'grails-webflow'
     }
 
-    build ":tomcat:$grailsVersion"
+    build(
+        "se.su.it.grails.plugins:grails-release-helper:0.0.3",
+        ":tomcat:$grailsVersion"
+    )
 
     runtime(
         "se.su.it.grails.plugins:grails-input-trimmer:0.1.2",
