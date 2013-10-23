@@ -616,19 +616,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     !session.errorWhileOrderingCard
   }
 
-  def "orderCardFlow: processCardOrder hasInvalidAddress"() {
-    given:
-    session.hasCompletedCardOrder = false
-    session.errorWhileOrderingCard = true
-
-    when:
-    orderCardFlow.processCardOrder.on.hasInvalidAddress.action()
-
-    then:
-    session.hasCompletedCardOrder
-    !session.errorWhileOrderingCard
-  }
-
   def "Error handler with provided message"() {
     given:
     flash.stateException = new Exception("kaka")
@@ -643,7 +630,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     flash.stateException == null
     session.errorWhileOrderingCard
   }
-
 
   def "Error handler without provided message"() {
     given:

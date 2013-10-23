@@ -479,10 +479,6 @@ class ActivateAccountAndCardController {
         session.hasCompletedCardOrder = true
         session.errorWhileOrderingCard = false
       }.to('beforeEnd')
-      on("hasInvalidAddress"){
-        session.hasCompletedCardOrder = true
-        session.errorWhileOrderingCard = false
-      }.to("hasInvalidAddress")
       on('error').to('cardOrder')
     }
 
