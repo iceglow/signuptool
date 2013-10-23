@@ -43,7 +43,7 @@
       <div>
         <p><g:message code="activateAccountAndCardController.createNewAccount.errorPage.text"/></p>
         <g:form>
-          <g:submitButton name="continue" value="${g.message(code:'activateAccountAndCard.createNewAccount.errorPage.continue')}"/>
+          <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.createNewAccount.errorPage.continue')}"/>
         </g:form>
       </div>
     </div>
