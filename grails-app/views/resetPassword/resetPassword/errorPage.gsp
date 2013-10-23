@@ -43,7 +43,7 @@
       <div>
         <p><g:message code="resetPassword.errorPage.text"/></p>
         <g:form>
-          <g:submitButton name="continue" value="${g.message(code:'resetPassword.errorPage.continue')}"/>
+          <g:submitButton name="continue" class="signupButton" value="${g.message(code:'resetPassword.errorPage.continue')}"/>
         </g:form>
       </div>
     </div>

@@ -57,7 +57,7 @@
           <label for="acceptSuConditions"><g:message code="activateAccountAndCardController.forwardEmail.acceptLabel"/></label>
         </div>
         <div class="clear-float"></div>
-        <g:submitButton name="activate" value="Aktivera"/>
+        <g:submitButton class="signupButton" name="activate" value="${g.message(code:"activateAccountAndCardController.activateButtonLabel")}"/>
       </g:form>
     </div>
   </div>

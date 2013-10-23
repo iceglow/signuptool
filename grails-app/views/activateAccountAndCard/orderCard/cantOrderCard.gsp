@@ -62,7 +62,7 @@
 
   <br/>
   <g:form>
-    <g:submitButton name="continue" value="${g.message(code:'activateAccountAndCard.cantOrderCard.continue')}"/>
+    <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.cantOrderCard.continue')}"/>
   </g:form>
 </div>
 </body>
