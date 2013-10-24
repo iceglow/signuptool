@@ -45,7 +45,7 @@
         <br/>
         <br/>
         <g:link action="activateAccountAndCard">
-          <div class="align-center">
+          <div class="align-right">
             <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'dashboard.index.startActivateAccountButton')}"/>
           </div>
         </g:link>
