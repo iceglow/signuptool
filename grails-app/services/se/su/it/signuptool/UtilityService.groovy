@@ -31,9 +31,12 @@
 
 package se.su.it.signuptool
 
+import se.su.it.signuptool.interfaces.UtilityServiceI
+
+import javax.servlet.http.HttpServletRequest
 import java.util.regex.Matcher
 
-class UtilityService {
+class UtilityService implements UtilityServiceI {
 
   static transactional = false
 
@@ -44,7 +47,7 @@ class UtilityService {
     return scope
   }
 
-  public EventLog getEventLog(def referenceId) throws Exception {
+  public EventLog getEventLog(long referenceId) throws Exception {
     def eventLog = EventLog.get((long) referenceId)
     if (!eventLog) {
       throw new IllegalArgumentException("Failed to get eventLog from referenceId: ${referenceId}")
@@ -58,5 +61,10 @@ class UtilityService {
 
   public String chompNinToSsn(String ssn) throws Exception {
     (ssn?.length() == 12) ? ssn[2..11] : ssn
+  }
+
+  public void prepareSession(HttpServletRequest request) {
+    session.eppn = request?.eppn
+    session.norEduPersonNIN = request?.norEduPersonNIN
   }
 }

@@ -3,7 +3,7 @@ package se.su.it.signuptool.interfaces
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
-public interface SukatServiceInterface {
+public interface SukatServiceI {
   List findUsersBySocialSecurityNumber(String nin)
   List getCardOrdersForUser(String uid)
   List getCardsForUser(String uid)

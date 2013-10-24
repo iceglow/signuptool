@@ -1,12 +1,13 @@
 package se.su.it.signuptool.stubs
 
 import groovy.util.logging.Slf4j
-import se.su.it.signuptool.interfaces.SukatServiceInterface
+import se.su.it.signuptool.interfaces.SukatService
+import se.su.it.signuptool.interfaces.SukatServiceI
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
 @Slf4j
-class SukatServiceStub implements SukatServiceInterface {
+class SukatServiceStub implements SukatServiceI {
 
   @Override
   List findUsersBySocialSecurityNumber(String nin) {
