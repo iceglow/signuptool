@@ -1,12 +1,7 @@
 package se.su.it.signuptool.stubs
 
 import groovy.util.logging.Slf4j
-<<<<<<< HEAD
-import se.su.it.signuptool.interfaces.SukatService
 import se.su.it.signuptool.interfaces.SukatServiceI
-=======
-import se.su.it.signuptool.interfaces.SukatServiceInterface
->>>>>>> 5cc913255003be3477eff3d4af3c661b6b77be1b
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
