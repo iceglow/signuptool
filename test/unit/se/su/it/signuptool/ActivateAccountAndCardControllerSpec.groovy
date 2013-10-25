@@ -301,30 +301,4 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
     1 * controller.sukatService.findUsersBySocialSecurityNumber(*_) >> [new SvcSuPersonVO(), new SvcSuPersonVO()]
   }
-
-  def "changeLanguage: test when the locale is sv_SE, should toggle to en_US"() {
-    given:
-    session.locale = "sv_SE"
-
-    when:
-    controller.changeLanguage()
-
-    then:
-    assert session.locale == 'en_US'
-
-    assert response.redirectedUrl == '/activateAccountAndCard/index?lang=en_US'
-  }
-
-  def "changeLanguage: test when the locale is en_US, should toggle to sv_SE"() {
-    given:
-    session.locale = "en_US"
-
-    when:
-    controller.changeLanguage()
-
-    then:
-    assert session.locale == 'sv_SE'
-
-    assert response.redirectedUrl == '/activateAccountAndCard/index?lang=sv_SE'
-  }
 }
