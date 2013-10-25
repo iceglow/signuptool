@@ -1,13 +1,15 @@
 package se.su.it.signuptool.stubs
 
+import groovy.util.logging.Slf4j
 import se.su.it.signuptool.interfaces.ActivateAccountAndCardServiceI
 import se.su.it.svc.SvcSuPersonVO
 
+@Slf4j
 class ActivateAccountAndCardServiceStub implements ActivateAccountAndCardServiceI {
 
   @Override
   boolean validateForwardAddress(String forwardAddress) {
-    return false  //To change body of implemented methods use File | Settings | File Templates.
+    return true
   }
 
   @Override

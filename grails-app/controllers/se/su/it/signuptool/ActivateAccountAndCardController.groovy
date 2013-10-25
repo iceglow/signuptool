@@ -163,7 +163,8 @@ class ActivateAccountAndCardController {
       }
 
       /** Saving enamn and tnamn for enroll method */
-      acp.newUser = true // Setting init to be able to differentiate a broken stub from a freshly initialized object.
+
+      acp.newUser = (!acp.isStubUser()) // a stub is never a new user.
       acp.user = new SvcSuPersonVO(
           givenName:ladokData.tnamn,
           sn:ladokData.enamn
@@ -274,6 +275,7 @@ class ActivateAccountAndCardController {
 
           if (acp.isBrokenStub()) {
             String msg = "There is a user but the user has no uid, likely a broken stub."
+            flow.error = msg
             eventLog.logEvent(msg)
             throw new IllegalStateException(msg)
           }
@@ -512,7 +514,7 @@ class ActivateAccountAndCardController {
 
   @grails.validation.Validateable
   @ToString(includeNames = true, includeFields = true, excludes = ["password"])
-  public class AccountAndCardProcess {
+  public static class AccountAndCardProcess {
 
     Long referenceId = null
     String eppn
@@ -565,7 +567,7 @@ class ActivateAccountAndCardController {
     }
 
     public boolean isStubUser() {
-      !this.newUser && !this.userVO?.accountIsActive
+      !this.userVO?.accountIsActive
     }
 
     public boolean isBrokenStub() {
