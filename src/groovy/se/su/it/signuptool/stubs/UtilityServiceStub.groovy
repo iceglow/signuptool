@@ -38,11 +38,4 @@ class UtilityServiceStub implements UtilityServiceI {
     log.info "Proxying request"
     return realUtilityService.chompNinToSsn(ssn)
   }
-
-  @Override
-  void prepareSession(HttpSession session, HttpServletRequest request) {
-    if (!session.eppn) {
-      throw new IllegalStateException("Illegal state, required attributes not set in session.")
-    }
-  }
 }

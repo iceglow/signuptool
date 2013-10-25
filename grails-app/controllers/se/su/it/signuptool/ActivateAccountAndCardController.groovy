@@ -31,6 +31,7 @@
 
 package se.su.it.signuptool
 
+import org.springframework.beans.factory.annotation.Autowired
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
@@ -85,7 +86,8 @@ class ActivateAccountAndCardController {
     String uid = acp.user?.uid
 
     if (!acp.verified) {
-      switch(acp.scope) {
+      String scope = utilityService.getScopeFromEppn(acp.eppn)
+      switch(scope) {
         case "studera.nu":
           if (acp.norEduPersonNIN) {
             eventLog.logEvent("verified account for ${acp.eppn} with norEduPersonNIN ${acp.norEduPersonNIN}")
@@ -507,14 +509,11 @@ class ActivateAccountAndCardController {
   }
 
   @grails.validation.Validateable
-  class AccountAndCardProcess {
-
-    def utilityService
+  public class AccountAndCardProcess {
 
     long referenceId
     String eppn
     String norEduPersonNIN
-    String scope = getScopeFromEppn()
     String error
     String password
     boolean newUser = false
@@ -544,10 +543,6 @@ class ActivateAccountAndCardController {
       String password = this.password
       this.password = null
       return password
-    }
-
-    private getScopeFromEppn() {
-      utilityService.getScopeFromEppn(this.eppn)
     }
 
     public boolean hasError() {
@@ -589,6 +584,11 @@ class ActivateAccountAndCardController {
 
     String toString() {
       this.dump() // remove this, make it something clever.
+    }
+
+    public void loadUseCase(def useCase) {
+      this.eppn = useCase.eppn
+      this.norEduPersonNIN = useCase.norEduPersonNIN
     }
   }
 }

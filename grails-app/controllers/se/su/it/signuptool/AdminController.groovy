@@ -95,24 +95,17 @@ class AdminController {
       return redirect(action:'index')
     }
 
-    def prepareSession = { Map user ->
-      log.error "Preparing session with $user"
-      session.givenName = null
-      session.sn = null
-      session.user = null
-      session.uid = null
-      session.referenceId = null
-      session.eppn = user.eppn
-      session.norEduPersonNIN = user.norEduPersonNIN
-    }
+    session.acp = null
+    ActivateAccountAndCardController.AccountAndCardProcess acp = new ActivateAccountAndCardController.AccountAndCardProcess()
+    acp.loadUseCase(getUseCase(caseName))
+    session.acp = acp
 
-    log.error "Preparing session."
-    prepareSession(getUser(caseName))
+    log.error "Preparing session. ${session.acp}"
     log.error "Session prepared with eppn: ${session.eppn}, nin: ${session.norEduPersonNIN}"
     return redirect(controller:'activateAccountAndCard', action:'index')
   }
 
-  def getUser(String name) {
+  def getUseCase(String name) {
     log.info "Requesting use case $name"
     return useCases.find { it.id == name }
   }

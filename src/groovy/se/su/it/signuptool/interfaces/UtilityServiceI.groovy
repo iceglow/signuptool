@@ -10,5 +10,4 @@ public interface UtilityServiceI {
   EventLog getEventLog(long referenceId)
   EventLog getEventLog()
   String chompNinToSsn(String ssn)
-  void prepareSession(HttpSession session, HttpServletRequest request)
 }

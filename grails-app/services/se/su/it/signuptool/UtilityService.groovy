@@ -63,9 +63,4 @@ class UtilityService implements UtilityServiceI {
   public String chompNinToSsn(String ssn) throws Exception {
     (ssn?.length() == 12) ? ssn[2..11] : ssn
   }
-
-  public void prepareSession(HttpSession session, HttpServletRequest request) {
-    session.eppn = request?.eppn
-    session.norEduPersonNIN = request?.norEduPersonNIN
-  }
 }

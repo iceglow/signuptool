@@ -7,9 +7,7 @@ class StateFilters {
   def filters = {
     all(controller: 'activateAccountAndCard', action: '*') {
       before = {
-        if (!session.norEduPersonNIN || !session.eppn) {
-          utilityService.prepareSession(session, request)
-        }
+        log.info "..."
       }
     }
   }
