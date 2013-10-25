@@ -29,7 +29,7 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="grails.util.Environment" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
   <meta name="layout" content="admin"/>
@@ -84,7 +84,22 @@
   </style>
 </head>
 <body>
+  <g:if test="${flash.error}">
+    <span class="error">${flash.error}</span>
+  </g:if>
   <div id="content">
+    <%-- <g:if test="${Environment.current.name == 'mock'}"> --%>
+      <div id="useCases">
+        <g:form name="useCaseForm" action="useCase">
+          <g:select name="caseName"
+                    from="${useCases}"
+                    optionKey="id"
+                    optionValue="${{message(code:it.description)}}"
+          />
+          <g:submitButton name="run" value="Kör"/>
+        </g:form>
+      </div>
+    <%-- </g:if> --%>
     <div id="searchForm">
       <tmpl:searchForm />
     </div>

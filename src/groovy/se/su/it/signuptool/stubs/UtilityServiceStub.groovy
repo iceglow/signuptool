@@ -5,20 +5,17 @@ import se.su.it.signuptool.EventLog
 import se.su.it.signuptool.interfaces.UtilityServiceI
 
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpSession
 
 @Slf4j
 class UtilityServiceStub implements UtilityServiceI {
 
-  private static String DEFAULT_EPPN = "studera.nu"
   def realUtilityService
 
   @Override
   String getScopeFromEppn(String eppn) {
-    switch(eppn) {
-      default:
-        log.info "Default case: returning $DEFAULT_EPPN"
-        return DEFAULT_EPPN
-    }
+    log.info "Proxying request"
+    return realUtilityService.getScopeFromEppn(eppn)
   }
 
   @Override
@@ -43,9 +40,9 @@ class UtilityServiceStub implements UtilityServiceI {
   }
 
   @Override
-  void prepareSession(HttpServletRequest request) {
-    if (!session.eppn || !session.norEduPersonNIN) {
-      throw new IllegalStateException("Session variables should be set before we end up here.")
+  void prepareSession(HttpSession session, HttpServletRequest request) {
+    if (!session.eppn) {
+      throw new IllegalStateException("Illegal state, required attributes not set in session.")
     }
   }
 }

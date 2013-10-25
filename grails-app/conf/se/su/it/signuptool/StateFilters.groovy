@@ -8,7 +8,7 @@ class StateFilters {
     all(controller: 'activateAccountAndCard', action: '*') {
       before = {
         if (!session.norEduPersonNIN || !session.eppn) {
-          utilityService.prepareSession(request)
+          utilityService.prepareSession(session, request)
         }
       }
     }

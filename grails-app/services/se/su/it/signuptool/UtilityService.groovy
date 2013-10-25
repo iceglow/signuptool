@@ -34,6 +34,7 @@ package se.su.it.signuptool
 import se.su.it.signuptool.interfaces.UtilityServiceI
 
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpSession
 import java.util.regex.Matcher
 
 class UtilityService implements UtilityServiceI {
@@ -63,7 +64,7 @@ class UtilityService implements UtilityServiceI {
     (ssn?.length() == 12) ? ssn[2..11] : ssn
   }
 
-  public void prepareSession(HttpServletRequest request) {
+  public void prepareSession(HttpSession session, HttpServletRequest request) {
     session.eppn = request?.eppn
     session.norEduPersonNIN = request?.norEduPersonNIN
   }

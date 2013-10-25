@@ -10,7 +10,22 @@ class SukatServiceStub implements SukatServiceI {
 
   @Override
   List findUsersBySocialSecurityNumber(String nin) {
-    return null  //To change body of implemented methods use File | Settings | File Templates.
+    List response = []
+    log.info "findUsersBySocialSecurityNumber: handling request for $nin"
+
+    switch(nin) {
+      case "1":
+        response = [new SvcSuPersonVO(), new SvcSuPersonVO()]
+      break
+      case "2":
+        throw new Exception("Generic SUKAT exception.")
+      break
+      default:
+      break
+    }
+
+    log.info "findUsersBySocialSecurityNumber: returning response: $response"
+    return response
   }
 
   @Override

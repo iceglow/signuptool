@@ -83,6 +83,7 @@ class ActivateAccountAndCardController {
 
     if (!session.norEduPersonNIN) {
       scope = utilityService.getScopeFromEppn(session.eppn as String)
+      log.info "Scope from eppn: $scope"
 
       switch(scope) {
         case "studera.nu":
@@ -112,8 +113,7 @@ class ActivateAccountAndCardController {
      */
     if (!hasUser) {
       try {
-        List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(session.norEduPersonNIN as String)
-
+        List vos = sukatService.findUsersBySocialSecurityNumber(session.norEduPersonNIN as String)
         SvcSuPersonVO user = null
         int voCount = (vos) ? vos?.size() : 0
 
