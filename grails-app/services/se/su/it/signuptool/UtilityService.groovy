@@ -33,8 +33,6 @@ package se.su.it.signuptool
 
 import se.su.it.signuptool.interfaces.UtilityServiceI
 
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpSession
 import java.util.regex.Matcher
 
 class UtilityService implements UtilityServiceI {

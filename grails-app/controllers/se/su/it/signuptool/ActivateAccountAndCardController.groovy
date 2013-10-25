@@ -31,7 +31,7 @@
 
 package se.su.it.signuptool
 
-import org.springframework.beans.factory.annotation.Autowired
+import groovy.transform.ToString
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
@@ -52,8 +52,9 @@ class ActivateAccountAndCardController {
     AccountAndCardProcess acp = session.acp
 
     if (!acp.validate()) {
-      acp.toString()
-      throw new IllegalStateException("foo!")
+      log.error acp.toString()
+      flash.error = message(code:'activateAccountAndCard.error.noEppn')
+      return redirect(controller:'dashboard', action:'index')
     }
 
     if (acp.hasError()) {
@@ -265,10 +266,11 @@ class ActivateAccountAndCardController {
         SvcUidPwd result
 
         try {
-          String uid = acp?.userVO?.uid
+
           String forwardAddress = flow.forwardAddress
 
-          SvcSuPersonVO user = acp.userVO
+          SvcSuPersonVO user = acp.user
+          String uid = user?.uid
 
           if (acp.isBrokenStub()) {
             String msg = "There is a user but the user has no uid, likely a broken stub."
@@ -509,9 +511,10 @@ class ActivateAccountAndCardController {
   }
 
   @grails.validation.Validateable
+  @ToString(includeNames = true, includeFields = true, excludes = ["password"])
   public class AccountAndCardProcess {
 
-    long referenceId
+    Long referenceId = null
     String eppn
     String norEduPersonNIN
     String error
@@ -524,6 +527,10 @@ class ActivateAccountAndCardController {
 
     static constraints = {
       eppn(nullable:false, blank:false)
+    }
+
+    public boolean getNewUser() {
+      newUser
     }
 
     void setNewUser(boolean newUser) {
@@ -580,10 +587,6 @@ class ActivateAccountAndCardController {
     public void storeActivationResult(def result) {
       this.userVO.uid = result.uid
       this.password = result.password
-    }
-
-    String toString() {
-      this.dump() // remove this, make it something clever.
     }
 
     public void loadUseCase(def useCase) {

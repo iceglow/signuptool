@@ -23,6 +23,9 @@ class SukatServiceStub implements SukatServiceI {
       case "4":
         response = [new SvcSuPersonVO(accountIsActive:true, uid:"fake1")]
         break
+      case "5":
+        response = [new SvcSuPersonVO(accountIsActive:false, uid:"fake1")]
+        break
       default:
         break
     }

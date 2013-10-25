@@ -36,6 +36,9 @@ class AdminController {
   def sukatService
 
   private static def useCases = [
+    [id:"missingEppn",
+        eppn:'',
+        description:"useCases.missingEppn"],
     [id:"unknown",
         eppn:'unknown@unknown.se',
         description:"useCases.unhandledScope"],
@@ -57,7 +60,12 @@ class AdminController {
     [id:"hasActiveUserInSUKAT",
         eppn:"x@studera.nu",
         norEduPersonNIN:'4',
-        description:"useCases.hasActiveUserInSUKAT"]
+        description:"useCases.hasActiveUserInSUKAT"],
+    [id:"creatingNewUserFromStub",
+        eppn:"x@studera.nu",
+        norEduPersonNIN:'5',
+        description:"useCases.creatingNewUserFromStub"]
+
   ]
 
   def index() {
@@ -88,7 +96,7 @@ class AdminController {
   }
 
   def useCase(String caseName) {
-    log.error ">>> $controllerName, $actionName, $params"
+
     if (!caseName || !caseName in useCases*.id) {
       log.error "Case name needed"
       flash.error = "Case name needed: ${useCases*.id?.join(', ')}"
@@ -100,8 +108,7 @@ class AdminController {
     acp.loadUseCase(getUseCase(caseName))
     session.acp = acp
 
-    log.error "Preparing session. ${session.acp}"
-    log.error "Session prepared with eppn: ${session.eppn}, nin: ${session.norEduPersonNIN}"
+    log.error "Prepared session: ${session.acp}"
     return redirect(controller:'activateAccountAndCard', action:'index')
   }
 
