@@ -34,6 +34,7 @@ import grails.util.Environment
 import org.springframework.jndi.JndiObjectFactoryBean
 import se.su.it.signuptool.WebServiceFactory
 import se.su.it.signuptool.stubs.ActivateAccountAndCardServiceStub
+import se.su.it.signuptool.stubs.LadokServiceStub
 import se.su.it.signuptool.stubs.SukatServiceStub
 import se.su.it.signuptool.stubs.UtilityServiceStub
 import se.su.it.svc.AccountServiceImpl
@@ -96,6 +97,7 @@ Environment.executeForCurrentEnvironment {
     beans = {
       sukatService(SukatServiceStub)
       activateAccountAndCardService(ActivateAccountAndCardServiceStub)
+      ladokService(LadokServiceStub)
       utilityService(UtilityServiceStub) {
         realUtilityService = ref("realUtilityService")
       }
