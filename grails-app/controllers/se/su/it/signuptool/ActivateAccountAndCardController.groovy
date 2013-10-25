@@ -84,7 +84,6 @@ class ActivateAccountAndCardController {
 
     String uid = acp.user?.uid
 
-<<<<<<< HEAD
     if (!acp.verified) {
       switch(acp.scope) {
         case "studera.nu":
