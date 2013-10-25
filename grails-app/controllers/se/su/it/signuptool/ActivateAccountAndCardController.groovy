@@ -44,95 +44,87 @@ class ActivateAccountAndCardController {
 
   def index() {
 
-    if (session.error) {
+    if (!session.acp) {
+      session.acp = new AccountAndCardProcess(eppn:request.eppn, norEduPersonNIN:request.norEduPersonNIN)
+    }
+
+    AccountAndCardProcess acp = session.acp
+
+    if (!acp.validate()) {
+      acp.toString()
+      throw new IllegalStateException("foo!")
+    }
+
+    if (acp.hasError()) {
       /** We don't want the error to hang around so we let it live in the shortest lived scope. */
-      request.error = session.error
-      session.error = null
+      request.error = acp.error
     }
 
     /** Only display the password if returned and remove it right after. */
     String password = ''
-    if (session.password) {
-      password = session.password
-      session.password = null
-    }
 
-    boolean hasCompletedCardOrder = (session.hasCompletedCardOrder)
+    if (acp.hasPassword()) {
+      password = acp.password
+    }
 
     EventLog eventLog
 
-    if (session.referenceId) {
+    if (acp.referenceId) {
       try {
-        eventLog = utilityService.getEventLog(session.referenceId)
+        eventLog = utilityService.getEventLog(acp.referenceId)
       } catch (ex) {
-        log.error "Failed to fetch eventLog for referenceId ${session.referenceId}", ex
+        log.error "Failed to fetch eventLog for referenceId ${acp.referenceId}", ex
         flash.error = g.message(code:'activateAccountAndCardController.errors.genericError')
         return redirect(controller:'dashboard', action:'index')
       }
     } else {
       eventLog = utilityService.eventLog
-      session.referenceId = eventLog?.id
+      acp.referenceId = eventLog?.id
     }
 
-    boolean hasUser = session.user
-    boolean stubUser = !session.user?.accountIsActive
+    String uid = acp.user?.uid
 
-    String scope
-
-    String uid = session.user?.uid
-
-    if (!session.nin) {
-      scope = utilityService.getScopeFromEppn(request.eppn as String)
-
-      switch(scope) {
+    if (!acp.verified) {
+      switch(acp.scope) {
         case "studera.nu":
-          if (request.norEduPersonNIN) {
-            session.nin = request.norEduPersonNIN
-            eventLog.logEvent("verified account for ${request.eppn}, nin set to ${session.nin} from norEduPersonNIN")
+          if (acp.norEduPersonNIN) {
+            eventLog.logEvent("verified account for ${acp.eppn} with norEduPersonNIN ${acp.norEduPersonNIN}")
           } else {
-            eventLog.logEvent("unverified account for ${request.eppn}")
+            eventLog.logEvent("unverified account for ${acp.eppn}")
             return render(view:'/shared/unverifiedAccount', model:[referenceId:eventLog?.id])
           }
           break
         default:
-          eventLog.logEvent("no handled or valid scope supplied for ${request.eppn}")
+          eventLog.logEvent("no handled or valid scope supplied for ${acp.eppn}")
           flash.error = message(
               code:'activateAccountAndCardController.noValidScopeFound',
-              args:[request?.eppn]) as String
+              args:[acp.eppn]) as String
           return redirect(controller:'dashboard', action:'index')
       }
     }
 
     if (!eventLog?.userId) {
-      eventLog.userId = session.nin
+      eventLog.userId = acp.norEduPersonNIN
       eventLog.save(flush:true)
     }
 
     /**
      * If the user isn't already in the session we find it either by ssn or uid and put it in the session.
      */
-    if (!hasUser) {
+    if (!acp.hasUser()) {
       try {
-        List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(session.nin as String)
+        List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(acp.norEduPersonNIN)
 
-        SvcSuPersonVO user = null
         int voCount = (vos) ? vos?.size() : 0
 
         if (voCount > 1) {
-          String msg = "Found multiple accounts with social security number based on norEduPersonNIN: ${session.nin}. Aborting activation."
+          String msg = "Found multiple accounts with social security number based on norEduPersonNIN: ${acp.norEduPersonNIN}. Aborting activation."
           eventLog.logEvent(msg)
           log.error msg
           flash.error = g.message(code:'sukat.errors.multipleUsersForSSN')
           return redirect(controller:'dashboard', action:'index')
         } else if (voCount == 1) {
-          user = vos?.first()
-        }
-
-        if (user) {
-          hasUser = true
-          stubUser = !user?.accountIsActive
-          session.user = user
-          session.uid = user?.uid
+          acp.user = vos?.first()
         }
       } catch (ex) {
         eventLog.logEvent("Failed when setting user in session for ${uid} with exception ${ex.message}")
@@ -140,53 +132,56 @@ class ActivateAccountAndCardController {
         log.error "Failed when setting user in session", ex
         flash.error = message(
             code:'activateAccountAndCardController.errorWhenFetchingUser',
-            args:[session.nin]) as String
+            args:[acp.norEduPersonNIN]) as String
 
         return redirect(controller:'dashboard', action:'index')
       }
     }
 
     /** If we still have no user in the session then this is a first time visit */
-    if (!hasUser || stubUser) {
+    if (!acp.hasUser() || acp.isStubUser()) {
 
-      eventLog.logEvent("First time visit for ${session.nin}")
+      eventLog.logEvent("First time visit for ${acp.norEduPersonNIN}")
       /** See if we can find the new user in Ladok */
       def ladokData
 
       try {
-        ladokData = activateAccountAndCardService.fetchLadokData(session.nin as String)
+        ladokData = activateAccountAndCardService.fetchLadokData(acp.norEduPersonNIN)
       } catch (ex) {
-        eventLog.logEvent("Failed when fetching ladokData for uid: $session.nin")
-        log.error "Failed when fetching ladokData for uid: $session.nin", ex
+        eventLog.logEvent("Failed when fetching ladokData for uid: $acp.norEduPersonNIN")
+        log.error "Failed when fetching ladokData for uid: $acp.norEduPersonNIN", ex
 
         flash.error = message(code: "activateAccountAndCardController.errorWhenContactingLadok")
         return redirect(controller:'dashboard', action:'index')
       }
 
       if (!ladokData) {
-        eventLog.logEvent("User ${session.nin} not found in ladok")
+        eventLog.logEvent("User ${acp.norEduPersonNIN} not found in ladok")
         return render(view:'userNotFoundInLadok', model:[referenceId:eventLog?.id])
       }
 
       /** Saving enamn and tnamn for enroll method */
-      session.givenName = ladokData.tnamn
-      session.sn = ladokData.enamn
+      acp.newUser = true // Setting init to be able to differentiate a broken stub from a freshly initialized object.
+      acp.user = new SvcSuPersonVO(
+          givenName:ladokData.tnamn,
+          sn:ladokData.enamn
+      )
 
-      eventLog.logEvent("Account for user with nin: ${session.nin} not found in SUKAT, starting create user account flow.")
+      eventLog.logEvent("Account for user with nin: ${acp.norEduPersonNIN} not found in SUKAT, starting create user account flow.")
 
       return redirect(action:'createNewAccount')
     }
 
     String lpwurl = configService.getValue("signup", "lpwtool")
     String sukaturl = configService.getValue("signup", "sukattool")
-    eventLog.logEvent("Found account with nin: ${session.nin} and uid: ${session.uid} in SUKAT, displaying information.")
+    eventLog.logEvent("Found account with nin: ${acp.norEduPersonNIN} and uid: ${acp?.userVO?.uid} in SUKAT, displaying information.")
 
     return render(view:'index', model:[
-        uid:session?.user?.uid,
+        uid:acp?.userVO?.uid,
         password:password,
         lpwurl: lpwurl,
         sukaturl: sukaturl,
-        hasCompletedCardOrder:hasCompletedCardOrder
+        hasCompletedCardOrder:acp.hasCompletedCardOrder
     ])
   }
 
@@ -195,8 +190,9 @@ class ActivateAccountAndCardController {
     prepareForwardAddress {
       action {
         EventLog eventLog
+        AccountAndCardProcess acp = session.acp
         try {
-          eventLog = utilityService.getEventLog(session.referenceId)
+          eventLog = utilityService.getEventLog(acp.referenceId)
         } catch (ex) {
           log.error "Fetching EventLog failed", ex
           return error()
@@ -205,7 +201,7 @@ class ActivateAccountAndCardController {
         String forwardAddress = ''
         /** Even if fetching forward address fails we should not fail here. */
         try {
-          forwardAddress = ladokService.findForwardAddressSuggestionForPnr(session.nin as String)
+          forwardAddress = ladokService.findForwardAddressSuggestionForPnr(acp.norEduPersonNIN)
         } catch (ex) {
           eventLog.logEvent("Failed when fetching forward address from Ladok: ${ex?.message}")
           log.error "Fetching forward address from LADOK failed.", ex
@@ -227,8 +223,9 @@ class ActivateAccountAndCardController {
     processEmailInput {
       action {
         EventLog eventLog
+        AccountAndCardProcess acp = session.acp
         try {
-          eventLog = utilityService.getEventLog(session.referenceId)
+          eventLog = utilityService.getEventLog(acp.referenceId)
         } catch (ex) {
           log.error "Fetching EventLog failed", ex
           return error()
@@ -242,7 +239,7 @@ class ActivateAccountAndCardController {
 
         if (!activateAccountAndCardService.validateForwardAddress((String)params?.forwardAddress)) {
           flow.error = g.message(code:'activateAccountAndCardController.errors.notHavingSuppliedValidForwardAddress')
-          eventLog.logEvent("Invalid email for ${session.nin}: ${flow.forwardAddress}")
+          eventLog.logEvent("Invalid email for ${acp.norEduPersonNIN}: ${flow.forwardAddress}")
           return retry()
         }
       }
@@ -257,8 +254,9 @@ class ActivateAccountAndCardController {
       action {
 
         EventLog eventLog
+        AccountAndCardProcess acp = session.acp
         try {
-          eventLog = utilityService.getEventLog(session.referenceId)
+          eventLog = utilityService.getEventLog(acp.referenceId)
         } catch (ex) {
           log.error "Fetching EventLog failed", ex
           return error()
@@ -267,23 +265,23 @@ class ActivateAccountAndCardController {
         SvcUidPwd result
 
         try {
-          String givenName = session.givenName
-          String sn = session.sn
-          String nin = session.nin
-          String uid = session.user?.uid
+
+          String uid = acp?.userVO?.uid
           String forwardAddress = flow.forwardAddress
 
-          if (session.user && !uid) {
+          SvcSuPersonVO user = acp.userVO
+
+          if (acp.isBrokenStub()) {
             String msg = "There is a user but the user has no uid, likely a broken stub."
             eventLog.logEvent(msg)
             throw new IllegalStateException(msg)
           }
 
-          if (!uid) {
+          if (acp.isNewUser()) {
             try {
-              uid = sukatService.createSuPersonStub(givenName, sn, nin)
+              uid = sukatService.createSuPersonStub(user.givenName, user.sn, acp.norEduPersonNIN)
             } catch (ex) {
-              eventLog.logEvent("Failed to create SUKAT stub for user with social security number: ${session.nin}")
+              eventLog.logEvent("Failed to create SUKAT stub for user with social security number: ${acp.norEduPersonNIN}")
               log.error "Failed to create SUKAT stub", ex
               flow.error = g.message(code:'activateAccountAndCardController.errors.failedWhenEnrollingUser')
               return error()
@@ -294,7 +292,7 @@ class ActivateAccountAndCardController {
           try {
             sukatService.setMailRoutingAddress(uid, forwardAddress)
           } catch (ex) {
-            eventLog.logEvent("Failed to set MailRoutingAddress for user with uid: $uid, ssn: ${session.nin}")
+            eventLog.logEvent("Failed to set MailRoutingAddress for user with uid: $uid, ssn: ${acp.norEduPersonNIN}")
             log.error "Failed to set mailRoutingAddress for user with uid $uid", ex
             flow.error = g.message(code:'activateAccountAndCardController.errors.failedWhenEnrollingUser')
             return error()
@@ -325,9 +323,9 @@ class ActivateAccountAndCardController {
         }
 
         /** Since we don't recieve a full account from the creation of an account we return the uid */
-        session.user = null
-        session.uid = result.uid
-        session.password = result.password
+
+        acp.storeActivationResult(result)
+        session.acp = acp
       }
       on("success").to("beforeEnd")
       on("error").to("errorHandler")
@@ -339,7 +337,8 @@ class ActivateAccountAndCardController {
           log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException as Throwable
         }
         flow.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
-        clearSession()
+        // clearSession()
+        session.acp = null
       }
       on("success").to("errorPage")
     }
@@ -370,34 +369,29 @@ class ActivateAccountAndCardController {
     }
   }
 
-
-
-  private void clearSession() {
-    session.uid = null
-    session.password = null
-  }
-
   def orderCardFlow = {
 
     prepareForwardOrderCard {
       action {
 
         EventLog eventLog
+        AccountAndCardProcess acp = session.acp
+
         try {
-          eventLog = utilityService.getEventLog(session.referenceId)
+          eventLog = utilityService.getEventLog(acp.referenceId)
         } catch (ex) {
           log.error "Fetching EventLog failed", ex
           return error()
         }
 
-        if (!session.user?.uid) {
-          eventLog.logEvent("User has no valid user in session, this should not happen. Value is currently set to ${session.user}")
+        if (!acp.userVO.uid) {
+          eventLog.logEvent("User has no valid user in session, this should not happen. Value is currently set to ${acp.user}")
           flow.error = g.message(code:'activateAccountAndCardController.cardOrder.noAccount.error')
           return error()
         }
 
         try {
-          flow.cardInfo = activateAccountAndCardService.getCardOrderStatus(session.user as SvcSuPersonVO)
+          flow.cardInfo = activateAccountAndCardService.getCardOrderStatus(acp.user)
         } catch (ex) {
           log.error "Error when fetching card order status", ex
           flow.error = g.message(code:'activateAccountAndCardController.cardOrder.optionalError.errorWhenFetchingCardOrderStatus')
@@ -426,7 +420,7 @@ class ActivateAccountAndCardController {
     cantOrderCard {
       on("continue") {
         /** We consider this a successful completion of the flow since the user can't order a card */
-        session.hasCompletedCardOrder = true
+        (session.acp as AccountAndCardProcess).hasCompletedCardOrder = true
       }.to("beforeEnd")
     }
 
@@ -439,10 +433,10 @@ class ActivateAccountAndCardController {
 
     processCardOrder {
       action {
-
+        AccountAndCardProcess acp = session.acp
         EventLog eventLog
         try {
-          eventLog = utilityService.getEventLog(session.referenceId)
+          eventLog = utilityService.getEventLog(acp.referenceId)
         } catch (ex) {
           log.error "Fetching EventLog failed", ex
           return error()
@@ -461,9 +455,8 @@ class ActivateAccountAndCardController {
             return error()
           }
           try {
-            SvcSuPersonVO user = session.user
             Map ladokAddress = flow.cardInfo?.ladokAddress
-            sukatService.orderCard(user, ladokAddress)
+            sukatService.orderCard(acp.user, ladokAddress)
           } catch (ex) {
             log.error "Failed to order card", ex
             eventLog.logEvent("Failed to order card: ${ex.message}")
@@ -476,8 +469,8 @@ class ActivateAccountAndCardController {
       }
       on('success'){
         flow.error = null
-        session.hasCompletedCardOrder = true
-        session.errorWhileOrderingCard = false
+        (session.acp as AccountAndCardProcess).hasCompletedCardOrder = true
+        (session.acp as AccountAndCardProcess).errorWhileOrderingCard = false
       }.to('beforeEnd')
       on('error').to('cardOrder')
     }
@@ -488,8 +481,8 @@ class ActivateAccountAndCardController {
           log.error "Exception was thrown in the Order Card Flow", flash.stateException as Throwable
           flash.stateException = null
         }
-        session.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
-        session.errorWhileOrderingCard = true
+        (session.acp as AccountAndCardProcess).error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
+        (session.acp as AccountAndCardProcess).errorWhileOrderingCard = true
       }
       on("success").to("beforeEnd")
     }
@@ -514,5 +507,91 @@ class ActivateAccountAndCardController {
     }
 
     redirect(controller: params.c, action: params.a, params:['lang':session.locale])
+  }
+
+  @grails.validation.Validateable
+  class AccountAndCardProcess {
+
+    def utilityService
+
+    long referenceId
+    String eppn
+    String norEduPersonNIN
+    String scope = getScopeFromEppn()
+    String error
+    String password
+    boolean newUser = false
+    boolean verified = false
+    boolean hasCompletedCardOrder = false
+    boolean errorWhileOrderingCard = false
+    SvcSuPersonVO userVO
+
+    static constraints = {
+      eppn(blank:false)
+    }
+
+    void setNewUser(boolean newUser) {
+      log.info "We are creating a new user."
+      this.newUser = newUser
+    }
+
+    public String getError() {
+      log.info "Fetching and clearing error"
+      String error = this.error
+      this.error = null
+      return error
+    }
+
+    public String getPassword() {
+      log.info "Fetching and clearing password"
+      String password = this.password
+      this.password = null
+      return password
+    }
+
+    private getScopeFromEppn() {
+      utilityService.getScopeFromEppn(this.eppn)
+    }
+
+    public boolean hasError() {
+      (this.@error)
+    }
+
+    public boolean hasPassword() {
+      (this.@password)
+    }
+
+    public boolean isNewUser() {
+      newUser
+    }
+
+    public boolean isStubUser() {
+      !this.newUser && !this.userVO?.accountIsActive
+    }
+
+    public boolean isBrokenStub() {
+      isStubUser() && !this.userVO.uid
+    }
+
+    public boolean hasUser() {
+      (this.userVO)
+    }
+
+    public def getUser() {
+      return this.userVO
+    }
+
+    public void setUser(def user) {
+      this.userVO = user
+    }
+
+    public void storeActivationResult(def result) {
+      this.userVO.uid = result.uid
+      this.password = result.password
+    }
+
+    String toString() {
+      this.dump() // remove this, make it something clever.
+    }
   }
 }
