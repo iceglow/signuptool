@@ -29,6 +29,8 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
+<% params.lang = params.lang =~ /sv_SE/ ? 'en_US':'sv_SE' %>
+
 <div class="top-links apps-darkblue">
   <div class="clear-float"></div>
 
@@ -37,9 +39,9 @@
       <li class="last-item">
         <g:link
             class="last-item"
-            controller="activateAccountAndCard"
-            action="changeLanguage"
-            params="${[c:params.controller, a:params.action, params:params]}">${g.message(code: 'application.toggle.language.label')}</g:link>
+            controller="${params.controller}"
+            action="${params.action}"
+            params="${params}">${g.message(code: 'application.toggle.language.label')}</g:link>
       </li>
     </ul>
   </div>
