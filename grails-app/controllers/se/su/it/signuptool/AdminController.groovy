@@ -50,6 +50,14 @@ class AdminController {
         eppn:"x@studera.nu",
         norEduPersonNIN:'2',
         description:"useCases.errorWhenAskingSukatForUser"],
+    [id:"noSUKATuserAndNotFoundInLADOK",
+        eppn:"x@studera.nu",
+        norEduPersonNIN:'3',
+        description:"useCases.noSUKATuserAndNotFoundInLADOK"],
+    [id:"hasActiveUserInSUKAT",
+        eppn:"x@studera.nu",
+        norEduPersonNIN:'4',
+        description:"useCases.hasActiveUserInSUKAT"]
   ]
 
   def index() {
@@ -89,6 +97,10 @@ class AdminController {
 
     def prepareSession = { Map user ->
       log.error "Preparing session with $user"
+      session.givenName = null
+      session.sn = null
+      session.user = null
+      session.uid = null
       session.referenceId = null
       session.eppn = user.eppn
       session.norEduPersonNIN = user.norEduPersonNIN

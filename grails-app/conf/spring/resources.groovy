@@ -33,6 +33,7 @@
 import grails.util.Environment
 import org.springframework.jndi.JndiObjectFactoryBean
 import se.su.it.signuptool.WebServiceFactory
+import se.su.it.signuptool.stubs.ActivateAccountAndCardServiceStub
 import se.su.it.signuptool.stubs.SukatServiceStub
 import se.su.it.signuptool.stubs.UtilityServiceStub
 import se.su.it.svc.AccountServiceImpl
@@ -94,6 +95,7 @@ Environment.executeForCurrentEnvironment {
     println "Running in mock production mode."
     beans = {
       sukatService(SukatServiceStub)
+      activateAccountAndCardService(ActivateAccountAndCardServiceStub)
       utilityService(UtilityServiceStub) {
         realUtilityService = ref("realUtilityService")
       }

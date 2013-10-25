@@ -16,12 +16,15 @@ class SukatServiceStub implements SukatServiceI {
     switch(nin) {
       case "1":
         response = [new SvcSuPersonVO(), new SvcSuPersonVO()]
-      break
+        break
       case "2":
         throw new Exception("Generic SUKAT exception.")
-      break
+        break
+      case "4":
+        response = [new SvcSuPersonVO(accountIsActive:true, uid:"fake1")]
+        break
       default:
-      break
+        break
     }
 
     log.info "findUsersBySocialSecurityNumber: returning response: $response"
