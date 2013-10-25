@@ -2,7 +2,6 @@ package se.su.it.signuptool
 
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import org.springframework.web.servlet.support.RequestContextUtils
 import spock.lang.Specification
 
 @TestFor(DashboardController) // To get some controller to run
