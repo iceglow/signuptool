@@ -84,6 +84,7 @@ class ActivateAccountAndCardController {
 
     String uid = acp.user?.uid
 
+<<<<<<< HEAD
     if (!acp.verified) {
       switch(acp.scope) {
         case "studera.nu":
@@ -150,7 +151,6 @@ class ActivateAccountAndCardController {
       } catch (ex) {
         eventLog.logEvent("Failed when fetching ladokData for uid: $acp.norEduPersonNIN")
         log.error "Failed when fetching ladokData for uid: $acp.norEduPersonNIN", ex
-
         flash.error = message(code: "activateAccountAndCardController.errorWhenContactingLadok")
         return redirect(controller:'dashboard', action:'index')
       }
@@ -168,7 +168,6 @@ class ActivateAccountAndCardController {
       )
 
       eventLog.logEvent("Account for user with nin: ${acp.norEduPersonNIN} not found in SUKAT, starting create user account flow.")
-
       return redirect(action:'createNewAccount')
     }
 
@@ -265,7 +264,6 @@ class ActivateAccountAndCardController {
         SvcUidPwd result
 
         try {
-
           String uid = acp?.userVO?.uid
           String forwardAddress = flow.forwardAddress
 
@@ -527,7 +525,7 @@ class ActivateAccountAndCardController {
     SvcSuPersonVO userVO
 
     static constraints = {
-      eppn(blank:false)
+      eppn(nullable:false, blank:false)
     }
 
     void setNewUser(boolean newUser) {

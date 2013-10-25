@@ -33,12 +33,13 @@ package se.su.it.signuptool
 
 import org.apache.commons.collections.Predicate
 import se.su.it.commons.PrincipalUtils
+import se.su.it.signuptool.interfaces.SukatServiceI
 import se.su.it.svc.SuCard
 import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
-class SukatService implements Serializable {
+class SukatService implements Serializable, SukatServiceI {
   /** Needed if we want to use this service in the flow. */
   static transactional = false
 

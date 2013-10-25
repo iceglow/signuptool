@@ -32,7 +32,37 @@
 package se.su.it.signuptool
 
 class AdminController {
-  def index() {}
+
+  def sukatService
+
+  private static def useCases = [
+    [id:"unknown",
+        eppn:'unknown@unknown.se',
+        description:"useCases.unhandledScope"],
+    [id:"unverifiedAccount",
+        eppn:"x@studera.nu",
+        description:"useCases.unverifiedAccount"],
+    [id:"multipleEntriesInSukat",
+        eppn:"x@studera.nu",
+        norEduPersonNIN:'1',
+        description:"useCases.multipleEntriesInSukat"],
+    [id:"errorWhenAskingSukatForUser",
+        eppn:"x@studera.nu",
+        norEduPersonNIN:'2',
+        description:"useCases.errorWhenAskingSukatForUser"],
+    [id:"noSUKATuserAndNotFoundInLADOK",
+        eppn:"x@studera.nu",
+        norEduPersonNIN:'3',
+        description:"useCases.noSUKATuserAndNotFoundInLADOK"],
+    [id:"hasActiveUserInSUKAT",
+        eppn:"x@studera.nu",
+        norEduPersonNIN:'4',
+        description:"useCases.hasActiveUserInSUKAT"]
+  ]
+
+  def index() {
+    [useCases:useCases.clone()]
+  }
 
   def search(String searchFor, String searchText) {
 
@@ -55,5 +85,35 @@ class AdminController {
       return render(text:g.message(code:'admin.search.noResults.for', args:[searchText]))
     }
     return render(template: 'searchResults', collection: eventLogs, var: "eventLog")
+  }
+
+  def useCase(String caseName) {
+    log.error ">>> $controllerName, $actionName, $params"
+    if (!caseName || !caseName in useCases*.id) {
+      log.error "Case name needed"
+      flash.error = "Case name needed: ${useCases*.id?.join(', ')}"
+      return redirect(action:'index')
+    }
+
+    def prepareSession = { Map user ->
+      log.error "Preparing session with $user"
+      session.givenName = null
+      session.sn = null
+      session.user = null
+      session.uid = null
+      session.referenceId = null
+      session.eppn = user.eppn
+      session.norEduPersonNIN = user.norEduPersonNIN
+    }
+
+    log.error "Preparing session."
+    prepareSession(getUser(caseName))
+    log.error "Session prepared with eppn: ${session.eppn}, nin: ${session.norEduPersonNIN}"
+    return redirect(controller:'activateAccountAndCard', action:'index')
+  }
+
+  def getUser(String name) {
+    log.info "Requesting use case $name"
+    return useCases.find { it.id == name }
   }
 }

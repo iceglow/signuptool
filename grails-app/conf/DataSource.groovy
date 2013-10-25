@@ -60,4 +60,10 @@ environments {
             jndiName = "java:comp/env/jdbc/signuptool"
         }
     }
+    mock {
+      dataSource {
+        dbCreate = "update"
+        url = "jdbc:h2:mem:mockDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+      }
+    }
 }
