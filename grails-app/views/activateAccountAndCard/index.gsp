@@ -30,20 +30,10 @@
   --}%
 
 <%@ page contentType="text/html;charset=UTF-8" %>
-<html>
+<g:applyLayout name="activateFlow"/>
 <head>
   <title></title>
-  <meta name="layout" content="main"/>
 </head>
-<body>
-  <div class="apps-mid-column">
-
-    <div class="float-left">
-      <div class="prompt">
-
-        <g:if test="${request.error}">
-          <div class="error"> ${request.error} </div>
-        </g:if>
 
         <!-- showAccount: When hasCompletedCardOrder and errorWhileOrderingCard when both are false. -->
         <g:set var="showAccountInfo" value="${!(session.hasCompletedCardOrder) && !(session.errorWhileOrderingCard)}"/>
@@ -51,6 +41,7 @@
         <!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
         <g:set var="showOrderCard" value="${!(session.hasCompletedCardOrder) || (session.errorWhileOrderingCard)}"/>
 
+<content tag="flow.prompt">
         <!-- Webreg:  When either hasCompletedCardOrder or errorWhileOrderingCard is true (when showAccountInfo == false) -->
 
         <g:if test="${showAccountInfo}">
@@ -70,9 +61,9 @@
             </div>
           </g:form>
         </g:if>
-      </div>
+</content>
 
-      <div class="state_progress_img">
+<content tag="flow.step.image">
         <g:if test="${showAccountInfo}">
           <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step3.image'))}"
                border="0"
@@ -85,9 +76,5 @@
                class="logotype"
                title="<g:message code='activateAccountAndCardController.step5.counter'/>">
         </g:else>
-      </div>
+</content>
 
-    </div>
-  </div>
-</body>
-</html>

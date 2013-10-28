@@ -30,15 +30,12 @@
   --}%
 
 <%@ page contentType="text/html;charset=UTF-8" %>
-<html>
+<g:applyLayout name="activateFlow"/>
 <head>
   <title><g:message code="activateAccountAndCard.cantOrderCard.title"/></title>
   <meta name="layout" content="main"/>
 </head>
-<body>
-<div class="apps-mid-column">
-  <div class="float-left">
-    <div class="prompt">
+<content tag="flow.prompt">
       <p><g:message code="activateAccountAndCard.cantOrderCard.text"/></p>
 
       <g:if test="${!(cardInfo?.hasAddress)}">
@@ -68,13 +65,9 @@
           <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.cantOrderCard.continue')}"/>
         </div>
       </g:form>
-    </div>
+</content>
 
-    <div class="state_progress_img">
+<content tag="flow.step.image">
       <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step4.image'))}" border="0"
            class="logotype" title="<g:message code='activateAccountAndCardController.step4.counter'/>">
-    </div>
-  </div>
-</div>
-</body>
-</html>
+</content>

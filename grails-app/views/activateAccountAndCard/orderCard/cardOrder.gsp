@@ -30,20 +30,11 @@
   --}%
 
 <%@ page contentType="text/html;charset=UTF-8" %>
-<html>
+<g:applyLayout name="activateFlow"/>
 <head>
-  <meta name="layout" content="main"/>
   <title>Order University Card</title>
 </head>
-<body>
-  <div class="apps-mid-column">
-    <g:if test="${error}">
-      <div class="error">${error}</div>
-    </g:if>
-
-    <div class="float-left">
-
-      <div class="prompt">
+<content tag="flow.prompt">
         <div><g:message code="activateAccountAndCardController.cardOrder.addressDetail"/></div>
         <div>${session?.user?.givenName} ${session?.user?.sn}</div>
         <div>${cardInfo?.ladokAddress?.gatadr}</div>
@@ -81,13 +72,9 @@
             <g:submitButton class="signupButton" name="sendCardOrder" value="${g.message(code:'activateAccountAndCardController.cardOrder.continue')}"/>
           </div>
         </g:form>
-      </div>
+</content>
 
-      <div class="state_progress_img">
+<content tag="flow.step.image">
         <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step4.image'))}" border="0"
              class="logotype" title="<g:message code='activateAccountAndCardController.step4.counter'/>">
-      </div>
-    </div>
-  </div>
-</body>
-</html>
+</content>
