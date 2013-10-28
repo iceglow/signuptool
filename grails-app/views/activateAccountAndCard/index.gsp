@@ -74,13 +74,13 @@
 
       <div class="state_progress_img">
         <g:if test="${showAccountInfo}">
-          <img src="${resource(dir: 'img', file: 'universityaccount_activate_account_se.png')}"
+          <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step3.image'))}"
                border="0"
                class="logotype"
                title="<g:message code='activateAccountAndCardController.step3.counter'/>">
         </g:if>
         <g:else>
-          <img src="${resource(dir: 'img', file: 'end_activate_account_se.png')}"
+          <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step5.image'))}"
                border="0"
                class="logotype"
                title="<g:message code='activateAccountAndCardController.step5.counter'/>">
