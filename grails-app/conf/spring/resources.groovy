@@ -29,8 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+import grails.util.Environment
 import org.springframework.jndi.JndiObjectFactoryBean
 import se.su.it.signuptool.WebServiceFactory
+import se.su.it.signuptool.stubs.ActivateAccountAndCardServiceStub
+import se.su.it.signuptool.stubs.LadokServiceStub
+import se.su.it.signuptool.stubs.SukatServiceStub
+import se.su.it.signuptool.stubs.UtilityServiceStub
 import se.su.it.svc.AccountServiceImpl
 import se.su.it.svc.CardInfoServiceImpl
 import se.su.it.svc.Status
@@ -78,3 +84,25 @@ beans = {
     bean.constructorArgs = [WebServiceAdminImpl.class, grailsApplication.config.sukatsvc.webserviceadmin]
   }
 }
+
+Environment.executeForCurrentEnvironment {
+  development {
+    println "Running in development mode."
+  }
+  production {
+    println "Running in production mode."
+  }
+  mock {
+    println "Running in mock production mode."
+    beans = {
+      sukatService(SukatServiceStub)
+      activateAccountAndCardService(ActivateAccountAndCardServiceStub)
+      ladokService(LadokServiceStub)
+      utilityService(UtilityServiceStub) {
+        realUtilityService = ref("realUtilityService")
+      }
+      realUtilityService(se.su.it.signuptool.UtilityService)
+    }
+  }
+}
+

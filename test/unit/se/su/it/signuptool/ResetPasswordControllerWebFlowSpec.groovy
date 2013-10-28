@@ -51,6 +51,7 @@ class ResetPasswordControllerWebFlowSpec extends Specification {
     }
     myController.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     myController.sukatService = Mock(SukatService)
+    session.referenceId = 1
     controller = myController
   }
 

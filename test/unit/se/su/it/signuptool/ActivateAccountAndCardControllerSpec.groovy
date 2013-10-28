@@ -54,15 +54,53 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     controller.log = Mock(Log)
   }
 
-  def "index: Testing the password passing."() {
+  def "index: When we fail to create a new valid AccountAndCardProcess"() {
+    when:
+    controller.index()
+
+    then:
+    response.redirectedUrl == '/dashboard/index'
+
+    and:
+    flash.error == 'activateAccountAndCard.error.noEppn'
+  }
+
+  def "index: Test creating a new AccountAndCardProcess"() {
     given:
-    session.password = 's3cret!'
+    def eppn = 'abc'
+    request.eppn = eppn
 
     when:
     controller.index()
 
     then:
-    session.password == null
+    session.acp.eppn == eppn
+  }
+
+  def "index: Test creating a new AccountAndCardProcess with norEduPersonNIN"() {
+    given:
+    def eppn = 'abc'
+    def norEduPersonNIN = '123'
+    request.eppn = eppn
+    request.norEduPersonNIN = norEduPersonNIN
+
+    when:
+    controller.index()
+
+    then:
+    session.acp.eppn == eppn
+    session.acp.norEduPersonNIN == norEduPersonNIN
+  }
+
+  def "index: Testing the password passing."() {
+    given:
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(eppn:'eppn@eppn.nu', password:'s3cret!')
+
+    when:
+    controller.index()
+
+    then:
+    session.acp.password == null
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
@@ -71,13 +109,13 @@ class ActivateAccountAndCardControllerSpec extends Specification {
   def "index: Passing the session error message to the index view."() {
     given:
     def message = 'message'
-    session.error = message
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(eppn:'eppn@eppn.nu', error: message)
 
     when:
     controller.index()
 
     then:
-    session.error == null
+    session.acp.error == null
 
     and:
     request.error == message
@@ -86,8 +124,10 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
   }
 
-
   def "index: handle studera.nu unverified account (missing norEduPersonNIN)"() {
+    given:
+    request.eppn = "some@studera.nu"
+
     when:
     controller.index()
 
@@ -99,6 +139,9 @@ class ActivateAccountAndCardControllerSpec extends Specification {
   }
 
   def "index: Test unhandled scope when users nin is not in the session."() {
+    def eppn = "unhandled@scope.se"
+    request.eppn = eppn
+
     when:
     controller.index()
 
@@ -108,11 +151,12 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     flash.error == "activateAccountAndCardController.noValidScopeFound"
 
     and:
-    1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.sen"
+    1 * controller.utilityService.getScopeFromEppn(*_) >> eppn
   }
 
   def "index: Test when session has reference id, should log to event log"() {
     given:
+    request.eppn = "default@studera.nu"
     session.referenceId = "1234567"
 
     when:
@@ -124,6 +168,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: Test when session has reference id and eventlog throws exception, should log error, create user error message and redirect to dashboard"() {
     given:
+    request.eppn = "default@studera.nu"
     session.referenceId = "1234567"
 
     when:
@@ -142,8 +187,13 @@ class ActivateAccountAndCardControllerSpec extends Specification {
   def "index: if we have an active user, we should use it"() {
     given:
     def user = new SvcSuPersonVO(uid: 'foo', accountIsActive: true)
-    session.user = user
-    session.nin = 'socialSecurityNumber'
+
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
+        eppn: "default@studera.nu",
+        norEduPersonNIN: "1234",
+        userVO: user,
+        verified: true
+    )
 
     when:
     controller.index()
@@ -155,9 +205,14 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     model.uid == user.uid
   }
 
-  def "index: Testing when nin is already in the session."() {
+  def "index: When user is not found in LADOK."() {
     given:
-    session.nin = 'socialSecurityNumber'
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
+        eppn: "default@studera.nu",
+        verified: true,
+        userVO: new SvcSuPersonVO(accountIsActive: false)
+
+    )
 
     when:
     controller.index()
@@ -167,11 +222,16 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
     and:
     0 * controller.utilityService.getScopeFromEppn(*_)
+    1 * controller.activateAccountAndCardService.fetchLadokData(*_)
   }
 
-  def "index: When nin is set in the session but finding the user throws an exception."() {
+  def "index: When finding the user in SUKAT throws an exception."() {
     given:
-    request.norEduPersonNIN = '191102023333'
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
+        eppn: "default@studera.nu",
+        norEduPersonNIN: '1234',
+        verified: false,
+    )
 
     when:
     controller.index()
@@ -187,31 +247,22 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     1 * controller.sukatService.findUsersBySocialSecurityNumber(*_) >> { throw new RuntimeException('foo') }
   }
 
-  def "index: Trying to create a new user (uid not found in sukat), but user is not found in ladok.."() {
-    given:
-    request.norEduPersonNIN = '191102023333'
-
-    when:
-    controller.index()
-
-    then:
-    view == '/activateAccountAndCard/userNotFoundInLadok'
-
-    and:
-    1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
-    1 * controller.sukatService.findUsersBySocialSecurityNumber(*_) >> null
-    1 * controller.activateAccountAndCardService.fetchLadokData(*_) >> null
-  }
-
   def "index: Trying to create a new user (uid not found in sukat), and fetching ladok data throws an exception"() {
     given:
-    request.norEduPersonNIN = '191102023333'
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
+        eppn: "default@studera.nu",
+        norEduPersonNIN: '1234',
+        verified: false,
+    )
 
     when:
     controller.index()
 
     then:
     response.redirectedUrl == '/dashboard/index'
+
+    and:
+    flash.error == 'activateAccountAndCardController.errorWhenContactingLadok'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
@@ -221,7 +272,11 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: Trying to create a new user (uid not found in sukat)"() {
     given:
-    request.norEduPersonNIN = '191102023333'
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
+        eppn: "default@studera.nu",
+        norEduPersonNIN: '1234',
+        verified: false,
+    )
 
     when:
     controller.index()
@@ -237,8 +292,12 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: When a user is found in sukat"() {
     given:
-    session.password = 's3cret!'
-    request.norEduPersonNIN = '191102023333'
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
+        eppn: "default@studera.nu",
+        norEduPersonNIN: '1234',
+        verified: false,
+        password: 's3cret!'
+    )
 
     when:
     controller.index()
@@ -253,7 +312,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     model.sukaturl == "sukattoolUrl"
 
     and:
-    session.password == null
+    session.acp.password == null
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> DEFAULT_SCOPE
@@ -269,8 +328,11 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: When a stub is found in SUKAT"() {
     given:
-    request.norEduPersonNIN = '191102023333'
-    flash.password = 's3cret!'
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
+        eppn: "default@studera.nu",
+        norEduPersonNIN: '1234',
+        verified: false
+    )
 
     when:
     controller.index()
@@ -286,7 +348,11 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: When multiple users are found in sukat"() {
     given:
-    request.norEduPersonNIN = '191102023333'
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
+        eppn: "default@studera.nu",
+        norEduPersonNIN: '1234',
+        verified: false
+    )
 
     when:
     controller.index()

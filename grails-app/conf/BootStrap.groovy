@@ -30,9 +30,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+import grails.util.Environment
 import org.grails.plugins.localization.Localization
 import org.springframework.core.io.Resource
 import se.su.it.grails.plugins.access.AccessRole
+import se.su.it.signuptool.mock.UseCase
 
 class BootStrap {
   def configService
@@ -121,7 +123,26 @@ class BootStrap {
       AccessRole.withTransaction { status ->
         try {
           def displayName = "Sysadmin"
-          def uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=dev"
+          def uri = ""
+
+          switch(Environment.current.name) {
+            case Environment.PRODUCTION.name:
+              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=prod"
+              break
+            case Environment.DEVELOPMENT.name:
+              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=dev"
+              break
+            case Environment.TEST.name:
+              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=test"
+              break
+            case "mock":
+              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=mock"
+              break
+            default:
+              log.error "Unhandled environment $Environment.current with name ${Environment.current.name}"
+          }
+
+
           def sysadmin = AccessRole.createOrUpdateInstance(displayName, uri)
           accessService.addAccess(sysadmin, 'admin')
           accessService.addAccess(sysadmin, 'access')
@@ -143,6 +164,71 @@ class BootStrap {
     } catch (ex) {
       log.error "*** RoleAccessManagment: Failed to create/add access roles.", ex
     }
+
+    if (Environment.current.name == "mock") {
+      /** Bootstrap some use case test data */
+      log.info "Adding mock Use Cases"
+
+      List useCases = []
+      useCases << new UseCase(
+          name:"missingEppn",
+          displayName: "${UseCase.I18N_PREFIX}.missingEppn",
+          eppn:'',
+          description: "When user is missing the request.eppn attribute.")
+
+      useCases << new UseCase(
+          name:"unknown",
+          displayName: "${UseCase.I18N_PREFIX}.unknown",
+          eppn:"unknown@unknown.com",
+          description: "When the user has an unknown scope (such as blaha.se), ie not studera.nu")
+
+      useCases << new UseCase(
+          name:"unverifiedAccount",
+          displayName: "${UseCase.I18N_PREFIX}.unverifiedAccount",
+          eppn:"x@studera.nu",
+          description:"When the user has a studera.nu account (ie scope studera.nu) but does not have a request.norEduPersonNIN set.")
+
+      useCases << new UseCase(
+          name:"multipleEntriesInSukat",
+          displayName:"${UseCase.I18N_PREFIX}.multipleEntriesInSukat",
+          eppn:"x@studera.nu",
+          norEduPersonNIN:'multipleEntriesInSukat',
+          description:"When a search in SUKAT yields serveral hits for the given persons norEduPersonNIN (social security number)")
+
+      useCases << new UseCase(
+          name:"errorWhenAskingSukatForUser",
+          displayName: "${UseCase.I18N_PREFIX}.errorWhenAskingSukatForUser",
+          eppn:"x@studera.nu",
+          norEduPersonNIN:'errorWhenAskingSukatForUser',
+          description:"When SUKAT throws an error when asking for user information. Such as network error, svc error or similar.")
+
+      useCases << new UseCase(
+          name:"noSUKATuserAndNotFoundInLADOK",
+          displayName: "${UseCase.I18N_PREFIX}.noSUKATuserAndNotFoundInLADOK",
+          eppn:"x@studera.nu",
+          norEduPersonNIN:'noSUKATuserAndNotFoundInLADOK',
+          description:"When the user has no SUKAT account and can't be found in LADOK, this often occurs when a new user has not yet" +
+              "been entered into the LADOK database.")
+
+      useCases << new UseCase(
+          name:"hasActiveUserInSUKAT",
+          displayName: "${UseCase.I18N_PREFIX}.hasActiveUserInSUKAT",
+          eppn:"x@studera.nu",
+          norEduPersonNIN:'hasActiveUserInSUKAT',
+          description:"When a user has an active account, happy path without account or card creation.")
+
+      useCases << new UseCase(
+          name:"creatingNewUserFromBrokenStub",
+          displayName: "${UseCase.I18N_PREFIX}.creatingNewUserFromBrokenStub",
+          eppn:"x@studera.nu",
+          norEduPersonNIN:'creatingNewUserFromBrokenStub',
+          description:"When a user has a broken stub entry in SUKAT, in this case a stub user without a uid.")
+
+      for (useCase in useCases) {
+        useCase.save(failOnError: true)
+      }
+    }
+
   }
 
   def destroy = {

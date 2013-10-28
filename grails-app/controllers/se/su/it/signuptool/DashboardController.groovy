@@ -31,6 +31,9 @@
 
 package se.su.it.signuptool
 
+import grails.util.Environment
+import se.su.it.signuptool.mock.UseCase
+
 class DashboardController {
 
   def index() {
@@ -51,11 +54,47 @@ class DashboardController {
 
   def activateAccountAndCard() {
     session.controller = 'activateAccountAndCard'
-    return render(view:'selectIdProvider')
+
+    def env = Environment.current.name
+
+    def useCases = UseCase.list()
+    def useCase = (useCases) ? useCases?.first() : null
+
+    return render(view:'selectIdProvider', model: [env:env, useCase:useCase, useCases:useCases])
   }
 
   def resetAccountOrPassword() {
     session.controller = 'resetPassword'
     return render(view:'selectPasswordIdp')
+  }
+
+  def useCase(long caseId) {
+
+    if (Environment.current.name != "mock") {
+      String errMsg = message(code:'dashboard.faultyEnvironment')
+      log.error errMsg
+      flash.error = errMsg
+      return redirect(action:'index')
+    }
+
+    UseCase useCase = UseCase.get(caseId)
+
+    if (!useCase) {
+      log.error "No use case found for id $caseId"
+      flash.error = "Case $caseId is invalid, valid cases are ${UseCase.list()*.id?.join(', ')}"
+      return redirect(action:'index')
+    }
+
+    session.acp = null
+    ActivateAccountAndCardController.AccountAndCardProcess acp = new ActivateAccountAndCardController.AccountAndCardProcess()
+    acp.loadUseCase(useCase)
+    session.acp = acp
+
+    log.error "Prepared session: ${session.acp}"
+    return redirect(controller:'activateAccountAndCard', action:'index')
+  }
+
+  def getUseCaseInfo(long caseId) {
+    return render(text:UseCase.get(caseId).description)
   }
 }
