@@ -63,10 +63,15 @@ class DashboardController {
     return render(view:'selectIdProvider', model: [env:env, useCase:useCase, useCases:useCases])
   }
 
+  def resetAccountOrPassword() {
+    session.controller = 'resetPassword'
+    return render(view:'selectPasswordIdp')
+  }
+
   def useCase(long caseId) {
 
-    if (!Environment.current.name == "mock") {
-      String errMsg = "Can't access this method outside mock environment."
+    if (Environment.current.name != "mock") {
+      String errMsg = message(code:'dashboard.faultyEnvironment')
       log.error errMsg
       flash.error = errMsg
       return redirect(action:'index')
@@ -91,10 +96,5 @@ class DashboardController {
 
   def getUseCaseInfo(long caseId) {
     return render(text:UseCase.get(caseId).description)
-  }
-
-  def resetAccountOrPassword() {
-    session.controller = 'resetPassword'
-    return render(view:'selectPasswordIdp')
   }
 }
