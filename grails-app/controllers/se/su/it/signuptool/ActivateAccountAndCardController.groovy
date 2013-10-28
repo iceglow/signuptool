@@ -47,11 +47,14 @@ class ActivateAccountAndCardController {
 
   def index() {
 
-    if (!session.acp) {
-      session.acp = new AccountAndCardProcess(eppn:request.eppn, norEduPersonNIN:request.norEduPersonNIN)
-    }
-
     AccountAndCardProcess acp = session.acp
+
+    if (!acp) {
+      acp = new AccountAndCardProcess(
+          eppn:request.eppn,
+          norEduPersonNIN:request.norEduPersonNIN)
+      session.acp = acp
+    }
 
     if (!acp.validate()) {
       log.error acp.toString()
@@ -82,8 +85,14 @@ class ActivateAccountAndCardController {
         return redirect(controller:'dashboard', action:'index')
       }
     } else {
-      eventLog = utilityService.eventLog
-      acp.referenceId = eventLog?.id
+      try {
+        eventLog = utilityService.eventLog
+        acp.referenceId = eventLog?.id
+      } catch (ex) {
+        log.error "Failed to create new eventLog", ex
+        flash.error = g.message(code:'activateAccountAndCardController.errors.genericError')
+        return redirect(controller:'dashboard', action:'index')
+      }
     }
 
     String uid = acp.user?.uid
@@ -391,7 +400,7 @@ class ActivateAccountAndCardController {
           return error()
         }
 
-        if (!acp.userVO.uid) {
+        if (!acp.userVO?.uid) {
           eventLog.logEvent("User has no valid user in session, this should not happen. Value is currently set to ${acp.user}")
           flow.error = g.message(code:'activateAccountAndCardController.cardOrder.noAccount.error')
           return error()
@@ -612,10 +621,18 @@ class ActivateAccountAndCardController {
       newUser
     }
 
+    /**
+     * A stub user is a not yet activated account.
+     * @return
+     */
     public boolean isStubUser() {
-      !this.userVO?.accountIsActive
+      !this.newUser && !this.userVO?.accountIsActive
     }
-
+    /**
+     * A broken stub is a stub user that has no uid.
+     * A new user has always got a uid or the process would have failed before this part.
+     * @return
+     */
     public boolean isBrokenStub() {
       isStubUser() && !this.userVO.uid
     }
@@ -631,7 +648,10 @@ class ActivateAccountAndCardController {
     public void setUser(def user) {
       this.userVO = user
     }
-
+    /**
+     * Stores the result of an account activation on the currently stored user.
+     * @param result
+     */
     public void storeActivationResult(def result) {
       this.userVO.uid = result.uid
       this.password = result.password

@@ -36,6 +36,7 @@ import org.apache.cxf.frontend.ClientProxy
 import org.apache.cxf.interceptor.LoggingInInterceptor
 import org.apache.cxf.interceptor.LoggingOutInterceptor
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
+import spock.lang.Ignore
 import spock.lang.IgnoreRest
 import spock.lang.Specification
 
@@ -70,9 +71,12 @@ class WebServiceFactorySpec extends Specification {
     expect:
     null == WebServiceFactory.getInstance().getInstanceForClass(Object, null)
   }
-  @IgnoreRest
+
   void "getInstanceForClass: calls factory method and returns the result."() {
     given:
+    WebServiceFactory.metaClass.static.getInstance = {
+      return new WebServiceFactory()
+    }
     WebServiceFactory.metaClass.getFactory = { Class arg1, String arg2 ->
       return 'someFactory'
     }
@@ -107,7 +111,6 @@ class WebServiceFactorySpec extends Specification {
     expect:
     null == WebServiceFactory.getInstance().createNewFactory(Object, 'someUrl')
   }
-
 
   void "createNewFactory: when configuring client fails"() {
     given:

@@ -31,11 +31,14 @@
 
 package se.su.it.signuptool
 
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
+import se.su.it.signuptool.mock.UseCase
 import spock.lang.Specification
 import spock.lang.Unroll
 
 @TestFor(DashboardController)
+@Mock([UseCase])
 class DashboardControllerSpec extends Specification {
 
   def setup() {
