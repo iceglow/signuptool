@@ -260,7 +260,7 @@ sukatsvc {
  * RoleAccessManager config
  */
 access {
-  env = Environment.current.name
+  env = "dev"
   redirect = [controller: 'dashboard']
   unprotected = ['dashboard', 'errorHandler', 'activateAccountAndCard', 'resetPassword']
   disabledInDynamicAccess = ['dashboard', 'access']
