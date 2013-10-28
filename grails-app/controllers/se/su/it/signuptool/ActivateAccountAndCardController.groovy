@@ -343,7 +343,8 @@ class ActivateAccountAndCardController {
           log.error "Webflow Exception occurred: ${flash.stateException}", flash.stateException as Throwable
         }
         flow.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
-        // clearSession()
+
+        /* On error we clear the AccountAndCardProcess object. */
         session.acp = null
       }
       on("success").to("errorPage")
