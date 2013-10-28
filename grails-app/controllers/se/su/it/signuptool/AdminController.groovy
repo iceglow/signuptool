@@ -31,15 +31,11 @@
 
 package se.su.it.signuptool
 
-import se.su.it.signuptool.mock.UseCase
-
 class AdminController {
 
   def sukatService
 
-  def index() {
-    [useCases:UseCase.list()]
-  }
+  def index() {}
 
   def search(String searchFor, String searchText) {
 
@@ -64,21 +60,5 @@ class AdminController {
     return render(template: 'searchResults', collection: eventLogs, var: "eventLog")
   }
 
-  def useCase(long caseId) {
-    UseCase useCase = UseCase.get(caseId)
 
-    if (!useCase) {
-      log.error "No use case found for id $caseId"
-      flash.error = "Case $caseId is invalid, valid cases are ${UseCase.list()*.id?.join(', ')}"
-      return redirect(action:'index')
-    }
-
-    session.acp = null
-    ActivateAccountAndCardController.AccountAndCardProcess acp = new ActivateAccountAndCardController.AccountAndCardProcess()
-    acp.loadUseCase(useCase)
-    session.acp = acp
-
-    log.error "Prepared session: ${session.acp}"
-    return redirect(controller:'activateAccountAndCard', action:'index')
-  }
 }

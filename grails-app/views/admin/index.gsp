@@ -88,18 +88,8 @@
     <span class="error">${flash.error}</span>
   </g:if>
   <div id="content">
-    <%-- <g:if test="${Environment.current.name == 'mock'}"> --%>
-      <div id="useCases">
-        <g:form name="useCaseForm" action="useCase">
-          <g:select name="caseId"
-                    from="${useCases}"
-                    optionKey="id"
-                    optionValue="name"
-          />
-          <g:submitButton name="run" value="Kör"/>
-        </g:form>
-      </div>
-    <%-- </g:if> --%>
+
+
     <div id="searchForm">
       <tmpl:searchForm />
     </div>

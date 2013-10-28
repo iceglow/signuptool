@@ -170,14 +170,59 @@ class BootStrap {
       log.info "Adding mock Use Cases"
 
       List useCases = []
-      useCases << new UseCase(name:"missingEppn", eppn:'', description: "Add description...")
-      useCases << new UseCase(name:"unknown", eppn:"unknown@unknown.com", description: "Add description...")
-      useCases << new UseCase(name:"unverifiedAccount", eppn:"x@studera.nu", description:"Add description...")
-      useCases << new UseCase(name:"multipleEntriesInSukat", eppn:"x@studera.nu", norEduPersonNIN:'multipleEntriesInSukat', description:"Add description...")
-      useCases << new UseCase(name:"errorWhenAskingSukatForUser", eppn:"x@studera.nu", norEduPersonNIN:'errorWhenAskingSukatForUser', description:"Add description...")
-      useCases << new UseCase(name:"noSUKATuserAndNotFoundInLADOK", eppn:"x@studera.nu", norEduPersonNIN:'noSUKATuserAndNotFoundInLADOK', description:"Add description...")
-      useCases << new UseCase(name:"hasActiveUserInSUKAT", eppn:"x@studera.nu", norEduPersonNIN:'hasActiveUserInSUKAT', description:"Add description...")
-      useCases << new UseCase(name:"creatingNewUserFromBrokenStub", eppn:"x@studera.nu", norEduPersonNIN:'creatingNewUserFromBrokenStub', description:"Add description...")
+      useCases << new UseCase(
+          name:"missingEppn",
+          displayName: "${UseCase.I18N_PREFIX}.missingEppn",
+          eppn:'',
+          description: "When user is missing the request.eppn attribute.")
+
+      useCases << new UseCase(
+          name:"unknown",
+          displayName: "${UseCase.I18N_PREFIX}.unknown",
+          eppn:"unknown@unknown.com",
+          description: "When the user has an unknown scope (such as blaha.se), ie not studera.nu")
+
+      useCases << new UseCase(
+          name:"unverifiedAccount",
+          displayName: "${UseCase.I18N_PREFIX}.unverifiedAccount",
+          eppn:"x@studera.nu",
+          description:"When the user has a studera.nu account (ie scope studera.nu) but does not have a request.norEduPersonNIN set.")
+
+      useCases << new UseCase(
+          name:"multipleEntriesInSukat",
+          displayName:"${UseCase.I18N_PREFIX}.multipleEntriesInSukat",
+          eppn:"x@studera.nu",
+          norEduPersonNIN:'multipleEntriesInSukat',
+          description:"When a search in SUKAT yields serveral hits for the given persons norEduPersonNIN (social security number)")
+
+      useCases << new UseCase(
+          name:"errorWhenAskingSukatForUser",
+          displayName: "${UseCase.I18N_PREFIX}.errorWhenAskingSukatForUser",
+          eppn:"x@studera.nu",
+          norEduPersonNIN:'errorWhenAskingSukatForUser',
+          description:"When SUKAT throws an error when asking for user information. Such as network error, svc error or similar.")
+
+      useCases << new UseCase(
+          name:"noSUKATuserAndNotFoundInLADOK",
+          displayName: "${UseCase.I18N_PREFIX}.noSUKATuserAndNotFoundInLADOK",
+          eppn:"x@studera.nu",
+          norEduPersonNIN:'noSUKATuserAndNotFoundInLADOK',
+          description:"When the user has no SUKAT account and can't be found in LADOK, this often occurs when a new user has not yet" +
+              "been entered into the LADOK database.")
+
+      useCases << new UseCase(
+          name:"hasActiveUserInSUKAT",
+          displayName: "${UseCase.I18N_PREFIX}.hasActiveUserInSUKAT",
+          eppn:"x@studera.nu",
+          norEduPersonNIN:'hasActiveUserInSUKAT',
+          description:"When a user has an active account, happy path without account or card creation.")
+
+      useCases << new UseCase(
+          name:"creatingNewUserFromBrokenStub",
+          displayName: "${UseCase.I18N_PREFIX}.creatingNewUserFromBrokenStub",
+          eppn:"x@studera.nu",
+          norEduPersonNIN:'creatingNewUserFromBrokenStub',
+          description:"When a user has a broken stub entry in SUKAT, in this case a stub user without a uid.")
 
       for (useCase in useCases) {
         useCase.save(failOnError: true)
