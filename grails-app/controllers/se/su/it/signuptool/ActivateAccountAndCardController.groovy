@@ -31,7 +31,9 @@
 
 package se.su.it.signuptool
 
+import grails.util.Environment
 import groovy.transform.ToString
+import se.su.it.signuptool.mock.UseCase
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
@@ -91,6 +93,7 @@ class ActivateAccountAndCardController {
       switch(scope) {
         case "studera.nu":
           if (acp.norEduPersonNIN) {
+            acp.verified = true
             eventLog.logEvent("verified account for ${acp.eppn} with norEduPersonNIN ${acp.norEduPersonNIN}")
           } else {
             eventLog.logEvent("unverified account for ${acp.eppn}")
@@ -516,23 +519,75 @@ class ActivateAccountAndCardController {
   @ToString(includeNames = true, includeFields = true, excludes = ["password"])
   public static class AccountAndCardProcess {
 
-    Long referenceId = null
-    String eppn
-    String norEduPersonNIN
-    String error
-    String password
-    boolean newUser = false
-    boolean verified = false
-    boolean hasCompletedCardOrder = false
-    boolean errorWhileOrderingCard = false
-    SvcSuPersonVO userVO
+    private Long referenceId = null
+    private String eppn
+    private String norEduPersonNIN
+    private String error
+    private String password
+    private boolean newUser = false
+    private boolean verified = false
+    private boolean hasCompletedCardOrder = false
+    private boolean errorWhileOrderingCard = false
+    private SvcSuPersonVO userVO
 
     static constraints = {
       eppn(nullable:false, blank:false)
     }
 
-    public boolean getNewUser() {
-      newUser
+    Long getReferenceId() {
+      return referenceId
+    }
+
+    void setReferenceId(Long referenceId) {
+      this.referenceId = referenceId
+    }
+
+    String getEppn() {
+      return eppn
+    }
+
+    void setEppn(String eppn) {
+      this.eppn = eppn
+    }
+
+    String getNorEduPersonNIN() {
+      return norEduPersonNIN
+    }
+
+    void setNorEduPersonNIN(String norEduPersonNIN) {
+      this.norEduPersonNIN = norEduPersonNIN
+    }
+
+    void setError(String error) {
+      this.error = error
+    }
+
+    void setPassword(String password) {
+      this.password = password
+    }
+
+    boolean getVerified() {
+      return verified
+    }
+
+    void setVerified(boolean verified) {
+      this.verified = verified
+    }
+
+    boolean getHasCompletedCardOrder() {
+      return hasCompletedCardOrder
+    }
+
+    void setHasCompletedCardOrder(boolean hasCompletedCardOrder) {
+      this.hasCompletedCardOrder = hasCompletedCardOrder
+    }
+
+    boolean getErrorWhileOrderingCard() {
+      return errorWhileOrderingCard
+    }
+
+    void setErrorWhileOrderingCard(boolean errorWhileOrderingCard) {
+      this.errorWhileOrderingCard = errorWhileOrderingCard
     }
 
     void setNewUser(boolean newUser) {
@@ -591,9 +646,11 @@ class ActivateAccountAndCardController {
       this.password = result.password
     }
 
-    public void loadUseCase(def useCase) {
-      this.eppn = useCase.eppn
-      this.norEduPersonNIN = useCase.norEduPersonNIN
+    public void loadUseCase(UseCase useCase) {
+      if (Environment.current.name == "mock") {
+        this.eppn = useCase.eppn
+        this.norEduPersonNIN = useCase.norEduPersonNIN
+      }
     }
   }
 }

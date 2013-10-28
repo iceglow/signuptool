@@ -16,7 +16,7 @@ class ActivateAccountAndCardServiceStub implements ActivateAccountAndCardService
   Map fetchLadokData(String socialSecurityNumber) {
     Map response = [:]
     switch(socialSecurityNumber) {
-      case "5":
+      case "creatingNewUserFromBrokenStub":
         response = [tnamn:'a', enamn:'b']
         break
       default:

@@ -31,45 +31,14 @@
 
 package se.su.it.signuptool
 
+import se.su.it.signuptool.mock.UseCase
+
 class AdminController {
 
   def sukatService
 
-  private static def useCases = [
-    [id:"missingEppn",
-        eppn:'',
-        description:"useCases.missingEppn"],
-    [id:"unknown",
-        eppn:'unknown@unknown.se',
-        description:"useCases.unhandledScope"],
-    [id:"unverifiedAccount",
-        eppn:"x@studera.nu",
-        description:"useCases.unverifiedAccount"],
-    [id:"multipleEntriesInSukat",
-        eppn:"x@studera.nu",
-        norEduPersonNIN:'1',
-        description:"useCases.multipleEntriesInSukat"],
-    [id:"errorWhenAskingSukatForUser",
-        eppn:"x@studera.nu",
-        norEduPersonNIN:'2',
-        description:"useCases.errorWhenAskingSukatForUser"],
-    [id:"noSUKATuserAndNotFoundInLADOK",
-        eppn:"x@studera.nu",
-        norEduPersonNIN:'3',
-        description:"useCases.noSUKATuserAndNotFoundInLADOK"],
-    [id:"hasActiveUserInSUKAT",
-        eppn:"x@studera.nu",
-        norEduPersonNIN:'4',
-        description:"useCases.hasActiveUserInSUKAT"],
-    [id:"creatingNewUserFromStub",
-        eppn:"x@studera.nu",
-        norEduPersonNIN:'5',
-        description:"useCases.creatingNewUserFromStub"]
-
-  ]
-
   def index() {
-    [useCases:useCases.clone()]
+    [useCases:UseCase.list()]
   }
 
   def search(String searchFor, String searchText) {
@@ -95,25 +64,21 @@ class AdminController {
     return render(template: 'searchResults', collection: eventLogs, var: "eventLog")
   }
 
-  def useCase(String caseName) {
+  def useCase(long caseId) {
+    UseCase useCase = UseCase.get(caseId)
 
-    if (!caseName || !caseName in useCases*.id) {
-      log.error "Case name needed"
-      flash.error = "Case name needed: ${useCases*.id?.join(', ')}"
+    if (!useCase) {
+      log.error "No use case found for id $caseId"
+      flash.error = "Case $caseId is invalid, valid cases are ${UseCase.list()*.id?.join(', ')}"
       return redirect(action:'index')
     }
 
     session.acp = null
     ActivateAccountAndCardController.AccountAndCardProcess acp = new ActivateAccountAndCardController.AccountAndCardProcess()
-    acp.loadUseCase(getUseCase(caseName))
+    acp.loadUseCase(useCase)
     session.acp = acp
 
     log.error "Prepared session: ${session.acp}"
     return redirect(controller:'activateAccountAndCard', action:'index')
-  }
-
-  def getUseCase(String name) {
-    log.info "Requesting use case $name"
-    return useCases.find { it.id == name }
   }
 }

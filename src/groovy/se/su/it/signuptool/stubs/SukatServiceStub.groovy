@@ -14,16 +14,16 @@ class SukatServiceStub implements SukatServiceI {
     log.info "findUsersBySocialSecurityNumber: handling request for $nin"
 
     switch(nin) {
-      case "1":
+      case "multipleEntriesInSukat":
         response = [new SvcSuPersonVO(), new SvcSuPersonVO()]
         break
-      case "2":
+      case "errorWhenAskingSukatForUser":
         throw new Exception("Generic SUKAT exception.")
         break
-      case "4":
+      case "hasActiveUserInSUKAT":
         response = [new SvcSuPersonVO(accountIsActive:true, uid:"fake1")]
         break
-      case "5":
+      case "creatingNewUserFromBrokenStub":
         response = [new SvcSuPersonVO(accountIsActive:false)]
         break
       default:

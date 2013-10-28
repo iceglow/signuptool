@@ -34,6 +34,7 @@ import grails.util.Environment
 import org.grails.plugins.localization.Localization
 import org.springframework.core.io.Resource
 import se.su.it.grails.plugins.access.AccessRole
+import se.su.it.signuptool.mock.UseCase
 
 class BootStrap {
   def configService
@@ -163,6 +164,26 @@ class BootStrap {
     } catch (ex) {
       log.error "*** RoleAccessManagment: Failed to create/add access roles.", ex
     }
+
+    if (Environment.current.name == "mock") {
+      /** Bootstrap some use case test data */
+      log.info "Adding mock Use Cases"
+
+      List useCases = []
+      useCases << new UseCase(name:"missingEppn", eppn:'', description: "Add description...")
+      useCases << new UseCase(name:"unknown", eppn:"unknown@unknown.com", description: "Add description...")
+      useCases << new UseCase(name:"unverifiedAccount", eppn:"x@studera.nu", description:"Add description...")
+      useCases << new UseCase(name:"multipleEntriesInSukat", eppn:"x@studera.nu", norEduPersonNIN:'multipleEntriesInSukat', description:"Add description...")
+      useCases << new UseCase(name:"errorWhenAskingSukatForUser", eppn:"x@studera.nu", norEduPersonNIN:'errorWhenAskingSukatForUser', description:"Add description...")
+      useCases << new UseCase(name:"noSUKATuserAndNotFoundInLADOK", eppn:"x@studera.nu", norEduPersonNIN:'noSUKATuserAndNotFoundInLADOK', description:"Add description...")
+      useCases << new UseCase(name:"hasActiveUserInSUKAT", eppn:"x@studera.nu", norEduPersonNIN:'hasActiveUserInSUKAT', description:"Add description...")
+      useCases << new UseCase(name:"creatingNewUserFromBrokenStub", eppn:"x@studera.nu", norEduPersonNIN:'creatingNewUserFromBrokenStub', description:"Add description...")
+
+      for (useCase in useCases) {
+        useCase.save(failOnError: true)
+      }
+    }
+
   }
 
   def destroy = {

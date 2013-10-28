@@ -13,7 +13,7 @@ class LadokServiceStub implements LadokServiceI {
   String findForwardAddressSuggestionForPnr(String nin) {
     String email
     switch(nin) {
-      case "5":
+      case "creatingNewUserFromBrokenStub":
         email = "a.b@su.se"
         break
       default:

@@ -91,10 +91,10 @@
     <%-- <g:if test="${Environment.current.name == 'mock'}"> --%>
       <div id="useCases">
         <g:form name="useCaseForm" action="useCase">
-          <g:select name="caseName"
+          <g:select name="caseId"
                     from="${useCases}"
                     optionKey="id"
-                    optionValue="${{message(code:it.description)}}"
+                    optionValue="name"
           />
           <g:submitButton name="run" value="Kör"/>
         </g:form>
