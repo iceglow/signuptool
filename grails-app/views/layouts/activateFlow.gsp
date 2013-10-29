@@ -42,9 +42,11 @@
 
   <div class="float-left">
     <div class="prompt">
+      <g:if test="${g.pageProperty(name: 'page.flowMainPreamble')}">
       <p>
         <g:pageProperty name="page.flowMainPreamble"/>
       </p>
+      </g:if>
       <g:pageProperty name="page.flowMainContent"/>
     </div>
 
