@@ -115,11 +115,11 @@ grails.project.dependency.resolution = {
 
     runtime(
         "se.su.it.grails.plugins:grails-input-trimmer:0.1.2",
+        "se.su.it.grails.plugins:role-access-manager:0.2.7",
         ":database-migration:1.3.5",
         ":hibernate:$grailsVersion",
         ":jquery:1.8.3",
         ":resources:1.1.6",
-        ":role-access-manager:0.2.6.1",
         ":su-config:0.6.5",
         ":su-localization-editor:2.0.1"
     )

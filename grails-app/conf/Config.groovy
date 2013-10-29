@@ -29,6 +29,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+import grails.util.Environment
 import org.apache.log4j.DailyRollingFileAppender
 import org.apache.log4j.net.SyslogAppender
 
@@ -258,6 +260,7 @@ sukatsvc {
  * RoleAccessManager config
  */
 access {
+  env = "dev"
   redirect = [controller: 'dashboard']
   unprotected = ['dashboard', 'errorHandler', 'activateAccountAndCard', 'resetPassword']
   disabledInDynamicAccess = ['dashboard', 'access']

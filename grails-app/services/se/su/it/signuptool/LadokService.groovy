@@ -33,9 +33,11 @@ package se.su.it.signuptool
 
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
+import se.su.it.signuptool.interfaces.LadokServiceI
+
 import javax.sql.DataSource
 
-class LadokService {
+class LadokService implements LadokServiceI, Serializable {
 
   static transactional = false
 

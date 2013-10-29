@@ -31,17 +31,22 @@
 
 package se.su.it.signuptool
 
+import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
+import grails.util.Environment
+import se.su.it.signuptool.mock.UseCase
 import spock.lang.Specification
 import spock.lang.Unroll
 
 @TestFor(DashboardController)
+@Mock([UseCase])
 class DashboardControllerSpec extends Specification {
 
   def setup() {
   }
 
   def cleanup() {
+    Environment.metaClass = null
   }
 
   void "index"() {
@@ -75,10 +80,15 @@ class DashboardControllerSpec extends Specification {
 
   void "activateAccountAndCard"() {
     when:
+    UseCase useCase = new UseCase(name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something').save(flush:true)
+
     controller.activateAccountAndCard()
 
     then:
     view == '/dashboard/selectIdProvider'
+    model['env'] == Environment.current.name
+    model['useCase'] == useCase
+    model['useCases'] == [useCase]
 
     and:
     session.controller == 'activateAccountAndCard'
@@ -93,6 +103,59 @@ class DashboardControllerSpec extends Specification {
 
     and:
     session.controller == 'resetPassword'
+  }
+  @Unroll
+  void "useCase: Expect method to not be available in env: #env"() {
+    given:
+    Environment.metaClass.static.getCurrent = {->
+      return env
+    }
+
+    when:
+    controller.useCase(1)
+
+    then:
+    response.redirectedUrl == '/dashboard/index'
+
+    and:
+    flash.error == 'dashboard.faultyEnvironment'
+
+    where:
+    env << [Environment.DEVELOPMENT, Environment.PRODUCTION, Environment.TEST, Environment.CUSTOM]
+  }
+
+  void "useCase: Trying to load a useCase that does not exists yields"() {
+    given:
+    Environment.metaClass.static.getCurrent = {->
+      [name:'mock']
+    }
+
+    when:
+    controller.useCase(1)
+
+    then:
+    response.redirectedUrl == '/dashboard/index'
+  }
+
+  void "useCase: When loading a useCase"() {
+    given:
+
+    UseCase useCase = new UseCase(eppn: 'foo@kaka.se', name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something').save(flush:true)
+
+    Environment.metaClass.static.getCurrent = {->
+      [name:'mock']
+    }
+
+    assert session.acp == null
+
+    when:
+    controller.useCase(useCase.id)
+
+    then:
+    session.acp.eppn == useCase.eppn
+    session.acp.norEduPersonNIN == useCase.norEduPersonNIN
+
+    response.redirectedUrl == '/activateAccountAndCard/index'
   }
 
 }

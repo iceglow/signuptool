@@ -3,7 +3,6 @@ package se.su.it.signuptool
 import grails.buildtestdata.mixin.Build
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 import spock.lang.Unroll
 

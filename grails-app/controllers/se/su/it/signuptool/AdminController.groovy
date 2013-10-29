@@ -32,6 +32,9 @@
 package se.su.it.signuptool
 
 class AdminController {
+
+  def sukatService
+
   def index() {}
 
   def search(String searchFor, String searchText) {
@@ -56,4 +59,6 @@ class AdminController {
     }
     return render(template: 'searchResults', collection: eventLogs, var: "eventLog")
   }
+
+
 }

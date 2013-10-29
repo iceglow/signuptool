@@ -34,9 +34,7 @@ package se.su.it.signuptool
 import grails.test.mixin.Mock
 import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
-import org.apache.commons.logging.Log
 import se.su.it.svc.SvcSuPersonVO
-import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -56,6 +54,14 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     myController.activateAccountAndCardService = Mock(ActivateAccountAndCardService)
     myController.sukatService = Mock(SukatService)
     controller = myController
+
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
+        referenceId: 1
+    )
+  }
+
+  def cleanup() {
+    session.acp = null
   }
 
   def "createNewAccountFlow > prepareForwardAddress: Check success pathing"() {
@@ -230,9 +236,12 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "createNewAccountFlow > createAccount: On successful creation"() {
     given:
     def uid = 'uid'
-    session.givenName = 'givenName'
-    session.sn = 'sn'
-    session.nin = 'socialSecurityNumber'
+    def givenName = 'givenName'
+    def sn = 'sn'
+    def nin = 'socialSecurityNumber'
+    session.acp.newUser = true
+    session.acp.user = new SvcSuPersonVO(givenName:givenName, sn: sn, accountIsActive: false)
+    session.acp.norEduPersonNIN = nin
     flow.forwardAddress = 'mailRoutingAddress'
     def response = [uid:uid, password:'password']
 
@@ -240,11 +249,11 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     createNewAccountFlow.createAccount.action()
 
     then:
-    session.uid == response.uid
-    session.password == response.password
+    session.acp.user.uid == response.uid
+    session.acp.password == response.password
 
     and:
-    1 * controller.sukatService.createSuPersonStub(session.givenName,session.sn,session.nin) >> uid
+    1 * controller.sukatService.createSuPersonStub(*_) >> uid
 
     1 * controller.sukatService.setMailRoutingAddress(uid, flow.forwardAddress)
 
@@ -253,9 +262,8 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > createAccount: creation fails."() {
     given:
-    session.givenName = 'givenName'
-    session.sn = 'sn'
-    session.nin = 'socialSecurityNumber'
+    session.acp.newUser = true
+    session.acp.user = new SvcSuPersonVO(givenName:'foo', sn: 'bar', accountIsActive: false)
 
     when:
     def resp = createNewAccountFlow.createAccount.action()
@@ -286,7 +294,8 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > createAccount: exception during setMailRoutingAddress."() {
     given:
-    session.user = new SvcSuPersonVO(uid: 'apa')
+    session.acp.newUser = true
+    session.acp.user = new SvcSuPersonVO(givenName:'foo', sn: 'bar', accountIsActive: false)
 
     when:
     def resp = createNewAccountFlow.createAccount.action()
@@ -300,7 +309,8 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > createAccount: exception during activateUser."() {
     given:
-    session.user = new SvcSuPersonVO(uid: 'apa')
+    session.acp.newUser = true
+    session.acp.user = new SvcSuPersonVO(givenName:'foo', sn: 'bar', accountIsActive: false)
 
     when:
     def resp = createNewAccountFlow.createAccount.action()
@@ -314,7 +324,8 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "createNewAccountFlow > createAccount: no result from activateUser."() {
     given:
-    session.user = new SvcSuPersonVO(uid: 'apa')
+    session.acp.newUser = true
+    session.acp.user = new SvcSuPersonVO(givenName:'foo', sn: 'bar', accountIsActive: false)
 
     when:
     def resp = createNewAccountFlow.createAccount.action()
@@ -349,9 +360,8 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: test flow when user is found, has registered address and no cards or orders"() {
     given:
-    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
-    session.nin = "1234567890"
-
+    session.acp.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    session.acp.norEduPersonNIN = "1234567890"
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
@@ -366,8 +376,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: test when user is missing account, should log event and redirect to error page"() {
     given:
-    session.nin = "1234567890"
-
+    session.acp.norEduPersonNIN = "1234567890"
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
@@ -380,8 +389,8 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: test when user has an account but is not allowed to order cards, should log event and redirect to error page"() {
     given:
-    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
-    session.nin = "1234567890"
+    session.acp.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    session.acp.norEduPersonNIN = "1234567890"
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
@@ -406,7 +415,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: exception on getting card order status"() {
     given:
-    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    session.acp.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
 
     when:
     def event = orderCardFlow.prepareForwardOrderCard.action()
@@ -420,7 +429,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: can't order card"() {
     given:
-    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    session.acp.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
     controller.activateAccountAndCardService.getCardOrderStatus(*_) >> {
       [canOrderCard: false]
     }
@@ -434,7 +443,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: can't order card & has no address"() {
     given:
-    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    session.acp.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
     def eventLog = Mock(EventLog)
     controller.utilityService = Mock(UtilityService)
     controller.utilityService.getEventLog(*_) >> { eventLog }
@@ -454,7 +463,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: can't order card & has cards already"() {
     given:
-    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    session.acp.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
     def eventLog = Mock(EventLog)
     controller.utilityService = Mock(UtilityService)
     controller.utilityService.getEventLog(*_) >> { eventLog }
@@ -474,7 +483,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: can't order card & has card orders already"() {
     given:
-    session.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
+    session.acp.user = new SvcSuPersonVO(uid:"abcd1234@su.se")
     def eventLog = Mock(EventLog)
     controller.utilityService = Mock(UtilityService)
     controller.utilityService.getEventLog(*_) >> { eventLog }
@@ -520,7 +529,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     given:
     flow.registeredAddressValid = false
     flow.registeredAddressInvalid = false
-
 
     when:
     def event = orderCardFlow.processCardOrder.action()
@@ -577,7 +585,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
   def "orderCardFlow: processCardOrder happy path"() {
     given:
     SvcSuPersonVO user = new SvcSuPersonVO()
-    session.user = user
+    session.acp.user = user
     flow.cardInfo = [ladokAddress: [foo:'foo']]
     flow.addressIsValid = "1"
     flow.acceptLibraryRules = true
@@ -605,15 +613,15 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
   def "orderCardFlow: processCardOrder success"() {
     given:
-    session.hasCompletedCardOrder = false
-    session.errorWhileOrderingCard = true
+    session.acp.hasCompletedCardOrder = false
+    session.acp.errorWhileOrderingCard = true
 
     when:
     orderCardFlow.processCardOrder.on.success.action()
 
     then:
-    session.hasCompletedCardOrder
-    !session.errorWhileOrderingCard
+    session.acp.hasCompletedCardOrder
+    !session.acp.errorWhileOrderingCard
   }
 
   def "Error handler with provided message"() {
@@ -626,9 +634,9 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     orderCardFlow.errorHandler.action()
 
     then:
-    session.error == message
+    session.acp.error == message
     flash.stateException == null
-    session.errorWhileOrderingCard
+    session.acp.errorWhileOrderingCard
   }
 
   def "Error handler without provided message"() {
@@ -640,8 +648,8 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
 
     then:
     flash.stateException == null
-    session.error == "activateAccountAndCardController.errors.genericError"
-    session.errorWhileOrderingCard
+    session.acp.error == "activateAccountAndCardController.errors.genericError"
+    session.acp.errorWhileOrderingCard
   }
 
   def "cantOrderCard"() {
@@ -649,6 +657,6 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     orderCardFlow.cantOrderCard.on.continue.action() == 'beforeEnd'
 
     then:
-    session.hasCompletedCardOrder == true
+    session.acp.hasCompletedCardOrder == true
   }
 }
