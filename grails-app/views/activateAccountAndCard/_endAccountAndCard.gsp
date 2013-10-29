@@ -35,9 +35,9 @@
 
 <div class="align-right">
   <div><g:message code="activateAccountAndCard.endAccountAndCard.webreg.text"/></div>
-  <g:link url="${lpwurl}">
+  <g:form url="${lpwurl}">
     <g:submitButton class="signupButton"
                     name="toMinaStudier"
                     value="${g.message(code:'activateAccountAndCard.endAccountAndCard.webreg.button')}"/>
-  </g:link>
+  </g:form>
 </div>
