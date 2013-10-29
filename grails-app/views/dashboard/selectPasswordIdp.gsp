@@ -32,13 +32,11 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
+  <meta name="layout" content="activateFlow"/>
   <title></title>
-  <meta name="layout" content="main"/>
 </head>
 <body>
-  <div class="apps-mid-column">
-    <div class="float-left">
-      <div class="prompt">
+<content tag="flowMain">
         <p><g:message code="activateAccountAndCardController.selectIdProviderText"/></p>
         <div class="bordered-detail-square">
           <div class="header-id-provider">
@@ -51,9 +49,6 @@
             </div>
           </g:link>
         </div>
-
-      </div>
-    </div>
-  </div>
+</content>
 </body>
 </html>
