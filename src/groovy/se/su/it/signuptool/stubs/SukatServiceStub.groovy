@@ -33,7 +33,7 @@ class SukatServiceStub implements SukatServiceI {
         break
     }
 
-    log.info "findUsersBySocialSecurityNumber: returning response: $response"
+    log.info "findUsersBySocialSecurityNumber: returning response => $response"
     return response
   }
 
@@ -49,16 +49,20 @@ class SukatServiceStub implements SukatServiceI {
 
   @Override
   String createSuPersonStub(String givenName, String sn, String nin) {
+    log.info "createSuPersonStub: Intercepted with parameters givenName: $givenName,  sn: $sn, nin: $nin"
     String uid = null
 
-    switch(nin) {
-     case "NEW_USER_FROM_STUB":
-       uid = "NEW_USER_FROM_STUB"
-       break
-     default:
-       break
+    switch (nin) {
+      case "NEW_USER_FROM_STUB":
+        uid = "NEW_USER_FROM_STUB"
+        break
+      case "NEW_USER_FROM_SCRATCH":
+        uid = "NEW_USER_FROM_SCRATCH"
+        break
+      default:
+        break
     }
-
+    log.info "createSuPersonStub: Returning uid => $uid"
     return uid
   }
 
@@ -79,23 +83,31 @@ class SukatServiceStub implements SukatServiceI {
 
   @Override
   SvcUidPwd activateUser(String uid) {
+    log.info "activateUser: Intercepted request for uid: $uid"
+
     SvcUidPwd result = null
 
     switch(uid) {
       case "NEW_USER_FROM_STUB":
         result = new SvcUidPwd()
         result.uid = "NEW_USER_FROM_STUB"
-        result.password = "KAKBURK123"
+        result.password = "p4sSw0rd"
+        break
+      case "NEW_USER_FROM_SCRATCH":
+        result = new SvcUidPwd()
+        result.uid = "NEW_USER_FROM_SCRATCH"
+        result.password = "p4sSw0rd"
         break
       default:
         break
     }
-
+    log.info "activateUser: returning response => $result"
     return result
   }
 
   @Override
   void setMailRoutingAddress(String uid, String mail) {
+    log.info "setMailRoutingAddress: Intercepted for uid $uid with mail $mail"
     //To change body of implemented methods use File | Settings | File Templates.
   }
 }

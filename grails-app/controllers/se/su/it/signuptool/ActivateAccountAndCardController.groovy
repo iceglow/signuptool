@@ -633,15 +633,19 @@ class ActivateAccountAndCardController {
      * @return
      */
     public boolean isStubUser() {
-      !this.newUser && !this.userVO?.accountIsActive
+      hasUser() && !isNewUser() && !isActiveAccount()
     }
-    /**
-     * A broken stub is a stub user that has no uid.
-     * A new user has always got a uid or the process would have failed before this part.
-     * @return
-     */
+
     public boolean isBrokenStub() {
-      isStubUser() && !this.userVO.uid
+      isStubUser() && !isValidStub()
+    }
+
+    private boolean isValidStub() {
+      getUser()?.uid
+    }
+
+    private boolean isActiveAccount() {
+      this.userVO?.accountIsActive
     }
 
     public boolean hasUser() {

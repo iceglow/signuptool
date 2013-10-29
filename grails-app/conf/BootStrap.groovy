@@ -174,6 +174,8 @@ class BootStrap {
 
       List useCases = []
 
+      // TODO: Write more pathing information.
+
       /** Broken paths */
       useCases << new UseCase(
           name: "MISSING_EPPN",
@@ -230,12 +232,46 @@ class BootStrap {
           norEduPersonNIN: 'HAS_SUKAT_USER',
           description: "When a user has an active account, happy path without account or card creation.")
 
+      /**
+       * === Service Stub Pathing ===
+       * UtilityService:
+       *  1. getScopeFromEppn => scope from DEFAULT_VALID_EPPN
+       * SukatService:
+       *  2. findUsersBySocialSecurityNumber => stub user
+       *  5. setMailRoutingAddress => void
+       *  6. activateUser => SvcUidPwd(uid & passwd)
+       * ActivateAccountAndCardService:
+       *  4. fetchLadokData => [tnamn:'tnamn', enamn:'enamn']
+       * LadokService:
+       *  3. findForwardAddressSuggestionForPnr => tnamn.enamn@student.su.se
+       */
       useCases << new UseCase(
           name: "NEW_USER_FROM_STUB",
           displayName: "${UseCase.I18N_PREFIX}.newUserFromStub",
           eppn: DEFAULT_VALID_EPPN,
           norEduPersonNIN: 'NEW_USER_FROM_STUB',
           description: "When a user has a stub entry in SUKAT.")
+
+      /**
+       * === Service Stub Pathing ===
+       * UtilityService:
+       *  1. getScopeFromEppn => scope from DEFAULT_VALID_EPPN
+       * SukatService:
+       *  2. findUsersBySocialSecurityNumber => [] (since we do it from scratch)
+       *  5. createSuPersonStub => uid
+       *  6. setMailRoutingAddress => void
+       *  7. activateUser => SvcUidPwd(uid & passwd)
+       * ActivateAccountAndCardService:
+       *  3. fetchLadokData => [tnamn:'tnamn', enamn:'enamn']
+       * LadokService:
+       *  4. findForwardAddressSuggestionForPnr => tnamn.enamn@student.su.se
+       */
+      useCases << new UseCase(
+          name: "NEW_USER_FROM_SCRATCH",
+          displayName: "${UseCase.I18N_PREFIX}.newUserFromScratch",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: 'NEW_USER_FROM_SCRATCH',
+          description: "Account creation from scratch.")
 
       for (useCase in useCases) {
         useCase.save(failOnError: true)

@@ -9,11 +9,15 @@ class ActivateAccountAndCardServiceStub implements ActivateAccountAndCardService
 
   @Override
   boolean validateForwardAddress(String forwardAddress) {
-    return true
+    log.info "validateForwardAddress: intercepting request for $forwardAddress"
+    boolean valid = true
+    log.info "validateForwardAddress: returning response => $valid"
+    return valid
   }
 
   @Override
   Map fetchLadokData(String socialSecurityNumber) {
+    log.info "fetchLadokData: Intercepted request for $socialSecurityNumber"
     Map response = [:]
     switch(socialSecurityNumber) {
       case "BROKEN_STUB":
@@ -22,9 +26,14 @@ class ActivateAccountAndCardServiceStub implements ActivateAccountAndCardService
       case "NEW_USER_FROM_STUB":
         response = [tnamn:'a', enamn:'b']
         break
+      case "NEW_USER_FROM_SCRATCH":
+        response = [tnamn:'tnamn', enamn:'enamn']
+        break
       default:
         break
     }
+
+    log.info "fetchLadokData: Returning response => $response"
     return response
   }
 
