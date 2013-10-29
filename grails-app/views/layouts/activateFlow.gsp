@@ -47,6 +47,7 @@
             <g:pageProperty name="page.flowPreamble"/>
           </p>
         </g:if>
+
         <g:pageProperty name="page.flowContent"/>
       </div>
 

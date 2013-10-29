@@ -43,7 +43,7 @@
 <content tag="flowContent">
   <g:form>
     <div class="align-right">
-    <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.createNewAccount.errorPage.continue')}"/>
+      <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.createNewAccount.errorPage.continue')}"/>
     </div>
   </g:form>
 </content>
