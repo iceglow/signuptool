@@ -53,9 +53,6 @@ class SukatServiceStub implements SukatServiceI {
     String uid = null
 
     switch (nin) {
-      case "NEW_USER_FROM_STUB":
-        uid = "NEW_USER_FROM_STUB"
-        break
       case "NEW_USER_FROM_SCRATCH":
         uid = "NEW_USER_FROM_SCRATCH"
         break
