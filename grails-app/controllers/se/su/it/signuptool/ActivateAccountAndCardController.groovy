@@ -186,12 +186,13 @@ class ActivateAccountAndCardController {
       }
 
       /** Saving enamn and tnamn for enroll method */
+      if (!acp.isStubUser()) {
+        acp.newUser = true
+        acp.user = new SvcSuPersonVO()
+      }
 
-      acp.newUser = (!acp.isStubUser()) // a stub is never a new user.
-      acp.user = new SvcSuPersonVO(
-          givenName:ladokData.tnamn,
-          sn:ladokData.enamn
-      )
+      acp.user.givenName = ladokData.tnamn
+      acp.user.sn = ladokData.enamn
 
       eventLog.logEvent("Account for user with nin: ${acp.norEduPersonNIN} not found in SUKAT, starting create user account flow.")
       return redirect(action:'createNewAccount')
@@ -383,6 +384,7 @@ class ActivateAccountAndCardController {
     dashboard() {
       /** We don't want to send the user back into the same flow that crashed so we send him / her to the dashboard */
       action {
+        log.info "Account creation process failed, returning to dashboard."
         redirect(controller:'dashboard', action:'index')
       }
       on("success").to("end")
@@ -390,6 +392,7 @@ class ActivateAccountAndCardController {
 
     beforeEnd {
       action {
+        log.info "Account creation succeeded, returning to index."
         redirect(action:'index')
       }
       on("success").to("end")
@@ -423,7 +426,11 @@ class ActivateAccountAndCardController {
         }
 
         try {
-          flow.cardInfo = activateAccountAndCardService.getCardOrderStatus(acp.user)
+          def cardInfo = activateAccountAndCardService.getCardOrderStatus(acp.user)
+          if (!cardInfo) {
+            throw new IllegalStateException("Illegal cardInfo state, null or empty.")
+          }
+          flow.cardInfo = cardInfo
         } catch (ex) {
           log.error "Error when fetching card order status", ex
           flow.error = g.message(code:'activateAccountAndCardController.cardOrder.optionalError.errorWhenFetchingCardOrderStatus')
@@ -645,15 +652,19 @@ class ActivateAccountAndCardController {
      * @return
      */
     public boolean isStubUser() {
-      !this.newUser && !this.userVO?.accountIsActive
+      hasUser() && !isNewUser() && !isActiveAccount()
     }
-    /**
-     * A broken stub is a stub user that has no uid.
-     * A new user has always got a uid or the process would have failed before this part.
-     * @return
-     */
+
     public boolean isBrokenStub() {
-      isStubUser() && !this.userVO.uid
+      isStubUser() && !isValidStub()
+    }
+
+    private boolean isValidStub() {
+      getUser()?.uid
+    }
+
+    private boolean isActiveAccount() {
+      this.userVO?.accountIsActive
     }
 
     public boolean hasUser() {
@@ -681,7 +692,8 @@ class ActivateAccountAndCardController {
      * @param result
      */
     public void storeActivationResult(def result) {
-      this.userVO.uid = result.uid
+      this.user.accountIsActive = true
+      this.user.uid = result.uid
       this.password = result.password
     }
 

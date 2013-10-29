@@ -159,7 +159,7 @@ log4j = {
             appender new DailyRollingFileAppender(
                 name: "logFile",
                 datePattern: "'.'yyyy-MM-dd",
-                fileName: "${System.properties["catalina.home"]}/logs/${appName}-production.log",
+                fileName: "${System.properties["catalina.home"]}/logs/application.log",
                 layout: pattern(conversionPattern: '%d [%t] %-5p %c{2} %x - %m%n')
             )
             appender new SyslogAppender(name: "syslog",
@@ -175,6 +175,7 @@ log4j = {
         additivity: true
       }
     }
+
     development {
       error "org.codehaus.groovy.grails.web",
           "org.codehaus.groovy.grails.web.servlet",
@@ -206,7 +207,45 @@ log4j = {
         info 'stdout'
         additivity: true
       }
+    }
 
+    mock {
+      error "org.codehaus.groovy.grails.web",
+          "org.codehaus.groovy.grails.web.servlet",
+          "org.codehaus.groovy.grails.web.pages",
+          "org.codehaus.groovy.grails.web.sitemesh",
+          "org.codehaus.groovy.grails.web.mapping.filter",
+          "org.codehaus.groovy.grails.web.mapping",
+          "org.codehaus.groovy.grails.commons",
+          "org.codehaus.groovy.grails.plugins",
+          "org.codehaus.groovy.grails.orm.hibernate",
+          "org.springframework",
+          "org.hibernate",
+          "net.sf.ehcache"
+
+      info "grails.app",
+          "grails.app.domain",
+          "grails.app.controllers",
+          "grails.app.services",
+          "grails.app.taglib",
+          "grails.app.conf",
+          "grails.app.filters"
+
+      appenders {
+        'null' name: 'stacktrace' // this makes sure we don't get a stacktrace.log
+        console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c{2} %x - %m%n')
+        appender new DailyRollingFileAppender(
+            name: "logFile",
+            datePattern: "'.'yyyy-MM-dd",
+            fileName: "${System.properties["catalina.home"]}/logs/application-mock.log",
+            layout: pattern(conversionPattern: '%d [%t] %-5p %c{2} %x - %m%n')
+        )
+      }
+
+      root {
+        info 'stdout', 'logFile'
+        additivity: true
+      }
     }
 
     test {
