@@ -47,7 +47,7 @@
     </div>
     <g:message code="activateAccountAndCardController.idProvider.promptText.antagning"/>
     <g:link url="/Shibboleth.sso/WAYF/antagning.se/produktion">
-      <div class="align-center">
+      <div class="align-right">
         <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
       </div>
     </g:link>
