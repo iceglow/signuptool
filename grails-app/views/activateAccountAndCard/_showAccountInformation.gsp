@@ -29,8 +29,6 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-<p><g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/></p>
-
 <div class="clear-float"></div>
 
 <div class="bordered-detail-square apps-float-50">

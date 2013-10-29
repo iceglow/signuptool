@@ -42,7 +42,10 @@
 
   <div class="float-left">
     <div class="prompt">
-      <g:pageProperty name="page.flowMain"/>
+      <p>
+        <g:pageProperty name="page.flowMainPreamble"/>
+      </p>
+      <g:pageProperty name="page.flowMainContent"/>
     </div>
 
     <div class="state_progress_img">

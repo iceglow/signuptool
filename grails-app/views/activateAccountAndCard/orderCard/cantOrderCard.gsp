@@ -36,9 +36,11 @@
   <title><g:message code="activateAccountAndCard.cantOrderCard.title"/></title>
 </head>
 <body>
-<content tag="flowMain">
-  <p><g:message code="activateAccountAndCard.cantOrderCard.text"/></p>
+<content tag="flowMainPreamble">
+  <g:message code="activateAccountAndCard.cantOrderCard.text"/>
+</content>
 
+<content tag="flowMainContent">
   <g:if test="${!(cardInfo?.hasAddress)}">
     <label for="hasAddress">
       <g:message code="activateAccountAndCard.cantOrderCard.hasAddress.label"/>

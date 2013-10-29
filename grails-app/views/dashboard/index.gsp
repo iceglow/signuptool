@@ -36,8 +36,11 @@
   <title><g:message code="application.title"/></title>
 </head>
 <body>
-<content tag="flowMain">
-  <p><g:message code="dashboard.index.activateAccountText"/></p>
+<content tag="flowMainPreamble">
+  <g:message code="dashboard.index.activateAccountText"/>
+</content>
+
+<content tag="flowMainContent">
   <br/>
   <br/>
   <g:link action="activateAccountAndCard">
@@ -46,6 +49,7 @@
     </div>
   </g:link>
 </content>
+
 <content tag="flowBottom">
   <div class="large-bottom-spacer"></div>
   <div class="clear-float"></div>

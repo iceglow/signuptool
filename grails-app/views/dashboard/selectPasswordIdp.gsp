@@ -36,8 +36,11 @@
   <title></title>
 </head>
 <body>
-<content tag="flowMain">
-  <p><g:message code="activateAccountAndCardController.selectIdProviderText"/></p>
+<content tag="flowMainPreamble">
+  <g:message code="activateAccountAndCardController.selectIdProviderText"/>
+</content>
+
+<content tag="flowMainContent">
   <div class="bordered-detail-square">
     <div class="header-id-provider">
       <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>

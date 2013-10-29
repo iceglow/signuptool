@@ -36,7 +36,7 @@
   <title>Order University Card</title>
 </head>
 <body>
-<content tag="flowMain">
+<content tag="flowMainContent">
   <div><g:message code="activateAccountAndCardController.cardOrder.addressDetail"/></div>
   <div>${session?.user?.givenName} ${session?.user?.sn}</div>
   <div>${cardInfo?.ladokAddress?.gatadr}</div>

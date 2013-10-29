@@ -36,8 +36,11 @@
   <title><g:message code="activateAccountAndCard.createNewAccount.errorPage"/></title>
 </head>
 <body>
-<content tag="flowMain">
-  <p><g:message code="activateAccountAndCardController.createNewAccount.errorPage.text"/></p>
+<content tag="flowMainPreamble">
+  <g:message code="activateAccountAndCardController.createNewAccount.errorPage.text"/>
+</content>
+
+<content tag="flowMainContent">
   <g:form>
     <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.createNewAccount.errorPage.continue')}"/>
   </g:form>

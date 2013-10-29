@@ -29,10 +29,6 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-<div class="apps-float-80">
-  <p><g:message code="activateAccountAndCard.endAccountAndCard.text"/></p>
-</div>
-
 <div class="clear-float"></div>
 
 <br/>

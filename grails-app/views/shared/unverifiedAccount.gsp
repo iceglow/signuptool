@@ -36,8 +36,11 @@
   <title><g:message code="activateAccountAndCard.unverifiedAccount.title"/></title>
 </head>
 <body>
-<content tag="flowMain">
-  <p><g:message code="activateAccountAndCard.unverifiedAccount.text"/></p>
+<content tag="flowMainPreamble">
+  <g:message code="activateAccountAndCard.unverifiedAccount.text"/>
+</content>
+
+<content tag="flowMainContent">
   <span><g:message code="activateAccountAndCard.referenceId" args="[referenceId]"/></span>
 </content>
 </body>
