@@ -32,8 +32,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
+  <meta name="layout" content="activateFlow"/>
   <title></title>
-  <meta name="layout" content="main"/>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script>
     $(function() {
@@ -56,9 +56,7 @@
   </script>
 </head>
 <body>
-  <div class="apps-mid-column">
-    <div class="float-left">
-      <div class="prompt">
+  <content tag="flowMain">
         <p><g:message code="activateAccountAndCardController.selectIdProviderText"/></p>
 
         <div class="bordered-detail-square mgn-bottom-20">
@@ -105,15 +103,6 @@
             </g:form>
           </div>
         </g:if>
-
-
-      </div>
-
-      <div class="state_progress_img">
-        <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step2.image')) }" border="0"
-             class="logotype" title="<g:message code='activateAccountAndCardController.step2.counter'/>">
-      </div>
-    </div>
-  </div>
+  </content>
 </body>
 </html>

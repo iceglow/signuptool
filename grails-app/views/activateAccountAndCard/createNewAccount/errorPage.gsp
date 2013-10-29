@@ -30,13 +30,17 @@
   --}%
 
 <%@ page contentType="text/html;charset=UTF-8" %>
-<g:applyLayout name="activateFlow"/>
+<html>
   <head>
+    <meta name="layout" content="activateFlow"/>
     <title><g:message code="activateAccountAndCard.createNewAccount.errorPage"/></title>
   </head>
-<content tag="flow.prompt">
+<body>
+  <content tag="flowMain">
         <p><g:message code="activateAccountAndCardController.createNewAccount.errorPage.text"/></p>
         <g:form>
           <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.createNewAccount.errorPage.continue')}"/>
         </g:form>
-</content>
+  </content>
+</body>
+</html>

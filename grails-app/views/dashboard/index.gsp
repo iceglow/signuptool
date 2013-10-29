@@ -32,15 +32,11 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-  <meta name="layout" content="main"/>
+  <meta name="layout" content="activateFlow"/>
   <title><g:message code="application.title"/></title>
 </head>
 <body>
-  <div class="apps-mid-column">
-    <tmpl:/shared/feedback flash="${flash}"/>
-
-    <div class="float-left bottom-divider">
-      <div class="prompt">
+  <content tag="flowMain">
         <p><g:message code="dashboard.index.activateAccountText"/></p>
         <br/>
         <br/>
@@ -49,19 +45,14 @@
             <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'dashboard.index.startActivateAccountButton')}"/>
           </div>
         </g:link>
-      </div>
-
-      <div class="state_progress_img">
-        <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step1.image'))}" border="0"
-             class="logotype" title="<g:message code='activateAccountAndCardController.step1.counter'/>">
-      </div>
-
-      <div class="large-bottom-spacer"></div>
-    </div>
+  </content>
+  <content tag="flowBottom">
+    <div class="large-bottom-spacer"></div>
     <div class="clear-float"></div>
-    <div class="section">
+    <div class="bottom-divider"></div>
+    <div class="section ">
       <g:link action="resetAccountOrPassword"><g:message code="dashboard.index.forgotPassword"/></g:link>
     </div>
-  </div>
+  </content>
 </body>
-</html>
+<html>

@@ -30,11 +30,13 @@
   --}%
 
 <%@ page contentType="text/html;charset=UTF-8" %>
-<g:applyLayout name="activateFlow"/>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
+  <meta name="layout" content="activateFlow"/>
   <title></title>
 </head>
-<content tag="flow.prompt">
+<body>
+  <content tag="flowMain">
         <p><g:message code="activateAccountAndCardController.activateAccount.promptText"/></p>
 
         <g:form id="activateAccountForm">
@@ -51,9 +53,6 @@
             <g:submitButton class="signupButton" name="acceptAccountActivation" value="${g.message(code:'activateAccountAndCardController.activateAccount.activate')}"/>
           </div>
         </g:form>
-</content>
-
-<content tag="flow.step.image">
-        <img src="${resource(dir: 'img', g.message(code: 'activateAccountAndCardController.step3.image'))}" border="0"
-             class="logotype" title="<g:message code='activateAccountAndCardController.step3.counter'/>">
-</content>
+  </content>
+</body>
+</html>

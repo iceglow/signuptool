@@ -30,11 +30,13 @@
   --}%
 
 <%@ page contentType="text/html;charset=UTF-8" %>
-<g:applyLayout name="activateFlow"/>
+<html>
 <head>
+  <meta name="layout" content="activateFlow"/>
   <title></title>
 </head>
-<content tag="flow.prompt">
+<body>
+  <content tag="flowMain">
       <p><g:message code="activateAccountAndCardController.forwardEmail.explanation"/></p>
       <g:form>
         <div class="apps-float-30 mgn-left-20">
@@ -53,9 +55,6 @@
         <div class="clear-float"></div>
         <g:submitButton class="signupButton" name="activate" value="${g.message(code:"activateAccountAndCardController.activateButtonLabel")}"/>
       </g:form>
-</content>
-
-<content tag="flow.step.image">
-  <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step3.image'))}" border="0"
-       class="logotype" title="<g:message code='activateAccountAndCardController.step3.counter'/>">
-</content>
+  </content>
+</body>
+</html>
