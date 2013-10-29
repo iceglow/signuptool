@@ -29,21 +29,21 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-    <p><g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/></p>
+<p><g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/></p>
 
-    <div class="clear-float"></div>
+<div class="clear-float"></div>
 
-    <div class="bordered-detail-square apps-float-50">
-      <g:link action="#" class="print-details" onclick="window.print(); return false;">
-        <span class="mgn-left-30"><g:message code="activateAccountAndCardController.hasActivatedAccount.print"/></span>
-      </g:link>
-      <div><g:message code="activateAccountAndCardController.hasActivatedAccount.username"/>: ${uid}</div>
-      <g:if test="${password}">
-        <div><g:message code="activateAccountAndCardController.hasActivatedAccount.password"/>: ${password}</div>
-      </g:if>
-      <g:else>
-        <g:link controller="dashboard" action="resetAccountOrPassword" target="_blank">
-          <g:message code="activateAccountAndCardController.forgotten_password"/>
-        </g:link>
-      </g:else>
-    </div>
+<div class="bordered-detail-square apps-float-50">
+  <g:link action="#" class="print-details" onclick="window.print(); return false;">
+    <span class="mgn-left-30"><g:message code="activateAccountAndCardController.hasActivatedAccount.print"/></span>
+  </g:link>
+  <div><g:message code="activateAccountAndCardController.hasActivatedAccount.username"/>: ${uid}</div>
+  <g:if test="${password}">
+    <div><g:message code="activateAccountAndCardController.hasActivatedAccount.password"/>: ${password}</div>
+  </g:if>
+  <g:else>
+    <g:link controller="dashboard" action="resetAccountOrPassword" target="_blank">
+      <g:message code="activateAccountAndCardController.forgotten_password"/>
+    </g:link>
+  </g:else>
+</div>

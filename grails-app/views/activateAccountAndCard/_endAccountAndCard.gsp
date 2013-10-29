@@ -29,19 +29,19 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-    <div class="apps-float-80">
-      <p><g:message code="activateAccountAndCard.endAccountAndCard.text"/></p>
-    </div>
+<div class="apps-float-80">
+  <p><g:message code="activateAccountAndCard.endAccountAndCard.text"/></p>
+</div>
 
-    <div class="clear-float"></div>
+<div class="clear-float"></div>
 
-    <br/>
+<br/>
 
-    <div class="align-right">
-      <div><g:message code="activateAccountAndCard.endAccountAndCard.webreg.text"/></div>
-      <g:link url="${lpwurl}">
-        <g:submitButton class="signupButton"
-                        name="toMinaStudier"
-                        value="${g.message(code:'activateAccountAndCard.endAccountAndCard.webreg.button')}"/>
-      </g:link>
-    </div>
+<div class="align-right">
+  <div><g:message code="activateAccountAndCard.endAccountAndCard.webreg.text"/></div>
+  <g:link url="${lpwurl}">
+    <g:submitButton class="signupButton"
+                    name="toMinaStudier"
+                    value="${g.message(code:'activateAccountAndCard.endAccountAndCard.webreg.button')}"/>
+  </g:link>
+</div>

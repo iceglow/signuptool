@@ -36,32 +36,32 @@
   <title></title>
 </head>
 <body>
-        <!-- showAccount: When hasCompletedCardOrder and errorWhileOrderingCard when both are false. -->
-        <g:set var="showAccountInfo" value="${!(session.hasCompletedCardOrder) && !(session.errorWhileOrderingCard)}"/>
+<!-- showAccount: When hasCompletedCardOrder and errorWhileOrderingCard when both are false. -->
+<g:set var="showAccountInfo" value="${!(session.hasCompletedCardOrder) && !(session.errorWhileOrderingCard)}"/>
 
-        <!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
-        <g:set var="showOrderCard" value="${!(session.hasCompletedCardOrder) || (session.errorWhileOrderingCard)}"/>
+<!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
+<g:set var="showOrderCard" value="${!(session.hasCompletedCardOrder) || (session.errorWhileOrderingCard)}"/>
 
-  <content tag="flowMain">
-        <!-- Webreg:  When either hasCompletedCardOrder or errorWhileOrderingCard is true (when showAccountInfo == false) -->
+<content tag="flowMain">
+  <!-- Webreg:  When either hasCompletedCardOrder or errorWhileOrderingCard is true (when showAccountInfo == false) -->
 
-        <g:if test="${showAccountInfo}">
-          <tmpl:showAccountInformation model="[password:password, uid:uid]"/>
-        </g:if>
-        <g:else>
-          <tmpl:endAccountAndCard model="[lpwurl:lpwurl]"/>
-        </g:else>
+  <g:if test="${showAccountInfo}">
+    <tmpl:showAccountInformation model="[password:password, uid:uid]"/>
+  </g:if>
+  <g:else>
+    <tmpl:endAccountAndCard model="[lpwurl:lpwurl]"/>
+  </g:else>
 
-        <div class="clear-float"></div>
+  <div class="clear-float"></div>
 
-        <g:if test="${showOrderCard}">
-          <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
-            <div class="align-right"><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></div>
-            <div class="align-right">
-              <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
-            </div>
-          </g:form>
-        </g:if>
-  </content>
+  <g:if test="${showOrderCard}">
+    <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
+      <div class="align-right"><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></div>
+      <div class="align-right">
+        <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
+      </div>
+    </g:form>
+  </g:if>
+</content>
 </body>
 </html>

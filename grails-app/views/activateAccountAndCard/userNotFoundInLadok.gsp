@@ -36,9 +36,9 @@
   <title><g:message code="activateAccountAndCard.userNotFoundInLadok.title"/></title>
 </head>
 <body>
-  <content tag="flowMain">
-    <p><g:message code="activateAccountAndCard.userNotFoundInLadok.text"/></p>
-    <span><g:message code="activateAccountAndCard.referenceId" args="[referenceId]"/></span>
-  </content>
+<content tag="flowMain">
+  <p><g:message code="activateAccountAndCard.userNotFoundInLadok.text"/></p>
+  <span><g:message code="activateAccountAndCard.referenceId" args="[referenceId]"/></span>
+</content>
 </body>
 </html>

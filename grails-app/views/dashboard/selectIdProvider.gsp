@@ -56,53 +56,53 @@
   </script>
 </head>
 <body>
-  <content tag="flowMain">
-        <p><g:message code="activateAccountAndCardController.selectIdProviderText"/></p>
+<content tag="flowMain">
+  <p><g:message code="activateAccountAndCardController.selectIdProviderText"/></p>
 
-        <div class="bordered-detail-square mgn-bottom-20">
-          <div class="header-id-provider">
-            <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
-          </div>
-          <g:message code="activateAccountAndCardController.idProvider.promptText.antagning"/>
-          <g:link url="/Shibboleth.sso/WAYF/antagning.se/produktion">
-            <div class="align-right">
-              <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
-            </div>
-          </g:link>
+  <div class="bordered-detail-square mgn-bottom-20">
+    <div class="header-id-provider">
+      <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
+    </div>
+    <g:message code="activateAccountAndCardController.idProvider.promptText.antagning"/>
+    <g:link url="/Shibboleth.sso/WAYF/antagning.se/produktion">
+      <div class="align-right">
+        <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
+      </div>
+    </g:link>
+  </div>
+
+  <div class="bordered-detail-square mgn-bottom-20">
+    <div class="header-id-provider">
+      <g:message code="activateAccountAndCardController.idProvider.header.eduID"/>
+    </div>
+    <g:message code="activateAccountAndCardController.idProvider.promptText.eduID"/>
+    <g:link url="#">
+      <div class="align-right">
+        <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
+      </div>
+    </g:link>
+  </div>
+
+  <g:if test="${env == 'mock'}">
+    <div id="useCases" class="bordered-detail-square mgn-bottom-20" >
+      <div class="header-id-provider">
+        <g:message code="activateAccountAndCardController.idProvider.header.mockup"/>
+      </div>
+      <g:message code="activateAccountAndCardController.idProvider.promptText.mockup"/>
+      <g:form name="useCaseForm" action="useCase">
+        <g:select name="caseId"
+                  from="${useCases}"
+                  optionKey="id"
+                  optionValue="${{message(code:it.displayName)}}"
+
+        />
+        <div id="useCaseDescription">${useCase?.description}</div>
+        <div class="align-right">
+          <g:submitButton class="signupButton" name="run" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
         </div>
-
-        <div class="bordered-detail-square mgn-bottom-20">
-          <div class="header-id-provider">
-            <g:message code="activateAccountAndCardController.idProvider.header.eduID"/>
-          </div>
-          <g:message code="activateAccountAndCardController.idProvider.promptText.eduID"/>
-          <g:link url="#">
-            <div class="align-right">
-              <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
-            </div>
-          </g:link>
-        </div>
-
-        <g:if test="${env == 'mock'}">
-          <div id="useCases" class="bordered-detail-square mgn-bottom-20" >
-            <div class="header-id-provider">
-              <g:message code="activateAccountAndCardController.idProvider.header.mockup"/>
-            </div>
-            <g:message code="activateAccountAndCardController.idProvider.promptText.mockup"/>
-            <g:form name="useCaseForm" action="useCase">
-              <g:select name="caseId"
-                        from="${useCases}"
-                        optionKey="id"
-                        optionValue="${{message(code:it.displayName)}}"
-
-              />
-              <div id="useCaseDescription">${useCase?.description}</div>
-              <div class="align-right">
-                <g:submitButton class="signupButton" name="run" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
-              </div>
-            </g:form>
-          </div>
-        </g:if>
-  </content>
+      </g:form>
+    </div>
+  </g:if>
+</content>
 </body>
 </html>

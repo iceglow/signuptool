@@ -36,23 +36,23 @@
   <title><g:message code="application.title"/></title>
 </head>
 <body>
-  <content tag="flowMain">
-        <p><g:message code="dashboard.index.activateAccountText"/></p>
-        <br/>
-        <br/>
-        <g:link action="activateAccountAndCard">
-          <div class="align-right">
-            <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'dashboard.index.startActivateAccountButton')}"/>
-          </div>
-        </g:link>
-  </content>
-  <content tag="flowBottom">
-    <div class="large-bottom-spacer"></div>
-    <div class="clear-float"></div>
-    <div class="bottom-divider"></div>
-    <div class="section ">
-      <g:link action="resetAccountOrPassword"><g:message code="dashboard.index.forgotPassword"/></g:link>
+<content tag="flowMain">
+  <p><g:message code="dashboard.index.activateAccountText"/></p>
+  <br/>
+  <br/>
+  <g:link action="activateAccountAndCard">
+    <div class="align-right">
+      <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'dashboard.index.startActivateAccountButton')}"/>
     </div>
-  </content>
+  </g:link>
+</content>
+<content tag="flowBottom">
+  <div class="large-bottom-spacer"></div>
+  <div class="clear-float"></div>
+  <div class="bottom-divider"></div>
+  <div class="section ">
+    <g:link action="resetAccountOrPassword"><g:message code="dashboard.index.forgotPassword"/></g:link>
+  </div>
+</content>
 </body>
 <html>

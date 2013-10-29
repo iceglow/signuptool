@@ -36,25 +36,25 @@
   <title></title>
 </head>
 <body>
-  <content tag="flowMain">
-      <p><g:message code="activateAccountAndCardController.forwardEmail.explanation"/></p>
-      <g:form>
-        <div class="apps-float-30 mgn-left-20">
-          <label for="forwardAddress"><g:message code="activateAccountAndCardController.forwardEmail.emailLabel"/></label>
-        </div>
-        <div class="apps-float-35">
-          <g:textField name="forwardAddress" value="${forwardAddress}"/>
-        </div>
-        <div class="clear-float"></div>
-        <div class="apps-float-5 mgn-left-20">
-          <g:checkBox name="acceptSuConditions"/>
-        </div>
-        <div class="apps-float-40">
-          <label for="acceptSuConditions"><g:message code="activateAccountAndCardController.forwardEmail.acceptLabel"/></label>
-        </div>
-        <div class="clear-float"></div>
-        <g:submitButton class="signupButton" name="activate" value="${g.message(code:"activateAccountAndCardController.activateButtonLabel")}"/>
-      </g:form>
-  </content>
+<content tag="flowMain">
+  <p><g:message code="activateAccountAndCardController.forwardEmail.explanation"/></p>
+  <g:form>
+    <div class="apps-float-30 mgn-left-20">
+      <label for="forwardAddress"><g:message code="activateAccountAndCardController.forwardEmail.emailLabel"/></label>
+    </div>
+    <div class="apps-float-35">
+      <g:textField name="forwardAddress" value="${forwardAddress}"/>
+    </div>
+    <div class="clear-float"></div>
+    <div class="apps-float-5 mgn-left-20">
+      <g:checkBox name="acceptSuConditions"/>
+    </div>
+    <div class="apps-float-40">
+      <label for="acceptSuConditions"><g:message code="activateAccountAndCardController.forwardEmail.acceptLabel"/></label>
+    </div>
+    <div class="clear-float"></div>
+    <g:submitButton class="signupButton" name="activate" value="${g.message(code:"activateAccountAndCardController.activateButtonLabel")}"/>
+  </g:form>
+</content>
 </body>
 </html>

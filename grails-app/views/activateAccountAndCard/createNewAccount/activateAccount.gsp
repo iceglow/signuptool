@@ -36,23 +36,23 @@
   <title></title>
 </head>
 <body>
-  <content tag="flowMain">
-        <p><g:message code="activateAccountAndCardController.activateAccount.promptText"/></p>
+<content tag="flowMain">
+  <p><g:message code="activateAccountAndCardController.activateAccount.promptText"/></p>
 
-        <g:form id="activateAccountForm">
+  <g:form id="activateAccountForm">
 
-          <label for="forwardAddress"><g:message code="activateAccountAndCardController.activateAccount.forwardAddress"/></label>
-          <br/>
-          <g:textField name="forwardAddress" value="${forwardAddress}"/>
+    <label for="forwardAddress"><g:message code="activateAccountAndCardController.activateAccount.forwardAddress"/></label>
+    <br/>
+    <g:textField name="forwardAddress" value="${forwardAddress}"/>
 
-          <div class="clear-float"></div>
+    <div class="clear-float"></div>
 
-          <g:checkBox name="approveTermsOfUse" value="${approveTermsOfUse}"/>
-          <label for="approveTermsOfUse"><g:message code="activateAccountAndCardController.activateAccount.approveTermsOfUse"/></label>
-          <div class="align-right">
-            <g:submitButton class="signupButton" name="acceptAccountActivation" value="${g.message(code:'activateAccountAndCardController.activateAccount.activate')}"/>
-          </div>
-        </g:form>
-  </content>
+    <g:checkBox name="approveTermsOfUse" value="${approveTermsOfUse}"/>
+    <label for="approveTermsOfUse"><g:message code="activateAccountAndCardController.activateAccount.approveTermsOfUse"/></label>
+    <div class="align-right">
+      <g:submitButton class="signupButton" name="acceptAccountActivation" value="${g.message(code:'activateAccountAndCardController.activateAccount.activate')}"/>
+    </div>
+  </g:form>
+</content>
 </body>
 </html>
