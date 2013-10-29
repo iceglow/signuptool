@@ -31,33 +31,33 @@
 
 <%@ page import="se.su.it.signuptool.ActivateAccountAndCardController" contentType="text/html;charset=UTF-8" %>
 <g:applyLayout name="main">
-<html>
-<head>
-  <title><g:layoutTitle/></title>
-  <g:layoutHead/>
-</head>
-<body>
-<div class="apps-mid-column">
-  <tmpl:/shared/feedback flash="${flash}"/>
+  <html>
+  <head>
+    <title><g:layoutTitle/></title>
+    <g:layoutHead/>
+  </head>
+  <body>
+  <div class="apps-mid-column">
+    <tmpl:/shared/feedback flash="${flash}"/>
 
-  <div class="float-left">
-    <div class="prompt">
-      <g:if test="${g.pageProperty(name: 'page.flowMainPreamble')}">
-      <p>
-        <g:pageProperty name="page.flowMainPreamble"/>
-      </p>
-      </g:if>
-      <g:pageProperty name="page.flowMainContent"/>
-    </div>
+    <div class="float-left">
+      <div class="prompt">
+        <g:if test="${g.pageProperty(name: 'page.flowMainPreamble')}">
+          <p>
+            <g:pageProperty name="page.flowMainPreamble"/>
+          </p>
+        </g:if>
+        <g:pageProperty name="page.flowMainContent"/>
+      </div>
 
-    <div class="state_progress_img">
-      <% def step = session.step ?: session.acp?.step ?: ActivateAccountAndCardController.STEP_START %>
-      <img src="${resource(dir: 'img', file: g.message(code: "activateAccountAndCardController.step${step}.image"))}" border="0"
-           class="logotype" title="<g:message code='activateAccountAndCardController.step${step}.counter'/>">
+      <div class="state_progress_img">
+        <% def step = session.step ?: session.acp?.step ?: ActivateAccountAndCardController.STEP_START %>
+        <img src="${resource(dir: 'img', file: g.message(code: "activateAccountAndCardController.step${step}.image"))}" border="0"
+             class="logotype" title="<g:message code='activateAccountAndCardController.step${step}.counter'/>">
+      </div>
     </div>
+    <g:pageProperty name="page.flowBottom"/>
   </div>
-  <g:pageProperty name="page.flowBottom"/>
-</div>
-</body>
-</html>
+  </body>
+  </html>
 </g:applyLayout>
