@@ -95,6 +95,6 @@ class DashboardController {
   }
 
   def getUseCaseInfo(long caseId) {
-    return render(text:UseCase.get(caseId).description)
+    return render(text:(UseCase.get(caseId)?.description)?:'')
   }
 }

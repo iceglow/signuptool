@@ -4,9 +4,6 @@ import groovy.util.logging.Slf4j
 import se.su.it.signuptool.EventLog
 import se.su.it.signuptool.interfaces.UtilityServiceI
 
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpSession
-
 @Slf4j
 class UtilityServiceStub implements UtilityServiceI {
 
@@ -14,28 +11,30 @@ class UtilityServiceStub implements UtilityServiceI {
 
   @Override
   String getScopeFromEppn(String eppn) {
-    log.info "Proxying request"
-    return realUtilityService.getScopeFromEppn(eppn)
+    log.info "getScopeFromEppn: Proxying request for eppn: $eppn"
+    String response = realUtilityService.getScopeFromEppn(eppn)
+    log.info "getScopeFromEppn: Returning response => $response"
+    return response
   }
 
   @Override
   EventLog getEventLog(long referenceId) {
-    // Proxying request.
-    log.info "Proxying request"
+    log.info "getEventLog: Proxying request for referenceId: $referenceId"
     return realUtilityService.getEventLog(referenceId)
   }
 
   @Override
   EventLog getEventLog() {
-    // Proxying request.
-    log.info "Proxying request"
+    log.info "getEventLog: Proxying getEventLog request"
     return realUtilityService.getEventLog()
   }
 
   @Override
   String chompNinToSsn(String ssn) {
     // Proxying request.
-    log.info "Proxying request"
-    return realUtilityService.chompNinToSsn(ssn)
+    log.info "chompNinToSsn: Proxying request for ssn: $ssn"
+    String result = realUtilityService.chompNinToSsn(ssn)
+    log.info "chompNinToSsn: Returning result => $ssn"
+    return result
   }
 }

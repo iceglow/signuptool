@@ -166,63 +166,112 @@ class BootStrap {
     }
 
     if (Environment.current.name == "mock") {
+
+      final String DEFAULT_VALID_EPPN = "student@studera.nu"
+      final String DEFAULT_INVALID_EPPN ="student@skolka.nu"
       /** Bootstrap some use case test data */
       log.info "Adding mock Use Cases"
 
       List useCases = []
+
+      // TODO: Write more pathing information.
+
+      /** Broken paths */
       useCases << new UseCase(
-          name:"missingEppn",
+          name: "MISSING_EPPN",
           displayName: "${UseCase.I18N_PREFIX}.missingEppn",
-          eppn:'',
+          eppn: null,
           description: "When user is missing the request.eppn attribute.")
 
       useCases << new UseCase(
-          name:"unknown",
+          name: "UNKNOWN_SCOPE",
           displayName: "${UseCase.I18N_PREFIX}.unknown",
-          eppn:"unknown@unknown.com",
+          eppn: DEFAULT_INVALID_EPPN,
           description: "When the user has an unknown scope (such as blaha.se), ie not studera.nu")
 
       useCases << new UseCase(
-          name:"unverifiedAccount",
+          name: "UNVERIFIED_ACCOUNT",
           displayName: "${UseCase.I18N_PREFIX}.unverifiedAccount",
-          eppn:"x@studera.nu",
-          description:"When the user has a studera.nu account (ie scope studera.nu) but does not have a request.norEduPersonNIN set.")
+          eppn: DEFAULT_VALID_EPPN,
+          description: "When the user has a studera.nu account (ie scope studera.nu) but does not have a request.norEduPersonNIN set.")
 
       useCases << new UseCase(
-          name:"multipleEntriesInSukat",
-          displayName:"${UseCase.I18N_PREFIX}.multipleEntriesInSukat",
-          eppn:"x@studera.nu",
-          norEduPersonNIN:'multipleEntriesInSukat',
-          description:"When a search in SUKAT yields serveral hits for the given persons norEduPersonNIN (social security number)")
+          name: "MULTIPLE_ENTRIES_IN_SUKAT",
+          displayName: "${UseCase.I18N_PREFIX}.multipleEntriesInSukat",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: 'MULTIPLE_ENTRIES_IN_SUKAT',
+          description: "When a search in SUKAT yields serveral hits for the given persons norEduPersonNIN (social security number)")
 
       useCases << new UseCase(
-          name:"errorWhenAskingSukatForUser",
+          name: "ERROR_WHEN_ASKING_SUKAT_FOR_USER",
           displayName: "${UseCase.I18N_PREFIX}.errorWhenAskingSukatForUser",
-          eppn:"x@studera.nu",
-          norEduPersonNIN:'errorWhenAskingSukatForUser',
-          description:"When SUKAT throws an error when asking for user information. Such as network error, svc error or similar.")
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: 'ERROR_WHEN_ASKING_SUKAT_FOR_USER',
+          description: "When SUKAT throws an error when asking for user information. Such as network error, svc error or similar.")
 
       useCases << new UseCase(
-          name:"noSUKATuserAndNotFoundInLADOK",
-          displayName: "${UseCase.I18N_PREFIX}.noSUKATuserAndNotFoundInLADOK",
-          eppn:"x@studera.nu",
-          norEduPersonNIN:'noSUKATuserAndNotFoundInLADOK',
-          description:"When the user has no SUKAT account and can't be found in LADOK, this often occurs when a new user has not yet" +
+          name: "NEW_USER_NOT_FOUND_IN_LADOK",
+          displayName: "${UseCase.I18N_PREFIX}.newUserNotFoundInLADOK",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: 'NEW_USER_NOT_FOUND_IN_LADOK',
+          description: "When the user has no SUKAT account and can't be found in LADOK, this often occurs when a new user has not yet" +
               "been entered into the LADOK database.")
 
       useCases << new UseCase(
-          name:"hasActiveUserInSUKAT",
-          displayName: "${UseCase.I18N_PREFIX}.hasActiveUserInSUKAT",
-          eppn:"x@studera.nu",
-          norEduPersonNIN:'hasActiveUserInSUKAT',
-          description:"When a user has an active account, happy path without account or card creation.")
+          name: "BROKEN_STUB",
+          displayName: "${UseCase.I18N_PREFIX}.brokenStub",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: 'BROKEN_STUB',
+          description: "When a user has a broken stub entry in SUKAT, in this case a stub user without a uid.")
 
+      /** Functional paths */
       useCases << new UseCase(
-          name:"creatingNewUserFromBrokenStub",
-          displayName: "${UseCase.I18N_PREFIX}.creatingNewUserFromBrokenStub",
-          eppn:"x@studera.nu",
-          norEduPersonNIN:'creatingNewUserFromBrokenStub',
-          description:"When a user has a broken stub entry in SUKAT, in this case a stub user without a uid.")
+          name: "HAS_SUKAT_USER",
+          displayName: "${UseCase.I18N_PREFIX}.hasSUKATUser",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: 'HAS_SUKAT_USER',
+          description: "When a user has an active account, happy path without account or card creation.")
+
+      /**
+       * === Service Stub Pathing ===
+       * UtilityService:
+       *  1. getScopeFromEppn => scope from DEFAULT_VALID_EPPN
+       * SukatService:
+       *  2. findUsersBySocialSecurityNumber => stub user
+       *  5. setMailRoutingAddress => void
+       *  6. activateUser => SvcUidPwd(uid & passwd)
+       * ActivateAccountAndCardService:
+       *  4. fetchLadokData => [tnamn:'tnamn', enamn:'enamn']
+       * LadokService:
+       *  3. findForwardAddressSuggestionForPnr => tnamn.enamn@student.su.se
+       */
+      useCases << new UseCase(
+          name: "NEW_USER_FROM_STUB",
+          displayName: "${UseCase.I18N_PREFIX}.newUserFromStub",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: 'NEW_USER_FROM_STUB',
+          description: "When a user has a stub entry in SUKAT.")
+
+      /**
+       * === Service Stub Pathing ===
+       * UtilityService:
+       *  1. getScopeFromEppn => scope from DEFAULT_VALID_EPPN
+       * SukatService:
+       *  2. findUsersBySocialSecurityNumber => [] (since we do it from scratch)
+       *  5. createSuPersonStub => uid
+       *  6. setMailRoutingAddress => void
+       *  7. activateUser => SvcUidPwd(uid & passwd)
+       * ActivateAccountAndCardService:
+       *  3. fetchLadokData => [tnamn:'tnamn', enamn:'enamn']
+       * LadokService:
+       *  4. findForwardAddressSuggestionForPnr => tnamn.enamn@student.su.se
+       */
+      useCases << new UseCase(
+          name: "NEW_USER_FROM_SCRATCH",
+          displayName: "${UseCase.I18N_PREFIX}.newUserFromScratch",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: 'NEW_USER_FROM_SCRATCH',
+          description: "Account creation from scratch.")
 
       for (useCase in useCases) {
         useCase.save(failOnError: true)
