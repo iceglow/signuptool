@@ -29,11 +29,6 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-<div id="feedback">
-  <g:if test="${flash.info}">
-    <div>${flash.info}</div>
-  </g:if>
-  <g:if test="${flash.error || request.error}">
-    <div class="error">${flash.error ?: request.error}</div>
-  </g:if>
-</div>
+<g:if test="${flash.error || request.error}">
+  <div class="apps-dialogue-red">${flash.error ?: request.error}</div>
+</g:if>
