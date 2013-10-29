@@ -52,11 +52,11 @@
       </div>
 
       <g:if test="${! g.pageProperty(name: 'page.hideStepImage')}">
-      <div class="state_progress_img">
-        <% def step = session.step ?: session.acp?.step ?: ActivateAccountAndCardController.STEP_START %>
-        <img src="${resource(dir: 'img', file: g.message(code: "activateAccountAndCardController.step${step}.image"))}" border="0"
-             class="logotype" title="<g:message code='activateAccountAndCardController.step${step}.counter'/>">
-      </div>
+        <div class="state_progress_img">
+          <% def step = session.step ?: session.acp?.step ?: ActivateAccountAndCardController.STEP_START %>
+          <img src="${resource(dir: 'img', file: g.message(code: "activateAccountAndCardController.step${step}.image"))}" border="0"
+               class="logotype" title="<g:message code='activateAccountAndCardController.step${step}.counter'/>">
+        </div>
       </g:if>
     </div>
     <g:pageProperty name="page.flowBottom"/>
