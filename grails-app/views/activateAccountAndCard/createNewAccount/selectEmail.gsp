@@ -36,11 +36,11 @@
   <title></title>
 </head>
 <body>
-<content tag="flowMainPreamble">
+<content tag="flowPreamble">
   <g:message code="activateAccountAndCardController.forwardEmail.explanation"/>
 </content>
 
-<content tag="flowMainContent">
+<content tag="flowContent">
   <g:form>
     <div class="apps-float-30 mgn-left-20">
       <label for="forwardAddress"><g:message code="activateAccountAndCardController.forwardEmail.emailLabel"/></label>

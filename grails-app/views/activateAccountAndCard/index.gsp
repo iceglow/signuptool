@@ -42,7 +42,7 @@
 <!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
 <g:set var="showOrderCard" value="${!(session.hasCompletedCardOrder) || (session.errorWhileOrderingCard)}"/>
 
-<content tag="flowMainPreamble">
+<content tag="flowPreamble">
 <g:if test="${showAccountInfo}">
   <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/>
 </g:if>
@@ -51,7 +51,7 @@
 </g:else>
 </content>
 
-<content tag="flowMainContent">
+<content tag="flowContent">
   <!-- Webreg:  When either hasCompletedCardOrder or errorWhileOrderingCard is true (when showAccountInfo == false) -->
 
   <g:if test="${showAccountInfo}">

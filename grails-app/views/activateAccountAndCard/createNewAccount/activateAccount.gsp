@@ -36,11 +36,11 @@
   <title></title>
 </head>
 <body>
-<content tag="flowMainPreamble">
+<content tag="flowPreamble">
   <g:message code="activateAccountAndCardController.activateAccount.promptText"/>
 </content>
 
-<content tag="flowMainContent">
+<content tag="flowContent">
   <g:form id="activateAccountForm">
 
     <label for="forwardAddress"><g:message code="activateAccountAndCardController.activateAccount.forwardAddress"/></label>

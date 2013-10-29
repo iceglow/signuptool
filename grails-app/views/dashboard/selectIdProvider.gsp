@@ -56,11 +56,11 @@
   </script>
 </head>
 <body>
-<content tag="flowMainPreamble">
+<content tag="flowPreamble">
   <g:message code="activateAccountAndCardController.selectIdProviderText"/>
 </content>
 
-<content tag="flowMainContent">
+<content tag="flowContent">
   <div class="bordered-detail-square mgn-bottom-20">
     <div class="header-id-provider">
       <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>

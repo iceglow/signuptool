@@ -36,11 +36,11 @@
   <title><g:message code="application.title"/></title>
 </head>
 <body>
-<content tag="flowMainPreamble">
+<content tag="flowPreamble">
   <g:message code="dashboard.index.activateAccountText"/>
 </content>
 
-<content tag="flowMainContent">
+<content tag="flowContent">
   <br/>
   <br/>
   <g:link action="activateAccountAndCard">

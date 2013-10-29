@@ -36,11 +36,11 @@
   <title><g:message code="activateAccountAndCard.userNotFoundInLadok.title"/></title>
 </head>
 <body>
-<content tag="flowMainPreamble">
+<content tag="flowPreamble">
   <g:message code="activateAccountAndCard.userNotFoundInLadok.text"/>
 </content>
 
-<content tag="flowMainContent">
+<content tag="flowContent">
   <span><g:message code="activateAccountAndCard.referenceId" args="[referenceId]"/></span>
 </content>
 </body>
