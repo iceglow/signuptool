@@ -53,5 +53,7 @@
     </g:form>
   </div>
 </content>
+
+<sitemesh:parameter name="hideStepImage" value="true"/>
 </body>
 </html>
