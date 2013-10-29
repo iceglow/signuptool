@@ -37,18 +37,18 @@
 </head>
 <body>
 <content tag="flowMain">
-        <p><g:message code="activateAccountAndCardController.selectIdProviderText"/></p>
-        <div class="bordered-detail-square">
-          <div class="header-id-provider">
-            <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
-          </div>
-          <g:message code="activateAccountAndCardController.idProvider.promptText.antagning"/>
-          <g:link url="/Shibboleth.sso/WAYF/antagning.se/produktion">
-            <div class="align-center">
-              <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
-            </div>
-          </g:link>
-        </div>
+  <p><g:message code="activateAccountAndCardController.selectIdProviderText"/></p>
+  <div class="bordered-detail-square">
+    <div class="header-id-provider">
+      <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
+    </div>
+    <g:message code="activateAccountAndCardController.idProvider.promptText.antagning"/>
+    <g:link url="/Shibboleth.sso/WAYF/antagning.se/produktion">
+      <div class="align-center">
+        <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
+      </div>
+    </g:link>
+  </div>
 </content>
 </body>
 </html>
