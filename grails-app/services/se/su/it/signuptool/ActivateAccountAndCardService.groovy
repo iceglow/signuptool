@@ -94,7 +94,7 @@ class ActivateAccountAndCardService implements Serializable, ActivateAccountAndC
     return cardInfo
   }
 
-  private static boolean canOrderCard(Map cardInfo) {
+  private static synchronized boolean canOrderCard(Map cardInfo) {
     if (!cardInfo.hasAddress) {
       return false
     }

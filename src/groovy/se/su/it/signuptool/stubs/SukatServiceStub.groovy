@@ -14,17 +14,20 @@ class SukatServiceStub implements SukatServiceI {
     log.info "findUsersBySocialSecurityNumber: handling request for $nin"
 
     switch(nin) {
-      case "multipleEntriesInSukat":
+      case "MULTIPLE_ENTRIES_IN_SUKAT":
         response = [new SvcSuPersonVO(), new SvcSuPersonVO()]
         break
-      case "errorWhenAskingSukatForUser":
+      case "ERROR_WHEN_ASKING_SUKAT_FOR_USER":
         throw new Exception("Generic SUKAT exception.")
         break
-      case "hasActiveUserInSUKAT":
-        response = [new SvcSuPersonVO(accountIsActive:true, uid:"fake1")]
+      case "HAS_SUKAT_USER":
+        response = [new SvcSuPersonVO(accountIsActive:true, uid:"HAS_SUKAT_USER")]
         break
-      case "creatingNewUserFromBrokenStub":
+      case "BROKEN_STUB":
         response = [new SvcSuPersonVO(accountIsActive:false)]
+        break
+      case "NEW_USER_FROM_STUB":
+        response = [new SvcSuPersonVO(accountIsActive:false, uid: 'NEW_USER_FROM_STUB')]
         break
       default:
         break
@@ -46,7 +49,17 @@ class SukatServiceStub implements SukatServiceI {
 
   @Override
   String createSuPersonStub(String givenName, String sn, String nin) {
-    return null  //To change body of implemented methods use File | Settings | File Templates.
+    String uid = null
+
+    switch(nin) {
+     case "NEW_USER_FROM_STUB":
+       uid = "NEW_USER_FROM_STUB"
+       break
+     default:
+       break
+    }
+
+    return uid
   }
 
   @Override
@@ -66,7 +79,19 @@ class SukatServiceStub implements SukatServiceI {
 
   @Override
   SvcUidPwd activateUser(String uid) {
-    return null  //To change body of implemented methods use File | Settings | File Templates.
+    SvcUidPwd result = null
+
+    switch(uid) {
+      case "NEW_USER_FROM_STUB":
+        result = new SvcUidPwd()
+        result.uid = "NEW_USER_FROM_STUB"
+        result.password = "KAKBURK123"
+        break
+      default:
+        break
+    }
+
+    return result
   }
 
   @Override
