@@ -50,9 +50,6 @@
     <label for="registeredAddressValid">
       <g:message code="activateAccountAndCardController.cardOrder.registeredAddressValid"/>
     </label>
-    <a href="#" title="${g.message(code:"activateAccountAndCardController.cardOrder.registeredAddressValid.tooltip")}">
-      <span class="help"></span>
-    </a>
     <br/>
 
     <div class="indent-small">
