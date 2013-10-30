@@ -56,11 +56,25 @@ class DashboardController {
     session.controller = 'activateAccountAndCard'
 
     def env = Environment.current.name
+    def accountUseCases = null
+    def accountUseCase = null
+    def cardUseCases = null
+    def cardUseCase = null
 
-    def useCases = UseCase.list()
-    def useCase = (useCases) ? useCases?.first() : null
+    if (env == "mock") {
+      accountUseCases = UseCase.findAllByType(UseCase.Type.ACCOUNT)
+      accountUseCase = UseCase.findByType(UseCase.Type.ACCOUNT)
+      cardUseCases = UseCase.findAllByType(UseCase.Type.CARD)
+      cardUseCase = UseCase.findByType(UseCase.Type.CARD)
+    }
 
-    return render(view:'selectIdProvider', model: [env:env, useCase:useCase, useCases:useCases])
+    return render(view: 'selectIdProvider', model: [
+        env: env,
+        accountUseCases: accountUseCases,
+        accountUseCase: accountUseCase,
+        cardUseCases: cardUseCases,
+        cardUseCase: cardUseCase
+    ])
   }
 
   def resetAccountOrPassword() {
@@ -91,7 +105,21 @@ class DashboardController {
     session.acp = acp
 
     log.error "Prepared session: ${session.acp}"
-    return redirect(controller:'activateAccountAndCard', action:'index')
+
+    switch(useCase.type) {
+      case UseCase.Type.ACCOUNT:
+        log.info "Routing to index"
+        return redirect(controller:'activateAccountAndCard', action:'index')
+        break
+      case UseCase.Type.CARD:
+        log.info "Routing to cardOrder"
+        return redirect(controller:'activateAccountAndCard', action:'orderCard')
+        break
+      default:
+        flash.error = "Use Case has an unknown type: ${useCase.type}"
+        return redirect(action:'index')
+    }
+
   }
 
   def getUseCaseInfo(long caseId) {

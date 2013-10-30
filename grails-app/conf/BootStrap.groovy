@@ -34,7 +34,9 @@ import grails.util.Environment
 import org.grails.plugins.localization.Localization
 import org.springframework.core.io.Resource
 import se.su.it.grails.plugins.access.AccessRole
+import se.su.it.signuptool.mock.MockUserVO
 import se.su.it.signuptool.mock.UseCase
+import se.su.it.svc.SvcSuPersonVO
 
 class BootStrap {
   def configService
@@ -178,24 +180,28 @@ class BootStrap {
 
       /** Broken paths */
       useCases << new UseCase(
+          type: UseCase.Type.ACCOUNT,
           name: "MISSING_EPPN",
           displayName: "${UseCase.I18N_PREFIX}.missingEppn",
           eppn: null,
           description: "When user is missing the request.eppn attribute.")
 
       useCases << new UseCase(
+          type: UseCase.Type.ACCOUNT,
           name: "UNKNOWN_SCOPE",
           displayName: "${UseCase.I18N_PREFIX}.unknown",
           eppn: DEFAULT_INVALID_EPPN,
           description: "When the user has an unknown scope (such as blaha.se), ie not studera.nu")
 
       useCases << new UseCase(
+          type: UseCase.Type.ACCOUNT,
           name: "UNVERIFIED_ACCOUNT",
           displayName: "${UseCase.I18N_PREFIX}.unverifiedAccount",
           eppn: DEFAULT_VALID_EPPN,
           description: "When the user has a studera.nu account (ie scope studera.nu) but does not have a request.norEduPersonNIN set.")
 
       useCases << new UseCase(
+          type: UseCase.Type.ACCOUNT,
           name: "MULTIPLE_ENTRIES_IN_SUKAT",
           displayName: "${UseCase.I18N_PREFIX}.multipleEntriesInSukat",
           eppn: DEFAULT_VALID_EPPN,
@@ -203,6 +209,7 @@ class BootStrap {
           description: "When a search in SUKAT yields serveral hits for the given persons norEduPersonNIN (social security number)")
 
       useCases << new UseCase(
+          type: UseCase.Type.ACCOUNT,
           name: "ERROR_WHEN_ASKING_SUKAT_FOR_USER",
           displayName: "${UseCase.I18N_PREFIX}.errorWhenAskingSukatForUser",
           eppn: DEFAULT_VALID_EPPN,
@@ -210,6 +217,7 @@ class BootStrap {
           description: "When SUKAT throws an error when asking for user information. Such as network error, svc error or similar.")
 
       useCases << new UseCase(
+          type: UseCase.Type.ACCOUNT,
           name: "NEW_USER_NOT_FOUND_IN_LADOK",
           displayName: "${UseCase.I18N_PREFIX}.newUserNotFoundInLADOK",
           eppn: DEFAULT_VALID_EPPN,
@@ -218,6 +226,7 @@ class BootStrap {
               "been entered into the LADOK database.")
 
       useCases << new UseCase(
+          type: UseCase.Type.ACCOUNT,
           name: "BROKEN_STUB",
           displayName: "${UseCase.I18N_PREFIX}.brokenStub",
           eppn: DEFAULT_VALID_EPPN,
@@ -226,6 +235,7 @@ class BootStrap {
 
       /** Functional paths */
       useCases << new UseCase(
+          type: UseCase.Type.ACCOUNT,
           name: "HAS_SUKAT_USER",
           displayName: "${UseCase.I18N_PREFIX}.hasSUKATUser",
           eppn: DEFAULT_VALID_EPPN,
@@ -246,6 +256,7 @@ class BootStrap {
        *  3. findForwardAddressSuggestionForPnr => tnamn.enamn@student.su.se
        */
       useCases << new UseCase(
+          type: UseCase.Type.ACCOUNT,
           name: "NEW_USER_FROM_STUB",
           displayName: "${UseCase.I18N_PREFIX}.newUserFromStub",
           eppn: DEFAULT_VALID_EPPN,
@@ -267,11 +278,87 @@ class BootStrap {
        *  4. findForwardAddressSuggestionForPnr => tnamn.enamn@student.su.se
        */
       useCases << new UseCase(
+          type: UseCase.Type.ACCOUNT,
           name: "NEW_USER_FROM_SCRATCH",
           displayName: "${UseCase.I18N_PREFIX}.newUserFromScratch",
           eppn: DEFAULT_VALID_EPPN,
           norEduPersonNIN: 'NEW_USER_FROM_SCRATCH',
           description: "Account creation from scratch.")
+
+      useCases << new UseCase(
+          type: UseCase.Type.CARD,
+          name: "NO_VALID_USER",
+          eppn:DEFAULT_VALID_EPPN,
+          displayName: "${UseCase.I18N_PREFIX}.noValidUser",
+          description: "When the user has no user in the current session (illegal state).",
+          user: new MockUserVO(uid:null, accountIsActive: true).save()
+      )
+
+      /**
+       * 1. activateAccountAndCardService.getCardOrderStatus => null
+       */
+      useCases << new UseCase(
+          type: UseCase.Type.CARD,
+          name: "FETCHING_CARD_ORDER_STATUS_FAILS",
+          displayName: "${UseCase.I18N_PREFIX}.fetchingCardOrderStatusFails",
+          eppn:DEFAULT_VALID_EPPN,
+          norEduPersonNIN: "FETCHING_CARD_ORDER_STATUS_FAILS",
+          description: "When the system is unable to fetch the status of the current users cards and card orders.",
+          user: new MockUserVO(uid:"FETCHING_CARD_ORDER_STATUS_FAILS", accountIsActive: true).save()
+      )
+
+      /**
+       * 1. activateAccountAndCardService.getCardOrderStatus => [canOrderCard = false, hasAddress = false]
+       */
+      useCases << new UseCase(
+          type: UseCase.Type.CARD,
+          name: "MISSING_ADDRESS",
+          displayName: "${UseCase.I18N_PREFIX}.missingAddress",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: "MISSING_ADDRESS",
+          description: "When the user is missing a proper address, which is fetched from LADOK.",
+          user: new MockUserVO(uid: "MISSING_ADDRESS", accountIsActive: true).save()
+      )
+
+      useCases << new UseCase(
+          type: UseCase.Type.CARD,
+          name: "HAS_ACTIVE_CARDS",
+          displayName: "${UseCase.I18N_PREFIX}.hasActiveCards",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: "HAS_ACTIVE_CARDS",
+          description: "When the user already has an active card",
+          user: new MockUserVO(uid: "HAS_ACTIVE_CARDS", accountIsActive: true).save()
+      )
+
+      useCases << new UseCase(
+          type: UseCase.Type.CARD,
+          name: "HAS_CARD_ORDERS",
+          displayName: "${UseCase.I18N_PREFIX}.hasCardOrders",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: "HAS_CARD_ORDERS",
+          description: "When the user already has active card orders in the card order database.",
+          user: new MockUserVO(uid: "HAS_CARD_ORDERS", accountIsActive: true).save()
+      )
+
+      useCases << new UseCase(
+          type: UseCase.Type.CARD,
+          name: "CARD_ORDER_FAILS",
+          displayName: "${UseCase.I18N_PREFIX}.cardOrderFails",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: "CARD_ORDER_FAILS",
+          description: "When the actual ordering of the card fails.",
+          user: new MockUserVO(uid: "CARD_ORDER_FAILS", accountIsActive: true).save()
+      )
+
+      useCases << new UseCase(
+          type: UseCase.Type.CARD,
+          name: "CARD_ORDER_SUCCEEDS",
+          displayName: "${UseCase.I18N_PREFIX}.cardOrderSucceeds",
+          eppn: DEFAULT_VALID_EPPN,
+          norEduPersonNIN: "CARD_ORDER_SUCCEEDS",
+          description: "A successful uneventful card order.",
+          user: new MockUserVO(uid: "CARD_ORDER_SUCCEEDS", accountIsActive: true).save()
+      )
 
       for (useCase in useCases) {
         useCase.save(failOnError: true)

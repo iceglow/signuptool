@@ -39,16 +39,16 @@
     $(function() {
       $("select[name=caseId]").on("change", function() {
         var id = $(this).val();
+        var target$ = $(this).siblings(".useCaseDescription");
         $.ajax({
           url:"/dashboard/getUseCaseInfo",
           type:"POST",
           data:{caseId:id},
           success: function(data) {
-            console.log(data);
-            $("#useCaseDescription").html(data);
+            target$.html(data);
           },
           error: function(data) {
-            $("#useCaseDescription").html("Failed when fetching use case information.");
+            target$.html("Failed when fetching use case information.");
           }
         })
       });
@@ -90,15 +90,31 @@
             <div class="header-id-provider">
               <g:message code="activateAccountAndCardController.idProvider.header.mockup"/>
             </div>
-            <g:message code="activateAccountAndCardController.idProvider.promptText.mockup"/>
-            <g:form name="useCaseForm" action="useCase">
+            <g:message code="activateAccountAndCardController.idProvider.promptText.accountCases"/>
+            <g:form name="useCaseAccountForm" action="useCase" class="mgn-bottom-10">
               <g:select name="caseId"
-                        from="${useCases}"
+                        from="${accountUseCases}"
+                        value="${accountUseCase}"
                         optionKey="id"
                         optionValue="${{message(code:it.displayName)}}"
 
               />
-              <div id="useCaseDescription">${useCase?.description}</div>
+              <div id="accountUseCaseDescription" class="useCaseDescription">${accountUseCase?.description}</div>
+              <div class="align-right">
+                <g:submitButton class="signupButton" name="run" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
+              </div>
+            </g:form>
+
+            <g:message code="activateAccountAndCardController.idProvider.promptText.cardCases"/>
+            <g:form name="useCaseCardForm" action="useCase">
+              <g:select name="caseId"
+                        from="${cardUseCases}"
+                        value="${cardUseCase}"
+                        optionKey="id"
+                        optionValue="${{message(code:it.displayName)}}"
+
+              />
+              <div id="cardUseCaseDescription" class="useCaseDescription">${cardUseCase?.description}</div>
               <div class="align-right">
                 <g:submitButton class="signupButton" name="run" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
               </div>

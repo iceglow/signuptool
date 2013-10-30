@@ -70,7 +70,20 @@ class SukatServiceStub implements SukatServiceI {
 
   @Override
   String orderCard(SvcSuPersonVO user, Map ladokAddress) {
-    return null  //To change body of implemented methods use File | Settings | File Templates.
+    log.info "orderCard: Intercepted request from ${user}"
+    String response = null
+    switch (user?.uid) {
+      case "CARD_ORDER_FAILS":
+        throw new IllegalStateException("Set to fail in an epic way!")
+        break
+      case "CARD_ORDER_SUCCEEDS":
+        break;
+      default:
+        log.info "No case specified for user with uid: $user.uid"
+    }
+    /* We don't actually care about the response string so it doesn't matter, as long as it is not an exception. */
+    log.info "orderCard: Returning => $response"
+    return response
   }
 
   @Override
