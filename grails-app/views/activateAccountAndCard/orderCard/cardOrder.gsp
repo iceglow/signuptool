@@ -33,7 +33,7 @@
 <html>
 <head>
   <meta name="layout" content="activateFlow"/>
-  <title>Order University Card</title>
+  <title><g:message code="activateAccountAndCardController.cardOrder.title" /></title>
 </head>
 <body>
 <content tag="flowContent">
