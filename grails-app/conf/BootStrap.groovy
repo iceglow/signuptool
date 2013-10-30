@@ -386,6 +386,14 @@ class BootStrap {
         useCase.save(failOnError: true)
       }
     }
+
+    StringBuilder sb = new StringBuilder()
+    sb.append("\n\n==== Configuration ====\n")
+    grailsApplication.config.toProperties()?.sort { it.key }?.each { key, value ->
+      sb.append("\t $key => $value\n")
+    }
+    sb.append("\n\n")
+    log.info sb.toString()
   }
 
   def destroy = {
