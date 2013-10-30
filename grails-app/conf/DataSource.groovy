@@ -45,7 +45,7 @@ environments {
     development {
         dataSource {
             dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
-            jndiName = "java:comp/env/jdbc/signuptool-dev"
+            jndiName = "java:comp/env/jdbc/signuptool"
         }
     }
     test {
@@ -62,8 +62,8 @@ environments {
     }
     mock {
       dataSource {
-        dbCreate = "update"
-        url = "jdbc:h2:mem:mockDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+          dbCreate = "update"
+          jndiName = "java:comp/env/jdbc/signuptool"
       }
     }
 }
