@@ -34,7 +34,6 @@ package se.su.it.signuptool
 import grails.util.Environment
 import grails.validation.Validateable
 import groovy.transform.ToString
-import se.su.it.signuptool.mock.MockUserVO
 import se.su.it.signuptool.mock.UseCase
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
@@ -208,7 +207,8 @@ class ActivateAccountAndCardController {
         password:password,
         lpwurl: lpwurl,
         sukaturl: sukaturl,
-        hasCompletedCardOrder:acp.hasCompletedCardOrder
+        hasCompletedCardOrder: acp.hasCompletedCardOrder,
+        errorWhileOrderingCard: acp.errorWhileOrderingCard
     ])
   }
 
