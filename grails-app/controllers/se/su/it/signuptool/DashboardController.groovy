@@ -37,6 +37,7 @@ import se.su.it.signuptool.mock.UseCase
 class DashboardController {
 
   def index() {
+    session.step = ActivateAccountAndCardController.STEP_START
     if (session.controller) {
 
       /** Always remove stored controllers from the session */
@@ -53,6 +54,7 @@ class DashboardController {
   }
 
   def activateAccountAndCard() {
+    session.step = ActivateAccountAndCardController.STEP_IDENTIFY
     session.controller = 'activateAccountAndCard'
 
     def env = Environment.current.name

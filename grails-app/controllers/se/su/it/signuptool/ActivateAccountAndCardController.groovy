@@ -32,6 +32,7 @@
 package se.su.it.signuptool
 
 import grails.util.Environment
+import grails.validation.Validateable
 import groovy.transform.ToString
 import se.su.it.signuptool.mock.MockUserVO
 import se.su.it.signuptool.mock.UseCase
@@ -39,6 +40,12 @@ import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
 class ActivateAccountAndCardController {
+
+  public static final int STEP_START    = 1
+  public static final int STEP_IDENTIFY = 2
+  public static final int STEP_ACCOUNT  = 3
+  public static final int STEP_CARD     = 4
+  public static final int STEP_END      = 5
 
   def activateAccountAndCardService
   def configService
@@ -56,6 +63,10 @@ class ActivateAccountAndCardController {
           norEduPersonNIN:request.norEduPersonNIN)
       session.acp = acp
     }
+
+    // Cleanup any session step & set current step in acp obj.
+    session.step = null
+    acp.step = STEP_ACCOUNT
 
     if (!acp.validate()) {
       log.error acp.toString()
@@ -207,6 +218,7 @@ class ActivateAccountAndCardController {
       action {
         EventLog eventLog
         AccountAndCardProcess acp = session.acp
+        acp.step = STEP_ACCOUNT
         try {
           eventLog = utilityService.getEventLog(acp.referenceId)
         } catch (ex) {
@@ -240,6 +252,7 @@ class ActivateAccountAndCardController {
       action {
         EventLog eventLog
         AccountAndCardProcess acp = session.acp
+        acp.step = STEP_ACCOUNT
         try {
           eventLog = utilityService.getEventLog(acp.referenceId)
         } catch (ex) {
@@ -271,6 +284,7 @@ class ActivateAccountAndCardController {
 
         EventLog eventLog
         AccountAndCardProcess acp = session.acp
+        acp.step = STEP_ACCOUNT
         try {
           eventLog = utilityService.getEventLog(acp.referenceId)
         } catch (ex) {
@@ -356,6 +370,7 @@ class ActivateAccountAndCardController {
         flow.error = (flow.error)?:g.message(code:"activateAccountAndCardController.errors.genericError")
 
         /* On error we clear the AccountAndCardProcess object. */
+        session.step = session.acp?.step
         session.acp = null
       }
       on("success").to("errorPage")
@@ -395,6 +410,7 @@ class ActivateAccountAndCardController {
       action {
         EventLog eventLog
         AccountAndCardProcess acp = session.acp
+        acp.step = STEP_CARD
 
         try {
           if (acp.referenceId) {
@@ -462,6 +478,7 @@ class ActivateAccountAndCardController {
     processCardOrder {
       action {
         AccountAndCardProcess acp = session.acp
+        acp.step = STEP_CARD
         EventLog eventLog
         try {
           eventLog = utilityService.getEventLog(acp.referenceId)
@@ -518,6 +535,7 @@ class ActivateAccountAndCardController {
 
     beforeEnd() {
       action {
+        session.acp?.step = STEP_END
         return redirect(action:'index')
       }
       on("success").to("end")
@@ -528,7 +546,7 @@ class ActivateAccountAndCardController {
     }
   }
 
-  @grails.validation.Validateable
+  @Validateable
   @ToString(includeNames = true, includeFields = true, excludes = ["password"])
   public static class AccountAndCardProcess {
 
@@ -542,6 +560,7 @@ class ActivateAccountAndCardController {
     private boolean hasCompletedCardOrder = false
     private boolean errorWhileOrderingCard = false
     private SvcSuPersonVO userVO
+    private int step = STEP_START
 
     static constraints = {
       eppn(nullable:false, blank:false)
@@ -665,6 +684,15 @@ class ActivateAccountAndCardController {
     public void setUser(def user) {
       this.userVO = user
     }
+
+    public int getStep() {
+      this.step
+    }
+
+    public void setStep(int step) {
+      this.step = step
+    }
+
     /**
      * Stores the result of an account activation on the currently stored user.
      * @param result

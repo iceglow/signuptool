@@ -31,21 +31,21 @@
 
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
-  <head>
-    <title><g:message code="activateAccountAndCard.createNewAccount.errorPage"/></title>
-    <meta name="layout" content="main"/>
-  </head>
-  <body>
-    <div id="section">
-      <g:if test="${error}">
-        <div class="error">${error}</div>
-      </g:if>
-      <div>
-        <p><g:message code="activateAccountAndCardController.createNewAccount.errorPage.text"/></p>
-        <g:form>
-          <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.createNewAccount.errorPage.continue')}"/>
-        </g:form>
-      </div>
+<head>
+  <meta name="layout" content="activateFlow"/>
+  <title><g:message code="activateAccountAndCard.createNewAccount.errorPage"/></title>
+</head>
+<body>
+<content tag="flowPreamble">
+  <g:message code="activateAccountAndCardController.createNewAccount.errorPage.text"/>
+</content>
+
+<content tag="flowContent">
+  <g:form>
+    <div class="align-right">
+      <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.createNewAccount.errorPage.continue')}"/>
     </div>
-  </body>
+  </g:form>
+</content>
+</body>
 </html>

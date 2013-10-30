@@ -30,43 +30,31 @@
   --}%
 
 <%@ page contentType="text/html;charset=UTF-8" %>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
+  <meta name="layout" content="activateFlow"/>
   <title></title>
-  <meta name="layout" content="main"/>
 </head>
 <body>
-  <div class="apps-mid-column">
+<content tag="flowPreamble">
+  <g:message code="activateAccountAndCardController.activateAccount.promptText"/>
+</content>
 
-    <g:if test="${error}">
-      <div class="error">${error}</div>
-    </g:if>
+<content tag="flowContent">
+  <g:form id="activateAccountForm">
 
-    <div class="float-left">
-      <div class="prompt">
-        <p><g:message code="activateAccountAndCardController.activateAccount.promptText"/></p>
+    <label for="forwardAddress"><g:message code="activateAccountAndCardController.activateAccount.forwardAddress"/></label>
+    <br/>
+    <g:textField name="forwardAddress" value="${forwardAddress}"/>
 
-        <g:form id="activateAccountForm">
+    <div class="clear-float"></div>
 
-          <label for="forwardAddress"><g:message code="activateAccountAndCardController.activateAccount.forwardAddress"/></label>
-          <br/>
-          <g:textField name="forwardAddress" value="${forwardAddress}"/>
-
-          <div class="clear-float"></div>
-
-          <g:checkBox name="approveTermsOfUse" value="${approveTermsOfUse}"/>
-          <label for="approveTermsOfUse"><g:message code="activateAccountAndCardController.activateAccount.approveTermsOfUse"/></label>
-          <div class="align-right">
-            <g:submitButton class="signupButton" name="acceptAccountActivation" value="${g.message(code:'activateAccountAndCardController.activateAccount.activate')}"/>
-          </div>
-        </g:form>
-      </div>
-
-      <div class="state_progress_img">
-        <img src="${resource(dir: 'img', g.message(code: 'activateAccountAndCardController.step3.image'))}" border="0"
-             class="logotype" title="<g:message code='activateAccountAndCardController.step3.counter'/>">
-      </div>
+    <g:checkBox name="approveTermsOfUse" value="${approveTermsOfUse}"/>
+    <label for="approveTermsOfUse"><g:message code="activateAccountAndCardController.activateAccount.approveTermsOfUse"/></label>
+    <div class="align-right">
+      <g:submitButton class="signupButton" name="acceptAccountActivation" value="${g.message(code:'activateAccountAndCardController.activateAccount.activate')}"/>
     </div>
-  </div>
+  </g:form>
+</content>
 </body>
 </html>

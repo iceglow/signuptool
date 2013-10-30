@@ -16,10 +16,13 @@ class LocaleFilters {
           session.locale = params.lang
         }
 
-        // If no session locale can be found, get it from the request (browser locale) or default to sv_SE
+        // If no session locale can be found, get it from the request (browser locale)
         if (!session.locale) {
-          session.locale = RequestContextUtils.getLocale(request)?.toString() ?: 'sv_SE'
+          session.locale = RequestContextUtils.getLocale(request)?.language
         }
+
+        // Check that session.locale is a supported locale, or default to 'sv'
+        session.locale = (session.locale in ['sv', 'en'] ? session.locale : 'sv')
 
         // Set params.lang from session.locale, since params.lang is used by Grails
         params.lang = session.locale

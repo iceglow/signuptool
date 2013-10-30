@@ -29,7 +29,7 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-<% params.lang = params.lang =~ /sv_SE/ ? 'en_US':'sv_SE' %>
+<% params.lang = params.lang =~ /sv/ ? 'en':'sv' %>
 
 <div class="top-links apps-darkblue">
   <div class="clear-float"></div>
@@ -38,7 +38,7 @@
     <ul>
       <li class="last-item">
         <g:link
-            class="last-item"
+            class="last-item top-links-lang lang-${params.lang}"
             controller="${params.controller}"
             action="${params.action}"
             params="${params}">${g.message(code: 'application.toggle.language.label')}</g:link>

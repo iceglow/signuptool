@@ -32,49 +32,42 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
+  <meta name="layout" content="activateFlow"/>
   <title><g:message code="activateAccountAndCard.cantOrderCard.title"/></title>
-  <meta name="layout" content="main"/>
 </head>
 <body>
-<div class="apps-mid-column">
-  <div class="float-left">
-    <div class="prompt">
-      <p><g:message code="activateAccountAndCard.cantOrderCard.text"/></p>
+<content tag="flowPreamble">
+  <g:message code="activateAccountAndCard.cantOrderCard.text"/>
+</content>
 
-      <g:if test="${!(cardInfo?.hasAddress)}">
-        <label for="hasAddress">
-          <g:message code="activateAccountAndCard.cantOrderCard.hasAddress.label"/>
-        </label>
-        <span id="hasAddress"><g:message code="activateAccountAndCard.cantOrderCard.hasAddress.text"/></span>
-      </g:if>
+<content tag="flowContent">
+  <g:if test="${!(cardInfo?.hasAddress)}">
+    <label for="hasAddress">
+      <g:message code="activateAccountAndCard.cantOrderCard.hasAddress.label"/>
+    </label>
+    <span id="hasAddress"><g:message code="activateAccountAndCard.cantOrderCard.hasAddress.text"/></span>
+  </g:if>
 
-      <g:if test="${(cardInfo?.suCards)}">
-        <label for="suCards">
-          <g:message code="activateAccountAndCard.cantOrderCard.suCards.label"/>
-        </label>
-        <span id="suCards"><g:message code="activateAccountAndCard.cantOrderCard.suCards.text"/></span>
-      </g:if>
+  <g:if test="${(cardInfo?.suCards)}">
+    <label for="suCards">
+      <g:message code="activateAccountAndCard.cantOrderCard.suCards.label"/>
+    </label>
+    <span id="suCards"><g:message code="activateAccountAndCard.cantOrderCard.suCards.text"/></span>
+  </g:if>
 
-      <g:if test="${(cardInfo?.cardOrders)}">
-        <label for="cardOrders">
-          <g:message code="activateAccountAndCard.cantOrderCard.cardOrders.label"/>
-        </label>
-        <span id="cardOrders"><g:message code="activateAccountAndCard.cantOrderCard.cardOrders.text"/></span>
-      </g:if>
+  <g:if test="${(cardInfo?.cardOrders)}">
+    <label for="cardOrders">
+      <g:message code="activateAccountAndCard.cantOrderCard.cardOrders.label"/>
+    </label>
+    <span id="cardOrders"><g:message code="activateAccountAndCard.cantOrderCard.cardOrders.text"/></span>
+  </g:if>
 
-      <br/>
-      <g:form>
-        <div class="align-right">
-          <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.cantOrderCard.continue')}"/>
-        </div>
-      </g:form>
+  <br/>
+  <g:form>
+    <div class="align-right">
+      <g:submitButton class="signupButton" name="continue" value="${g.message(code:'activateAccountAndCard.cantOrderCard.continue')}"/>
     </div>
-
-    <div class="state_progress_img">
-      <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step4.image'))}" border="0"
-           class="logotype" title="<g:message code='activateAccountAndCardController.step4.counter'/>">
-    </div>
-  </div>
-</div>
+  </g:form>
+</content>
 </body>
 </html>
