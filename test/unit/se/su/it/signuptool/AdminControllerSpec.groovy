@@ -33,7 +33,11 @@ package se.su.it.signuptool
 
 import grails.buildtestdata.mixin.Build
 import grails.test.mixin.TestFor
+import spock.lang.Ignore
+import spock.lang.IgnoreRest
 import spock.lang.Specification
+
+import javax.servlet.http.HttpServletResponse
 
 @TestFor(AdminController)
 @Build([EventLog, EventLogEvent])
@@ -44,8 +48,30 @@ class  AdminControllerSpec extends Specification {
   def cleanup() {
   }
 
+  @Ignore // GRAILS-8426
+  def "search: should only allow POST method"() {
+    when:
+    controller.search("1", "1")
+
+    then:
+    response.status == HttpServletResponse.SC_METHOD_NOT_ALLOWED
+  }
+
+  def "search: should only allow XHR request"() {
+    when:
+    controller.search("1", "1")
+
+    then:
+    response.status == HttpServletResponse.SC_FOUND
+    response.redirectedUrl == '/admin/index'
+    flash.error == "Invalid user request, not an ajax request."
+  }
+
   def "search: test search for 'referenceId', should render search result template and return collection of event log"() {
     given:
+    request.method = "POST"
+    request.makeAjaxRequest()
+
     def searchFor = 'referenceId'
     def searchText = '1'
     def mockViewData = "viewData"
@@ -65,6 +91,9 @@ class  AdminControllerSpec extends Specification {
 
   def "search: test search for 'socialSecurityNumber', should render search result template and return collection of event log"() {
     given:
+    request.method = "POST"
+    request.makeAjaxRequest()
+
     def searchFor = 'norEduPersonNIN'
     def searchText = '191212121212'
     def mockViewData = "viewData"
@@ -84,6 +113,9 @@ class  AdminControllerSpec extends Specification {
 
   def "search: test no event logs are found, should render message 'no result'"() {
     given:
+    request.method = "POST"
+    request.makeAjaxRequest()
+
     def searchFor = 'referenceId'
     def searchText = '1'
 
@@ -96,6 +128,9 @@ class  AdminControllerSpec extends Specification {
 
   def "search: test when search criteria is undefined, should render message 'no result'"() {
     given:
+    request.method = "POST"
+    request.makeAjaxRequest()
+
     def searchFor = 'unknown'
     def searchText = '1'
 
