@@ -42,15 +42,11 @@
   <g:if test="${flash.error}">
     <span class="error">${flash.error}</span>
   </g:if>
-  <div id="content">
-
-
-    <div id="searchForm">
-      <tmpl:searchForm />
-    </div>
-    <div id="searchResults">
-      <g:render template="searchResults" model="[eventLog: eventLog]"/>
-    </div>
+  <div id="searchForm">
+    <tmpl:searchForm />
+  </div>
+  <div id="searchResults">
+    <g:render template="searchResults" model="[eventLog: eventLog]"/>
   </div>
 </body>
 </html>
