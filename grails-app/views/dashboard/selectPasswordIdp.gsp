@@ -33,7 +33,7 @@
 <html>
 <head>
   <meta name="layout" content="activateFlow"/>
-  <title></title>
+  <title><g:message code="dashboardController.selectPasswordIdp.title" /></title>
 </head>
 <body>
 <content tag="flowPreamble">

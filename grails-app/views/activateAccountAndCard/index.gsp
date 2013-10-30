@@ -33,7 +33,7 @@
 <html>
 <head>
   <meta name="layout" content="activateFlow"/>
-  <title></title>
+  <title><g:message code="activateAccountAndCardController.index.title" /></title>
 </head>
 <body>
 <!-- showAccount: When hasCompletedCardOrder and errorWhileOrderingCard when both are false. -->

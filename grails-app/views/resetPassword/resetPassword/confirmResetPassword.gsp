@@ -33,7 +33,7 @@
 <html>
   <head>
     <meta name="layout" content="main"/>
-    <title></title>
+    <title><g:message code="resetPasswordController.confirmResetPassword.title" /></title>
   </head>
   <body>
     <tmpl:/shared/feedback flash="${flash}"/>
