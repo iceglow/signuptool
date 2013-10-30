@@ -79,16 +79,24 @@ class DashboardControllerSpec extends Specification {
   }
 
   void "activateAccountAndCard"() {
+    given:
+    Environment.metaClass.static.getCurrent = {
+      [name:"mock"]
+    }
+
     when:
-    UseCase useCase = new UseCase(name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something').save(flush:true)
+    UseCase accountCase = new UseCase(type:UseCase.Type.ACCOUNT, name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something').save(flush:true)
+    UseCase cardCase = new UseCase(type:UseCase.Type.CARD, name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something').save(flush:true)
 
     controller.activateAccountAndCard()
 
     then:
     view == '/dashboard/selectIdProvider'
     model['env'] == Environment.current.name
-    model['useCase'] == useCase
-    model['useCases'] == [useCase]
+    model['accountUseCase'] == accountCase
+    model['accountUseCases'] == [accountCase]
+    model['cardUseCase'] == cardCase
+    model['cardUseCases'] == [cardCase]
 
     and:
     session.controller == 'activateAccountAndCard'
@@ -140,7 +148,7 @@ class DashboardControllerSpec extends Specification {
   void "useCase: When loading a useCase"() {
     given:
 
-    UseCase useCase = new UseCase(eppn: 'foo@kaka.se', name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something').save(flush:true)
+    UseCase useCase = new UseCase(type:UseCase.Type.ACCOUNT, eppn: 'foo@kaka.se', name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something').save(flush:true)
 
     Environment.metaClass.static.getCurrent = {->
       [name:'mock']
