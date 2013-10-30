@@ -39,6 +39,36 @@ class ActivateAccountAndCardServiceStub implements ActivateAccountAndCardService
 
   @Override
   Map getCardOrderStatus(SvcSuPersonVO user) {
-    return null  //To change body of implemented methods use File | Settings | File Templates.
+    log.info "getCardOrderStatus: Intercepted request for $user.uid"
+    Map response = null
+
+    final Map genericLadokAddr = [gatadr:'Testgatan 1', coadr:'Box 1', postnr:'100 00', ort:'Stockholm' ]
+
+    if (user) {
+      switch(user.uid) {
+        case "MISSING_ADDRESS":
+          response = [canOrderCard: false, hasAddress:false, suCards: true, cardOrders: true]
+          break
+        case "HAS_ACTIVE_CARDS":
+          response = [canOrderCard: false, hasAddress:true, suCards: false, cardOrders: true]
+          break
+        case "HAS_CARD_ORDERS":
+          response = [canOrderCard: false, hasAddress:true, suCards:true, cardOrders: false]
+          break
+        case "CARD_ORDER_FAILS":
+          response = [canOrderCard: true, hasAddress:true, suCards:true, cardOrders: true,
+              ladokAddress:genericLadokAddr]
+          break
+        case "CARD_ORDER_SUCCEEDS":
+          response = [canOrderCard: true, hasAddress:true, suCards:true, cardOrders: true,
+              ladokAddress:genericLadokAddr]
+          break
+        default:
+          log.info "Unhandled uid: $user.uid"
+      }
+    }
+
+    log.info "getCardOrderStatus: Returning => $response"
+    return response
   }
 }
