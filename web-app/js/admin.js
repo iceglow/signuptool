@@ -2,8 +2,10 @@ $(function() {
   $("#searchForm").on("submit", function() {
     var searchFor = $("input[name=searchFor]:checked").val();
     var searchText = $("#searchText").val();
+    var target$ = $("#searchResults");
 
     if (searchText.length === 0) {
+      target$.html("Please enter a value to search for.");
       return false;
     }
 
@@ -12,10 +14,10 @@ $(function() {
       type:"POST",
       data:{searchFor:searchFor, searchText:searchText},
       success:function(data) {
-        $("#searchResults").html(data)
+        target$.html(data);
       },
       error: function(data) {
-        console.log(data)
+        target$.html($("<div>").addClass("error").html(data.responseText));
       }
     });
 

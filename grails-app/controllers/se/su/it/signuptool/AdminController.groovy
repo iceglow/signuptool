@@ -33,17 +33,33 @@ package se.su.it.signuptool
 
 class AdminController {
 
+  static allowedMethods = [index: "GET", search:"POST"]
+
   def sukatService
 
   def index() {}
 
   def search(String searchFor, String searchText) {
 
+    if (!request.xhr) {
+      flash.error = "Invalid user request, not an ajax request."
+      return redirect(action:'index')
+    }
+
     List eventLogs = []
 
     switch(searchFor) {
       case "referenceId":
-        def eventLog = EventLog.get(searchText)
+        long referenceId
+
+        try {
+          referenceId = Long.parseLong(searchText)
+        } catch (ex) {
+          log.error "Could not parse ${searchText}", ex
+          return response.sendError(400, "$searchText is not a valid referenceId")
+        }
+
+        def eventLog = EventLog.get(referenceId)
         if (eventLog) {
           eventLogs << eventLog
         }
