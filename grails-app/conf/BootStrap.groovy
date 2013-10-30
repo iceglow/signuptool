@@ -39,6 +39,7 @@ import se.su.it.signuptool.mock.MockUserVO
 import se.su.it.signuptool.mock.UseCase
 import se.su.it.svc.SvcSuPersonVO
 
+import javax.sql.DataSource
 import java.sql.Connection
 
 class BootStrap {
@@ -173,10 +174,8 @@ class BootStrap {
       log.error "*** RoleAccessManagment: Failed to create/add access roles.", ex
     }
 
-    Connection conn = null
     try {
-      conn = dataSource.connection
-      Sql sql = new Sql(conn)
+      Sql sql = new Sql(dataSource as DataSource)
       sql.withTransaction {
         if (Environment.current.name == MOCK_ENVIRONMENT_NAME) {
           sql.execute("DELETE FROM use_case")
@@ -188,8 +187,6 @@ class BootStrap {
       }
     } catch (ex) {
       log.error "Issue when running sql commands", ex
-    } finally {
-      conn.close()
     }
 
     if (Environment.current.name == MOCK_ENVIRONMENT_NAME) {
