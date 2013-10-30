@@ -56,6 +56,9 @@ environments {
   test {
     customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy", CustomDataSources]
   }
+  mock {
+    customConfigurations = ["file:/local/signuptool/conf/signuptool.groovy", CustomDataSources]
+  }
 }
 /** Some custom options */
 grails.app.context = '/' // set the base directory to / instead of /signuptool/.
