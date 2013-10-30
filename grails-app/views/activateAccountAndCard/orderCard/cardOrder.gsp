@@ -41,7 +41,7 @@
 </content>
 
 <content tag="flowContent">
-  <div>${session?.user?.givenName} ${session?.user?.sn}</div>
+  <div>${userName}</div>
   <div>${cardInfo?.ladokAddress?.gatadr}</div>
   <g:if test="${cardInfo?.ladokAddress?.coadr}">
     <div>${cardInfo?.ladokAddress?.coadr}</div>

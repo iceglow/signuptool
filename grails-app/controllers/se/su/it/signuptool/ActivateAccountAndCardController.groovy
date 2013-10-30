@@ -430,6 +430,11 @@ class ActivateAccountAndCardController {
           return error()
         }
 
+        // Set the users name from acp.user
+        def givenName = acp.user?.givenName ?: ""
+        def sn = acp.user?.sn ?: ""
+        flow.userName = givenName + " " + sn
+
         try {
           def cardInfo = activateAccountAndCardService.getCardOrderStatus(acp.user)
           if (!cardInfo) {
