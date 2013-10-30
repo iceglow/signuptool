@@ -33,7 +33,7 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
   <meta name="layout" content="activateFlow"/>
-  <title></title>
+  <title><g:message code="activateAccountAndCardController.activateAccount.title" /></title>
 </head>
 <body>
 <content tag="flowPreamble">
