@@ -29,37 +29,38 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-<%@ page contentType="text/html;charset=UTF-8" %>
-<html>
-<head>
-  <title></title>
-  <meta name="layout" content="main"/>
-</head>
-<body>
-  <div id="section">
-    <g:if test="${error}">
-      <div class="error">${error}</div>
-    </g:if>
-    <div>
-      <p><g:message code="activateAccountAndCardController.forwardEmail.explanation"/></p>
-      <g:form>
-        <div class="apps-float-30 mgn-left-20">
-          <label for="forwardAddress"><g:message code="activateAccountAndCardController.forwardEmail.emailLabel"/></label>
+<%@ page import="se.su.it.signuptool.ActivateAccountAndCardController" contentType="text/html;charset=UTF-8" %>
+<g:applyLayout name="main">
+  <html>
+  <head>
+    <title><g:layoutTitle/></title>
+    <g:layoutHead/>
+  </head>
+  <body>
+  <div class="apps-mid-column">
+    <tmpl:/shared/feedback flash="${flash}"/>
+
+    <div class="float-left">
+      <div class="prompt">
+        <g:if test="${g.pageProperty(name: 'page.flowPreamble')}">
+          <p>
+            <g:pageProperty name="page.flowPreamble"/>
+          </p>
+        </g:if>
+
+        <g:pageProperty name="page.flowContent"/>
+      </div>
+
+      <g:if test="${! g.pageProperty(name: 'page.hideStepImage')}">
+        <div class="state_progress_img">
+          <% def step = session.step ?: session.acp?.step ?: ActivateAccountAndCardController.STEP_START %>
+          <img src="${resource(dir: 'img', file: g.message(code: "activateAccountAndCardController.step${step}.image"))}" border="0"
+               class="logotype" title="<g:message code='activateAccountAndCardController.step${step}.counter'/>">
         </div>
-        <div class="apps-float-35">
-          <g:textField name="forwardAddress" value="${forwardAddress}"/>
-        </div>
-        <div class="clear-float"></div>
-        <div class="apps-float-5 mgn-left-20">
-          <g:checkBox name="acceptSuConditions"/>
-        </div>
-        <div class="apps-float-40">
-          <label for="acceptSuConditions"><g:message code="activateAccountAndCardController.forwardEmail.acceptLabel"/></label>
-        </div>
-        <div class="clear-float"></div>
-        <g:submitButton class="signupButton" name="activate" value="${g.message(code:"activateAccountAndCardController.activateButtonLabel")}"/>
-      </g:form>
+      </g:if>
     </div>
+    <g:pageProperty name="page.flowBottom"/>
   </div>
-</body>
-</html>
+  </body>
+  </html>
+</g:applyLayout>

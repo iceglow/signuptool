@@ -32,62 +32,45 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
+  <meta name="layout" content="activateFlow"/>
   <title></title>
-  <meta name="layout" content="main"/>
 </head>
 <body>
-  <div class="apps-mid-column">
+<!-- showAccount: When hasCompletedCardOrder and errorWhileOrderingCard when both are false. -->
+<g:set var="showAccountInfo" value="${!(session.hasCompletedCardOrder) && !(session.errorWhileOrderingCard)}"/>
 
-    <div class="float-left">
-      <div class="prompt">
+<!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
+<g:set var="showOrderCard" value="${!(session.hasCompletedCardOrder) || (session.errorWhileOrderingCard)}"/>
 
-        <g:if test="${request.error}">
-          <div class="error"> ${request.error} </div>
-        </g:if>
+<content tag="flowPreamble">
+<g:if test="${showAccountInfo}">
+  <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/>
+</g:if>
+<g:else>
+  <g:message code="activateAccountAndCard.endAccountAndCard.text"/>
+</g:else>
+</content>
 
-        <!-- showAccount: When hasCompletedCardOrder and errorWhileOrderingCard when both are false. -->
-        <g:set var="showAccountInfo" value="${!(session.hasCompletedCardOrder) && !(session.errorWhileOrderingCard)}"/>
+<content tag="flowContent">
+  <!-- Webreg:  When either hasCompletedCardOrder or errorWhileOrderingCard is true (when showAccountInfo == false) -->
 
-        <!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
-        <g:set var="showOrderCard" value="${!(session.hasCompletedCardOrder) || (session.errorWhileOrderingCard)}"/>
+  <g:if test="${showAccountInfo}">
+    <tmpl:showAccountInformation model="[password:password, uid:uid]"/>
+  </g:if>
+  <g:else>
+    <tmpl:endAccountAndCard model="[lpwurl:lpwurl]"/>
+  </g:else>
 
-        <!-- Webreg:  When either hasCompletedCardOrder or errorWhileOrderingCard is true (when showAccountInfo == false) -->
+  <div class="clear-float"></div>
 
-        <g:if test="${showAccountInfo}">
-          <tmpl:showAccountInformation model="[password:password, uid:uid]"/>
-        </g:if>
-        <g:else>
-          <tmpl:endAccountAndCard model="[lpwurl:lpwurl]"/>
-        </g:else>
-
-        <div class="clear-float"></div>
-
-        <g:if test="${showOrderCard}">
-          <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
-            <div class="align-right"><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></div>
-            <div class="align-right">
-              <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
-            </div>
-          </g:form>
-        </g:if>
+  <g:if test="${showOrderCard}">
+    <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
+      <div class="align-right"><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></div>
+      <div class="align-right">
+        <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
       </div>
-
-      <div class="state_progress_img">
-        <g:if test="${showAccountInfo}">
-          <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step3.image'))}"
-               border="0"
-               class="logotype"
-               title="<g:message code='activateAccountAndCardController.step3.counter'/>">
-        </g:if>
-        <g:else>
-          <img src="${resource(dir: 'img', file: g.message(code: 'activateAccountAndCardController.step5.image'))}"
-               border="0"
-               class="logotype"
-               title="<g:message code='activateAccountAndCardController.step5.counter'/>">
-        </g:else>
-      </div>
-
-    </div>
-  </div>
+    </g:form>
+  </g:if>
+</content>
 </body>
 </html>

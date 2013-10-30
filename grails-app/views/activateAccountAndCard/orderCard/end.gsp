@@ -29,6 +29,7 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
+%{-- This is a placeholder needed by the flow. Will never be displayed. --}%
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
