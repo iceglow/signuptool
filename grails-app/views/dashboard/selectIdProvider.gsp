@@ -34,26 +34,7 @@
 <head>
   <meta name="layout" content="activateFlow"/>
   <title><g:message code="dashboardController.selectIdProvider.title" /></title>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script>
-    $(function() {
-      $("select[name=caseId]").on("change", function() {
-        var id = $(this).val();
-        var target$ = $(this).siblings(".useCaseDescription");
-        $.ajax({
-          url:"/dashboard/getUseCaseInfo",
-          type:"POST",
-          data:{caseId:id},
-          success: function(data) {
-            target$.html(data);
-          },
-          error: function(data) {
-            target$.html("Failed when fetching use case information.");
-          }
-        })
-      });
-    });
-  </script>
+  <r:require modules="use_cases"/>
 </head>
 <body>
 <content tag="flowPreamble">
