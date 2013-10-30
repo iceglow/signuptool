@@ -37,10 +37,10 @@
 </head>
 <body>
 <!-- showAccount: When hasCompletedCardOrder and errorWhileOrderingCard when both are false. -->
-<g:set var="showAccountInfo" value="${!(session.hasCompletedCardOrder) && !(session.errorWhileOrderingCard)}"/>
+<g:set var="showAccountInfo" value="${!(hasCompletedCardOrder) && !(errorWhileOrderingCard)}"/>
 
 <!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
-<g:set var="showOrderCard" value="${!(session.hasCompletedCardOrder) || (session.errorWhileOrderingCard)}"/>
+<g:set var="showOrderCard" value="${!(hasCompletedCardOrder) || (errorWhileOrderingCard)}"/>
 
 <content tag="flowPreamble">
 <g:if test="${showAccountInfo}">

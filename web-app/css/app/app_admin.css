@@ -1,0 +1,19 @@
+#searchForm {
+  max-width: 300px;
+  border: 1px solid black;
+  padding: 5px;
+}
+#searchForm p {
+  margin-bottom: 0;
+}
+#searchText {
+  min-width: 250px;
+  margin: 5px;
+}
+#searchResults {
+  margin-top: 20px;
+}
+#searchResults ul {
+  padding-left: 2px;
+  list-style: none;
+}

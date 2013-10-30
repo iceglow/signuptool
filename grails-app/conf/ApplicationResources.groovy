@@ -34,6 +34,21 @@ modules = {
     resource url:'js/application.js'
   }
 
+  jQuery {
+    resource url:'js/lib/jquery-1.10.2.min.js'
+  }
+
+  use_cases {
+    dependsOn(['jQuery'])
+    resource url:'js/use_cases.js'
+  }
+
+  admin {
+    dependsOn(['jQuery'])
+    resource url:'css/app/app_admin.css'
+    resource url:'js/admin.js'
+  }
+
   css {
 
     resource url:'css/layout.css'

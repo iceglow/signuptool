@@ -31,6 +31,7 @@
  */
 
 import grails.util.Environment
+import groovy.sql.Sql
 import org.grails.plugins.localization.Localization
 import org.springframework.core.io.Resource
 import se.su.it.grails.plugins.access.AccessRole
@@ -38,11 +39,17 @@ import se.su.it.signuptool.mock.MockUserVO
 import se.su.it.signuptool.mock.UseCase
 import se.su.it.svc.SvcSuPersonVO
 
+import javax.sql.DataSource
+import java.sql.Connection
+
 class BootStrap {
   def configService
 
   def grailsApplication
   def accessService
+  def dataSource
+
+  final String MOCK_ENVIRONMENT_NAME = "mock"
 
   def init = { servletContext ->
     // some urls to other systems
@@ -138,7 +145,7 @@ class BootStrap {
               uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=test"
               break
             case "mock":
-              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=mock"
+              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=${MOCK_ENVIRONMENT_NAME}"
               break
             default:
               log.error "Unhandled environment $Environment.current with name ${Environment.current.name}"
@@ -167,7 +174,22 @@ class BootStrap {
       log.error "*** RoleAccessManagment: Failed to create/add access roles.", ex
     }
 
-    if (Environment.current.name == "mock") {
+    try {
+      Sql sql = new Sql(dataSource as DataSource)
+      sql.withTransaction {
+        if (Environment.current.name == MOCK_ENVIRONMENT_NAME) {
+          sql.execute("DELETE FROM use_case")
+          sql.execute("DELETE FROM mock_uservo")
+        } else {
+          sql.execute("DROP TABLE use_case")
+          sql.execute("DROP TABLE mock_uservo")
+        }
+      }
+    } catch (ex) {
+      log.error "Issue when running sql commands", ex
+    }
+
+    if (Environment.current.name == MOCK_ENVIRONMENT_NAME) {
 
       final String DEFAULT_VALID_EPPN = "student@studera.nu"
       final String DEFAULT_INVALID_EPPN ="student@skolka.nu"
@@ -364,7 +386,6 @@ class BootStrap {
         useCase.save(failOnError: true)
       }
     }
-
   }
 
   def destroy = {
