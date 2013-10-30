@@ -42,7 +42,7 @@
         <g:link action="#" class="print-details" onclick="window.print(); return false;">
           <span class="mgn-left-30"><g:message code="resetPassword.passwordReset.print"/></span>
         </g:link>
-        <div><g:message code="resetPassword.passwordReset.username"/>: ${session?.user?.uid}</div>
+        <div><g:message code="resetPassword.passwordReset.username"/>: ${uid}</div>
       </div>
 
       <div class="clear-float"></div>

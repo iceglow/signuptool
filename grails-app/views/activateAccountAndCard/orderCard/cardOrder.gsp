@@ -36,9 +36,12 @@
   <title><g:message code="activateAccountAndCardController.cardOrder.title" /></title>
 </head>
 <body>
+<content tag="flowPreamble">
+  <g:message code="activateAccountAndCardController.cardOrder.addressDetail"/>
+</content>
+
 <content tag="flowContent">
-  <div><g:message code="activateAccountAndCardController.cardOrder.addressDetail"/></div>
-  <div>${session?.user?.givenName} ${session?.user?.sn}</div>
+  <div>${userName}</div>
   <div>${cardInfo?.ladokAddress?.gatadr}</div>
   <g:if test="${cardInfo?.ladokAddress?.coadr}">
     <div>${cardInfo?.ladokAddress?.coadr}</div>
