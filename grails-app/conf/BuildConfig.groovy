@@ -109,7 +109,7 @@ grails.project.dependency.resolution = {
     }
 
     build(
-        "se.su.it.grails.plugins:grails-sonar-pom:0.0.1",
+        "se.su.it.grails.plugins:grails-sonar-pom:0.0.2",
         "se.su.it.grails.plugins:grails-release-helper:0.0.3",
         ":tomcat:$grailsVersion"
     )

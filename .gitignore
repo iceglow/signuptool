@@ -8,3 +8,4 @@ target/
 cobertura.ser
 grails-app/conf/CustomDataSources.groovy
 out
+sonar.xml
