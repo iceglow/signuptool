@@ -34,6 +34,7 @@ package se.su.it.signuptool
 import grails.util.Environment
 import grails.validation.Validateable
 import groovy.transform.ToString
+import se.su.it.signuptool.mock.MockUserVO
 import se.su.it.signuptool.mock.UseCase
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
@@ -407,19 +408,23 @@ class ActivateAccountAndCardController {
 
     prepareForwardOrderCard {
       action {
-
         EventLog eventLog
         AccountAndCardProcess acp = session.acp
         acp.step = STEP_CARD
 
         try {
-          eventLog = utilityService.getEventLog(acp.referenceId)
+          if (acp.referenceId) {
+            eventLog = utilityService.getEventLog((long) acp.referenceId)
+          } else {
+            eventLog = utilityService.getEventLog()
+            acp.referenceId = eventLog.id
+          }
         } catch (ex) {
           log.error "Fetching EventLog failed", ex
           return error()
         }
 
-        if (!acp.userVO?.uid) {
+        if (!acp.user?.uid) {
           eventLog.logEvent("User has no valid user in session, this should not happen. Value is currently set to ${acp.user}")
           flow.error = g.message(code:'activateAccountAndCardController.cardOrder.noAccount.error')
           return error()
@@ -499,6 +504,7 @@ class ActivateAccountAndCardController {
             sukatService.orderCard(acp.user, ladokAddress)
           } catch (ex) {
             log.error "Failed to order card", ex
+            flow.error = g.message(code:'activateAccountAndCardController.cardOrder.orderFailed')
             eventLog.logEvent("Failed to order card: ${ex.message}")
             return error()
           }
@@ -701,6 +707,15 @@ class ActivateAccountAndCardController {
       if (Environment.current.name == "mock") {
         this.eppn = useCase.eppn
         this.norEduPersonNIN = useCase.norEduPersonNIN
+
+        if (useCase.user) {
+          def user = new SvcSuPersonVO()
+          user.uid = useCase.user.uid
+          user.accountIsActive = useCase.user.accountIsActive
+          this.userVO = user
+        }
+
+        log.info "Done loading use case."
       }
     }
   }
