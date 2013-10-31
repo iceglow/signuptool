@@ -73,16 +73,16 @@
 
   <div class="clear-float"></div>
 
-  <div class="top-spacer-10">
   <g:if test="${showOrderCard}">
+    <div class="top-spacer-10">
     <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
       <p><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></p>
       <div class="align-right">
         <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
       </div>
     </g:form>
+    </div>
   </g:if>
-  </div>
 </content>
 </body>
 </html>
