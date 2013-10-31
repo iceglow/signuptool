@@ -29,7 +29,10 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-<% def linkLocale = session.locale == 'sv' ? 'en':'sv' %>
+<%
+  def locale = (session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE')?.toLanguageTag()
+  def linkLocale = (locale == 'sv') ? 'en':'sv'
+%>
 
 <div class="top-links apps-darkblue">
   <div class="clear-float"></div>
