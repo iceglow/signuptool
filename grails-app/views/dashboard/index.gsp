@@ -57,9 +57,7 @@
 <content tag="flowBottom">
   <div class="clear-float"></div>
   <div class="dotted-divider"></div>
-  <div class="section ">
     <g:link action="resetAccountOrPassword"><g:message code="dashboard.index.forgotPassword"/></g:link>
-  </div>
 </content>
 </body>
 <html>
