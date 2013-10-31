@@ -1,3 +1,4 @@
+<%@ page import="org.springframework.web.servlet.support.RequestContextUtils" %>
 %{--
   - Copyright (c) 2013, IT Services, Stockholm University
   - All rights reserved.
@@ -29,7 +30,7 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-<g:set var="lang" value="${(session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE')?.toLanguageTag()}"/>
+<g:set var="lang" value="${RequestContextUtils.getLocale(request)?.language}"/>
 
 <div id="head" class="head apps-darkblue">
 
