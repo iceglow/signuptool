@@ -45,7 +45,7 @@
 </content>
 
 <content tag="flowContent">
-  <div class="bordered-detail-square">
+  <div class="apps-colorbox2">
     <div class="header-id-provider">
       <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
     </div>
