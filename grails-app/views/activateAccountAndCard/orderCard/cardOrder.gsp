@@ -46,12 +46,12 @@
 
 <content tag="flowContent">
   <div class="apps-colorbox2">
-  <div>${userName}</div>
-  <div>${cardInfo?.ladokAddress?.gatadr}</div>
-  <g:if test="${cardInfo?.ladokAddress?.coadr}">
-    <div>${cardInfo?.ladokAddress?.coadr}</div>
-  </g:if>
-  <div>${cardInfo?.ladokAddress?.postnr} ${cardInfo?.ladokAddress?.ort}</div>
+    <div>${userName}</div>
+    <div>${cardInfo?.ladokAddress?.gatadr}</div>
+    <g:if test="${cardInfo?.ladokAddress?.coadr}">
+      <div>${cardInfo?.ladokAddress?.coadr}</div>
+    </g:if>
+    <div>${cardInfo?.ladokAddress?.postnr} ${cardInfo?.ladokAddress?.ort}</div>
   </div>
 
   <g:form>
