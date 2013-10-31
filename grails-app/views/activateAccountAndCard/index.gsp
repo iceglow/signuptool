@@ -40,7 +40,7 @@
 <g:set var="showAccountInfo" value="${!(hasCompletedCardOrder) && !(errorWhileOrderingCard)}"/>
 
 <!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
-<g:set var="showOrderCard" value="${!(hasCompletedCardOrder) || (errorWhileOrderingCard)}"/>
+<g:set var="showOrderCard" value="${!(hasCompletedCardOrder) && !(errorWhileOrderingCard)}"/>
 
 <content tag="flowHeader">
 <g:if test="${showAccountInfo}">
