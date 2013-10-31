@@ -55,7 +55,6 @@
 </content>
 
 <content tag="flowBottom">
-  <div class="large-bottom-spacer"></div>
   <div class="clear-float"></div>
   <div class="bottom-divider"></div>
   <div class="section ">
