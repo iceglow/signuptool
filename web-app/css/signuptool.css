@@ -17,7 +17,8 @@
 
 .state_progress_img {
   width: 128px;
-  float: right;
+  float: left;
+  margin-left: 10px;
 }
 
 .pointer_cursor {
