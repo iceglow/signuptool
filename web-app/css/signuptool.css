@@ -6,6 +6,10 @@
   border-color: #EDF2F8;
 }
 
+.top-spacer-10 {
+  padding-top: 10px;
+}
+
 .state_progress_img {
   width: 128px;
   float: left;
