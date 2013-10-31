@@ -43,7 +43,7 @@
 
       <div class="clear-float"></div>
 
-      <div class="bordered-detail-square apps-float-50">
+      <div class="apps-colorbox2 apps-float-50">
         <g:link action="#" class="print-details" onclick="window.print(); return false;">
           <span class="mgn-left-30"><g:message code="resetPassword.passwordReset.print"/></span>
         </g:link>

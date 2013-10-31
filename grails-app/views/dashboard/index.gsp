@@ -36,6 +36,10 @@
   <title><g:message code="application.title"/></title>
 </head>
 <body>
+<content tag="flowHeader">
+  <g:message code="dashboard.index.header"/>
+</content>
+
 <content tag="flowPreamble">
   <g:message code="dashboard.index.activateAccountText"/>
 </content>
@@ -51,12 +55,9 @@
 </content>
 
 <content tag="flowBottom">
-  <div class="large-bottom-spacer"></div>
   <div class="clear-float"></div>
-  <div class="bottom-divider"></div>
-  <div class="section ">
+  <div class="dotted-divider"></div>
     <g:link action="resetAccountOrPassword"><g:message code="dashboard.index.forgotPassword"/></g:link>
-  </div>
 </content>
 </body>
 <html>

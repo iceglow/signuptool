@@ -34,6 +34,7 @@ package se.su.it.signuptool
 import grails.util.Environment
 import grails.validation.Validateable
 import groovy.transform.ToString
+import org.springframework.web.context.request.RequestContextHolder
 import se.su.it.signuptool.mock.UseCase
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
@@ -63,8 +64,7 @@ class ActivateAccountAndCardController {
       session.acp = acp
     }
 
-    // Cleanup any session step & set current step in acp obj.
-    session.step = null
+    // Set current step in acp obj.
     acp.step = STEP_ACCOUNT
 
     if (!acp.validate()) {
@@ -201,6 +201,12 @@ class ActivateAccountAndCardController {
     String lpwurl = configService.getValue("signup", "lpwtool")
     String sukaturl = configService.getValue("signup", "sukattool")
     eventLog.logEvent("Found account with nin: ${acp.norEduPersonNIN} and uid: ${acp?.userVO?.uid} in SUKAT, displaying information.")
+
+    if (acp.hasCompletedCardOrder || acp.errorWhileOrderingCard) {
+      acp.step = STEP_END
+    } else if(! acp.hasCompletedCardOrder) {
+      acp.step = STEP_ACCOUNT
+    }
 
     return render(view:'index', model:[
         uid:acp?.userVO?.uid,
@@ -696,6 +702,8 @@ class ActivateAccountAndCardController {
 
     public void setStep(int step) {
       this.step = step
+      def session = RequestContextHolder.requestAttributes?.session
+      session?.step = null
     }
 
     /**

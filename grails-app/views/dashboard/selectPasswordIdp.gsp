@@ -36,12 +36,16 @@
   <title><g:message code="dashboardController.selectPasswordIdp.title" /></title>
 </head>
 <body>
+<content tag="flowHeader">
+  <g:message code="activateAccountAndCardController.selectPasswordIdp.header"/>
+</content>
+
 <content tag="flowPreamble">
-  <g:message code="activateAccountAndCardController.selectIdProviderText"/>
+  <g:message code="activateAccountAndCardController.selectPasswordIdp.text"/>
 </content>
 
 <content tag="flowContent">
-  <div class="bordered-detail-square">
+  <div class="apps-colorbox2">
     <div class="header-id-provider">
       <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
     </div>

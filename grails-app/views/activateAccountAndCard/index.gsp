@@ -40,15 +40,24 @@
 <g:set var="showAccountInfo" value="${!(hasCompletedCardOrder) && !(errorWhileOrderingCard)}"/>
 
 <!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
-<g:set var="showOrderCard" value="${!(hasCompletedCardOrder) || (errorWhileOrderingCard)}"/>
+<g:set var="showOrderCard" value="${!(hasCompletedCardOrder) && !(errorWhileOrderingCard)}"/>
+
+<content tag="flowHeader">
+  <g:if test="${showAccountInfo}">
+    <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated.header"/>
+  </g:if>
+  <g:else>
+    <g:message code="activateAccountAndCard.endAccountAndCard.header"/>
+  </g:else>
+</content>
 
 <content tag="flowPreamble">
-<g:if test="${showAccountInfo}">
-  <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/>
-</g:if>
-<g:else>
-  <g:message code="activateAccountAndCard.endAccountAndCard.text"/>
-</g:else>
+  <g:if test="${showAccountInfo}">
+    <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/>
+  </g:if>
+  <g:else>
+    <g:message code="activateAccountAndCard.endAccountAndCard.text"/>
+  </g:else>
 </content>
 
 <content tag="flowContent">
@@ -64,12 +73,14 @@
   <div class="clear-float"></div>
 
   <g:if test="${showOrderCard}">
-    <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
-      <div class="align-right"><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></div>
-      <div class="align-right">
-        <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
-      </div>
-    </g:form>
+    <div class="top-spacer-10">
+      <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
+        <p><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></p>
+        <div class="align-right">
+          <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
+        </div>
+      </g:form>
+    </div>
   </g:if>
 </content>
 </body>

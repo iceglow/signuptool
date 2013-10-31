@@ -37,12 +37,16 @@
   <r:require modules="use_cases"/>
 </head>
 <body>
+<content tag="flowHeader">
+  <g:message code="activateAccountAndCardController.selectIdProvider.header"/>
+</content>
+
 <content tag="flowPreamble">
   <g:message code="activateAccountAndCardController.selectIdProviderText"/>
 </content>
 
 <content tag="flowContent">
-  <div class="bordered-detail-square mgn-bottom-20">
+  <div class="apps-colorbox2 mgn-bottom-20">
     <div class="header-id-provider">
       <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
     </div>
@@ -54,7 +58,7 @@
     </g:form>
   </div>
 
-  <div class="bordered-detail-square mgn-bottom-20">
+  <div class="apps-colorbox2 mgn-bottom-20 light-border">
     <div class="header-id-provider">
       <g:message code="activateAccountAndCardController.idProvider.header.eduID"/>
     </div>
@@ -67,7 +71,7 @@
   </div>
 
   <g:if test="${env == 'mock'}">
-    <div id="useCases" class="bordered-detail-square mgn-bottom-20" >
+    <div id="useCases" class="apps-colorbox2 mgn-bottom-20" >
       <div class="header-id-provider">
         <g:message code="activateAccountAndCardController.idProvider.header.mockup"/>
       </div>

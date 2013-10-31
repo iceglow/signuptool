@@ -36,17 +36,23 @@
   <title><g:message code="activateAccountAndCardController.cardOrder.title" /></title>
 </head>
 <body>
+<content tag="flowHeader">
+  <g:message code="activateAccountAndCardController.cardOrder.header"/>
+</content>
+
 <content tag="flowPreamble">
   <g:message code="activateAccountAndCardController.cardOrder.addressDetail"/>
 </content>
 
 <content tag="flowContent">
-  <div>${userName}</div>
-  <div>${cardInfo?.ladokAddress?.gatadr}</div>
-  <g:if test="${cardInfo?.ladokAddress?.coadr}">
-    <div>${cardInfo?.ladokAddress?.coadr}</div>
-  </g:if>
-  <div>${cardInfo?.ladokAddress?.postnr} ${cardInfo?.ladokAddress?.ort}</div>
+  <div class="apps-colorbox2">
+    <div>${userName}</div>
+    <div>${cardInfo?.ladokAddress?.gatadr}</div>
+    <g:if test="${cardInfo?.ladokAddress?.coadr}">
+      <div>${cardInfo?.ladokAddress?.coadr}</div>
+    </g:if>
+    <div>${cardInfo?.ladokAddress?.postnr} ${cardInfo?.ladokAddress?.ort}</div>
+  </div>
 
   <g:form>
     <g:radio id="registeredAddressValid" name="addressIsValid" value="1" checked="${(addressIsValid == "1")}"/>

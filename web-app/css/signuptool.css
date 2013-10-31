@@ -1,23 +1,17 @@
-.bottom-divider {
-  border-bottom: solid 1px #000000;
-}
-
-.bordered-detail-square {
-  border: solid 1px #000000;
-  padding: 4px;
-}
-
 .header-id-provider {
   font-weight: bold;
 }
 
-.large-bottom-spacer {
-  margin-bottom: 80px;
+.light-border {
+  border-color: #EDF2F8;
+}
+
+.top-spacer-10 {
+  padding-top: 10px;
 }
 
 .state_progress_img {
-  width: 128px;
-  float: right;
+  margin-left: 10px;
 }
 
 .pointer_cursor {

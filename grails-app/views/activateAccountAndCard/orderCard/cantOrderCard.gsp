@@ -36,6 +36,10 @@
   <title><g:message code="activateAccountAndCard.cantOrderCard.title"/></title>
 </head>
 <body>
+<content tag="flowHeader">
+  <g:message code="activateAccountAndCard.cantOrderCard.header"/>
+</content>
+
 <content tag="flowPreamble">
   <g:message code="activateAccountAndCard.cantOrderCard.text"/>
 </content>
