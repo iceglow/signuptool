@@ -2,6 +2,10 @@
   font-weight: bold;
 }
 
+.light-border {
+  border-color: #EDF2F8;
+}
+
 .state_progress_img {
   width: 128px;
   float: left;
