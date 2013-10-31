@@ -1,3 +1,4 @@
+<%@ page import="org.springframework.web.servlet.support.RequestContextUtils" %>
 %{--
   - Copyright (c) 2013, IT Services, Stockholm University
   - All rights reserved.
@@ -28,8 +29,7 @@
   - ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
-
-<g:set var="lang" value="${(session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE')?.toLanguageTag()}"/>
+<g:set var="lang" value="${RequestContextUtils.getLocale(request)?.language}"/>
 
 <g:set var="linkLang" value="${(lang == 'sv') ? 'en':'sv'}"/>
 
