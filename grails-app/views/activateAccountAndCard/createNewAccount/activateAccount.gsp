@@ -36,6 +36,10 @@
   <title><g:message code="activateAccountAndCardController.activateAccount.title" /></title>
 </head>
 <body>
+<content tag="flowHeader">
+  <g:message code="activateAccountAndCardController.activateAccount.header"/>
+</content>
+
 <content tag="flowPreamble">
   <g:message code="activateAccountAndCardController.activateAccount.promptText"/>
 </content>

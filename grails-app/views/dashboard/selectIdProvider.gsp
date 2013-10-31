@@ -37,6 +37,10 @@
   <r:require modules="use_cases"/>
 </head>
 <body>
+<content tag="flowHeader">
+  <g:message code="activateAccountAndCardController.selectIdProvider.header"/>
+</content>
+
 <content tag="flowPreamble">
   <g:message code="activateAccountAndCardController.selectIdProviderText"/>
 </content>

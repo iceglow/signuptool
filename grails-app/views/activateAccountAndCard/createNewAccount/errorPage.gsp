@@ -36,6 +36,10 @@
   <title><g:message code="activateAccountAndCard.createNewAccount.errorPage"/></title>
 </head>
 <body>
+<content tag="flowHeader">
+  <g:message code="activateAccountAndCardController.createNewAccount.header"/>
+</content>
+
 <content tag="flowPreamble">
   <g:message code="activateAccountAndCardController.createNewAccount.errorPage.text"/>
 </content>

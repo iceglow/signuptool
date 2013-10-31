@@ -36,6 +36,10 @@
   <title><g:message code="application.title"/></title>
 </head>
 <body>
+<content tag="flowHeader">
+  <g:message code="dashboard.index.header"/>
+</content>
+
 <content tag="flowPreamble">
   <g:message code="dashboard.index.activateAccountText"/>
 </content>

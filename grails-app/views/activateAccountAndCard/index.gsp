@@ -42,6 +42,16 @@
 <!-- showOrderCard: When hasCompletedCardOrder is false and errorWhileOrderingCard is true -->
 <g:set var="showOrderCard" value="${!(hasCompletedCardOrder) || (errorWhileOrderingCard)}"/>
 
+<content tag="flowHeader">
+<g:if test="${showAccountInfo}">
+  <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated.header"/>
+</g:if>
+<g:else>
+  <g:message code="activateAccountAndCard.endAccountAndCard.header"/>
+</g:else>
+
+</content>
+
 <content tag="flowPreamble">
 <g:if test="${showAccountInfo}">
   <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/>
