@@ -40,7 +40,7 @@
     <div><g:message code="activateAccountAndCardController.hasActivatedAccount.password"/>: ${password}</div>
   </g:if>
   <g:else>
-    <g:link controller="dashboard" action="resetAccountOrPassword" target="_blank">
+    <g:link controller="resetPassword" action="index" target="_blank">
       <g:message code="activateAccountAndCardController.forgotten_password"/>
     </g:link>
   </g:else>
