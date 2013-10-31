@@ -15,7 +15,7 @@ class LocaleFiltersSpec extends Specification {
   def cleanup() {
   }
 
-  void "filter sets session.locale from params.lang"() {
+  void "filter sets session.lang from params.lang"() {
     given:
     params.lang = 'en'
 
@@ -25,12 +25,12 @@ class LocaleFiltersSpec extends Specification {
     }
 
     then:
-    session.locale == 'en'
+    session.lang == 'en'
   }
 
-  void "filter sets params.lang from session.locale"() {
+  void "filter sets params.lang from session.lang"() {
     given:
-    session.locale = 'en'
+    session.lang = 'en'
 
     when:
     withFilters(action: 'index'){
@@ -44,7 +44,7 @@ class LocaleFiltersSpec extends Specification {
   @Unroll
   void "filter defaults sets #expected locale for #locale"() {
     given:
-    session.locale = locale
+    session.lang = locale
 
     when:
     withFilters(action: 'index'){

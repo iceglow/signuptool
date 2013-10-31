@@ -29,7 +29,9 @@
   - POSSIBILITY OF SUCH DAMAGE.
   --}%
 
-<% params.lang = params.lang =~ /sv/ ? 'en':'sv' %>
+<g:set var="lang" value="${(session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE')?.toLanguageTag()}"/>
+
+<g:set var="linkLang" value="${(lang == 'sv') ? 'en':'sv'}"/>
 
 <div class="top-links apps-darkblue">
   <div class="clear-float"></div>
@@ -38,10 +40,10 @@
     <ul>
       <li class="last-item">
         <g:link
-            class="last-item top-links-lang lang-${params.lang}"
+            class="last-item top-links-lang lang-${linkLang}"
             controller="${params.controller}"
             action="${params.action}"
-            params="${params}">${g.message(code: 'application.toggle.language.label')}</g:link>
+            params="${params + [lang: linkLang]}">${g.message(code: 'application.toggle.language.label')}</g:link>
       </li>
     </ul>
   </div>
