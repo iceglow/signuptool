@@ -34,6 +34,7 @@ package se.su.it.signuptool
 import grails.util.Environment
 import grails.validation.Validateable
 import groovy.transform.ToString
+import org.springframework.web.context.request.RequestContextHolder
 import se.su.it.signuptool.mock.UseCase
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
@@ -63,8 +64,7 @@ class ActivateAccountAndCardController {
       session.acp = acp
     }
 
-    // Cleanup any session step & set current step in acp obj.
-    session.step = null
+    // Set current step in acp obj.
     acp.step = STEP_ACCOUNT
 
     if (!acp.validate()) {
@@ -702,6 +702,8 @@ class ActivateAccountAndCardController {
 
     public void setStep(int step) {
       this.step = step
+      def session = RequestContextHolder.requestAttributes?.session
+      session?.step = null
     }
 
     /**
