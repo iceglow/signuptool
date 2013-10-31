@@ -202,6 +202,12 @@ class ActivateAccountAndCardController {
     String sukaturl = configService.getValue("signup", "sukattool")
     eventLog.logEvent("Found account with nin: ${acp.norEduPersonNIN} and uid: ${acp?.userVO?.uid} in SUKAT, displaying information.")
 
+    if (acp.hasCompletedCardOrder || acp.errorWhileOrderingCard) {
+      acp.step = STEP_END
+    } else if(! acp.hasCompletedCardOrder) {
+      acp.step = STEP_ACCOUNT
+    }
+
     return render(view:'index', model:[
         uid:acp?.userVO?.uid,
         password:password,
