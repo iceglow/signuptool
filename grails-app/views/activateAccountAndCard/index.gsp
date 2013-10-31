@@ -43,22 +43,21 @@
 <g:set var="showOrderCard" value="${!(hasCompletedCardOrder) && !(errorWhileOrderingCard)}"/>
 
 <content tag="flowHeader">
-<g:if test="${showAccountInfo}">
-  <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated.header"/>
-</g:if>
-<g:else>
-  <g:message code="activateAccountAndCard.endAccountAndCard.header"/>
-</g:else>
-
+  <g:if test="${showAccountInfo}">
+    <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated.header"/>
+  </g:if>
+  <g:else>
+    <g:message code="activateAccountAndCard.endAccountAndCard.header"/>
+  </g:else>
 </content>
 
 <content tag="flowPreamble">
-<g:if test="${showAccountInfo}">
-  <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/>
-</g:if>
-<g:else>
-  <g:message code="activateAccountAndCard.endAccountAndCard.text"/>
-</g:else>
+  <g:if test="${showAccountInfo}">
+    <g:message code="activateAccountAndCardController.hasActivatedAccount.accountActivated"/>
+  </g:if>
+  <g:else>
+    <g:message code="activateAccountAndCard.endAccountAndCard.text"/>
+  </g:else>
 </content>
 
 <content tag="flowContent">
@@ -75,12 +74,12 @@
 
   <g:if test="${showOrderCard}">
     <div class="top-spacer-10">
-    <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
-      <p><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></p>
-      <div class="align-right">
-        <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
-      </div>
-    </g:form>
+      <g:form id="activateAccountForm" url="${[controller:'activateAccountAndCard', action:'orderCard']}">
+        <p><g:message code="activateAccountAndCardController.hasActivatedAccount.orderCard"/></p>
+        <div class="align-right">
+          <g:submitButton class="signupButton" name="orderCard" value="${g.message(code:'activateAccountAndCardController.hasActivatedAccount.card')}"/>
+        </div>
+      </g:form>
     </div>
   </g:if>
 </content>
