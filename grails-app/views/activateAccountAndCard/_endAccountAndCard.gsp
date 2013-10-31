@@ -33,11 +33,11 @@
 
 <br/>
 
-<div class="align-right">
-  <div><g:message code="activateAccountAndCard.endAccountAndCard.webreg.text"/></div>
-  <g:form url="${lpwurl}">
+<div><g:message code="activateAccountAndCard.endAccountAndCard.webreg.text"/></div>
+<g:form url="${lpwurl}">
+  <div class="align-right">
     <g:submitButton class="signupButton"
                     name="toMinaStudier"
                     value="${g.message(code:'activateAccountAndCard.endAccountAndCard.webreg.button')}"/>
-  </g:form>
-</div>
+  </div>
+</g:form>
