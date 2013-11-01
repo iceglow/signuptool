@@ -36,6 +36,8 @@ import se.su.it.signuptool.mock.UseCase
 
 class DashboardController {
 
+  def mockService
+
   def index() {
     session.step = ActivateAccountAndCardController.STEP_START
     if (session.controller) {
@@ -64,10 +66,10 @@ class DashboardController {
     def cardUseCase = null
 
     if (env == "mock") {
-      accountUseCases = UseCase.findAllByType(UseCase.Type.ACCOUNT)
-      accountUseCase = UseCase.findByType(UseCase.Type.ACCOUNT)
-      cardUseCases = UseCase.findAllByType(UseCase.Type.CARD)
-      cardUseCase = UseCase.findByType(UseCase.Type.CARD)
+      accountUseCases = mockService.findAllByType(UseCase.Type.ACCOUNT)
+      accountUseCase = mockService.findByType(UseCase.Type.ACCOUNT)
+      cardUseCases = mockService.findAllByType(UseCase.Type.CARD)
+      cardUseCase = mockService.findByType(UseCase.Type.CARD)
     }
 
     return render(view: 'selectIdProvider', model: [
@@ -93,11 +95,11 @@ class DashboardController {
       return redirect(action:'index')
     }
 
-    UseCase useCase = UseCase.get(caseId)
+    UseCase useCase = mockService.get(caseId)
 
     if (!useCase) {
       log.error "No use case found for id $caseId"
-      flash.error = "Case $caseId is invalid, valid cases are ${UseCase.list()*.id?.join(', ')}"
+      flash.error = "Case $caseId is invalid, valid cases are ${mockService.useCases*.id?.join(', ')}"
       return redirect(action:'index')
     }
 
@@ -125,6 +127,6 @@ class DashboardController {
   }
 
   def getUseCaseInfo(long caseId) {
-    return render(text:(UseCase.get(caseId)?.description)?:'')
+    return render(text:(mockService.get(caseId)?.description)?:'')
   }
 }
