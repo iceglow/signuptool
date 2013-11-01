@@ -608,7 +608,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     def ret = orderCardFlow.processCardOrder.action()
 
     then:
-    ret == 'error'
+    ret == 'failed'
   }
 
   def "orderCardFlow: processCardOrder success"() {
