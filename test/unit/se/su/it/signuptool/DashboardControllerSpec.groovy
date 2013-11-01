@@ -39,10 +39,10 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 @TestFor(DashboardController)
-@Mock([UseCase])
 class DashboardControllerSpec extends Specification {
 
   def setup() {
+    controller.mockService = new MockService()
   }
 
   def cleanup() {
@@ -85,8 +85,8 @@ class DashboardControllerSpec extends Specification {
     }
 
     when:
-    UseCase accountCase = new UseCase(type:UseCase.Type.ACCOUNT, name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something').save(flush:true)
-    UseCase cardCase = new UseCase(type:UseCase.Type.CARD, name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something').save(flush:true)
+    UseCase accountCase = controller.mockService.addUseCase(new UseCase(type:UseCase.Type.ACCOUNT, name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something'))
+    UseCase cardCase = controller.mockService.addUseCase(new UseCase(type:UseCase.Type.CARD, name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something'))
 
     controller.activateAccountAndCard()
 
@@ -148,7 +148,7 @@ class DashboardControllerSpec extends Specification {
   void "useCase: When loading a useCase"() {
     given:
 
-    UseCase useCase = new UseCase(type:UseCase.Type.ACCOUNT, eppn: 'foo@kaka.se', name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something').save(flush:true)
+    UseCase useCase = controller.mockService.addUseCase(new UseCase(type:UseCase.Type.ACCOUNT, eppn: 'foo@kaka.se', name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something'))
 
     Environment.metaClass.static.getCurrent = {->
       [name:'mock']

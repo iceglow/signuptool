@@ -24,9 +24,10 @@ class MockService {
     useCases
   }
 
-  public void addUseCase(UseCase useCase) {
+  public UseCase addUseCase(UseCase useCase) {
     useCase.id = idCounter++
     this.useCases << useCase
+    useCase
   }
 
   /**
@@ -241,7 +242,6 @@ class MockService {
         }
         throw new IllegalStateException("UseCase did not validate, ${useCase.errors.errorCount} errors.")
       }
-
     }
   }
 }
