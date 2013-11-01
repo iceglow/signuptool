@@ -93,10 +93,14 @@ class ResetPasswordController {
   }
 
   def resetPasswordFlow = {
-    confirmResetPassword {
+    prepareConfirmResetPassword {
       action {
         flow.uid = session?.user?.uid
       }
+      on('success').to('confirmResetPassword')
+    }
+
+    confirmResetPassword {
       on('ok').to('resetPassword')
     }
 
