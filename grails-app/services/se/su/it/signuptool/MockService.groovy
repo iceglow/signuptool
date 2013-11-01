@@ -24,9 +24,10 @@ class MockService {
     useCases
   }
 
-  public void addUseCase(UseCase useCase) {
+  public UseCase addUseCase(UseCase useCase) {
     useCase.id = idCounter++
     this.useCases << useCase
+    useCase
   }
 
   /**
