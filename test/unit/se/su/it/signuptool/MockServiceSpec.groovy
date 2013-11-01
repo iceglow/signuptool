@@ -33,12 +33,9 @@ package se.su.it.signuptool
 
 import grails.test.MockUtils
 import grails.test.mixin.TestFor
-import grails.test.mixin.TestMixin
-import groovy.sql.Sql
 import se.su.it.signuptool.mock.UseCase
 import spock.lang.Specification
 
-import javax.sql.DataSource
 
 @TestFor(MockService)
 class MockServiceSpec extends Specification {

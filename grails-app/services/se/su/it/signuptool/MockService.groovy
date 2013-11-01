@@ -242,7 +242,6 @@ class MockService {
         }
         throw new IllegalStateException("UseCase did not validate, ${useCase.errors.errorCount} errors.")
       }
-
     }
   }
 }
