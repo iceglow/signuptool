@@ -486,6 +486,13 @@ class ActivateAccountAndCardController {
       }.to("processCardOrder")
     }
 
+    cardOrderFailed {
+      on("continue") {
+        /** We consider this a successful completion of the flow since the user failed while ordering a card */
+        (session.acp as AccountAndCardProcess).hasCompletedCardOrder = true
+      }.to("beforeEnd")
+    }
+
     processCardOrder {
       action {
         AccountAndCardProcess acp = session.acp
@@ -517,7 +524,7 @@ class ActivateAccountAndCardController {
             log.error "Failed to order card", ex
             flow.error = g.message(code:'activateAccountAndCardController.cardOrder.orderFailed')
             eventLog.logEvent("Failed to order card: ${ex.message}")
-            return error()
+            return failed()
           }
         } else {
           eventLog.logEvent("User says address is invalid")
@@ -529,6 +536,7 @@ class ActivateAccountAndCardController {
         (session.acp as AccountAndCardProcess).hasCompletedCardOrder = true
         (session.acp as AccountAndCardProcess).errorWhileOrderingCard = false
       }.to('beforeEnd')
+      on('failed').to('cardOrderFailed')
       on('error').to('cardOrder')
     }
 
