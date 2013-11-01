@@ -31,6 +31,9 @@
 
 package se.su.it.signuptool.mock
 
+import grails.validation.Validateable
+
+@Validateable
 class UseCase {
 
   final static String I18N_PREFIX = "use_case"
@@ -40,6 +43,7 @@ class UseCase {
     CARD
   }
 
+  Long id
   Type type
   String name
   String displayName
@@ -49,6 +53,7 @@ class UseCase {
   MockUserVO user
 
   static constraints = {
+    id(nullable: false, min: 0L)
     type(nullable:false)
     name(nullable:false, blank:false)
     displayName(nullable:false, blank:false, validator: { val ->
@@ -59,5 +64,4 @@ class UseCase {
     description(nullable:true, blank:true)
     user(nullable:true)
   }
-
 }

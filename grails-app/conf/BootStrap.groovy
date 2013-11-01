@@ -49,6 +49,8 @@ class BootStrap {
   def accessService
   def dataSource
 
+  def mockService
+
   final String MOCK_ENVIRONMENT_NAME = "mock"
 
   def init = { servletContext ->
@@ -174,21 +176,6 @@ class BootStrap {
       log.error "*** RoleAccessManagment: Failed to create/add access roles.", ex
     }
 
-    try {
-      Sql sql = new Sql(dataSource as DataSource)
-      sql.withTransaction {
-        if (Environment.current.name == MOCK_ENVIRONMENT_NAME) {
-          sql.execute("DELETE FROM use_case")
-          sql.execute("DELETE FROM mock_uservo")
-        } else {
-          sql.execute("DROP TABLE use_case")
-          sql.execute("DROP TABLE mock_uservo")
-        }
-      }
-    } catch (ex) {
-      log.error "Issue when running sql commands", ex
-    }
-
     if (Environment.current.name == MOCK_ENVIRONMENT_NAME) {
 
       final String DEFAULT_VALID_EPPN = "student@studera.nu"
@@ -196,7 +183,7 @@ class BootStrap {
       /** Bootstrap some use case test data */
       log.info "Adding mock Use Cases"
 
-      List useCases = []
+      List<UseCase> useCases = []
 
       // TODO: Write more pathing information.
 
@@ -313,7 +300,7 @@ class BootStrap {
           eppn:DEFAULT_VALID_EPPN,
           displayName: "${UseCase.I18N_PREFIX}.noValidUser",
           description: "When the user has no user in the current session (illegal state).",
-          user: new MockUserVO(uid:null, accountIsActive: true).save()
+          user: new MockUserVO(uid:null, accountIsActive: true)
       )
 
       /**
@@ -326,7 +313,7 @@ class BootStrap {
           eppn:DEFAULT_VALID_EPPN,
           norEduPersonNIN: "FETCHING_CARD_ORDER_STATUS_FAILS",
           description: "When the system is unable to fetch the status of the current users cards and card orders.",
-          user: new MockUserVO(uid:"FETCHING_CARD_ORDER_STATUS_FAILS", accountIsActive: true).save()
+          user: new MockUserVO(uid:"FETCHING_CARD_ORDER_STATUS_FAILS", accountIsActive: true)
       )
 
       /**
@@ -339,7 +326,7 @@ class BootStrap {
           eppn: DEFAULT_VALID_EPPN,
           norEduPersonNIN: "MISSING_ADDRESS",
           description: "When the user is missing a proper address, which is fetched from LADOK.",
-          user: new MockUserVO(uid: "MISSING_ADDRESS", accountIsActive: true).save()
+          user: new MockUserVO(uid: "MISSING_ADDRESS", accountIsActive: true)
       )
 
       useCases << new UseCase(
@@ -349,7 +336,7 @@ class BootStrap {
           eppn: DEFAULT_VALID_EPPN,
           norEduPersonNIN: "HAS_ACTIVE_CARDS",
           description: "When the user already has an active card",
-          user: new MockUserVO(uid: "HAS_ACTIVE_CARDS", accountIsActive: true).save()
+          user: new MockUserVO(uid: "HAS_ACTIVE_CARDS", accountIsActive: true)
       )
 
       useCases << new UseCase(
@@ -359,7 +346,7 @@ class BootStrap {
           eppn: DEFAULT_VALID_EPPN,
           norEduPersonNIN: "HAS_CARD_ORDERS",
           description: "When the user already has active card orders in the card order database.",
-          user: new MockUserVO(uid: "HAS_CARD_ORDERS", accountIsActive: true).save()
+          user: new MockUserVO(uid: "HAS_CARD_ORDERS", accountIsActive: true)
       )
 
       useCases << new UseCase(
@@ -369,7 +356,7 @@ class BootStrap {
           eppn: DEFAULT_VALID_EPPN,
           norEduPersonNIN: "CARD_ORDER_FAILS",
           description: "When the actual ordering of the card fails.",
-          user: new MockUserVO(uid: "CARD_ORDER_FAILS", accountIsActive: true).save()
+          user: new MockUserVO(uid: "CARD_ORDER_FAILS", accountIsActive: true)
       )
 
       useCases << new UseCase(
@@ -379,11 +366,19 @@ class BootStrap {
           eppn: DEFAULT_VALID_EPPN,
           norEduPersonNIN: "CARD_ORDER_SUCCEEDS",
           description: "A successful uneventful card order.",
-          user: new MockUserVO(uid: "CARD_ORDER_SUCCEEDS", accountIsActive: true).save()
+          user: new MockUserVO(uid: "CARD_ORDER_SUCCEEDS", accountIsActive: true)
       )
 
-      for (useCase in useCases) {
-        useCase.save(failOnError: true)
+      mockService.useCases = useCases
+
+      for (useCase in mockService.useCases) {
+        if(! useCase.validate()) {
+          for (error in useCase.errors.allErrors) {
+            log.error("UseCase did not validate: " + error.toString())
+          }
+          throw new IllegalStateException("UseCase did not validate, ${useCase.errors.errorCount} errors.")
+        }
+
       }
     }
 
