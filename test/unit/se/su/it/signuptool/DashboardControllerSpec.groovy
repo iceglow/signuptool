@@ -163,7 +163,7 @@ class DashboardControllerSpec extends Specification {
     session.acp.eppn == useCase.eppn
     session.acp.norEduPersonNIN == useCase.norEduPersonNIN
 
-    response.redirectedUrl == '/activateAccountAndCard/index'
+    response.redirectedUrl == '/dashboard/index'
   }
 
 }
