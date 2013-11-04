@@ -33,6 +33,7 @@ package se.su.it.signuptool
 
 import grails.util.Environment
 import se.su.it.signuptool.commandobjects.AccountAndCardProcess
+import se.su.it.signuptool.commandobjects.ResetPasswordProcess
 import se.su.it.signuptool.mock.UseCase
 
 class DashboardController {
@@ -120,12 +121,19 @@ class DashboardController {
       acp.loadUseCase(useCase)
       session.acp = acp
     }
+    else if (session.controller == 'resetPassword') {
+      session.rpp = null
+      ResetPasswordProcess rpp = new ResetPasswordProcess()
+      rpp.loadUseCase(useCase)
+      session.rpp = rpp
+    }
 
-    log.error "Prepared session: ${session.acp}"
+    log.error "Prepared session: ${session.acp || session.rpp}"
 
     switch(useCase.type) {
       case UseCase.Type.ACCOUNT:
       case UseCase.Type.CARD:
+      case UseCase.Type.PASSWORD:
         log.info "Routing to index"
         return redirect(controller:'dashboard', action:'index')
         break
