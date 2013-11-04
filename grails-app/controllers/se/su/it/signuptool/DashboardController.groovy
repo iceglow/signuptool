@@ -60,24 +60,20 @@ class DashboardController {
     session.controller = 'activateAccountAndCard'
 
     def env = Environment.current.name
-    def accountUseCases = null
-    def accountUseCase = null
-    def cardUseCases = null
-    def cardUseCase = null
+    def useCases = null
+    def useCase = null
 
     if (env == "mock") {
-      accountUseCases = mockService.findAllByType(UseCase.Type.ACCOUNT)
-      accountUseCase = mockService.findByType(UseCase.Type.ACCOUNT)
-      cardUseCases = mockService.findAllByType(UseCase.Type.CARD)
-      cardUseCase = mockService.findByType(UseCase.Type.CARD)
+      useCases = mockService.findAllByType(UseCase.Type.ACCOUNT)
+      useCases += mockService.findAllByType(UseCase.Type.CARD)
+      useCase = mockService.findByType(UseCase.Type.ACCOUNT)
+      useCase = useCase ?: mockService.findByType(UseCase.Type.CARD)
     }
 
     return render(view: 'selectIdProvider', model: [
         env: env,
-        accountUseCases: accountUseCases,
-        accountUseCase: accountUseCase,
-        cardUseCases: cardUseCases,
-        cardUseCase: cardUseCase
+        useCases: useCases,
+        useCase: useCase,
     ])
   }
 
