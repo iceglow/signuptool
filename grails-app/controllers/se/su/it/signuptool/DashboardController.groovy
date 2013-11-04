@@ -79,7 +79,21 @@ class DashboardController {
 
   def resetAccountOrPassword() {
     session.controller = 'resetPassword'
-    return render(view:'selectPasswordIdp')
+
+    def env = Environment.current.name
+    def useCases = null
+    def useCase = null
+
+    if (env == "mock") {
+      useCases = mockService.findAllByType(UseCase.Type.PASSWORD)
+      useCase = mockService.findByType(UseCase.Type.PASSWORD)
+    }
+
+    return render(view:'selectPasswordIdp', model: [
+        env: env,
+        useCases: useCases,
+        useCase: useCase,
+    ])
   }
 
   def useCase(long caseId) {
