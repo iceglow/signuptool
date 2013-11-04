@@ -32,6 +32,7 @@
 package se.su.it.signuptool
 
 import grails.util.Environment
+import se.su.it.signuptool.commandobjects.AccountAndCardProcess
 import se.su.it.signuptool.mock.UseCase
 
 class DashboardController {
@@ -113,10 +114,12 @@ class DashboardController {
       return redirect(action:'index')
     }
 
-    session.acp = null
-    ActivateAccountAndCardController.AccountAndCardProcess acp = new ActivateAccountAndCardController.AccountAndCardProcess()
-    acp.loadUseCase(useCase)
-    session.acp = acp
+    if (session.controller == 'activateAccountAndCard') {
+      session.acp = null
+      AccountAndCardProcess acp = new AccountAndCardProcess()
+      acp.loadUseCase(useCase)
+      session.acp = acp
+    }
 
     log.error "Prepared session: ${session.acp}"
 

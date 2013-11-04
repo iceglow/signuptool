@@ -244,6 +244,17 @@ class MockService {
             user: new MockUserVO(uid: "CARD_ORDER_SUCCEEDS", accountIsActive: true)
     ))
 
+    /** Password flow use cases */
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_HAPPY_PATH",
+            displayName: "${UseCase.I18N_PREFIX}.passwordHappyPath",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: "PASSWORD_HAPPY_PATH",
+            description: "A successful password reset.",
+            user: new MockUserVO(uid: "PASSWORD_HAPPY_PATH", accountIsActive: true)
+    ))
+
     // Validate the UseCases & throw exception on error
     useCases.each { useCase ->
       if(! useCase.validate()) {
