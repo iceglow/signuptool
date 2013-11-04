@@ -112,20 +112,14 @@ class DashboardController {
 
     switch(useCase.type) {
       case UseCase.Type.ACCOUNT:
-        log.info "Routing to index"
-        session.controller = 'activateAccountAndCard'
-        return redirect(controller:'dashboard', action:'index')
-        break
       case UseCase.Type.CARD:
-        log.info "Routing to cardOrder"
-        session.controller = 'activateAccountAndCard'
+        log.info "Routing to index"
         return redirect(controller:'dashboard', action:'index')
         break
       default:
         flash.error = "Use Case has an unknown type: ${useCase.type}"
         return redirect(action:'index')
     }
-
   }
 
   def getUseCaseInfo(long caseId) {
