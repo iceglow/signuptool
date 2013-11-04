@@ -522,7 +522,6 @@ class ActivateAccountAndCardController {
             sukatService.orderCard(acp.user, ladokAddress)
           } catch (ex) {
             log.error "Failed to order card", ex
-            flow.error = g.message(code:'activateAccountAndCardController.cardOrder.orderFailed')
             eventLog.logEvent("Failed to order card: ${ex.message}")
             return failed()
           }
