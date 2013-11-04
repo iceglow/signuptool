@@ -26,6 +26,9 @@ class LadokServiceStub implements LadokServiceI {
       case "NEW_USER_FROM_SCRATCH":
         email = "tnamn.enamn@student.su.se"
         break
+      case "ACTIVATE_HAPPY_PATH":
+        email = "b.c@su.se"
+        break
       default:
         email = null
         break

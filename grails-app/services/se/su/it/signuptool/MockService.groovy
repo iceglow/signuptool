@@ -42,6 +42,16 @@ class MockService {
 
     // TODO: Write more pathing information.
 
+    /** Happy path */
+    addUseCase(new UseCase(
+            type: UseCase.Type.ACCOUNT,
+            name: "ACTIVATE_HAPPY_PATH",
+            displayName: "${UseCase.I18N_PREFIX}.happyPath",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: "ACTIVATE_HAPPY_PATH",
+            description: "A successful activation."
+    ))
+
     /** Broken paths */
     addUseCase(new UseCase(
             type: UseCase.Type.ACCOUNT,
