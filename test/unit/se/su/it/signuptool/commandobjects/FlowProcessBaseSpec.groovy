@@ -19,6 +19,22 @@ class FlowProcessBaseSpec extends Specification {
     Environment.metaClass = null
   }
 
+  def "Initial state"() {
+    given:
+
+    def fpb = new FlowProcessBase()
+
+    expect:
+    fpb.referenceId == null
+    fpb.norEduPersonNIN == null
+    fpb.eppn == null
+    fpb.error == null
+    fpb.password == null
+    !fpb.newUser
+    !fpb.verified
+    fpb.userVO == null
+  }
+
   def "referenceId"() {
     when:
     fpb.referenceId = 10
