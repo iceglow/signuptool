@@ -63,9 +63,9 @@
       <g:message code="activateAccountAndCardController.idProvider.header.eduID"/>
     </div>
     <g:message code="activateAccountAndCardController.idProvider.promptText.eduID"/>
-    <g:form url="#">
+    <g:form url="#" onclick="return false;">
       <div class="align-right">
-        <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
+        <g:submitButton class="signupButton disabled" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
       </div>
     </g:form>
   </div>

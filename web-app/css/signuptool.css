@@ -59,6 +59,22 @@
   padding-right: 10px;
   padding-bottom: 8px;
   margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.signupButton.disabled,
+.signupButton[disabled] {
+  color: #333333;
+  background-color: #e6e6e6;
+  *background-color: #d9d9d9;
+  cursor: default;
+  background-image: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  cursor: default;
 }
 
 input#forwardAddress {
