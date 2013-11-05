@@ -57,7 +57,7 @@ class ResetPasswordController {
         eventLog = utilityService.getEventLog(rpp.referenceId)
       } catch (ex) {
         log.error "Failed to fetch eventLog for referenceId ${rpp.referenceId}", ex
-        flash.error = g.message(code:'activateAccountAndCardController.errors.genericError')
+        flash.error = g.message(code:'resetPassword.errors.genericError')
         return redirect(controller:'dashboard', action:'index')
       }
     } else {
@@ -66,7 +66,7 @@ class ResetPasswordController {
         rpp.referenceId = eventLog?.id
       } catch (ex) {
         log.error "Failed to create new eventLog", ex
-        flash.error = g.message(code:'activateAccountAndCardController.errors.genericError')
+        flash.error = g.message(code:'resetPassword.errors.genericError')
         return redirect(controller:'dashboard', action:'index')
       }
     }
@@ -89,7 +89,7 @@ class ResetPasswordController {
         default:
           eventLog.logEvent("no handled or valid scope supplied for ${rpp.eppn}")
           flash.error = message(
-                  code:'activateAccountAndCardController.noValidScopeFound',
+                  code:'resetPassword.noValidScopeFound',
                   args:[rpp.eppn]) as String
           return redirect(controller:'dashboard', action:'index')
       }
@@ -118,7 +118,7 @@ class ResetPasswordController {
 
         log.error "Failed when setting user in session", ex
         flash.error = message(
-                code:'activateAccountAndCardController.errorWhenFetchingUser',
+                code:'resetPassword.errorWhenFetchingUser',
                 args:[rpp.norEduPersonNIN]) as String
 
         return redirect(controller:'dashboard', action:'index')
