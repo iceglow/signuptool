@@ -46,6 +46,11 @@ public class AccountAndCardProcess extends FlowProcessBase {
    * @param result
    */
   public void storeActivationResult(def result) {
+
+    if (!this.user) {
+      throw new IllegalStateException("No user found.")
+    }
+
     this.user.accountIsActive = true
     this.user.uid = result.uid
     this.password = result.password
