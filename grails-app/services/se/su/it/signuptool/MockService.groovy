@@ -3,10 +3,13 @@ package se.su.it.signuptool
 import se.su.it.signuptool.mock.MockUserVO
 import se.su.it.signuptool.mock.UseCase
 
+import java.util.concurrent.atomic.AtomicLong
+
 class MockService {
 
-  private synchronized Long idCounter = 0L
+  AtomicLong ids = new AtomicLong()
   private List<UseCase> useCases = Collections.synchronizedList([])
+  public List<UseCase> unmodifiableUseCases
 
   public List<UseCase> findAllByType(UseCase.Type type) {
     useCases.findAll { it.type == type }
@@ -20,12 +23,18 @@ class MockService {
     useCases.find { it.id == id }
   }
 
+  /**
+   * @return an unmodifiable list of Use cases
+   */
   public List<UseCase> getUseCases() {
-    useCases
+    if (!unmodifiableUseCases) {
+      unmodifiableUseCases = Collections.unmodifiableList(useCases)
+    }
+    return unmodifiableUseCases
   }
 
-  public UseCase addUseCase(UseCase useCase) {
-    useCase.id = idCounter++
+  private UseCase addUseCase(UseCase useCase) {
+    useCase.id = ids.getAndIncrement()
     this.useCases << useCase
     useCase
   }
@@ -333,5 +342,7 @@ class MockService {
         throw new IllegalStateException("UseCase did not validate, ${useCase.errors.errorCount} errors.")
       }
     }
+
+
   }
 }
