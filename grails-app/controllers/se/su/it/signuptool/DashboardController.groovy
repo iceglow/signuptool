@@ -33,6 +33,7 @@ package se.su.it.signuptool
 
 import grails.util.Environment
 import se.su.it.signuptool.commandobjects.AccountAndCardProcess
+import se.su.it.signuptool.commandobjects.FlowProcessBase
 import se.su.it.signuptool.commandobjects.ResetPasswordProcess
 import se.su.it.signuptool.mock.UseCase
 
@@ -115,20 +116,22 @@ class DashboardController {
       return redirect(action:'index')
     }
 
+    FlowProcessBase process = null
+
     if (session.controller == 'activateAccountAndCard') {
       session.acp = null
-      AccountAndCardProcess acp = new AccountAndCardProcess()
-      acp.loadUseCase(useCase)
-      session.acp = acp
+      process = new AccountAndCardProcess()
+      session.acp = process
     }
     else if (session.controller == 'resetPassword') {
       session.rpp = null
-      ResetPasswordProcess rpp = new ResetPasswordProcess()
-      rpp.loadUseCase(useCase)
-      session.rpp = rpp
+      process = new ResetPasswordProcess()
+      session.rpp = process
     }
 
-    log.error "Prepared session: ${session.acp || session.rpp}"
+    process?.loadUseCase(useCase)
+
+    log.error "Prepared session: ${process}"
 
     switch(useCase.type) {
       case UseCase.Type.ACCOUNT:
