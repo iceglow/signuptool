@@ -32,6 +32,9 @@
 package se.su.it.signuptool
 
 import grails.util.Environment
+import se.su.it.signuptool.commandobjects.AccountAndCardProcess
+import se.su.it.signuptool.commandobjects.FlowProcessBase
+import se.su.it.signuptool.commandobjects.ResetPasswordProcess
 import se.su.it.signuptool.mock.UseCase
 
 class DashboardController {
@@ -60,30 +63,40 @@ class DashboardController {
     session.controller = 'activateAccountAndCard'
 
     def env = Environment.current.name
-    def accountUseCases = null
-    def accountUseCase = null
-    def cardUseCases = null
-    def cardUseCase = null
+    def useCases = null
+    def useCase = null
 
     if (env == "mock") {
-      accountUseCases = mockService.findAllByType(UseCase.Type.ACCOUNT)
-      accountUseCase = mockService.findByType(UseCase.Type.ACCOUNT)
-      cardUseCases = mockService.findAllByType(UseCase.Type.CARD)
-      cardUseCase = mockService.findByType(UseCase.Type.CARD)
+      useCases = mockService.findAllByType(UseCase.Type.ACCOUNT)
+      useCases += mockService.findAllByType(UseCase.Type.CARD)
+      useCase = mockService.findByType(UseCase.Type.ACCOUNT)
+      useCase = useCase ?: mockService.findByType(UseCase.Type.CARD)
     }
 
     return render(view: 'selectIdProvider', model: [
         env: env,
-        accountUseCases: accountUseCases,
-        accountUseCase: accountUseCase,
-        cardUseCases: cardUseCases,
-        cardUseCase: cardUseCase
+        useCases: useCases,
+        useCase: useCase,
     ])
   }
 
   def resetAccountOrPassword() {
     session.controller = 'resetPassword'
-    return render(view:'selectPasswordIdp')
+
+    def env = Environment.current.name
+    def useCases = null
+    def useCase = null
+
+    if (env == "mock") {
+      useCases = mockService.findAllByType(UseCase.Type.PASSWORD)
+      useCase = mockService.findByType(UseCase.Type.PASSWORD)
+    }
+
+    return render(view:'selectPasswordIdp', model: [
+        env: env,
+        useCases: useCases,
+        useCase: useCase,
+    ])
   }
 
   def useCase(long caseId) {
@@ -103,16 +116,27 @@ class DashboardController {
       return redirect(action:'index')
     }
 
-    session.acp = null
-    ActivateAccountAndCardController.AccountAndCardProcess acp = new ActivateAccountAndCardController.AccountAndCardProcess()
-    acp.loadUseCase(useCase)
-    session.acp = acp
+    FlowProcessBase process = null
 
-    log.error "Prepared session: ${session.acp}"
+    if (session.controller == 'activateAccountAndCard') {
+      session.acp = null
+      process = new AccountAndCardProcess()
+      session.acp = process
+    }
+    else if (session.controller == 'resetPassword') {
+      session.rpp = null
+      process = new ResetPasswordProcess()
+      session.rpp = process
+    }
+
+    process?.loadUseCase(useCase)
+
+    log.error "Prepared session: ${process}"
 
     switch(useCase.type) {
       case UseCase.Type.ACCOUNT:
       case UseCase.Type.CARD:
+      case UseCase.Type.PASSWORD:
         log.info "Routing to index"
         return redirect(controller:'dashboard', action:'index')
         break

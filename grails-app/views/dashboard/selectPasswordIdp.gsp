@@ -76,6 +76,9 @@
     </g:form>
   </div>
 
+  <tmpl:mockProvider env="${env}"
+                     useCases="${useCases}"
+                     useCase="${useCase}" />
 </content>
 
 <sitemesh:parameter name="hideStepImage" value="true"/>

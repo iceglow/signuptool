@@ -31,6 +31,7 @@
 
 package se.su.it.signuptool
 
+import se.su.it.signuptool.commandobjects.ResetPasswordProcess
 import se.su.it.svc.SvcSuPersonVO
 
 class ResetPasswordController {
@@ -40,54 +41,96 @@ class ResetPasswordController {
 
   def index() {
 
-    EventLog eventLog = utilityService.eventLog
-    session.referenceId = eventLog?.id
+    ResetPasswordProcess rpp = session.rpp
 
-    String scope = utilityService.getScopeFromEppn(request.eppn as String)
+    if (!rpp) {
+      rpp = new ResetPasswordProcess(
+              eppn:request.eppn,
+              norEduPersonNIN:request.norEduPersonNIN)
+      session.rpp = rpp
+    }
 
-    switch(scope) {
-      case "studera.nu":
-        if (request.norEduPersonNIN) {
-          session.nin = request.norEduPersonNIN
-          eventLog.logEvent("verified account for ${request.eppn}, nin set to ${session.nin} from norEduPersonNIN")
-        } else {
-          eventLog.logEvent("unverified account for ${request.eppn}")
-          return render(view:'/shared/unverifiedAccount', model:[referenceId:eventLog?.id])
-        }
-        break
-      default:
-        eventLog.logEvent("no handled or valid scope supplied for ${request.eppn}")
-        flash.error = message(
-            code:'activateAccountAndCardController.noValidScopeFound',
-            args:[request?.eppn]) as String
+    EventLog eventLog
+
+    if (rpp.referenceId) {
+      try {
+        eventLog = utilityService.getEventLog(rpp.referenceId)
+      } catch (ex) {
+        log.error "Failed to fetch eventLog for referenceId ${rpp.referenceId}", ex
+        flash.error = g.message(code:'activateAccountAndCardController.errors.genericError')
         return redirect(controller:'dashboard', action:'index')
+      }
+    } else {
+      try {
+        eventLog = utilityService.eventLog
+        rpp.referenceId = eventLog?.id
+      } catch (ex) {
+        log.error "Failed to create new eventLog", ex
+        flash.error = g.message(code:'activateAccountAndCardController.errors.genericError')
+        return redirect(controller:'dashboard', action:'index')
+      }
     }
 
-    List<SvcSuPersonVO> users
-
-    try {
-      users = sukatService.findUsersBySocialSecurityNumber(session.nin as String)
-    } catch (ex) {
-      log.error "Failed to fetch user using social security number ${session.nin}", ex
-      flash.error = g.message(code:'sukat.errors.errorWhenFetchingUser')
-      return redirect(controller:'dashboard', action:'index')
+    if (!rpp.verified) {
+      String scope = utilityService.getScopeFromEppn(rpp.eppn)
+      switch(scope) {
+        case "studera.nu":
+          if (rpp.norEduPersonNIN) {
+            rpp.verified = true
+            eventLog.logEvent("verified account for ${rpp.eppn} with norEduPersonNIN ${rpp.norEduPersonNIN}")
+          } else {
+            eventLog.logEvent("unverified account for ${rpp.eppn}")
+            flash.error = message(
+                  code:'resetPasswordController.unverifiedAccount',
+                  args:[rpp.eppn]) as String
+            return redirect(controller:'dashboard', action:'index')
+          }
+          break
+        default:
+          eventLog.logEvent("no handled or valid scope supplied for ${rpp.eppn}")
+          flash.error = message(
+                  code:'activateAccountAndCardController.noValidScopeFound',
+                  args:[rpp.eppn]) as String
+          return redirect(controller:'dashboard', action:'index')
+      }
     }
 
-    if (users?.size() > 1) {
-      eventLog.logEvent "Found multiple accounts with social security number ${session.nin}. Aborting password reset."
-      log.error "Found multiple accounts with social security number ${session.nin}. Aborting password reset."
-      flash.error = g.message(code:'sukat.errors.multipleUsersForSSN')
-      return redirect(controller:'dashboard', action:'index')
+    /**
+     * If the user isn't already in the session we find it either by ssn or uid and put it in the session.
+     */
+    if (!rpp.hasUser()) {
+      try {
+        List<SvcSuPersonVO> vos = sukatService.findUsersBySocialSecurityNumber(rpp.norEduPersonNIN)
+
+        int voCount = (vos) ? vos?.size() : 0
+
+        if (voCount > 1) {
+          String msg = "Found multiple accounts with social security number based on norEduPersonNIN: ${rpp.norEduPersonNIN}. Aborting password reset."
+          eventLog.logEvent(msg)
+          log.error msg
+          flash.error = g.message(code:'sukat.errors.multipleUsersForSSN')
+          return redirect(controller:'dashboard', action:'index')
+        } else if (voCount == 1) {
+          rpp.user = vos?.first()
+        }
+      } catch (ex) {
+        eventLog.logEvent("Failed when setting user in session for ${rpp?.user?.uid} with exception ${ex.message}")
+
+        log.error "Failed when setting user in session", ex
+        flash.error = message(
+                code:'activateAccountAndCardController.errorWhenFetchingUser',
+                args:[rpp.norEduPersonNIN]) as String
+
+        return redirect(controller:'dashboard', action:'index')
+      }
     }
 
-    if (!users || !users.first() || !users.first().accountIsActive) {
-      eventLog.logEvent("User with social security number ${session.nin} doesnt have an account!")
-      log.error "User with social security number ${session.nin} doesnt have an account!"
+    if (!rpp.hasUser() || rpp.isStubUser()) {
+      eventLog.logEvent("User with social security number ${rpp.norEduPersonNIN} doesnt have an account!")
+      log.error "User with social security number ${rpp.norEduPersonNIN} doesnt have an account!"
       flash.error = g.message(code:'resetPassword.errors.userNotFound')
       return redirect(controller:'dashboard', action:'index')
     }
-
-    session.user = users.first()
 
     return redirect(action: 'resetPassword')
   }
@@ -95,7 +138,7 @@ class ResetPasswordController {
   def resetPasswordFlow = {
     prepareConfirmResetPassword {
       action {
-        flow.uid = session?.user?.uid
+        flow.uid = (session?.rpp as ResetPasswordProcess)?.user?.uid
       }
       on('success').to('confirmResetPassword')
     }
@@ -107,26 +150,25 @@ class ResetPasswordController {
     resetPassword() {
       action {
 
+        ResetPasswordProcess rpp = session.rpp
         EventLog eventLog
         try {
-          eventLog = utilityService.getEventLog(session.referenceId)
+          eventLog = utilityService.getEventLog(rpp?.referenceId)
         } catch (ex) {
           log.error "Fetching EventLog failed", ex
           return error()
         }
 
         try {
-          String uid = session?.user?.uid
-          flash.password = sukatService.resetPassword(uid)
-          flash.uid = session.user?.uid
+          rpp.password = sukatService.resetPassword(rpp?.user?.uid)
         } catch (ex) {
           flow.error = g.message(code:'resetPassword.errors.passwordResetFailed')
-          log.error "Reset Password failed for user with uid ${session?.user?.uid}.", ex
-          eventLog.logEvent("Reset Password failed for user with uid ${session?.user?.uid}: ${ex?.message}")
+          log.error "Reset Password failed for user with uid ${rpp?.user?.uid}.", ex
+          eventLog.logEvent("Reset Password failed for user with uid ${rpp?.user?.uid}: ${ex?.message}")
           return error()
         }
       }
-      on("success").to('end')
+      on("success").to('prepareEnd')
       on("error").to("errorHandler")
     }
 
@@ -149,11 +191,17 @@ class ResetPasswordController {
       action {
         return redirect(controller: 'dashboard', action:'index')
       }
-      on("success").to("end")
+      on("success").to("prepareEnd")
     }
 
-    end() {
-      [password:flash.password, uid:flash.uid]
+    prepareEnd {
+      action {
+        flow.password = (session.rpp as ResetPasswordProcess)?.password
+        flow.uid = (session.rpp as ResetPasswordProcess)?.user?.uid
+      }
+      on("success").to 'end'
     }
+
+    end {}
   }
 }
