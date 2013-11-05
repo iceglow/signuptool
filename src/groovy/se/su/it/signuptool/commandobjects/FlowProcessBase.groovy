@@ -17,6 +17,7 @@ public class FlowProcessBase {
   protected String norEduPersonNIN
   protected String error
   protected String password
+  protected boolean newUser = false
   protected boolean verified = false
   protected SvcSuPersonVO userVO
 
@@ -88,6 +89,35 @@ public class FlowProcessBase {
 
   public boolean hasUser() {
     (this.userVO)
+  }
+
+  void setNewUser(boolean newUser) {
+    log.info "We are creating a new user."
+    this.newUser = newUser
+  }
+
+  public boolean isNewUser() {
+    newUser
+  }
+
+  /**
+   * A stub user is a not yet activated account.
+   * @return
+   */
+  public boolean isStubUser() {
+    hasUser() && !isNewUser() && !isActiveAccount()
+  }
+
+  public boolean isBrokenStub() {
+    isStubUser() && !isValidStub()
+  }
+
+  private boolean isValidStub() {
+    getUser()?.uid
+  }
+
+  private boolean isActiveAccount() {
+    this.userVO?.accountIsActive
   }
 
   public def getUser() {

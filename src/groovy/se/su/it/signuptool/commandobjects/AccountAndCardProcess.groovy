@@ -11,18 +11,9 @@ import se.su.it.signuptool.ActivateAccountAndCardController
 @Slf4j
 public class AccountAndCardProcess extends FlowProcessBase {
 
-  private boolean newUser = false
   private boolean hasCompletedCardOrder = false
   private boolean errorWhileOrderingCard = false
   private int step = ActivateAccountAndCardController.STEP_START
-
-  void setError(String error) {
-    this.error = error
-  }
-
-  void setPassword(String password) {
-    this.@password = password
-  }
 
   boolean getHasCompletedCardOrder() {
     return hasCompletedCardOrder
@@ -38,35 +29,6 @@ public class AccountAndCardProcess extends FlowProcessBase {
 
   void setErrorWhileOrderingCard(boolean errorWhileOrderingCard) {
     this.errorWhileOrderingCard = errorWhileOrderingCard
-  }
-
-  void setNewUser(boolean newUser) {
-    log.info "We are creating a new user."
-    this.newUser = newUser
-  }
-
-  public boolean isNewUser() {
-    newUser
-  }
-
-  /**
-   * A stub user is a not yet activated account.
-   * @return
-   */
-  public boolean isStubUser() {
-    hasUser() && !isNewUser() && !isActiveAccount()
-  }
-
-  public boolean isBrokenStub() {
-    isStubUser() && !isValidStub()
-  }
-
-  private boolean isValidStub() {
-    getUser()?.uid
-  }
-
-  private boolean isActiveAccount() {
-    this.userVO?.accountIsActive
   }
 
   public int getStep() {
