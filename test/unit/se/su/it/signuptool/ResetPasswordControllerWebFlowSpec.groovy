@@ -34,6 +34,7 @@ package se.su.it.signuptool
 import grails.test.mixin.Mock
 import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
+import se.su.it.signuptool.commandobjects.ResetPasswordProcess
 import se.su.it.svc.SvcSuPersonVO
 import spock.lang.Shared
 import spock.lang.Specification
@@ -68,10 +69,13 @@ class ResetPasswordControllerWebFlowSpec extends Specification {
     assert resp == 'error'
 
     and:
-    1 * controller.utilityService.getEventLog(*_) >> { throw new RuntimeException('exception') }
+    controller.utilityService.getEventLog(_) >> { throw new RuntimeException('exception') }
   }
 
   def "resetPasswordFlow: test resetPassword state transition when sukatService throws Exception, should progress to errorHandler and generate user error message"() {
+    given:
+    session.rpp = new ResetPasswordProcess(referenceId: 0)
+
     when:
     def resp = resetPasswordFlow.resetPassword.action()
 
@@ -90,14 +94,14 @@ class ResetPasswordControllerWebFlowSpec extends Specification {
     def user = new SvcSuPersonVO()
     user.setUid('test1234')
 
-    session.user = user
+    session.rpp = new ResetPasswordProcess(referenceId: 0, user: user)
 
     when:
     resetPasswordFlow.resetPassword.action()
 
     then:
-    assert flash.password == password
-    assert flash.uid == user.uid
+    assert session.rpp.password == password
+    assert session.rpp.user.uid == user.uid
 
     and:
     1 * controller.sukatService.resetPassword(*_) >> { return password }
@@ -113,8 +117,27 @@ class ResetPasswordControllerWebFlowSpec extends Specification {
     assert 'dashboard' == resetPasswordFlow.errorPage.on.continue.to
   }
 
-  def "resetPasswordFlow: test dashboard state transition, should progress to end"() {
+  def "resetPasswordFlow: test dashboard state transition, should progress to prepareEnd"() {
     expect:
-    assert 'end' == resetPasswordFlow.dashboard.on.success.to
+    assert 'prepareEnd' == resetPasswordFlow.dashboard.on.success.to
+  }
+
+  def "resetPasswordFlow: test prepareEnd state transition, should progress to end"() {
+    expect:
+    assert 'end' == resetPasswordFlow.prepareEnd.on.success.to
+  }
+
+  def "resetPasswordFlow: test prepareEnd action sets uid and password"() {
+    given:
+    def pass = 'foo'
+    def uid = 'bar'
+    session.rpp = new ResetPasswordProcess(password: pass, user: new SvcSuPersonVO(uid: uid))
+
+    when:
+    resetPasswordFlow.prepareEnd.action()
+
+    then:
+    flow.uid == uid
+    flow.password == pass
   }
 }

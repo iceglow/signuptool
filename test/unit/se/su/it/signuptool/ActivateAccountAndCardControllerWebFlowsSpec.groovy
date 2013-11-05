@@ -34,6 +34,7 @@ package se.su.it.signuptool
 import grails.test.mixin.Mock
 import grails.test.mixin.TestMixin
 import grails.test.mixin.webflow.WebFlowUnitTestMixin
+import se.su.it.signuptool.commandobjects.AccountAndCardProcess
 import se.su.it.svc.SvcSuPersonVO
 import spock.lang.Shared
 import spock.lang.Specification
@@ -55,7 +56,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     myController.sukatService = Mock(SukatService)
     controller = myController
 
-    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
+    session.acp = new AccountAndCardProcess(
         referenceId: 1
     )
   }
