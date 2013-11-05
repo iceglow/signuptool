@@ -70,12 +70,12 @@ class ResetPasswordControllerSpec extends Specification {
     1 * controller.sukatService.findUsersBySocialSecurityNumber(ssn) >> [user]
   }
 
-  def "index: test when scope is 'studera.nu' and none 'norEduPersonNIN' is set on request, should redirect to unverified account"() {
+  def "index: test when scope is 'studera.nu' and none 'norEduPersonNIN' is set on request, should redirect to dashboard"() {
     when:
     controller.index()
 
     then:
-    assert view == '/shared/unverifiedAccount'
+    assert response.redirectedUrl == '/dashboard/index'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
