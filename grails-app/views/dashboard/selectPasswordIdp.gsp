@@ -45,7 +45,7 @@
 </content>
 
 <content tag="flowContent">
-  <div class="apps-colorbox2 mgn-bottom-20 light-border">
+  <div class="apps-colorbox2 mgn-bottom-20">
     <div class="header-id-provider">
       <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
     </div>
@@ -61,11 +61,7 @@
     </g:form>
   </div>
 
-  <tmpl:mockProvider env="${env}"
-                     useCases="${useCases}"
-                     useCase="${useCase}" />
-
-  <div class="apps-colorbox2 mgn-bottom-20 light-border">
+  <div class="apps-colorbox2 mgn-bottom-20">
     <div class="header-id-provider">
       <g:message code="activateAccountAndCardController.idProvider.header.eduID"/>
     </div>
@@ -80,6 +76,9 @@
     </g:form>
   </div>
 
+  <tmpl:mockProvider env="${env}"
+                     useCases="${useCases}"
+                     useCase="${useCase}" />
 </content>
 
 <sitemesh:parameter name="hideStepImage" value="true"/>
