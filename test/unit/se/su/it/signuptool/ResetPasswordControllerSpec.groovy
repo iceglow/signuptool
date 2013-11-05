@@ -59,7 +59,7 @@ class ResetPasswordControllerSpec extends Specification {
     controller.index()
 
     then:
-    assert session.rpp.norEduPersonNIN == ssn
+    assert session.nin == ssn
 
     assert response.redirectedUrl == '/resetPassword/resetPassword'
 
@@ -105,7 +105,7 @@ class ResetPasswordControllerSpec extends Specification {
     controller.index()
 
     then:
-    assert session.rpp.norEduPersonNIN == ssn
+    assert session.nin == ssn
 
     assert response.redirectedUrl == '/dashboard/index'
 
@@ -128,7 +128,7 @@ class ResetPasswordControllerSpec extends Specification {
     controller.index()
 
     then:
-    assert session.rpp.norEduPersonNIN == ssn
+    assert session.nin == ssn
 
     assert response.redirectedUrl == '/dashboard/index'
 
@@ -151,7 +151,7 @@ class ResetPasswordControllerSpec extends Specification {
     controller.index()
 
     then:
-    assert session.rpp.norEduPersonNIN == ssn
+    assert session.nin == ssn
 
     assert response.redirectedUrl == '/dashboard/index'
 

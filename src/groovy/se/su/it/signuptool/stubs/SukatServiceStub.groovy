@@ -93,20 +93,7 @@ class SukatServiceStub implements SukatServiceI {
 
   @Override
   String resetPassword(String uid) {
-
-    log.info "resetPassword: Intercepted request for uid: $uid"
-
-    String result = null
-
-    switch(uid) {
-      case "PASSWORD_HAPPY_PATH":
-        result = "p4sSw0rd"
-        break
-      default:
-        break
-    }
-    log.info "resetPassword: returning response => $result"
-    return result
+    return null  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override

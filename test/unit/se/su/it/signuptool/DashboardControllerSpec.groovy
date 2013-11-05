@@ -86,14 +86,17 @@ class DashboardControllerSpec extends Specification {
 
     when:
     UseCase accountCase = controller.mockService.addUseCase(new UseCase(type:UseCase.Type.ACCOUNT, name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something'))
+    UseCase cardCase = controller.mockService.addUseCase(new UseCase(type:UseCase.Type.CARD, name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something'))
 
     controller.activateAccountAndCard()
 
     then:
     view == '/dashboard/selectIdProvider'
     model['env'] == Environment.current.name
-    model['useCase'] == accountCase
-    model['useCases'] == [accountCase]
+    model['accountUseCase'] == accountCase
+    model['accountUseCases'] == [accountCase]
+    model['cardUseCase'] == cardCase
+    model['cardUseCases'] == [cardCase]
 
     and:
     session.controller == 'activateAccountAndCard'
@@ -150,8 +153,6 @@ class DashboardControllerSpec extends Specification {
     Environment.metaClass.static.getCurrent = {->
       [name:'mock']
     }
-
-    session.controller = 'activateAccountAndCard'
 
     assert session.acp == null
 

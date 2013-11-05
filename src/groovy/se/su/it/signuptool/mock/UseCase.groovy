@@ -40,8 +40,7 @@ class UseCase {
 
   enum Type {
     ACCOUNT,
-    CARD,
-    PASSWORD
+    CARD
   }
 
   Long id

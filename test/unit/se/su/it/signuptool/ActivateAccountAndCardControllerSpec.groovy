@@ -34,7 +34,6 @@ package se.su.it.signuptool
 import grails.test.mixin.*
 import org.apache.commons.logging.Log
 import se.su.it.config.ConfigService
-import se.su.it.signuptool.commandobjects.AccountAndCardProcess
 import se.su.it.svc.SvcSuPersonVO
 import spock.lang.Specification
 
@@ -95,7 +94,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: Testing the password passing."() {
     given:
-    session.acp = new AccountAndCardProcess(eppn:'eppn@eppn.nu', password:'s3cret!')
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(eppn:'eppn@eppn.nu', password:'s3cret!')
 
     when:
     controller.index()
@@ -110,7 +109,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
   def "index: Passing the session error message to the index view."() {
     given:
     def message = 'message'
-    session.acp = new AccountAndCardProcess(eppn:'eppn@eppn.nu', error: message)
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(eppn:'eppn@eppn.nu', error: message)
 
     when:
     controller.index()
@@ -189,7 +188,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
     given:
     def user = new SvcSuPersonVO(uid: 'foo', accountIsActive: true)
 
-    session.acp = new AccountAndCardProcess(
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
         eppn: "default@studera.nu",
         norEduPersonNIN: "1234",
         userVO: user,
@@ -208,7 +207,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: When user is not found in LADOK."() {
     given:
-    session.acp = new AccountAndCardProcess(
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
         eppn: "default@studera.nu",
         verified: true,
         userVO: new SvcSuPersonVO(accountIsActive: false)
@@ -228,7 +227,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: When finding the user in SUKAT throws an exception."() {
     given:
-    session.acp = new AccountAndCardProcess(
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
         eppn: "default@studera.nu",
         norEduPersonNIN: '1234',
         verified: false,
@@ -250,7 +249,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: Trying to create a new user (uid not found in sukat), and fetching ladok data throws an exception"() {
     given:
-    session.acp = new AccountAndCardProcess(
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
         eppn: "default@studera.nu",
         norEduPersonNIN: '1234',
         verified: false,
@@ -273,7 +272,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: Trying to create a new user (uid not found in sukat)"() {
     given:
-    session.acp = new AccountAndCardProcess(
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
         eppn: "default@studera.nu",
         norEduPersonNIN: '1234',
         verified: false,
@@ -293,7 +292,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: When a user is found in sukat"() {
     given:
-    session.acp = new AccountAndCardProcess(
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
         eppn: "default@studera.nu",
         norEduPersonNIN: '1234',
         verified: false,
@@ -329,7 +328,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: When a stub is found in SUKAT"() {
     given:
-    session.acp = new AccountAndCardProcess(
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
         eppn: "default@studera.nu",
         norEduPersonNIN: '1234',
         verified: false
@@ -349,7 +348,7 @@ class ActivateAccountAndCardControllerSpec extends Specification {
 
   def "index: When multiple users are found in sukat"() {
     given:
-    session.acp = new AccountAndCardProcess(
+    session.acp = new ActivateAccountAndCardController.AccountAndCardProcess(
         eppn: "default@studera.nu",
         norEduPersonNIN: '1234',
         verified: false
