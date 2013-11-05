@@ -80,7 +80,10 @@ class ResetPasswordController {
             eventLog.logEvent("verified account for ${rpp.eppn} with norEduPersonNIN ${rpp.norEduPersonNIN}")
           } else {
             eventLog.logEvent("unverified account for ${rpp.eppn}")
-            return render(view:'/shared/unverifiedAccount', model:[referenceId:eventLog?.id])
+            flash.error = message(
+                  code:'resetPasswordController.unverifiedAccount',
+                  args:[rpp.eppn]) as String
+            return redirect(controller:'dashboard', action:'index')
           }
           break
         default:
