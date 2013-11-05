@@ -102,6 +102,9 @@ class SukatServiceStub implements SukatServiceI {
       case "PASSWORD_HAPPY_PATH":
         result = "p4sSw0rd"
         break
+      case "PASSWORD_ERROR_ON_RESET_PWD":
+        throw new IllegalStateException("Set to fail in an epic way!")
+        break
       default:
         break
     }
