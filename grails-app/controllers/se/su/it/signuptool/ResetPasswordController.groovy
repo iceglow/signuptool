@@ -122,6 +122,13 @@ class ResetPasswordController {
       }
     }
 
+    if (!rpp.hasUser() || rpp.isStubUser()) {
+      eventLog.logEvent("User with social security number ${rpp.norEduPersonNIN} doesnt have an account!")
+      log.error "User with social security number ${rpp.norEduPersonNIN} doesnt have an account!"
+      flash.error = g.message(code:'resetPassword.errors.userNotFound')
+      return redirect(controller:'dashboard', action:'index')
+    }
+
     return redirect(action: 'resetPassword')
   }
 
@@ -143,7 +150,7 @@ class ResetPasswordController {
         ResetPasswordProcess rpp = session.rpp
         EventLog eventLog
         try {
-          eventLog = utilityService.getEventLog(rpp.referenceId)
+          eventLog = utilityService.getEventLog(rpp?.referenceId)
         } catch (ex) {
           log.error "Fetching EventLog failed", ex
           return error()
