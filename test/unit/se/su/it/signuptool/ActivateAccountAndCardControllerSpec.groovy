@@ -34,6 +34,7 @@ package se.su.it.signuptool
 import grails.test.mixin.*
 import org.apache.commons.logging.Log
 import se.su.it.config.ConfigService
+import se.su.it.signuptool.commandobjects.AccountAndCardProcess
 import se.su.it.svc.SvcSuPersonVO
 import spock.lang.Specification
 
