@@ -255,6 +255,65 @@ class MockService {
             user: new MockUserVO(uid: "PASSWORD_HAPPY_PATH", accountIsActive: true)
     ))
 
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_MISSING_EPPN",
+            displayName: "${UseCase.I18N_PREFIX}.missingEppn",
+            eppn: null,
+            description: "When user is missing the request.eppn attribute.")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_MISSING_EPPN",
+            displayName: "${UseCase.I18N_PREFIX}.missingEppn",
+            eppn: null,
+            description: "When user is missing the request.eppn attribute.")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_UNKNOWN_SCOPE",
+            displayName: "${UseCase.I18N_PREFIX}.unknown",
+            eppn: DEFAULT_INVALID_EPPN,
+            description: "When the user has an unknown scope (such as blaha.se), ie not studera.nu")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_UNVERIFIED_ACCOUNT",
+            displayName: "${UseCase.I18N_PREFIX}.unverifiedAccount",
+            eppn: DEFAULT_VALID_EPPN,
+            description: "When the user has a studera.nu account (ie scope studera.nu) but does not have a request.norEduPersonNIN set.")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_MULTIPLE_ENTRIES_IN_SUKAT",
+            displayName: "${UseCase.I18N_PREFIX}.multipleEntriesInSukat",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: 'MULTIPLE_ENTRIES_IN_SUKAT',
+            description: "When a search in SUKAT yields serveral hits for the given persons norEduPersonNIN (social security number)")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_ERROR_WHEN_ASKING_SUKAT_FOR_USER",
+            displayName: "${UseCase.I18N_PREFIX}.errorWhenAskingSukatForUser",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: 'ERROR_WHEN_ASKING_SUKAT_FOR_USER',
+            description: "When SUKAT throws an error when asking for user information. Such as network error, svc error or similar.")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_STUB_USER",
+            displayName: "${UseCase.I18N_PREFIX}.newUserFromStub",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: 'NEW_USER_FROM_STUB',
+            description: "When a user has a stub entry in SUKAT.")
+    )
+
     // Validate the UseCases & throw exception on error
     useCases.each { useCase ->
       if(! useCase.validate()) {
