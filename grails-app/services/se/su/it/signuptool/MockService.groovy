@@ -314,6 +314,16 @@ class MockService {
             description: "When a user has a stub entry in SUKAT.")
     )
 
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_ERROR_ON_RESET_PWD",
+            displayName: "${UseCase.I18N_PREFIX}.passwordResetError",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: "PASSWORD_ERROR_ON_RESET_PWD",
+            description: "Exception while resetting password",
+            user: new MockUserVO(uid: "PASSWORD_ERROR_ON_RESET_PWD", accountIsActive: true)
+    ))
+
     // Validate the UseCases & throw exception on error
     useCases.each { useCase ->
       if(! useCase.validate()) {
