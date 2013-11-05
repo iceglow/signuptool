@@ -3,9 +3,11 @@ package se.su.it.signuptool
 import se.su.it.signuptool.mock.MockUserVO
 import se.su.it.signuptool.mock.UseCase
 
+import java.util.concurrent.atomic.AtomicLong
+
 class MockService {
 
-  private synchronized Long idCounter = 0L
+  AtomicLong ids = new AtomicLong()
   private List<UseCase> useCases = Collections.synchronizedList([])
 
   public List<UseCase> findAllByType(UseCase.Type type) {
@@ -20,12 +22,15 @@ class MockService {
     useCases.find { it.id == id }
   }
 
+  /**
+   * @return an unmodifiable list of Use cases
+   */
   public List<UseCase> getUseCases() {
-    useCases
+    Collections.unmodifiableList(useCases)
   }
 
   public UseCase addUseCase(UseCase useCase) {
-    useCase.id = idCounter++
+    useCase.id = ids.getAndIncrement()
     this.useCases << useCase
     useCase
   }
