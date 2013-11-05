@@ -9,7 +9,7 @@ class MockService {
 
   AtomicLong ids = new AtomicLong()
   private List<UseCase> useCases = Collections.synchronizedList([])
-  public List<UseCase> unmodifiableUseCases
+  private List<UseCase> unmodifiableUseCases
 
   public List<UseCase> findAllByType(UseCase.Type type) {
     useCases.findAll { it.type == type }
@@ -26,7 +26,7 @@ class MockService {
   /**
    * @return an unmodifiable list of Use cases
    */
-  public List<UseCase> getUseCases() {
+  public synchronized List<UseCase> getUseCases() {
     if (!unmodifiableUseCases) {
       unmodifiableUseCases = Collections.unmodifiableList(useCases)
     }
