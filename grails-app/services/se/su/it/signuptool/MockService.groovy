@@ -9,6 +9,7 @@ class MockService {
 
   AtomicLong ids = new AtomicLong()
   private List<UseCase> useCases = Collections.synchronizedList([])
+  public List<UseCase> unmodifiableUseCases
 
   public List<UseCase> findAllByType(UseCase.Type type) {
     useCases.findAll { it.type == type }
@@ -26,10 +27,13 @@ class MockService {
    * @return an unmodifiable list of Use cases
    */
   public List<UseCase> getUseCases() {
-    Collections.unmodifiableList(useCases)
+    if (!unmodifiableUseCases) {
+      unmodifiableUseCases = Collections.unmodifiableList(useCases)
+    }
+    return unmodifiableUseCases
   }
 
-  public UseCase addUseCase(UseCase useCase) {
+  private UseCase addUseCase(UseCase useCase) {
     useCase.id = ids.getAndIncrement()
     this.useCases << useCase
     useCase
@@ -338,5 +342,7 @@ class MockService {
         throw new IllegalStateException("UseCase did not validate, ${useCase.errors.errorCount} errors.")
       }
     }
+
+
   }
 }
