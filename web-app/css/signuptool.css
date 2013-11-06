@@ -77,3 +77,10 @@
 input#forwardAddress {
   width: 300px;
 }
+
+@media screen and (max-width: 800px) {
+
+  body #MainRight {
+    display: none;
+  }
+}

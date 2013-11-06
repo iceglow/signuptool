@@ -61,4 +61,10 @@ modules = {
     resource url:'css/print.css', attrs:[media:'print']
     resource url:'css/signuptool.css'
   }
+
+  responsive {
+    dependsOn(['css'])
+    resource url:'css/responsive.css'
+    resource url:'js/responsiveScripting.js'
+  }
 }
