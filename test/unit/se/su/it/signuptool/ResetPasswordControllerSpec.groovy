@@ -89,7 +89,7 @@ class ResetPasswordControllerSpec extends Specification {
     assert response.redirectedUrl == '/dashboard/index'
 
     and:
-    assert flash.error == 'activateAccountAndCardController.noValidScopeFound'
+    assert flash.error == 'resetPassword.noValidScopeFound'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> "bogus"
