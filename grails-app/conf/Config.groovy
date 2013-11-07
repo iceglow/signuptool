@@ -303,6 +303,7 @@ sukatsvc {
  */
 access {
   env = "dev"
+  applicationName = appName
   redirect = [controller: 'dashboard']
   unprotected = ['dashboard', 'errorHandler', 'activateAccountAndCard', 'resetPassword']
   disabledInDynamicAccess = ['dashboard', 'access']

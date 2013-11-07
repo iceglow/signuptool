@@ -133,28 +133,12 @@ class BootStrap {
     def initRoleAccessManagement = {
       AccessRole.withTransaction { status ->
         try {
-          def displayName = "Sysadmin"
-          def uri = ""
+          String displayName = "Sysadmin"
+          String system = "$grailsApplication.config.access.applicationName"
+          String role = "sysadmin"
+          Map scope = [env:"$grailsApplication.config.access.env"]
 
-          switch(Environment.current.name) {
-            case Environment.PRODUCTION.name:
-              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=prod"
-              break
-            case Environment.DEVELOPMENT.name:
-              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=dev"
-              break
-            case Environment.TEST.name:
-              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=test"
-              break
-            case "mock":
-              uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=${MOCK_ENVIRONMENT_NAME}"
-              break
-            default:
-              log.error "Unhandled environment $Environment.current with name ${Environment.current.name}"
-          }
-
-
-          def sysadmin = AccessRole.createOrUpdateInstance(displayName, uri)
+          def sysadmin = AccessRole.createOrUpdateInstance(displayName, system, role, scope)
           accessService.addAccess(sysadmin, 'admin')
           accessService.addAccess(sysadmin, 'access')
         } catch (ex) {
