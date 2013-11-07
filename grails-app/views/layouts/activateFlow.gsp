@@ -38,20 +38,22 @@
   </head>
   <body>
   <div id="MainLeft" class="main-columns-left">
-    <tmpl:/shared/feedback flash="${flash}"/>
+    <div class="inner">
+      <tmpl:/shared/feedback flash="${flash}"/>
 
-    <div class="float-left"></div>
-    <h2><g:pageProperty name="page.flowHeader"/></h2>
+      <div class="float-left"></div>
+      <h2><g:pageProperty name="page.flowHeader"/></h2>
 
-    <g:if test="${g.pageProperty(name: 'page.flowPreamble')}">
-      <p>
-        <g:pageProperty name="page.flowPreamble"/>
-      </p>
-    </g:if>
+      <g:if test="${g.pageProperty(name: 'page.flowPreamble')}">
+        <p>
+          <g:pageProperty name="page.flowPreamble"/>
+        </p>
+      </g:if>
 
-    <g:pageProperty name="page.flowContent"/>
+      <g:pageProperty name="page.flowContent"/>
 
-    <g:pageProperty name="page.flowBottom"/>
+      <g:pageProperty name="page.flowBottom"/>
+    </div>
   </div>
 
   <div id="MainRight" class="main-columns-right">
