@@ -82,4 +82,8 @@ input#forwardAddress {
   body #MainRight {
     display: none;
   }
+
+  .apps-float-50 {
+    width: auto;
+  }
 }
