@@ -35,7 +35,7 @@ import grails.util.Environment;
 
 /** Configure AJP */
 eventConfigureTomcat = {tomcat ->
-  if (Environment?.current == Environment.DEVELOPMENT) {
+  if (Environment?.current == Environment.DEVELOPMENT || Environment.current.name == "mock") {
     def ajpConnector = new Connector("org.apache.coyote.ajp.AjpProtocol")
     ajpConnector.port = 8009
     ajpConnector.protocol = "AJP/1.3"
