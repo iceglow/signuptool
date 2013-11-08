@@ -240,7 +240,7 @@ log4j = {
         appender new DailyRollingFileAppender(
             name: "logFile",
             datePattern: "'.'yyyy-MM-dd",
-            fileName: "${System.properties["catalina.home"]}/logs/application-mock.log",
+            fileName: "${(System.properties["catalina.home"])?:System.properties["user.dir"]}/logs/application-mock.log",
             layout: pattern(conversionPattern: '%d [%t] %-5p %c{2} %x - %m%n')
         )
       }
@@ -303,6 +303,7 @@ sukatsvc {
  */
 access {
   env = "dev"
+  applicationName = appName
   redirect = [controller: 'dashboard']
   unprotected = ['admin','dashboard', 'errorHandler', 'activateAccountAndCard', 'resetPassword']
   disabledInDynamicAccess = ['dashboard', 'access']
