@@ -12,7 +12,7 @@ var resizeCallbacks = $.Callbacks();
 
 //Document ready
 $(document).ready(function () {
-    //Caclulate menu info...            
+    //Caclulate menu info...
     menuInfo.Init();
     searchBlocks.Init();
 
@@ -80,14 +80,14 @@ var SetLeftColumnToBottom = function () {
 
         //Only add height if the element was found.
         var topLinksHeight = $('.top-links-320 > .top-links').height();
-        
+
         if (topLinksHeight !== null)
             bottom += topLinksHeight;
         var footerHeight = $('.footer').height();
-        
+
         if (footerHeight !== null)
             bottom += footerHeight;
-        //Move element...     
+        //Move element...
 
         $('.left-column').css('bottom', bottom + 'px');
 
@@ -152,7 +152,7 @@ var ShowHideDropDownMenu = function () {
 };
 
 //////////////////////////////////////////////////////////////////
-// Creates a dropdown from the regular menu, 
+// Creates a dropdown from the regular menu,
 // to be showed in smaller width...
 // The HTML created reflects the dropdown menu from the POC.
 //////////////////////////////////////////////////////////////////
@@ -200,14 +200,14 @@ var createDropDownFromRegularMenu = function () {
 
     //When the ménu is changed, navigate to the selection...
     select.change(function () {
-        window.location = $(this).val(); 
+        window.location = $(this).val();
     });
     //Insert the menu at the correct location in the page.
     nav320Wrapper.insertAfter($(".head-row"));
 
     // If chrome then disable webkit-appearance SUPP9-1822
     if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1){
-       $(jumpMenu).css("-webkit-appearance", "none");
+       $('jumpMenu').css("-webkit-appearance", "none");
     }
 
 };
@@ -366,7 +366,7 @@ var menuInfo = (function () {
                 clearInterval(timeoutId);
             });
 
-            //TOUCH EVENTS            
+            //TOUCH EVENTS
 
             this.targetList.bind('touchstart', function (e) {
                 var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
