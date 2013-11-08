@@ -43,7 +43,7 @@
     <r:layoutResources/>
   </head>
 
-  <body id="oBody">
+  <body id="oBody" class="subpagelayout department">
 
   <!-- container -->
   <div id="container" class="wrapper">
@@ -63,9 +63,12 @@
       <!-- columns -->
       <div id="columns" class="columns">
 
-        <div class="row-path-tools">
-          <div class="clear-float"></div>
+        <div class="menu-link">
+          <a href="#Menu">
+            <span>Till undermenyn</span>
+          </a>
         </div>
+
         <!-- ************************************************** PAGE ************************************************** -->
         <div class="left-column">
           <g:render template="/layouts/menu"/>
@@ -81,6 +84,7 @@
       <!-- /columns -->
     </div>
     <!-- /content -->
+    <div class="clear-float"></div>
     <g:render template="/layouts/footer"/>
   </div>
   <!-- /container -->

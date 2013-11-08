@@ -37,17 +37,21 @@
   <div class="clear-float"></div>
 
   <div class="head-left">
-    <a href="http://www.su.se/" title="${g.message(code: 'layout.su.logo.alternative.name')}">
-      <img class="logotype"
-           src="${resource(dir: 'img', file: (lang == 'sv') ? 'logo_su_se_big_dark_blue.gif' : 'logo_su_en_big_dark_blue.gif')}"
-           alt="${g.message(code: 'layout.su.logo.alternative.name')}" border="0"/>
+    <!--responsive-->
+    <a title="${g.message(code: 'layout.su.logo.alternative.name')}" accesskey="0" href="http://www.su.se">
+      <img class="logotype" src="${resource(dir: 'img', file: (lang == 'sv') ? 'logo_su_se_big_dark_blue.gif' : 'logo_su_en_big_dark_blue.gif')}" alt="Stockholms universitet hem">
+      <img class="logotype-small" src="${resource(dir: 'img', file: (lang == 'sv') ? 'logo_su_se_responsive.png' : 'logo_su_en_responsive.png')}" alt="${g.message(code: 'layout.su.logo.alternative.name')}">
     </a>
+
+    <div class="sec-logo-text">
+      <a href="/">${g.message(code: 'application.title')}</a>
+    </div>
   </div>
 
   <div class="head-right">
-    <img class=department
-         src="${resource(dir: 'img', file: (lang == 'sv') ? 'app-logotype-signuptool-se.gif' : 'app-logotype-signuptool-en.gif')}"
-         alt="${g.message(code: 'application.title')}" title="${g.message(code: 'application.title')}" border="0"/>
+      <a title="${g.message(code: 'application.title')}" accesskey="0" href="/">
+        <img class="logotype" src="${resource(dir: 'img', file: (lang == 'sv') ? 'app-logotype-signuptool-se.gif' : 'app-logotype-signuptool-en.gif')}" alt="${g.message(code: 'application.title')}">
+      </a>
   </div>
 
   <div class="clear-float"></div>

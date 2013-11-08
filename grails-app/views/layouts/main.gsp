@@ -43,7 +43,7 @@
     <r:layoutResources/>
   </head>
 
-  <body id="oBody">
+  <body id="oBody" class="subpagelayout department">
 
   <!-- container -->
   <div id="container" class="wrapper">
@@ -61,7 +61,7 @@
       <!-- /head -->
 
       <!-- columns -->
-      <div id="columns" class="columns">
+      <div id="columns" class="columns no-left-content">
 
         <div class="row-path-tools">
           <div class="clear-float"></div>

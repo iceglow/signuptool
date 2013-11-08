@@ -76,3 +76,51 @@
 input#forwardAddress {
   width: 300px;
 }
+
+html>body #container {
+  height: 100%;
+}
+
+body #content {
+  min-height: 100%;
+  padding-bottom: 0px;
+}
+
+.columns {
+  overflow: auto;
+  padding-bottom: 80px; /* The height of the footer */
+}
+
+.footer {
+  clear: both;
+  margin-top: -80px; /* The height of the footer */
+  position: relative;
+}
+
+@media screen and (max-width: 800px) {
+
+  body #MainRight {
+    display: none;
+  }
+
+  .apps-float-50 {
+    width: auto;
+  }
+
+  .no-left-content .left-column {
+    display: none;
+  }
+
+  .no-left-content .main-column {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media screen and (max-width: 660px) {
+
+  body .footer {
+    margin-top: -80px; /* The height of the footer */
+  }
+}

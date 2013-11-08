@@ -1,16 +1,16 @@
-/* ---------------------------------------------------------------------------------------------------- */
-/* ----- forms.css */
+/* CSS Document - forms.css */
 /* This stylesheet contains form styles */
-/* ---------------------------------------------------------------------------------------------------- */
+/*
+================= Element specific CSS =================
+TABLE OF CONTENTS
+	1. INPUT, TEXTAREA SELECT
+	2. LABEL, FIELDSET, LEGEND
+	3. ERRORS
+	4. BUTTONS
+	5. FORM COLORING
+	6. CAPTCHA
+/* ****************************************************** */
 
-/* ---------------------------------------------------------------------------------------------------- */
-/* FORMS */
-/* --------------- Containers */
-.form {}
-.form-block {}
-/* --------------- /Containers */
-/* --------------- Input, textarea, select */
-/* ----- Elements */
 input, textarea, select {
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
 	font-size: 100%;
@@ -23,7 +23,6 @@ input {
 	padding-right: 2px;
 	padding-bottom: 3px;
 }
-div.block input {}
 div.checkbox input, div.radio input { border: none; }
 input:focus { border-color: #002f5f; color: #000000; }
 textarea { 
@@ -43,9 +42,9 @@ select:focus { border-color: #002f5f; }
 .wdt-3 { width: 90px; }
 /* Height */
 .hgt-1 { height: 150px; }
-/* --------------- /Input, textarea, select */
-/* --------------- Label, fieldset, legend */
-/* ----- Label */
+/* ********************* /1. INPUT, TEXTAREA SELECT ***** */
+
+/* ********************** 2. LABEL, FIELDSET, LEGEND **** */
 label {
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
 	font-size: 100%;
@@ -97,8 +96,9 @@ legend {
 }
 /* ----- Additional text */
 .field-additional-text { margin: 0 0 0 8px; }
-/* --------------- /Label, fieldset, legend */
-/* --------------- Errors */
+/* ********************* /2. LABEL, FIELDSET, LEGEND **** */
+
+/* ********************** 3. ERRORS ********************* */
 input.error, textarea.error {
 	border: solid 1px #c74b38; 
 	padding: 2px 1px 3px 1px;
@@ -112,7 +112,7 @@ span.error, div.error {
 }
 span.error {
 	line-height: 16px;
-	background-image: url(../img/error-arrow-2.gif);
+	background-image: url(/img/error-arrow-2.gif);
 	background-position: left 3px;
 	background-repeat: no-repeat;
 	margin: 4px 0 0 4px;
@@ -132,7 +132,7 @@ div.error ul {
 	list-style-type: none;
 }
 div.error li {
-	background-image: url(../img/error-arrow-3.gif);
+	background-image: url(/img/error-arrow-3.gif);
 	background-position: left 5px;
 	background-repeat: no-repeat;
 	line-height: 16px;
@@ -148,8 +148,9 @@ div.error b {
 	color:#000000; 
 	margin-bottom: 10px;
 }
-/* --------------- /Errors */
-/* --------------- Buttons */
+/* ********************* /3. ERRORS ********************* */
+
+/* ********************** 4. BUTTONS ******************** */
 button, input.button {
 	height: auto;
 	width: auto;
@@ -157,7 +158,7 @@ button, input.button {
 	border: none;
 	color: #ffffff;
 	background-color: #ffffff;
-	background-image: url(../img/button-background-repeater.gif);
+	background-image: url(/img/button-background-repeater.gif);
 	background-position: left;
 	background-repeat: repeat-x;
 	padding-top: 1px;
@@ -183,11 +184,9 @@ button, input.button {
 .form-block .button-block { background-color: #ececec; }
 .button-block-left { float: left; }
 .button-block-right { float: right; }
-/* --------------- /Buttons */
-/* /FORMS */
-/* ---------------------------------------------------------------------------------------------------- */
-/* FORM COLORS */
-/* --------------- Form blocks */
+/* ********************* /4. BUTTONS ******************** */
+
+/* ********************** 5. FORM COLORING ************** */
 /* --- Form block 1 (water) */
 .form-block-1 h2 { color: #93a9c3; }
 .form-block-1 .button-block { background-color: #d7e0eb; }
@@ -208,11 +207,9 @@ button, input.button {
 .form-block-4 .button-block { background-color: #f0bf99; }
 .form-block-4 div.progress li.active { background-color: #d95e00; }
 .form-block-4 .captcha { background-color: #f7dfcc; border-color: #f0bf99; }
-/* --------------- /Form blocks */
-/* /FORM COLORS */
-/* ---------------------------------------------------------------------------------------------------- */
-/* CAPTCHA */
-/* --------------- Captcha */
+/* ********************* /5. FORM COLORING ************** */
+
+/* ********************** 6. CAPTCHA ******************** */
 .captcha {
 	margin: 16px 0 16px 0;
 	padding: 10px 8px 10px 8px;
@@ -231,10 +228,8 @@ img.captcha-img {
 	width: 250px;
 	height: 100px;
 	display: block;
-	background-image: url(../img/loader.gif);
+	background-image: url(/img/loader.gif);
 	background-repeat: no-repeat;
 	background-position: 75px 25px;
 }
-/* --------------- /Captcha */
-/* /CAPTCHA */
-/* ---------------------------------------------------------------------------------------------------- */
+/* ********************* /6. CAPTCHA ******************** */
