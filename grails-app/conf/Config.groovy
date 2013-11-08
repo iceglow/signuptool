@@ -305,7 +305,7 @@ access {
   env = "dev"
   applicationName = appName
   redirect = [controller: 'dashboard']
-  unprotected = ['admin','dashboard', 'errorHandler', 'activateAccountAndCard', 'resetPassword']
+  unprotected = ['dashboard', 'errorHandler', 'activateAccountAndCard', 'resetPassword']
   disabledInDynamicAccess = ['dashboard', 'access']
 }
 
