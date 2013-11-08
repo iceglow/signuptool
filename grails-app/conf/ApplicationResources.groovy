@@ -50,7 +50,6 @@ modules = {
   }
 
   css {
-
     resource url:'css/layout.css'
     resource url:'css/resources.css'
     resource url:'css/typography.css'
@@ -59,12 +58,8 @@ modules = {
     resource url:'css/webapps.css'
     resource url:'css/profile.css'
     resource url:'css/print.css', attrs:[media:'print']
-    resource url:'css/signuptool.css'
-  }
-
-  responsive {
-    dependsOn(['css'])
     resource url:'css/responsive.css'
     resource url:'js/responsiveScripting.js'
+    resource url:'css/signuptool.css'
   }
 }

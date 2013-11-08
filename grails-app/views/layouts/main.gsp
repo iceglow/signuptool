@@ -38,12 +38,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <g:layoutHead/>
 
-    <r:require modules="jquery, responsive"/>
+    <r:require modules="jquery, css"/>
 
     <r:layoutResources/>
   </head>
 
-  <body id="oBody" class="department">
+  <body id="oBody" class="subpagelayout department">
 
   <!-- container -->
   <div id="container" class="wrapper">

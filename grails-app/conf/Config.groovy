@@ -304,7 +304,7 @@ sukatsvc {
 access {
   env = "dev"
   redirect = [controller: 'dashboard']
-  unprotected = ['dashboard', 'errorHandler', 'activateAccountAndCard', 'resetPassword']
+  unprotected = ['admin','dashboard', 'errorHandler', 'activateAccountAndCard', 'resetPassword']
   disabledInDynamicAccess = ['dashboard', 'access']
 }
 
