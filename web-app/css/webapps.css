@@ -8,11 +8,6 @@
   margin-bottom: 12px;
 }
 
-body {
-  height: 101%;
-
-} /* --- Creates scrollbar on all pages  */
-
 /* --- Margin under the logotype, needed when "head row" div is removed  */
 #apps-headmargin {
   clear: both;
