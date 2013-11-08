@@ -61,7 +61,7 @@
       <!-- /head -->
 
       <!-- columns -->
-      <div id="columns" class="columns">
+      <div id="columns" class="columns no-left-content">
 
         <div class="row-path-tools">
           <div class="clear-float"></div>
