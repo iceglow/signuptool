@@ -45,17 +45,40 @@
 </content>
 
 <content tag="flowContent">
-  <div class="apps-colorbox2">
+  <div class="apps-colorbox2 mgn-bottom-20">
     <div class="header-id-provider">
       <g:message code="activateAccountAndCardController.idProvider.header.antagning"/>
     </div>
     <g:message code="activateAccountAndCardController.idProvider.promptText.antagning"/>
     <g:form url="/Shibboleth.sso/WAYF/antagning.se/produktion">
       <div class="align-right">
-        <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
+        <g:submitButton class="signupButton"
+                        name="resetPassword"
+                        alt="${g.message(code:'activateAccountAndCardController.idProvider.select')}"
+                        value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"
+        />
       </div>
     </g:form>
   </div>
+
+  <div class="apps-colorbox2 mgn-bottom-20">
+    <div class="header-id-provider">
+      <g:message code="activateAccountAndCardController.idProvider.header.eduID"/>
+    </div>
+    <g:message code="activateAccountAndCardController.idProvider.promptText.eduID"/>
+    <g:form url="#" onclick="return false;">
+      <div class="align-right">
+        <g:submitButton class="signupButton disabled"
+                        name="resetPassword"
+                        alt="${g.message(code:'activateAccountAndCardController.idProvider.select')}"
+                        value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
+      </div>
+    </g:form>
+  </div>
+
+  <tmpl:mockProvider env="${env}"
+                     useCases="${useCases}"
+                     useCase="${useCase}" />
 </content>
 
 <sitemesh:parameter name="hideStepImage" value="true"/>

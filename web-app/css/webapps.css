@@ -8,11 +8,6 @@
   margin-bottom: 12px;
 }
 
-body {
-  height: 101%;
-
-} /* --- Creates scrollbar on all pages  */
-
 /* --- Margin under the logotype, needed when "head row" div is removed  */
 #apps-headmargin {
   clear: both;
@@ -46,7 +41,6 @@ table .apps-th-descending {
 }
 
 table .apps-th-ascending {
-  /*background-image:url(../img/webapps/icon-menu-close-2.gif);*/
   background-repeat: no-repeat;
   background-position: right;
   padding-right:10px;

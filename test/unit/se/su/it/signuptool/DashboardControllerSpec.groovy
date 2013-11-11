@@ -86,17 +86,14 @@ class DashboardControllerSpec extends Specification {
 
     when:
     UseCase accountCase = controller.mockService.addUseCase(new UseCase(type:UseCase.Type.ACCOUNT, name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something'))
-    UseCase cardCase = controller.mockService.addUseCase(new UseCase(type:UseCase.Type.CARD, name:'foo', displayName: 'use_case.foo', norEduPersonNIN: '1234', description: 'something'))
 
     controller.activateAccountAndCard()
 
     then:
     view == '/dashboard/selectIdProvider'
     model['env'] == Environment.current.name
-    model['accountUseCase'] == accountCase
-    model['accountUseCases'] == [accountCase]
-    model['cardUseCase'] == cardCase
-    model['cardUseCases'] == [cardCase]
+    model['useCase'] == accountCase
+    model['useCases'] == [accountCase]
 
     and:
     session.controller == 'activateAccountAndCard'
@@ -154,6 +151,8 @@ class DashboardControllerSpec extends Specification {
       [name:'mock']
     }
 
+    session.controller = 'activateAccountAndCard'
+
     assert session.acp == null
 
     when:
@@ -163,7 +162,7 @@ class DashboardControllerSpec extends Specification {
     session.acp.eppn == useCase.eppn
     session.acp.norEduPersonNIN == useCase.norEduPersonNIN
 
-    response.redirectedUrl == '/activateAccountAndCard/index'
+    response.redirectedUrl == '/dashboard/index'
   }
 
 }

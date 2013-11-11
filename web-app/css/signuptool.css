@@ -2,10 +2,6 @@
   font-weight: bold;
 }
 
-.light-border {
-  border-color: #EDF2F8;
-}
-
 .top-spacer-10 {
   padding-top: 10px;
 }
@@ -59,8 +55,72 @@
   padding-right: 10px;
   padding-bottom: 8px;
   margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.signupButton.disabled,
+.signupButton[disabled] {
+  color: #333333;
+  background-color: #e6e6e6;
+  *background-color: #d9d9d9;
+  cursor: default;
+  background-image: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  cursor: default;
 }
 
 input#forwardAddress {
   width: 300px;
+}
+
+html>body #container {
+  height: 100%;
+}
+
+body #content {
+  min-height: 100%;
+  padding-bottom: 0px;
+}
+
+.columns {
+  overflow: auto;
+  padding-bottom: 80px; /* The height of the footer */
+}
+
+.footer {
+  clear: both;
+  margin-top: -80px; /* The height of the footer */
+  position: relative;
+}
+
+@media screen and (max-width: 800px) {
+
+  body #MainRight {
+    display: none;
+  }
+
+  .apps-float-50 {
+    width: auto;
+  }
+
+  .no-left-content .left-column {
+    display: none;
+  }
+
+  .no-left-content .main-column {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media screen and (max-width: 660px) {
+
+  body .footer {
+    margin-top: -80px; /* The height of the footer */
+  }
 }

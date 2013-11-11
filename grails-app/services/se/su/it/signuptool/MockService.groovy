@@ -3,10 +3,13 @@ package se.su.it.signuptool
 import se.su.it.signuptool.mock.MockUserVO
 import se.su.it.signuptool.mock.UseCase
 
+import java.util.concurrent.atomic.AtomicLong
+
 class MockService {
 
-  private synchronized Long idCounter = 0L
+  AtomicLong ids = new AtomicLong()
   private List<UseCase> useCases = Collections.synchronizedList([])
+  private List<UseCase> unmodifiableUseCases
 
   public List<UseCase> findAllByType(UseCase.Type type) {
     useCases.findAll { it.type == type }
@@ -20,12 +23,18 @@ class MockService {
     useCases.find { it.id == id }
   }
 
-  public List<UseCase> getUseCases() {
-    useCases
+  /**
+   * @return an unmodifiable list of Use cases
+   */
+  public synchronized List<UseCase> getUseCases() {
+    if (!unmodifiableUseCases) {
+      unmodifiableUseCases = Collections.unmodifiableList(useCases)
+    }
+    return unmodifiableUseCases
   }
 
-  public UseCase addUseCase(UseCase useCase) {
-    useCase.id = idCounter++
+  private UseCase addUseCase(UseCase useCase) {
+    useCase.id = ids.getAndIncrement()
     this.useCases << useCase
     useCase
   }
@@ -41,6 +50,16 @@ class MockService {
     log.info "Adding mock Use Cases"
 
     // TODO: Write more pathing information.
+
+    /** Happy path */
+    addUseCase(new UseCase(
+            type: UseCase.Type.ACCOUNT,
+            name: "ACTIVATE_HAPPY_PATH",
+            displayName: "${UseCase.I18N_PREFIX}.happyPath",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: "ACTIVATE_HAPPY_PATH",
+            description: "A successful activation."
+    ))
 
     /** Broken paths */
     addUseCase(new UseCase(
@@ -234,6 +253,86 @@ class MockService {
             user: new MockUserVO(uid: "CARD_ORDER_SUCCEEDS", accountIsActive: true)
     ))
 
+    /** Password flow use cases */
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_HAPPY_PATH",
+            displayName: "${UseCase.I18N_PREFIX}.passwordHappyPath",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: "PASSWORD_HAPPY_PATH",
+            description: "A successful password reset.",
+            user: new MockUserVO(uid: "PASSWORD_HAPPY_PATH", accountIsActive: true)
+    ))
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_MISSING_EPPN",
+            displayName: "${UseCase.I18N_PREFIX}.missingEppn",
+            eppn: null,
+            description: "When user is missing the request.eppn attribute.")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_MISSING_EPPN",
+            displayName: "${UseCase.I18N_PREFIX}.missingEppn",
+            eppn: null,
+            description: "When user is missing the request.eppn attribute.")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_UNKNOWN_SCOPE",
+            displayName: "${UseCase.I18N_PREFIX}.unknown",
+            eppn: DEFAULT_INVALID_EPPN,
+            description: "When the user has an unknown scope (such as blaha.se), ie not studera.nu")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_UNVERIFIED_ACCOUNT",
+            displayName: "${UseCase.I18N_PREFIX}.unverifiedAccount",
+            eppn: DEFAULT_VALID_EPPN,
+            description: "When the user has a studera.nu account (ie scope studera.nu) but does not have a request.norEduPersonNIN set.")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_MULTIPLE_ENTRIES_IN_SUKAT",
+            displayName: "${UseCase.I18N_PREFIX}.multipleEntriesInSukat",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: 'MULTIPLE_ENTRIES_IN_SUKAT',
+            description: "When a search in SUKAT yields serveral hits for the given persons norEduPersonNIN (social security number)")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_ERROR_WHEN_ASKING_SUKAT_FOR_USER",
+            displayName: "${UseCase.I18N_PREFIX}.errorWhenAskingSukatForUser",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: 'ERROR_WHEN_ASKING_SUKAT_FOR_USER',
+            description: "When SUKAT throws an error when asking for user information. Such as network error, svc error or similar.")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_STUB_USER",
+            displayName: "${UseCase.I18N_PREFIX}.newUserFromStub",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: 'NEW_USER_FROM_STUB',
+            description: "When a user has a stub entry in SUKAT.")
+    )
+
+    addUseCase(new UseCase(
+            type: UseCase.Type.PASSWORD,
+            name: "PASSWORD_ERROR_ON_RESET_PWD",
+            displayName: "${UseCase.I18N_PREFIX}.passwordResetError",
+            eppn: DEFAULT_VALID_EPPN,
+            norEduPersonNIN: "PASSWORD_ERROR_ON_RESET_PWD",
+            description: "Exception while resetting password",
+            user: new MockUserVO(uid: "PASSWORD_ERROR_ON_RESET_PWD", accountIsActive: true)
+    ))
+
     // Validate the UseCases & throw exception on error
     useCases.each { useCase ->
       if(! useCase.validate()) {
@@ -243,5 +342,7 @@ class MockService {
         throw new IllegalStateException("UseCase did not validate, ${useCase.errors.errorCount} errors.")
       }
     }
+
+
   }
 }

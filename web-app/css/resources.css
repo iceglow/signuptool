@@ -1,29 +1,17 @@
-/* ---------------------------------------------------------------------------------------------------- */
-/* ----- resources.css */
+/* CSS Document - resources.css */
 /* This stylesheet contains common styles used for web pages */
-/* ---------------------------------------------------------------------------------------------------- */
+/*
+================= Element specific CSS =================
+TABLE OF CONTENTS
+	1. LAYOUT
+	2. ACCESSIBILITY
+	3. TYPOGRAPHY
+	4. PRINT
+/* *************************************************** */
 
-/* ---------------------------------------------------------------------------------------------------- */
-/* FORMS */
-
-/* remove form spacing in MSIE */
-form { margin: 0; }
-
-/* /FORMS */
-/* ---------------------------------------------------------------------------------------------------- */
-
-/* ---------------------------------------------------------------------------------------------------- */
-/* LAYOUT */
-
-/* --- Width, Height */
-/* width and height: sets an element's width to 100% of the surrounding object */
-.full-width {
-	width: 100%;
-}
-/* width and height: sets an element's height to 100% of the surrounding object */
-.full-height {
-	height: 100%;
-}
+/* ********************** 1. LAYOUT ****************** */
+.full-width { width: 100%; }
+.full-height { height: 100%; }
 
 /* --- Float */
 /* float: clears float before and after floating objects (div, table) */
@@ -37,56 +25,32 @@ form { margin: 0; }
 	visibility: hidden;
 }
 /* float: float element right */
-.float-right {
-	float: right;
-}
-/* float: float element left */
-.float-left {
-	float: left;
-}
+.float-right { float: right; }
+.float-left { float: left; }
 
 /* --- Align */
-/* alignment: right align everything inside this element */
-.align-right {
-	text-align: right;
-}
-/* alignment: left align everything inside this element */
-.align-left {
-	text-align: left;
-}
-/* alignment: left align everything inside this element */
-.align-center {
-	text-align: center;
-}
+.align-right { text-align: right; }
+.align-left { text-align: left; }
+.align-center { text-align: center; }
 
 /* ---Wrapping */
-/* do not wrap object contents (for < IE 6.0 use inline nowrap="nowrap") */
 .nowrap { white-space: nowrap; }
 
 /* --- Margins */
-/* remove all margins */
 .no-margins { margin: 0; }
 
 /* --- Paddings */
-/* remove all padding */
 .no-padding { padding: 0; }
 
 /* --- Borders */
-/* remove all borders */
 .no-border { border: none; }
 
 /* --- Backgrounds */
-/* remove background color */
 .no-bgcolor { background-color: transparent; }
-/* remove background image */
 .no-bgimage { background-image: none; }
+/* ********************* /1. LAYOUT ****************** */
 
-/* /LAYOUT */
-/* ---------------------------------------------------------------------------------------------------- */
-
-/* ---------------------------------------------------------------------------------------------------- */
-/* ACCESSIBILITY */
-
+/* ********************** 2. ACCESSIBILITY *********** */
 /* --- Hide elements from web browsers while leaving them readable for screen readers */
 .auraltext {
 	position: absolute;
@@ -98,33 +62,18 @@ form { margin: 0; }
 	font-size: 0;
 	line-height: 0;
 }
+/* ********************* /2. ACCESSIBILITY *********** */
 
-/* ACCESSIBILITY */
-/* ---------------------------------------------------------------------------------------------------- */
-
-/* ---------------------------------------------------------------------------------------------------- */
-/* TYPOGRAPHY */
-
-/* --- Misc */
+/* ********************** 3. TYPOGRAPHY ************** */
 br.clear {
 	line-height: 0px;
 	font-size: 1px;
 }
-/* --- Fonts */
-b { font-weight: bold; }
-/* italics */
-i {font-style: italic;}
+/* ********************* /3. TYPOGRAPHY ************** */
 
-/* /TYPOGRAPHY */
-/* ---------------------------------------------------------------------------------------------------- */
-
-/* ---------------------------------------------------------------------------------------------------- */
-/* PRINT */
-
+/* ********************** 4. PRINT ******************* */
 /* hide object for page print */
 @media print { 
 	.noprint { display: none }
 }
-
-/* /PRINT */
-/* ---------------------------------------------------------------------------------------------------- */
+/* ********************* /4. PRINT ******************* */

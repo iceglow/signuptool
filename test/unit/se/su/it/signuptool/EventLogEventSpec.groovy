@@ -68,8 +68,8 @@ class EventLogEventSpec extends Specification {
     given:
     def el1 = EventLog.build()
 
-    def ev2 = new EventLogEvent(description: 'bar')
-    def ev1 = new EventLogEvent(description: 'foo')
+    def ev2 = new EventLogEvent(description: 'bar', timeCreated: new Date().time)
+    def ev1 = new EventLogEvent(description: 'foo', timeCreated: (new Date() +1).time)
 
     el1.addToEvents(ev1)
     el1.addToEvents(ev2)

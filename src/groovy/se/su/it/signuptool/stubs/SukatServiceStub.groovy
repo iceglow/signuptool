@@ -29,6 +29,9 @@ class SukatServiceStub implements SukatServiceI {
       case "NEW_USER_FROM_STUB":
         response = [new SvcSuPersonVO(accountIsActive:false, uid: 'NEW_USER_FROM_STUB')]
         break
+      case "ACTIVATE_HAPPY_PATH":
+        response = [new SvcSuPersonVO(accountIsActive:false, uid: 'ACTIVATE_HAPPY_PATH')]
+        break
       default:
         break
     }
@@ -78,6 +81,8 @@ class SukatServiceStub implements SukatServiceI {
         break
       case "CARD_ORDER_SUCCEEDS":
         break;
+      case "ACTIVATE_HAPPY_PATH":
+        break;
       default:
         log.info "No case specified for user with uid: $user.uid"
     }
@@ -88,7 +93,23 @@ class SukatServiceStub implements SukatServiceI {
 
   @Override
   String resetPassword(String uid) {
-    return null  //To change body of implemented methods use File | Settings | File Templates.
+
+    log.info "resetPassword: Intercepted request for uid: $uid"
+
+    String result = null
+
+    switch(uid) {
+      case "PASSWORD_HAPPY_PATH":
+        result = "p4sSw0rd"
+        break
+      case "PASSWORD_ERROR_ON_RESET_PWD":
+        throw new IllegalStateException("Set to fail in an epic way!")
+        break
+      default:
+        break
+    }
+    log.info "resetPassword: returning response => $result"
+    return result
   }
 
   @Override
@@ -106,6 +127,11 @@ class SukatServiceStub implements SukatServiceI {
       case "NEW_USER_FROM_SCRATCH":
         result = new SvcUidPwd()
         result.uid = "NEW_USER_FROM_SCRATCH"
+        result.password = "p4sSw0rd"
+        break
+      case "ACTIVATE_HAPPY_PATH":
+        result = new SvcUidPwd()
+        result.uid = "ACTIVATE_HAPPY_PATH"
         result.password = "p4sSw0rd"
         break
       default:

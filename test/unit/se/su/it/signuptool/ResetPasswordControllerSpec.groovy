@@ -59,7 +59,7 @@ class ResetPasswordControllerSpec extends Specification {
     controller.index()
 
     then:
-    assert session.nin == ssn
+    assert session.rpp.norEduPersonNIN == ssn
 
     assert response.redirectedUrl == '/resetPassword/resetPassword'
 
@@ -70,12 +70,12 @@ class ResetPasswordControllerSpec extends Specification {
     1 * controller.sukatService.findUsersBySocialSecurityNumber(ssn) >> [user]
   }
 
-  def "index: test when scope is 'studera.nu' and none 'norEduPersonNIN' is set on request, should redirect to unverified account"() {
+  def "index: test when scope is 'studera.nu' and none 'norEduPersonNIN' is set on request, should redirect to dashboard"() {
     when:
     controller.index()
 
     then:
-    assert view == '/shared/unverifiedAccount'
+    assert response.redirectedUrl == '/dashboard/index'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
@@ -89,7 +89,7 @@ class ResetPasswordControllerSpec extends Specification {
     assert response.redirectedUrl == '/dashboard/index'
 
     and:
-    assert flash.error == 'activateAccountAndCardController.noValidScopeFound'
+    assert flash.error == 'resetPassword.noValidScopeFound'
 
     and:
     1 * controller.utilityService.getScopeFromEppn(*_) >> "bogus"
@@ -105,7 +105,7 @@ class ResetPasswordControllerSpec extends Specification {
     controller.index()
 
     then:
-    assert session.nin == ssn
+    assert session.rpp.norEduPersonNIN == ssn
 
     assert response.redirectedUrl == '/dashboard/index'
 
@@ -128,7 +128,7 @@ class ResetPasswordControllerSpec extends Specification {
     controller.index()
 
     then:
-    assert session.nin == ssn
+    assert session.rpp.norEduPersonNIN == ssn
 
     assert response.redirectedUrl == '/dashboard/index'
 
@@ -151,7 +151,7 @@ class ResetPasswordControllerSpec extends Specification {
     controller.index()
 
     then:
-    assert session.nin == ssn
+    assert session.rpp.norEduPersonNIN == ssn
 
     assert response.redirectedUrl == '/dashboard/index'
 

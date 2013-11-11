@@ -133,10 +133,12 @@ class BootStrap {
     def initRoleAccessManagement = {
       AccessRole.withTransaction { status ->
         try {
-          def displayName = "Sysadmin"
-          def uri = "urn:mace:swami.se:gmai:su-signuptool:sysadmin:env=${grailsApplication.config.access.env}"
+          String displayName = "Sysadmin"
+          String system = "$grailsApplication.config.access.applicationName"
+          String role = "sysadmin"
+          Map scope = [env:"$grailsApplication.config.access.env"]
 
-          def sysadmin = AccessRole.createOrUpdateInstance(displayName, uri)
+          def sysadmin = AccessRole.createOrUpdateInstance(displayName, system, role, scope)
           accessService.addAccess(sysadmin, 'admin')
           accessService.addAccess(sysadmin, 'access')
         } catch (ex) {

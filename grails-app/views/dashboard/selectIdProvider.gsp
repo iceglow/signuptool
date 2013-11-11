@@ -58,54 +58,21 @@
     </g:form>
   </div>
 
-  <div class="apps-colorbox2 mgn-bottom-20 light-border">
+  <div class="apps-colorbox2 mgn-bottom-20">
     <div class="header-id-provider">
       <g:message code="activateAccountAndCardController.idProvider.header.eduID"/>
     </div>
     <g:message code="activateAccountAndCardController.idProvider.promptText.eduID"/>
-    <g:form url="#">
+    <g:form url="#" onclick="return false;">
       <div class="align-right">
-        <g:submitButton class="signupButton" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
+        <g:submitButton class="signupButton disabled" name="startAccountActivation" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
       </div>
     </g:form>
   </div>
 
-  <g:if test="${env == 'mock'}">
-    <div id="useCases" class="apps-colorbox2 mgn-bottom-20" >
-      <div class="header-id-provider">
-        <g:message code="activateAccountAndCardController.idProvider.header.mockup"/>
-      </div>
-      <g:message code="activateAccountAndCardController.idProvider.promptText.accountCases"/>
-      <g:form name="useCaseAccountForm" action="useCase" class="mgn-bottom-10">
-        <g:select name="caseId"
-                  from="${accountUseCases}"
-                  value="${accountUseCase}"
-                  optionKey="id"
-                  optionValue="${{message(code:it.displayName)}}"
-
-        />
-        <div id="accountUseCaseDescription" class="useCaseDescription">${accountUseCase?.description}</div>
-        <div class="align-right">
-          <g:submitButton class="signupButton" name="run" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
-        </div>
-      </g:form>
-
-      <g:message code="activateAccountAndCardController.idProvider.promptText.cardCases"/>
-      <g:form name="useCaseCardForm" action="useCase">
-        <g:select name="caseId"
-                  from="${cardUseCases}"
-                  value="${cardUseCase}"
-                  optionKey="id"
-                  optionValue="${{message(code:it.displayName)}}"
-
-        />
-        <div id="cardUseCaseDescription" class="useCaseDescription">${cardUseCase?.description}</div>
-        <div class="align-right">
-          <g:submitButton class="signupButton" name="run" value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
-        </div>
-      </g:form>
-    </div>
-  </g:if>
+  <tmpl:mockProvider env="${env}"
+                     useCases="${useCases}"
+                     useCase="${useCase}" />
 </content>
 </body>
 </html>

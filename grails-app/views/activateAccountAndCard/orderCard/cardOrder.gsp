@@ -45,7 +45,7 @@
 </content>
 
 <content tag="flowContent">
-  <div class="apps-colorbox2">
+  <div class="apps-colorbox2 mgn-bottom-20">
     <div>${userName}</div>
     <div>${cardInfo?.ladokAddress?.gatadr}</div>
     <g:if test="${cardInfo?.ladokAddress?.coadr}">

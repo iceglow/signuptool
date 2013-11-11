@@ -29,6 +29,9 @@ class ActivateAccountAndCardServiceStub implements ActivateAccountAndCardService
       case "NEW_USER_FROM_SCRATCH":
         response = [tnamn:'tnamn', enamn:'enamn']
         break
+      case "ACTIVATE_HAPPY_PATH":
+        response = [tnamn:'tnamn', enamn:'enamn']
+        break
       default:
         break
     }
@@ -61,6 +64,10 @@ class ActivateAccountAndCardServiceStub implements ActivateAccountAndCardService
           break
         case "CARD_ORDER_SUCCEEDS":
           response = [canOrderCard: true, hasAddress:true, suCards:true, cardOrders: true,
+              ladokAddress:genericLadokAddr]
+          break
+        case "ACTIVATE_HAPPY_PATH":
+          response = [canOrderCard: true, hasAddress:false, suCards:true, cardOrders: true,
               ladokAddress:genericLadokAddr]
           break
         default:

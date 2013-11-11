@@ -39,6 +39,8 @@
   </style>
 </head>
 <body>
+<div id="MainLeft" class="main-columns-left">
+  <div class="inner">
   <g:if test="${flash.error}">
     <span class="error">${flash.error}</span>
   </g:if>
@@ -48,5 +50,7 @@
   <div id="searchResults">
     <g:render template="searchResults" model="[eventLog: eventLog]"/>
   </div>
+  </div>
+</div>
 </body>
 </html>

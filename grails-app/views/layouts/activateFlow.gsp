@@ -37,24 +37,26 @@
     <g:layoutHead/>
   </head>
   <body>
-  <div class="apps-mid-column">
-    <tmpl:/shared/feedback flash="${flash}"/>
+  <div id="MainLeft" class="main-columns-left">
+    <div class="inner">
+      <tmpl:/shared/feedback flash="${flash}"/>
 
-    <div class="float-left"></div>
-    <h2><g:pageProperty name="page.flowHeader"/></h2>
+      <div class="float-left"></div>
+      <h2><g:pageProperty name="page.flowHeader"/></h2>
 
-    <g:if test="${g.pageProperty(name: 'page.flowPreamble')}">
-      <p>
-        <g:pageProperty name="page.flowPreamble"/>
-      </p>
-    </g:if>
+      <g:if test="${g.pageProperty(name: 'page.flowPreamble')}">
+        <p>
+          <g:pageProperty name="page.flowPreamble"/>
+        </p>
+      </g:if>
 
-    <g:pageProperty name="page.flowContent"/>
+      <g:pageProperty name="page.flowContent"/>
 
-    <g:pageProperty name="page.flowBottom"/>
+      <g:pageProperty name="page.flowBottom"/>
+    </div>
   </div>
 
-  <div class="apps-right-column">
+  <div id="MainRight" class="main-columns-right">
   <g:if test="${! g.pageProperty(name: 'page.hideStepImage')}">
     <div class="state_progress_img">
       <% def step = session.step ?: session.acp?.step ?: ActivateAccountAndCardController.STEP_START %>
