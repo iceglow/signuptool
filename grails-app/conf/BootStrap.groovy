@@ -133,14 +133,16 @@ class BootStrap {
     def initRoleAccessManagement = {
       AccessRole.withTransaction { status ->
         try {
-          String displayName = "Sysadmin"
           String system = "$grailsApplication.config.access.applicationName"
-          String role = "sysadmin"
           Map scope = [env:"$grailsApplication.config.access.env"]
 
-          def sysadmin = AccessRole.createOrUpdateInstance(displayName, system, role, scope)
+          def sysadmin = AccessRole.createOrUpdateInstance('Sysadmin', system, 'sysadmin', scope)
           accessService.addAccess(sysadmin, 'admin')
           accessService.addAccess(sysadmin, 'access')
+
+          def helpdesk = AccessRole.createOrUpdateInstance('Helpdesk', system, 'helpdesk', scope)
+          accessService.addAccess(helpdesk, 'admin')
+
         } catch (ex) {
           log.error "Failed to save role ", ex
           status.setRollbackOnly()
