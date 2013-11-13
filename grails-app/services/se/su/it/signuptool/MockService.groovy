@@ -8,8 +8,7 @@ import java.util.concurrent.atomic.AtomicLong
 class MockService {
 
   AtomicLong ids = new AtomicLong()
-  private List<UseCase> useCases = Collections.synchronizedList([])
-  private List<UseCase> unmodifiableUseCases
+  private final List<UseCase> useCases = Collections.synchronizedList([])
 
   public List<UseCase> findAllByType(UseCase.Type type) {
     useCases.findAll { it.type == type }
@@ -26,11 +25,8 @@ class MockService {
   /**
    * @return an unmodifiable list of Use cases
    */
-  public synchronized List<UseCase> getUseCases() {
-    if (!unmodifiableUseCases) {
-      unmodifiableUseCases = Collections.unmodifiableList(useCases)
-    }
-    return unmodifiableUseCases
+  public List<UseCase> getUseCases() {
+    return useCases
   }
 
   private UseCase addUseCase(UseCase useCase) {
