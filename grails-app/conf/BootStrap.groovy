@@ -140,7 +140,7 @@ class BootStrap {
           if (!accessEnv || ! accessEnv instanceof String)
             throw new IllegalStateException("No access.env configured.")
 
-          Map scope = [env:grailsApplication.config.access.env]
+          Map scope = [env:accessEnv]
 
           def sysadmin = AccessRole.createOrUpdateInstance('Sysadmin', system, 'sysadmin', scope)
           accessService.addAccess(sysadmin, 'admin')
