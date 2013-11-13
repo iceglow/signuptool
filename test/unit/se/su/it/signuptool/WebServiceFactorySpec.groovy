@@ -32,12 +32,8 @@
 package se.su.it.signuptool
 
 import org.apache.cxf.endpoint.Client
-import org.apache.cxf.frontend.ClientProxy
 import org.apache.cxf.interceptor.LoggingInInterceptor
 import org.apache.cxf.interceptor.LoggingOutInterceptor
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
-import spock.lang.Ignore
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 class WebServiceFactorySpec extends Specification {

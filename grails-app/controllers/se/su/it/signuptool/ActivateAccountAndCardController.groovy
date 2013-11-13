@@ -31,12 +31,7 @@
 
 package se.su.it.signuptool
 
-import grails.util.Environment
-import grails.validation.Validateable
-import groovy.transform.ToString
-import org.springframework.web.context.request.RequestContextHolder
 import se.su.it.signuptool.commandobjects.AccountAndCardProcess
-import se.su.it.signuptool.mock.UseCase
 import se.su.it.svc.SvcSuPersonVO
 import se.su.it.svc.SvcUidPwd
 
