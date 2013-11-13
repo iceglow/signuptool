@@ -136,9 +136,11 @@ class BootStrap {
           def accessEnv = grailsApplication.config.access.env
 
           String system = "$grailsApplication.config.access.applicationName"
-          Map scope = [:]
-          if (accessEnv instanceof String)
-            scope = [env:grailsApplication.config.access.env]
+
+          if (!accessEnv || ! accessEnv instanceof String)
+            throw new IllegalStateException("No access.env configured.")
+
+          Map scope = [env:grailsApplication.config.access.env]
 
           def sysadmin = AccessRole.createOrUpdateInstance('Sysadmin', system, 'sysadmin', scope)
           accessService.addAccess(sysadmin, 'admin')
@@ -150,6 +152,7 @@ class BootStrap {
         } catch (ex) {
           log.error "Failed to save role ", ex
           status.setRollbackOnly()
+          throw ex
         }
       }
     }
@@ -158,12 +161,14 @@ class BootStrap {
       initLocalization()
     } catch (ex) {
       log.error "*** Localizations: Failed to import localizations from i18n files", ex
+      throw ex
     }
 
     try {
       initRoleAccessManagement()
     } catch (ex) {
       log.error "*** RoleAccessManagment: Failed to create/add access roles.", ex
+      throw ex
     }
 
     if (Environment.current.name == MOCK_ENVIRONMENT_NAME) {
