@@ -32,6 +32,7 @@
 package se.su.it.signuptool
 
 import grails.test.mixin.TestFor
+import se.su.it.signuptool.commandobjects.AccountAndCardProcess
 import se.su.it.svc.SuCard
 import se.su.it.svc.SvcCardOrderVO
 import se.su.it.svc.SvcSuPersonVO
@@ -88,7 +89,7 @@ class ActivateAccountAndCardServiceSpec extends Specification {
 
   void "getCardOrderStatus: When connection to ladok fails, should log and throw exception"() {
     when:
-    service.getCardOrderStatus(new SvcSuPersonVO())
+    service.getCardOrderStatus(new AccountAndCardProcess(user: new SvcSuPersonVO()))
 
     then:
     thrown(Exception)
@@ -99,7 +100,7 @@ class ActivateAccountAndCardServiceSpec extends Specification {
 
   void "getCardOrderStatus: When no valid address is returned"() {
     when:
-    def resp = service.getCardOrderStatus(new SvcSuPersonVO())
+    def resp = service.getCardOrderStatus(new AccountAndCardProcess(user: new SvcSuPersonVO()))
 
     then:
     resp.hasAddress == false

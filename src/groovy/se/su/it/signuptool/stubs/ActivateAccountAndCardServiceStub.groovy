@@ -1,6 +1,7 @@
 package se.su.it.signuptool.stubs
 
 import groovy.util.logging.Slf4j
+import se.su.it.signuptool.commandobjects.AccountAndCardProcess
 import se.su.it.signuptool.interfaces.ActivateAccountAndCardServiceI
 import se.su.it.svc.SvcSuPersonVO
 
@@ -41,14 +42,14 @@ class ActivateAccountAndCardServiceStub implements ActivateAccountAndCardService
   }
 
   @Override
-  Map getCardOrderStatus(SvcSuPersonVO user) {
-    log.info "getCardOrderStatus: Intercepted request for $user.uid"
+  Map getCardOrderStatus(AccountAndCardProcess acp) {
+    log.info "getCardOrderStatus: Intercepted request for $acp.user.uid"
     Map response = null
 
     final Map genericLadokAddr = [gatadr:'Testgatan 1', coadr:'Box 1', postnr:'100 00', ort:'Stockholm' ]
 
-    if (user) {
-      switch(user.uid) {
+    if (acp.user) {
+      switch(acp.user.uid) {
         case "MISSING_ADDRESS":
           response = [canOrderCard: false, hasAddress:false, suCards: true, cardOrders: true]
           break
@@ -71,7 +72,7 @@ class ActivateAccountAndCardServiceStub implements ActivateAccountAndCardService
               ladokAddress:genericLadokAddr]
           break
         default:
-          log.info "Unhandled uid: $user.uid"
+          log.info "Unhandled uid: $acp.user.uid"
       }
     }
 
