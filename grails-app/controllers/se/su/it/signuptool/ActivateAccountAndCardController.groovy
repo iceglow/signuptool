@@ -426,6 +426,8 @@ class ActivateAccountAndCardController {
           return error()
         }
 
+        eventLog.logEvent "User started the card order flow."
+
         if (!acp.user?.uid) {
           eventLog.logEvent("User has no valid user in session, this should not happen. Value is currently set to ${acp.user}")
           flow.error = g.message(code:'activateAccountAndCardController.cardOrder.noAccount.error')
@@ -524,6 +526,8 @@ class ActivateAccountAndCardController {
         } else {
           eventLog.logEvent("User says address is invalid")
         }
+
+        eventLog.logEvent "Card successfully ordered for ${acp?.user?.uid}."
         return success()
       }
       on('success'){

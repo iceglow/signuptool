@@ -459,7 +459,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     event == 'cantOrderCard'
 
     and:
-    1 * eventLog.logEvent(_)
+    2 * eventLog.logEvent(_)
   }
 
   def "orderCardFlow: can't order card & has cards already"() {
@@ -479,7 +479,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     event == 'cantOrderCard'
 
     and:
-    1 * eventLog.logEvent(_)
+    2 * eventLog.logEvent(_)
   }
 
   def "orderCardFlow: can't order card & has card orders already"() {
@@ -499,7 +499,7 @@ class ActivateAccountAndCardControllerWebFlowsSpec extends Specification {
     event == 'cantOrderCard'
 
     and:
-    1 * eventLog.logEvent(_)
+    2 * eventLog.logEvent(_)
   }
 
   def "orderCardFlow: sendCardOrder sets addressIsValid from params"() {
