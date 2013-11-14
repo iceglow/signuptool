@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 class MockService {
 
+  // TODO: this service is keeping state
   AtomicLong ids = new AtomicLong()
   private final List<UseCase> useCases = Collections.synchronizedList([])
 
