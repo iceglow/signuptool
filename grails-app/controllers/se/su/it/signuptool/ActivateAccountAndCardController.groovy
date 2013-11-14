@@ -527,7 +527,7 @@ class ActivateAccountAndCardController {
           eventLog.logEvent("User says address is invalid")
         }
 
-        eventLog.logEvent "Card successfully ordered for ${acp.user.uid}."
+        eventLog.logEvent "Card successfully ordered for ${acp?.user?.uid}."
         return success()
       }
       on('success'){
