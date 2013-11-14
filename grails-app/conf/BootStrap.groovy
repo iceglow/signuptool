@@ -31,16 +31,9 @@
  */
 
 import grails.util.Environment
-import groovy.sql.Sql
 import org.grails.plugins.localization.Localization
 import org.springframework.core.io.Resource
 import se.su.it.grails.plugins.access.AccessRole
-import se.su.it.signuptool.mock.MockUserVO
-import se.su.it.signuptool.mock.UseCase
-import se.su.it.svc.SvcSuPersonVO
-
-import javax.sql.DataSource
-import java.sql.Connection
 
 class BootStrap {
   def configService

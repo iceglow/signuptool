@@ -62,8 +62,6 @@ class LadokServiceSpec extends Specification {
 
   void "findStudentInLadok: When no student is found."() {
     given:
-    def arg1 = 'tnamn'
-    def arg2 = 'enamn'
     def ssn = "1234567890"
 
     LadokService.metaClass.doListQuery = { String iarg1, Map iarg2 ->

@@ -34,7 +34,6 @@ package se.su.it.signuptool
 import grails.buildtestdata.mixin.Build
 import grails.test.mixin.TestFor
 import spock.lang.Ignore
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 import javax.servlet.http.HttpServletResponse

@@ -29,8 +29,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-import grails.util.Environment
 import org.apache.log4j.DailyRollingFileAppender
 import org.apache.log4j.net.SyslogAppender
 
@@ -167,7 +165,7 @@ log4j = {
             )
             appender new SyslogAppender(name: "syslog",
                 syslogHost: "127.0.0.1",
-                threshold: org.apache.log4j.Level.INFO,
+                threshold: Level.INFO,
                 layout: pattern(conversionPattern: "${appName}: [%t] %-5p %c{2} %x - %m%n")
             )
           }
