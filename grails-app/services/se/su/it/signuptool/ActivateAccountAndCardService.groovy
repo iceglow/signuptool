@@ -33,7 +33,6 @@ package se.su.it.signuptool
 
 import se.su.it.signuptool.commandobjects.AccountAndCardProcess
 import se.su.it.signuptool.interfaces.ActivateAccountAndCardServiceI
-import se.su.it.svc.SvcSuPersonVO
 
 class ActivateAccountAndCardService implements Serializable, ActivateAccountAndCardServiceI {
   /** Needed if we want to use this service in the flow. */
