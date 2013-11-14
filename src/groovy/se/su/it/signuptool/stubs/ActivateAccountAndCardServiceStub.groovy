@@ -3,7 +3,6 @@ package se.su.it.signuptool.stubs
 import groovy.util.logging.Slf4j
 import se.su.it.signuptool.commandobjects.AccountAndCardProcess
 import se.su.it.signuptool.interfaces.ActivateAccountAndCardServiceI
-import se.su.it.svc.SvcSuPersonVO
 
 @Slf4j
 class ActivateAccountAndCardServiceStub implements ActivateAccountAndCardServiceI {
