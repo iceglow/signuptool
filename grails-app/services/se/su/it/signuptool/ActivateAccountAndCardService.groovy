@@ -31,8 +31,8 @@
 
 package se.su.it.signuptool
 
+import se.su.it.signuptool.commandobjects.AccountAndCardProcess
 import se.su.it.signuptool.interfaces.ActivateAccountAndCardServiceI
-import se.su.it.svc.SvcSuPersonVO
 
 class ActivateAccountAndCardService implements Serializable, ActivateAccountAndCardServiceI {
   /** Needed if we want to use this service in the flow. */
@@ -77,18 +77,18 @@ class ActivateAccountAndCardService implements Serializable, ActivateAccountAndC
     return ladokData
   }
 
-  public Map getCardOrderStatus(SvcSuPersonVO user) throws Exception {
+  public Map getCardOrderStatus(AccountAndCardProcess acp) throws Exception {
     Map cardInfo = [:]
 
-    Map address = ladokService.getAddressFromLadokByPnr(user.socialSecurityNumber)
+    Map address = ladokService.getAddressFromLadokByPnr(acp.norEduPersonNIN)
     cardInfo.hasAddress = address ? true : false
     cardInfo.ladokAddress = address
 
     // we may want to show info about the active cards a user already has
-    cardInfo.suCards = (sukatService.getCardsForUser(user.uid))
+    cardInfo.suCards = (sukatService.getCardsForUser(acp.user.uid))
 
     // we may want to show info about cardorders that the user may have done
-    cardInfo.cardOrders = (sukatService.getCardOrdersForUser(user.uid))
+    cardInfo.cardOrders = (sukatService.getCardOrdersForUser(acp.user.uid))
     cardInfo.canOrderCard = canOrderCard(cardInfo)
 
     return cardInfo

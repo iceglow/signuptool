@@ -440,7 +440,7 @@ class ActivateAccountAndCardController {
         flow.userName = givenName + " " + sn
 
         try {
-          def cardInfo = activateAccountAndCardService.getCardOrderStatus(acp.user)
+          def cardInfo = activateAccountAndCardService.getCardOrderStatus(acp)
           if (!cardInfo) {
             throw new IllegalStateException("Illegal cardInfo state, null or empty.")
           }
