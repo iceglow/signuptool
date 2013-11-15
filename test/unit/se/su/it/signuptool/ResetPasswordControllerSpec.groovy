@@ -161,4 +161,20 @@ class ResetPasswordControllerSpec extends Specification {
     and:
     1 * controller.sukatService.findUsersBySocialSecurityNumber(ssn) >> [user, user]
   }
+
+  def "index: userId is set on eventLog"() {
+    given:
+    def ssn = "8112129999"
+    def user = new SvcSuPersonVO()
+    user.setAccountIsActive(false)
+
+    request.norEduPersonNIN = ssn
+    controller.utilityService.getScopeFromEppn(*_) >> "studera.nu"
+
+    when:
+    controller.index()
+
+    then:
+    EventLog.findByUserId(ssn) != null
+  }
 }

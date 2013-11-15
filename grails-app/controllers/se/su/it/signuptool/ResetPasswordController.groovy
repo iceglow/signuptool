@@ -95,6 +95,11 @@ class ResetPasswordController {
       }
     }
 
+    if (!eventLog?.userId) {
+      eventLog.userId = rpp.norEduPersonNIN
+      eventLog.save(flush:true)
+    }
+
     /**
      * If the user isn't already in the session we find it either by ssn or uid and put it in the session.
      */
@@ -132,6 +137,8 @@ class ResetPasswordController {
       return redirect(controller:'dashboard', action:'index')
     }
 
+    eventLog.logEvent "Starting reset password for ${rpp?.user?.uid}."
+
     return redirect(action: 'resetPassword')
   }
 
@@ -159,6 +166,8 @@ class ResetPasswordController {
           return error()
         }
 
+        eventLog.logEvent "Attempting to reset password for ${rpp?.user?.uid}."
+
         try {
           rpp.password = sukatService.resetPassword(rpp?.user?.uid)
         } catch (ex) {
@@ -167,6 +176,8 @@ class ResetPasswordController {
           eventLog.logEvent("Reset Password failed for user with uid ${rpp?.user?.uid}: ${ex?.message}")
           return error()
         }
+
+        eventLog.logEvent "Password reset successful."
       }
       on("success").to('prepareEnd')
       on("error").to("errorHandler")
