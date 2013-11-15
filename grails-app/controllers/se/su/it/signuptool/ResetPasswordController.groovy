@@ -95,6 +95,11 @@ class ResetPasswordController {
       }
     }
 
+    if (!eventLog?.userId) {
+      eventLog.userId = rpp.norEduPersonNIN
+      eventLog.save(flush:true)
+    }
+
     /**
      * If the user isn't already in the session we find it either by ssn or uid and put it in the session.
      */
