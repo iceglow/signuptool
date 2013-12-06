@@ -66,9 +66,9 @@
       <g:message code="activateAccountAndCardController.idProvider.header.eduID"/>
     </div>
     <g:message code="activateAccountAndCardController.idProvider.promptText.eduID"/>
-    <g:form url="#" onclick="return false;">
+    <g:form url="/Shibboleth.sso/WAYF/eduid.se">
       <div class="align-right">
-        <g:submitButton class="signupButton disabled"
+        <g:submitButton class="signupButton"
                         name="resetPassword"
                         alt="${g.message(code:'activateAccountAndCardController.idProvider.select')}"
                         value="${g.message(code:'activateAccountAndCardController.idProvider.select')}"/>
