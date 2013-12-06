@@ -117,7 +117,12 @@ environments {
   }
   production {
     grails.logging.jul.usebridge = false
+    grails.plugin.databasemigration.reports.updateOntart = true
     // TODO: grails.serverURL = "http://www.changeme.com"
+  }
+  mock {
+    grails.logging.jul.usebridge = false
+    grails.plugin.databasemigration.reports.updateOntart = true
   }
 }
 

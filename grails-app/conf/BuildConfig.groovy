@@ -55,8 +55,8 @@ grails.project.dependency.resolution = {
     inherits true // Whether to inherit repository definitions from plugins
 
     // First try our own maven mirror
-    mavenRepo "https://maven.it.su.se/nexus/content/groups/public/"
-    grailsRepo "https://maven.it.su.se/nexus/content/groups/public/"
+    mavenRepo "http://maven.it.su.se/nexus/content/groups/public/"
+    grailsRepo "http://maven.it.su.se/nexus/content/groups/public/"
 
     grailsPlugins()
     grailsHome()
@@ -121,7 +121,7 @@ grails.project.dependency.resolution = {
     runtime(
         "se.su.it.grails.plugins:grails-input-trimmer:0.1.2",
         "se.su.it.grails.plugins:role-access-manager:0.4.0",
-        ":database-migration:1.3.5",
+        ":database-migration:1.3.8",
         ":hibernate:$grailsVersion",
         ":jquery:1.8.3",
         ":resources:1.1.6",

@@ -56,13 +56,11 @@ environments {
   }
   production {
     dataSource {
-      dbCreate = "update"
       jndiName = "java:comp/env/jdbc/signuptool"
     }
   }
   mock {
     dataSource {
-      dbCreate = "update"
       jndiName = "java:comp/env/jdbc/signuptool"
     }
   }

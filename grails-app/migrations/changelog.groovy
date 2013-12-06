@@ -30,5 +30,5 @@
  */
 
 databaseChangeLog = {
-  include file: 'addEventLog.groovy'
+  include file: 'initialMigration.groovy'
 }
