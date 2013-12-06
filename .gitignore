@@ -9,3 +9,4 @@ cobertura.ser
 grails-app/conf/CustomDataSources.groovy
 out
 sonar.xml
+atlassian-ide-plugin.xml
