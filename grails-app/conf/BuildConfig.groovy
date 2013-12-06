@@ -55,8 +55,8 @@ grails.project.dependency.resolution = {
     inherits true // Whether to inherit repository definitions from plugins
 
     // First try our own maven mirror
-    mavenRepo "https://maven.it.su.se/nexus/content/groups/public/"
-    grailsRepo "https://maven.it.su.se/nexus/content/groups/public/"
+    mavenRepo "http://maven.it.su.se/nexus/content/groups/public/"
+    grailsRepo "http://maven.it.su.se/nexus/content/groups/public/"
 
     grailsPlugins()
     grailsHome()
