@@ -46,8 +46,6 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy
 @Slf4j
 class WebServiceFactory {
 
-  private static final int DEFAULT_CONNECTION_TIMEOUT = 10000
-  private static final int DEFAULT_RECEIVE_TIMEOUT = 10000
   private static final String DEFAULT_AUTH_TYPE = "Negotiate"
 
   final private static WebServiceFactory instance = new WebServiceFactory()
@@ -149,8 +147,6 @@ class WebServiceFactory {
   private void configureClientProxy(Client client) {
     HTTPConduit conduit = (HTTPConduit) client.getConduit()
     HTTPClientPolicy policy = new HTTPClientPolicy()
-    policy.setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT)
-    policy.setReceiveTimeout(DEFAULT_RECEIVE_TIMEOUT)
 
     conduit.setClient(policy)
 
